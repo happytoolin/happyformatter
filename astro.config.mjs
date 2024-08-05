@@ -1,12 +1,13 @@
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
+import playformCompress from "@playform/compress";
 import { defineConfig } from "astro/config";
 
-import playformCompress from "@playform/compress";
+import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
-  integrations: [sitemap(), tailwind(), playformCompress()],
+  integrations: [sitemap(), tailwind(), playformCompress(), react()],
   output: "static",
 });
