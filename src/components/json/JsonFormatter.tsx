@@ -5,10 +5,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useRef, useState } from "react";
 
 export function JsonFormatter() {
-  const [jsonInput, setJsonInput] = useState("");
-  const [formattedJson, setFormattedJson] = useState("");
-  const inputRef = useRef(null);
-  const lineNumbersRef = useRef(null);
+  const [jsonInput, setJsonInput] = useState<string>("");
+  const [formattedJson, setFormattedJson] = useState<string>("");
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const lineNumbersRef = useRef<HTMLDivElement | null>(null);
 
   const formatJson = () => {
     console.log("formatting json");
@@ -20,12 +20,15 @@ export function JsonFormatter() {
     }
   };
 
-  const syncScroll = (e) => {
-    lineNumbersRef.current.scrollTop = e.target.scrollTop;
+  const syncScroll = (e: Event) => {
+    if (lineNumbersRef.current && inputRef.current) {
+      lineNumbersRef.current.scrollTop = inputRef.current.scrollTop;
+    }
   };
 
   useEffect(() => {
     const inputElement = inputRef.current;
+    if (!inputElement) return;
     inputElement.addEventListener("scroll", syncScroll);
     return () => {
       inputElement.removeEventListener("scroll", syncScroll);
