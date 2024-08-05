@@ -67,3 +67,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+div > div.relative.mt-10.min-h-100 > span > pre {
+  padding-left: 18px;
+  margin-top: -8px;
+}
