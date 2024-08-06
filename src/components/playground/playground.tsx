@@ -98,11 +98,11 @@ const CodePlayground = ({ initialJson, onJsonChange, readOnly = false }: {
 
   return (
     <div className="language-ts vp-adaptive-theme mini-playground transition-none" style={{ colorScheme: "inherit" }}>
-      <div className="relative mt-10 min-h-[400px] max-h-[600px] overflow-auto">
+      <div className="relative mt-10 h-full overflow-auto">
         <div
           ref={highlightContainerRef}
           dangerouslySetInnerHTML={{ __html: output }}
-          className="block max-h-[600px] overflow-auto min-h-[400px]"
+          className="block max-h-[600px] overflow-auto "
         />
         {!readOnly && (
           <textarea
@@ -113,7 +113,7 @@ const CodePlayground = ({ initialJson, onJsonChange, readOnly = false }: {
             className="
               whitespace-pre
               overflow-auto w-full h-full font-mono bg-transparent absolute inset-0 py-5 px-6
-              text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[400px]
+              text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[600px]
             "
             autoComplete="off"
             autoCorrect="off"
