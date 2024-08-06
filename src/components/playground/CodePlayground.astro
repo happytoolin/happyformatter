@@ -1,0 +1,110 @@
+---
+
+---
+
+<RootElement>
+  <div
+    class="language-ts vp-adaptive-theme mini-playground transition-none"
+    style="color-scheme: inherit;"
+  >
+    <div class="relative mt-10 min-h-[400px] max-h-[600px] overflow-auto">
+      <div
+        class="block max-h-[600px] overflow-auto min-h-[400px]"
+        data-target="highlight"
+      >
+      </div>
+      <textarea
+        id="codeTextarea"
+        class="whitespace-pre overflow-auto w-full h-full font-mono bg-transparent absolute inset-0 py-5 px-6 text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[400px]"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        data-target="textarea"
+        spellcheck="false"
+      ></textarea>
+    </div>
+  </div>
+</RootElement>
+<script>
+import { createHighlighter, type Highlighter } from "shiki";
+import json from "shiki/langs/json.mjs";
+import everforestLight from "shiki/themes/everforest-light.mjs";
+
+const initialJson = `{
+    "name": "example",
+    "version": "1.0.0"
+  }`;
+
+const debounce = (func: Function, wait: number) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
+
+const loadHighlighter = async (): Promise<Highlighter | null> => {
+  try {
+    const hl = await createHighlighter({
+      langs: [json],
+      themes: [everforestLight],
+    });
+    await hl.loadLanguage("json");
+    return hl;
+  } catch (error) {
+    console.error("Error loading highlighter:", error);
+    return null;
+  }
+};
+
+const highlightJson = (json: string, hl: Highlighter | null): string => {
+  if (hl) {
+    return hl.codeToHtml(json, {
+      lang: "json",
+      theme: "everforest-light",
+      transformers: [
+        {
+          pre(node) {
+            node.properties.class = Array.isArray(node.properties.class)
+              ? node.properties.class.concat("code")
+              : ["code"];
+          },
+        },
+      ],
+    });
+  }
+  return json;
+};
+
+const highlighter = await loadHighlighter();
+
+RootElement.ready(($) => {
+  const highlightDiv = $("highlight");
+  const textArea = $("textarea");
+
+  textArea.setAttribute("value", initialJson);
+  console.log(textArea.nodeValue);
+  const highlightedCode = highlightJson(initialJson, highlighter);
+  highlightDiv.innerHTML = highlightedCode;
+
+  textArea.addEventListener("input", (e) => {
+    const element = e.target as HTMLTextAreaElement;
+    const code = element.value;
+
+    if (code) {
+      const debouncedHighlight = debounce((code: string) => {
+        const highlightedCode = highlightJson(code, highlighter);
+        highlightDiv.innerHTML = highlightedCode;
+      }, 300);
+
+      debouncedHighlight(code);
+    }
+  });
+
+  // Add onscroll event to synchronize scroll positions
+  textArea.addEventListener("scroll", () => {
+    highlightDiv.scrollTop = textArea.scrollTop;
+    highlightDiv.scrollLeft = textArea.scrollLeft;
+  });
+});
+</script>
