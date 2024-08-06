@@ -1,17 +1,23 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import CodePlayground from "../playground";
+
+const initialJson = `{
+  "greeting": "Welcome to HappyFormatter!",
+  "instructions": [
+    "Type or paste JSON here",
+    "Or choose a sample above",
+    "HappyFormatter will format your code"
+  ]
+}`;
 
 export function JsonFormatter() {
-  const [jsonInput, setJsonInput] = useState<string>("");
+  const [jsonInput, setJsonInput] = useState<string>(initialJson);
   const [formattedJson, setFormattedJson] = useState<string>("");
-  const inputRef = useRef<HTMLTextAreaElement | null>(null);
-  const lineNumbersRef = useRef<HTMLDivElement | null>(null);
 
   const formatJson = () => {
-    console.log("formatting json");
     try {
       const parsedJson = JSON.parse(jsonInput);
       setFormattedJson(JSON.stringify(parsedJson, null, 2));
@@ -20,61 +26,29 @@ export function JsonFormatter() {
     }
   };
 
-  const syncScroll = (e: Event) => {
-    if (lineNumbersRef.current && inputRef.current) {
-      lineNumbersRef.current.scrollTop = inputRef.current.scrollTop;
-    }
-  };
+  useEffect(() => {
+    formatJson();
+  }, [jsonInput]);
 
   useEffect(() => {
-    const inputElement = inputRef.current;
-    if (!inputElement) return;
-    inputElement.addEventListener("scroll", syncScroll);
-    return () => {
-      inputElement.removeEventListener("scroll", syncScroll);
-    };
-  }, []);
+    console.log("formattedJson", formattedJson);
+  }, [formatJson]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-background">
-      <div className="w-full max-w-4xl bg-card p-6 rounded-lg shadow-lg">
+      <div className="w-full max-w-6xl bg-card p-6 rounded-lg shadow-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-14">
           <div className="relative">
-            <div className="flex">
-              <div
-                ref={lineNumbersRef}
-                className="w-8 bg-muted/50 text-muted-foreground flex flex-col items-center justify-start pt-4 rounded-l-md overflow-y-auto"
-              >
-                {jsonInput.split("\n").map((_, index) => (
-                  <div key={index} className="py-1">
-                    {index + 1}
-                  </div>
-                ))}
-              </div>
-              <Textarea
-                ref={inputRef}
-                value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
-                className="w-full h-[400px] p-4 border border-input rounded-md resize-none"
-                placeholder="Paste your JSON here..."
-              />
-            </div>
+            <CodePlayground
+              initialJson={jsonInput}
+              onJsonChange={(newJson) => setJsonInput(newJson)}
+            />
           </div>
           <div className="relative">
-            <div className="flex">
-              <div className="w-8 bg-muted/50 text-muted-foreground flex flex-col items-center justify-start pt-4 rounded-l-md overflow-y-auto">
-                {formattedJson.split("\n").map((_, index) => (
-                  <div key={index} className="py-1">
-                    {index + 1}
-                  </div>
-                ))}
-              </div>
-              <Textarea
-                value={formattedJson}
-                readOnly
-                className="w-full h-[400px] p-4 border border-input rounded-md resize-none"
-              />
-            </div>
+            <CodePlayground
+              initialJson={formattedJson}
+              readOnly
+            />
           </div>
         </div>
         <div className="flex justify-center mt-6">
