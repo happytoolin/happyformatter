@@ -16,6 +16,7 @@ const initialJson = `{
 export function JsonFormatter() {
   const [jsonInput, setJsonInput] = useState<string>(initialJson);
   const [formattedJson, setFormattedJson] = useState<string>("");
+  const [isValidJson, setIsValidJson] = useState<boolean>(true);
 
   const formatJson = () => {
     try {
@@ -26,13 +27,18 @@ export function JsonFormatter() {
     }
   };
 
-  useEffect(() => {
-    formatJson();
-  }, [jsonInput]);
+  const validateJson = (json: string) => {
+    try {
+      JSON.parse(json);
+      setIsValidJson(true);
+    } catch (error) {
+      setIsValidJson(false);
+    }
+  };
 
   useEffect(() => {
-    console.log("formattedJson", formattedJson);
-  }, [formatJson]);
+    validateJson(jsonInput);
+  }, [jsonInput]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-background">
@@ -43,6 +49,9 @@ export function JsonFormatter() {
               initialJson={jsonInput}
               onJsonChange={(newJson) => setJsonInput(newJson)}
             />
+            <div className={`mt-2 ${isValidJson ? "text-green-500" : "text-red-500"}`}>
+              {isValidJson ? "Valid JSON" : "Invalid JSON"}
+            </div>
           </div>
           <div className="relative">
             <CodePlayground
