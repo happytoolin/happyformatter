@@ -68,7 +68,27 @@
   }
 }
 
-div > div.relative.mt-10.min-h-100 > span > pre {
-  padding-left: 18px;
-  margin-top: -8px;
+.code {
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  tab-size: 4;
+  hyphens: none;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 20px 0;
+  background: transparent;
+  overflow-x: auto;
+}
+
+.code code {
+  display: block;
+  padding: 0 24px;
+  width: fit-content;
+  min-width: 100%;
+  transition: color 0.5s;
 }
