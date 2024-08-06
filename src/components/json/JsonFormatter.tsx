@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import CodePlayground from "../playground";
+import CodePlayground from "../playground/playground";
 
 const initialJson = `{
   "greeting": "Welcome to HappyFormatter!",

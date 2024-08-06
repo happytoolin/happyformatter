@@ -28,10 +28,12 @@
     "lucide-react": "^0.424.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "simple-stack-query": "^0.2.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.7",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "dprint": "^0.47.2",
