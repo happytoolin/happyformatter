@@ -5,10 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "format": "dprint fmt"
+    "check": "astro check",
+    "format": "dprint fmt",
+    "deploy": "wrangler pages deploy dist"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.2",
