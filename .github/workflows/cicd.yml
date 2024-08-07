@@ -4,15 +4,8 @@ on:
   push:
     branches:
       - main
-      - '**' # Include all branches for preview deployments
+      - "**" # Include all branches for preview deployments
   workflow_dispatch:
-    inputs:
-      branch:
-        description: "Branch to deploy, defaults to main"
-        required: true
-        default: "main"
-        type: choice
-        options: ${{ steps.get_branches.outputs.branches }}
 
 jobs:
   deploy:
