@@ -3,8 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
-      - "**" # Include all branches for preview deployments
+      - "**"
   workflow_dispatch:
 
 jobs:
@@ -44,10 +43,9 @@ jobs:
         if: github.ref != 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
-          packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=happyformatter-preview --branch ${{ github.ref_name }}
+          command: pages deploy dist --project-name=happyformatter --branch ${{ github.ref_name }}
 
       - name: Print deployment URL
         env:
