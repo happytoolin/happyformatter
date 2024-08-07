@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { createStore } from "zustand/vanilla";
 
 // Define the types for the state
 interface CodePlaygroundState {
@@ -8,12 +8,12 @@ interface CodePlaygroundState {
   setOutput: (output: string) => void;
 }
 
-// Create the Zustand store with typed state and actions
-const useCodePlaygroundStore = create<CodePlaygroundState>((set) => ({
+// Define the types for the state
+const store = createStore<CodePlaygroundState>((set) => ({
   input: "",
   output: "",
-  setInput: (input: string) => set({ input }),
-  setOutput: (output: string) => set({ output }),
+  setInput: (input) => set({ input }),
+  setOutput: (output) => set({ output }),
 }));
 
-export default useCodePlaygroundStore;
+export default store;
