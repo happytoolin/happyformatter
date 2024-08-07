@@ -1,6 +1,5 @@
 ---
-import { JsonFormatter } from "@/components/json/JsonFormatter";
-import CodePlayground from "@/components/playground/CodePlayground.astro";
+import Formatter from "@/components/playground/Formatter.astro";
 import "../styles/globals.css";
 ---
 
@@ -14,7 +13,6 @@ import "../styles/globals.css";
     <title>Astro</title>
   </head>
   <body>
-    <JsonFormatter client:load />
-    <CodePlayground />
+    <Formatter />
   </body>
 </html>

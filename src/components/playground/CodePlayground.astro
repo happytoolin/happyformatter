@@ -1,5 +1,14 @@
 ---
+const sampleJson = `{
+  "greeting": "Welcome to HappyFormatter!",
+  "instructions": [
+    "Type or paste JSON here",
+    "Or choose a sample above",
+    "HappyFormatter will format your code"
+  ]
+}`;
 
+const { data = sampleJson } = Astro.props;
 ---
 
 <RootElement>
@@ -21,6 +30,7 @@
         autocapitalize="off"
         data-target="textarea"
         spellcheck="false"
+        data-initial={data}
       ></textarea>
     </div>
   </div>
@@ -29,17 +39,27 @@
 import { createHighlighter, type Highlighter } from "shiki";
 import json from "shiki/langs/json.mjs";
 import everforestLight from "shiki/themes/everforest-light.mjs";
+import store from "./store";
 
-const initialJson = `{
-    "name": "example",
-    "version": "1.0.0"
-  }`;
-
-const debounce = (func: Function, wait: number) => {
-  let timeout: NodeJS.Timeout;
+const throttle = (func: Function, limit: number) => {
+  let lastFunc: NodeJS.Timeout;
+  let lastRan: number;
   return (...args: any[]) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
+    if (!lastRan) {
+      func(...args);
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = setTimeout(
+        () => {
+          if (Date.now() - lastRan >= limit) {
+            func(...args);
+            lastRan = Date.now();
+          }
+        },
+        limit - (Date.now() - lastRan),
+      );
+    }
   };
 };
 
@@ -79,29 +99,47 @@ const highlightJson = (json: string, hl: Highlighter | null): string => {
 const highlighter = await loadHighlighter();
 
 RootElement.ready(($) => {
-  const highlightDiv = $("highlight");
-  const textArea = $("textarea");
+  const highlightDiv = $("highlight") as HTMLDivElement;
+  const textArea = $("textarea") as HTMLTextAreaElement;
 
-  textArea.setAttribute("value", initialJson);
-  console.log(textArea.nodeValue);
+  const initialJson = textArea.dataset.initial;
+
+  if (!initialJson) {
+    console.error("No initial JSON provided");
+    return;
+  }
+  // Initialize Zustand state
+  store.setState({ input: initialJson });
+
+  const { input, setInput, setOutput } = store.getState();
+
+  textArea.value = input;
   const highlightedCode = highlightJson(initialJson, highlighter);
   highlightDiv.innerHTML = highlightedCode;
+
+  const throttledHighlight = throttle((code: string) => {
+    const highlightedCode = highlightJson(code, highlighter);
+    highlightDiv.innerHTML = highlightedCode;
+    store.setState({ output: highlightedCode });
+  }, 300);
 
   textArea.addEventListener("input", (e) => {
     const element = e.target as HTMLTextAreaElement;
     const code = element.value;
 
     if (code) {
-      const debouncedHighlight = debounce((code: string) => {
-        const highlightedCode = highlightJson(code, highlighter);
-        highlightDiv.innerHTML = highlightedCode;
-      }, 300);
+      // Immediate update
+      const immediateHighlightedCode = highlightJson(code, highlighter);
+      highlightDiv.innerHTML = immediateHighlightedCode;
 
-      debouncedHighlight(code);
+      // Update Zustand state
+      store.setState({ input: code, output: immediateHighlightedCode });
+
+      // Throttled update
+      throttledHighlight(code);
     }
   });
 
-  // Add onscroll event to synchronize scroll positions
   textArea.addEventListener("scroll", () => {
     highlightDiv.scrollTop = textArea.scrollTop;
     highlightDiv.scrollLeft = textArea.scrollLeft;
