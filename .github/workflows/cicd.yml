@@ -7,10 +7,12 @@ on:
       - '**' # Include all branches for preview deployments
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Choose an environment to deploy to: <production|preview>"
+      branch:
+        description: "Branch to deploy, defaults to main"
         required: true
-        default: "preview"
+        default: "main"
+        type: choice
+        options: ${{ steps.get_branches.outputs.branches }}
 
 jobs:
   deploy:
@@ -37,7 +39,7 @@ jobs:
         run: pnpm build
 
       - name: Deploy to Production
-        if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'production'
+        if: github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -46,7 +48,7 @@ jobs:
 
       - name: Deploy to Preview
         id: deploy
-        if: github.ref != 'refs/heads/main' && github.event.inputs.environment == 'preview'
+        if: github.ref != 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           packageManager: pnpm
