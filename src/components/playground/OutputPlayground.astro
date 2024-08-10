@@ -1,5 +1,5 @@
 ---
-const { data } = Astro.props;
+const { formattedJSON } = Astro.props;
 ---
 
 <RootElement>
@@ -21,15 +21,15 @@ const { data } = Astro.props;
         autocapitalize="off"
         data-target="textarea"
         spellcheck="false"
-        data-initial={data}
+        readonly
+        data-initial={formattedJSON}
       ></textarea>
     </div>
   </div>
 </RootElement>
 <script>
 import { highlightJson, loadHighlighter } from "@/lib/highlighter";
-import { throttle } from "@/lib/throttle";
-import { inputJSONStore } from "./store";
+import { formattedJSONStore } from "./store";
 
 const highlighter = await loadHighlighter();
 
@@ -37,33 +37,13 @@ RootElement.ready(($) => {
   const highlightDiv = $("highlight") as HTMLDivElement;
   const textArea = $("textarea") as HTMLTextAreaElement;
 
-  const initialJson = textArea.dataset.initial;
+  formattedJSONStore.subscribe((formattedJSON: string) => {
+    const highlightDiv = $("highlight") as HTMLDivElement;
+    const textArea = $("textarea") as HTMLTextAreaElement;
 
-  if (!initialJson) {
-    console.error("No initial JSON provided");
-    return;
-  }
-
-  textArea.value = initialJson;
-  const highlightedCode = highlightJson(initialJson, highlighter);
-  highlightDiv.innerHTML = highlightedCode;
-
-  const throttledHighlight = throttle((code: string) => {
-    const highlightedCode = highlightJson(code, highlighter);
+    textArea.value = formattedJSON;
+    const highlightedCode = highlightJson(formattedJSON, highlighter);
     highlightDiv.innerHTML = highlightedCode;
-  }, 300);
-
-  textArea.addEventListener("input", (e) => {
-    const element = e.target as HTMLTextAreaElement;
-    const code = element.value;
-
-    if (code) {
-      inputJSONStore.set(code);
-      const immediateHighlightedCode = highlightJson(code, highlighter);
-      highlightDiv.innerHTML = immediateHighlightedCode;
-
-      throttledHighlight(code);
-    }
   });
 
   textArea.addEventListener("scroll", () => {
