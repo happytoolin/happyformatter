@@ -1,16 +1,11 @@
 ---
 import CodePlayground from "./CodePlayground.astro";
+import OutputPlayground from "./OutputPlayground.astro";
+import { formattedJSONStore, inputJSONStore } from "./store";
 
-const inputJSON = `{
-  "greeting": "Welcome to HappyFormatter!",
-  "instructions": [
-    "Type or paste JSON here",
-    "Or choose a sample above",
-    "HappyFormatter will format your code"
-  ]
-}`;
+const inputJSON = inputJSONStore.get();
 
-const formattedJSON = "";
+const formattedJSON = formattedJSONStore.get();
 ---
 
 <RootElement>
@@ -22,12 +17,34 @@ const formattedJSON = "";
           <div>"Valid Json"</div>
         </div>
         <div class="relative">
-          <CodePlayground readOnly data={formattedJSON} />
+          <OutputPlayground readOnly data={formattedJSON} />
         </div>
       </div>
       <div class="flex justify-center mt-6">
-        <button class="btn">Format JSON</button>
+        <button data-target="btn">Format JSON</button>
       </div>
     </div>
   </div>
 </RootElement>
+
+<script>
+import { formattedJSONStore, inputJSONStore } from "./store";
+
+function formatJSON() {
+  const inputJSON = inputJSONStore.get();
+  try {
+    const parsedJSON = JSON.parse(inputJSON);
+    const formatted = JSON.stringify(parsedJSON, null, 2);
+    formattedJSONStore.set(formatted);
+  } catch (error) {
+    console.error("Invalid JSON:", error);
+  }
+}
+
+RootElement.ready(($) => {
+  $("btn").addEventListener("click", () => {
+    console.log("Formatting JSON...");
+    formatJSON();
+  });
+});
+</script>

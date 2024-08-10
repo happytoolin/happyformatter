@@ -1,19 +1,19 @@
-import { createStore } from "zustand/vanilla";
+import { atom } from "nanostores";
 
-// Define the types for the state
-interface CodePlaygroundState {
-  input: string;
-  output: string;
-  setInput: (input: string) => void;
-  setOutput: (output: string) => void;
-}
+export const inputJSONStore = atom(`{
+  "greeting": "Welcome to HappyFormatter!",
+  "instructions": [
+    "Type or paste JSON here",
+    "Or choose a sample above",
+    "HappyFormatter will format your code"
+  ]
+}`);
 
-// Define the types for the state
-const store = createStore<CodePlaygroundState>((set) => ({
-  input: "",
-  output: "",
-  setInput: (input) => set({ input }),
-  setOutput: (output) => set({ output }),
-}));
-
-export default store;
+export const formattedJSONStore = atom(`{
+  "greeting": "Welcome to HappyFormatter!",
+  "instructions": [
+    "Type or paste JSON here",
+    "Or choose a sample above",
+    "HappyFormatter will format your code"
+  ]
+}`);
