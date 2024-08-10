@@ -1,17 +1,16 @@
 ---
-import { Button } from "../ui/button";
 import CodePlayground from "./CodePlayground.astro";
 
-import store from "./store";
+const inputJSON = `{
+  "greeting": "Welcome to HappyFormatter!",
+  "instructions": [
+    "Type or paste JSON here",
+    "Or choose a sample above",
+    "HappyFormatter will format your code"
+  ]
+}`;
 
-const handleFormatJson = () => {
-  const json = store.getState().input;
-  const formattedJson = JSON.stringify(JSON.parse(json), null, 2);
-
-  console.log("Formatted JSON:", formattedJson);
-
-  store.setState({ output: formattedJson });
-};
+const formattedJSON = "";
 ---
 
 <RootElement>
@@ -19,15 +18,15 @@ const handleFormatJson = () => {
     <div class="w-full max-w-6xl bg-card p-6 rounded-lg shadow-lg">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-14">
         <div class="relative">
-          <CodePlayground />
+          <CodePlayground data={inputJSON} />
           <div>"Valid Json"</div>
         </div>
         <div class="relative">
-          <CodePlayground readOnly />
+          <CodePlayground readOnly data={formattedJSON} />
         </div>
       </div>
       <div class="flex justify-center mt-6">
-        <Button onClick={handleFormatJson}>Format JSON</Button>
+        <button class="btn">Format JSON</button>
       </div>
     </div>
   </div>
