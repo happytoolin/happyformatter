@@ -1,4 +1,6 @@
 ---
+import { scope } from "simple:scope";
+import Textarea from "../ui/textarea.astro";
 const { formattedJSON } = Astro.props;
 ---
 
@@ -13,17 +15,17 @@ const { formattedJSON } = Astro.props;
         data-target="highlight"
       >
       </div>
-      <textarea
+      <Textarea
         id="codeTextarea"
         class="whitespace-pre overflow-auto w-full h-full font-mono bg-transparent absolute inset-0 py-5 px-6 text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[400px]"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
-        data-target="textarea"
+        target={scope("textarea")}
         spellcheck="false"
         readonly
         data-initial={formattedJSON}
-      ></textarea>
+      />
     </div>
   </div>
 </RootElement>

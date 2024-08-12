@@ -1,8 +1,9 @@
 ---
+import { scope } from "simple:scope";
+import Button from "../ui/button.astro";
 import CodePlayground from "./CodePlayground.astro";
 import OutputPlayground from "./OutputPlayground.astro";
 import { formattedJSONStore, inputJSONStore } from "./store";
-
 const inputJSON = inputJSONStore.get();
 
 const formattedJSON = formattedJSONStore.get();
@@ -21,7 +22,8 @@ const formattedJSON = formattedJSONStore.get();
         </div>
       </div>
       <div class="flex justify-center mt-6">
-        <button data-target="btn">Format JSON</button>
+        <Button size="lg" target={scope("btn")} variant="outline"
+        >Format</Button>
       </div>
     </div>
   </div>
@@ -43,7 +45,6 @@ function formatJSON() {
 
 RootElement.ready(($) => {
   $("btn").addEventListener("click", () => {
-    console.log("Formatting JSON...");
     formatJSON();
   });
 });
