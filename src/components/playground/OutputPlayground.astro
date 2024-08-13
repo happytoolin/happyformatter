@@ -30,41 +30,41 @@ const { formattedJSON } = Astro.props as { formattedJSON: string };
   </div>
 </RootElement>
 <script>
-  import { highlightJson, initializeHighlighter } from "@/lib/highlighter";
-  import { formattedJSONStore } from "./store";
+import { highlightJson, initializeHighlighter } from "@/lib/highlighter";
+import { formattedJSONStore } from "./store";
 
-  function syncScroll(textArea: HTMLElement, highlightDiv: HTMLElement): void {
-    const preElement = highlightDiv.querySelector("pre");
+function syncScroll(textArea: HTMLElement, highlightDiv: HTMLElement): void {
+  const preElement = highlightDiv.querySelector("pre");
 
-    if (!preElement) {
-      console.error("No pre element found");
-      return;
-    }
-
-    textArea.addEventListener("scroll", () => {
-      preElement.scrollTop = textArea.scrollTop;
-      preElement.scrollLeft = textArea.scrollLeft;
-
-      highlightDiv.scrollTop = textArea.scrollTop;
-      highlightDiv.scrollLeft = textArea.scrollLeft;
-    });
+  if (!preElement) {
+    console.error("No pre element found");
+    return;
   }
 
-  RootElement.ready(async ($: any) => {
-    const highlightDiv = $("highlight") as HTMLDivElement;
-    const textArea = $("textarea") as HTMLTextAreaElement;
+  textArea.addEventListener("scroll", () => {
+    preElement.scrollTop = textArea.scrollTop;
+    preElement.scrollLeft = textArea.scrollLeft;
 
-    try {
-      const highlighter = await initializeHighlighter();
-
-      formattedJSONStore.subscribe((formattedJSON: string) => {
-        textArea.value = formattedJSON;
-        const highlightedCode = highlightJson(formattedJSON, highlighter);
-        highlightDiv.innerHTML = highlightedCode;
-        syncScroll(textArea, highlightDiv);
-      });
-    } catch (error) {
-      console.error("Initialization failed:", error);
-    }
+    highlightDiv.scrollTop = textArea.scrollTop;
+    highlightDiv.scrollLeft = textArea.scrollLeft;
   });
+}
+
+RootElement.ready(async ($: any) => {
+  const highlightDiv = $("highlight") as HTMLDivElement;
+  const textArea = $("textarea") as HTMLTextAreaElement;
+
+  try {
+    const highlighter = await initializeHighlighter();
+
+    formattedJSONStore.subscribe((formattedJSON: string) => {
+      textArea.value = formattedJSON;
+      const highlightedCode = highlightJson(formattedJSON, highlighter);
+      highlightDiv.innerHTML = highlightedCode;
+      syncScroll(textArea, highlightDiv);
+    });
+  } catch (error) {
+    console.error("Initialization failed:", error);
+  }
+});
 </script>

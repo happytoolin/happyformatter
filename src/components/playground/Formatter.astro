@@ -5,7 +5,6 @@ import CodePlayground from "./CodePlayground.astro";
 import OutputPlayground from "./OutputPlayground.astro";
 import { formattedJSONStore, inputJSONStore } from "./store";
 const inputJSON = inputJSONStore.get();
-
 const formattedJSON = formattedJSONStore.get();
 ---
 
@@ -15,7 +14,7 @@ const formattedJSON = formattedJSONStore.get();
       <div class="grid grid-cols-1 md:grid-cols-2 gap-14">
         <div class="relative">
           <CodePlayground data={inputJSON} />
-          <div>"Valid Json"</div>
+          <div id="json-validity"></div>
         </div>
         <div class="relative">
           <OutputPlayground readOnly data={formattedJSON} />
@@ -30,29 +29,33 @@ const formattedJSON = formattedJSONStore.get();
 </RootElement>
 
 <script>
-import * as parserBabel from "prettier/parser-babel";
-import pluginEstree from "prettier/plugins/estree";
-import * as prettier from "prettier/standalone";
-import { formattedJSONStore, inputJSONStore } from "./store";
-
-async function formatJSON() {
-  const inputJSON = inputJSONStore.get();
-  try {
-    const formatted = await prettier.format(inputJSON, {
-      parser: "json",
-      plugins: [parserBabel, pluginEstree],
-      tabWidth: 2,
-    });
-
-    formattedJSONStore.set(formatted);
-  } catch (error) {
-    console.error("Invalid JSON:", error);
-  }
-}
+import { formatJSON } from "./jsonFormatter";
+import { formattedJSONStore, inputJSONStore, jsonValidStore } from "./store";
 
 RootElement.ready(($) => {
   $("btn").addEventListener("click", async () => {
-    await formatJSON();
+    const inputJSON = inputJSONStore.get();
+    try {
+      const formatted = await formatJSON(inputJSON);
+      formattedJSONStore.set(formatted);
+    } catch (error) {
+      console.error("Invalid JSON:", error);
+    }
+  });
+
+  // Subscribe to jsonValidStore and update the UI
+  jsonValidStore.subscribe((isValid) => {
+    const validityElement = document.getElementById("json-validity");
+    if (validityElement) {
+      validityElement.textContent = isValid ? "Valid JSON" : "Invalid JSON";
+    }
+    if (isValid) {
+      const inputJSON = inputJSONStore.get();
+
+      formatJSON(inputJSON).then((formatted) => {
+        formattedJSONStore.set(formatted);
+      });
+    }
   });
 });
 </script>

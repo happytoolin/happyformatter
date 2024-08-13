@@ -4,8 +4,6 @@ import tailwind from "@astrojs/tailwind";
 import playformCompress from "@playform/compress";
 import { defineConfig } from "astro/config";
 import simpleStackQuery from "simple-stack-query";
-import topLevelAwait from "vite-plugin-top-level-await";
-import wasm from "vite-plugin-wasm";
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,11 +16,4 @@ export default defineConfig({
     simpleStackQuery(),
   ],
   output: "static",
-
-  vite: {
-    plugins: [wasm(), topLevelAwait()],
-    optimizeDeps: {
-      exclude: ["@biomejs/wasm-bundler"],
-    },
-  },
 });

@@ -17,3 +17,5 @@ export const formattedJSONStore = atom(`{
     "HappyFormatter will format your code"
   ]
 }`);
+
+export const jsonValidStore = atom(true);
