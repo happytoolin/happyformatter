@@ -30,13 +30,20 @@ const formattedJSON = formattedJSONStore.get();
 </RootElement>
 
 <script>
+import * as parserBabel from "prettier/parser-babel";
+import pluginEstree from "prettier/plugins/estree";
+import * as prettier from "prettier/standalone";
 import { formattedJSONStore, inputJSONStore } from "./store";
 
-function formatJSON() {
+async function formatJSON() {
   const inputJSON = inputJSONStore.get();
   try {
-    const parsedJSON = JSON.parse(inputJSON);
-    const formatted = JSON.stringify(parsedJSON, null, 2);
+    const formatted = await prettier.format(inputJSON, {
+      parser: "json",
+      plugins: [parserBabel, pluginEstree],
+      tabWidth: 2,
+    });
+
     formattedJSONStore.set(formatted);
   } catch (error) {
     console.error("Invalid JSON:", error);
@@ -44,8 +51,8 @@ function formatJSON() {
 }
 
 RootElement.ready(($) => {
-  $("btn").addEventListener("click", () => {
-    formatJSON();
+  $("btn").addEventListener("click", async () => {
+    await formatJSON();
   });
 });
 </script>
