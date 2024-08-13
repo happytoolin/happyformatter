@@ -13,6 +13,7 @@ const { data } = Astro.props;
       <div
         class="block max-h-[600px] overflow-auto min-h-[400px]"
         data-target="highlight"
+        id="highlight_code"
       >
       </div>
       <Textarea
@@ -29,13 +30,64 @@ const { data } = Astro.props;
   </div>
 </RootElement>
 <script>
-import { highlightJson, loadHighlighter } from "@/lib/highlighter";
+import { highlightJson, initializeHighlighter } from "@/lib/highlighter";
 import { throttle } from "@/lib/throttle";
+import type { Highlighter } from "shiki";
 import { inputJSONStore } from "./store";
 
-const highlighter = await loadHighlighter();
+function syncScroll(
+  preElement: HTMLElement,
+  textArea: HTMLTextAreaElement,
+): void {
+  preElement.scrollTop = textArea.scrollTop;
+  preElement.scrollLeft = textArea.scrollLeft;
+}
 
-RootElement.ready(($) => {
+function handleInputEvent(
+  e: Event,
+  highlighter: Highlighter,
+  highlightDiv: HTMLDivElement,
+  throttledHighlight: (code: string) => void,
+): void {
+  const element = e.target as HTMLTextAreaElement;
+  const code = element.value;
+
+  if (code) {
+    inputJSONStore.set(code);
+    const immediateHighlightedCode = highlightJson(code, highlighter);
+    highlightDiv.innerHTML = immediateHighlightedCode;
+
+    throttledHighlight(code);
+  }
+}
+
+function setupEventListeners(
+  textArea: HTMLTextAreaElement,
+  highlightDiv: HTMLDivElement,
+  highlighter: Highlighter,
+): void {
+  const throttledHighlight = throttle((code: string) => {
+    const highlightedCode = highlightJson(code, highlighter);
+    highlightDiv.innerHTML = highlightedCode;
+
+    const preElement = highlightDiv.querySelector("pre");
+
+    if (!preElement) {
+      console.error("No pre element found");
+      return;
+    }
+
+    textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
+  }, 300);
+
+  textArea.addEventListener(
+    "input",
+    (e) => handleInputEvent(e, highlighter, highlightDiv, throttledHighlight),
+  );
+  textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
+}
+
+RootElement.ready(async ($) => {
   const highlightDiv = $("highlight") as HTMLDivElement;
   const textArea = $("textarea") as HTMLTextAreaElement;
 
@@ -47,30 +99,15 @@ RootElement.ready(($) => {
   }
 
   textArea.value = initialJson;
-  const highlightedCode = highlightJson(initialJson, highlighter);
-  highlightDiv.innerHTML = highlightedCode;
 
-  const throttledHighlight = throttle((code: string) => {
-    const highlightedCode = highlightJson(code, highlighter);
+  try {
+    const highlighter = await initializeHighlighter();
+    const highlightedCode = highlightJson(initialJson, highlighter);
     highlightDiv.innerHTML = highlightedCode;
-  }, 300);
 
-  textArea.addEventListener("input", (e) => {
-    const element = e.target as HTMLTextAreaElement;
-    const code = element.value;
-
-    if (code) {
-      inputJSONStore.set(code);
-      const immediateHighlightedCode = highlightJson(code, highlighter);
-      highlightDiv.innerHTML = immediateHighlightedCode;
-
-      throttledHighlight(code);
-    }
-  });
-
-  textArea.addEventListener("scroll", () => {
-    highlightDiv.scrollTop = textArea.scrollTop;
-    highlightDiv.scrollLeft = textArea.scrollLeft;
-  });
+    setupEventListeners(textArea, highlightDiv, highlighter);
+  } catch (error) {
+    console.error("Initialization failed:", error);
+  }
 });
 </script>

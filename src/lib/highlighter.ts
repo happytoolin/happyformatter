@@ -14,7 +14,11 @@ export const loadHighlighter = async (): Promise<Highlighter | null> => {
   }
 };
 
-export const highlightJson = (json: string, hl: Highlighter | null): string => {
+export const highlightJson = (
+  json: string,
+  hl: Highlighter | null,
+  id?: string,
+): string => {
   if (hl) {
     return hl.codeToHtml(json, {
       lang: "json",
@@ -25,6 +29,7 @@ export const highlightJson = (json: string, hl: Highlighter | null): string => {
             node.properties.class = Array.isArray(node.properties.class)
               ? node.properties.class.concat("code")
               : ["code"];
+            node.properties.id = id ? id : "";
           },
         },
       ],
@@ -32,3 +37,18 @@ export const highlightJson = (json: string, hl: Highlighter | null): string => {
   }
   return json;
 };
+
+export async function initializeHighlighter(): Promise<Highlighter> {
+  try {
+    const highliter = await loadHighlighter();
+
+    if (!highliter) {
+      throw new Error("Failed to load highlighter");
+    }
+
+    return highliter;
+  } catch (error) {
+    console.error("Failed to load highlighter:", error);
+    throw error;
+  }
+}
