@@ -91,18 +91,18 @@ RootElement.ready(async ($) => {
   const highlightDiv = $("highlight") as HTMLDivElement;
   const textArea = $("textarea") as HTMLTextAreaElement;
 
-  const initialJson = textArea.dataset.initial;
+  const initialJSON = textArea.dataset.initial;
 
-  if (!initialJson) {
+  if (!initialJSON) {
     console.error("No initial JSON provided");
     return;
   }
 
-  textArea.value = initialJson;
+  textArea.value = initialJSON;
 
   try {
     const highlighter = await initializeHighlighter();
-    const highlightedCode = highlightJson(initialJson, highlighter);
+    const highlightedCode = highlightJson(initialJSON, highlighter);
     highlightDiv.innerHTML = highlightedCode;
 
     setupEventListeners(textArea, highlightDiv, highlighter);
