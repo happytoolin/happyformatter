@@ -1,0 +1,19 @@
+---
+
+---
+
+<div id="json-validity-indicator" class="flex items-center"></div>
+
+<script>
+import { jsonValidStore } from "./store";
+
+const validityElement = document.getElementById("json-validity-indicator");
+
+jsonValidStore.subscribe((isValid) => {
+  if (validityElement) {
+    validityElement.innerHTML = isValid
+      ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><span class="ml-2 text-green-500">Valid JSON</span>`
+      : `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><span class="ml-2 text-red-500">Invalid JSON</span>`;
+  }
+});
+</script>
