@@ -1,7 +1,20 @@
 ---
+import { highlightJson, initializeHighlighter } from "@/lib/highlighter";
 import { scope } from "simple:scope";
 import Textarea from "../ui/textarea.astro";
-const { data } = Astro.props;
+
+interface Props {
+  inputJSON: string;
+}
+
+const { inputJSON: data } = Astro.props;
+
+const InitialCodeHTMLString = async () => {
+  const highlighter = await initializeHighlighter();
+  return highlightJson(data, highlighter);
+};
+
+const highlightedHTML = await InitialCodeHTMLString();
 ---
 
 <RootElement>
@@ -14,8 +27,8 @@ const { data } = Astro.props;
         class="block max-h-[600px] overflow-auto min-h-[400px]"
         data-target="highlight"
         id="highlight_code"
-      >
-      </div>
+        set:html={highlightedHTML}
+      />
       <Textarea
         id="codeTextarea"
         class="whitespace-pre overflow-auto w-full h-full font-mono bg-transparent absolute inset-0 py-5 px-6 text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[400px]"
@@ -118,8 +131,6 @@ RootElement.ready(async ($) => {
 
   try {
     const highlighter = await initializeHighlighter();
-    const highlightedCode = highlightJson(initialJSON, highlighter);
-    highlightDiv.innerHTML = highlightedCode;
 
     setupEventListeners(textArea, highlightDiv, highlighter);
   } catch (error) {

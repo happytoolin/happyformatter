@@ -2,34 +2,43 @@ import * as parserBabel from "prettier/parser-babel";
 import pluginEstree from "prettier/plugins/estree";
 import * as prettier from "prettier/standalone";
 
-type DebouncedFunction<T extends (...args: any[]) => any> = (
-  ...args: Parameters<T>
-) => void;
+// Define a type for the supported languages
+type SupportedLanguage = "json" | "javascript";
 
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number,
-): DebouncedFunction<T> {
-  let timeoutId: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-}
+// Mapping of languages to their respective parsers and plugins
+const languageConfig: Record<
+  SupportedLanguage,
+  { parser: string; plugins: any[] }
+> = {
+  json: {
+    parser: "json",
+    plugins: [parserBabel, pluginEstree],
+  },
+  javascript: {
+    parser: "babel",
+    plugins: [parserBabel],
+  },
+  // Add more languages and their configurations as needed
+};
 
-export async function formatJSON(inputJSON: string) {
+export async function formatCode<T extends SupportedLanguage>(
+  input: string,
+  language: T,
+): Promise<string> {
+  const config = languageConfig[language];
+
+  if (!config) {
+    throw new Error(`Unsupported language: ${language}`);
+  }
+
   try {
-    return await prettier.format(inputJSON, {
-      parser: "json",
-      plugins: [parserBabel, pluginEstree],
+    return await prettier.format(input, {
+      parser: config.parser,
+      plugins: config.plugins,
       tabWidth: 2,
     });
   } catch (error) {
-    console.error("Invalid JSON:", error);
+    console.error(`Invalid ${language} code:`, error);
     throw error;
   }
 }
