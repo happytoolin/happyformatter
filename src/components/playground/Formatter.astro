@@ -14,11 +14,11 @@ const formattedJSON = formattedJSONStore.get();
     <div class="w-full max-w-6xl bg-card p-6 rounded-lg shadow-lg">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-14">
         <div class="relative">
-          <CodePlayground data={inputJSON} />
+          <CodePlayground inputJSON={inputJSON} />
           <JsonValidity />
         </div>
         <div class="relative">
-          <OutputPlayground readOnly data={formattedJSON} />
+          <OutputPlayground formattedJSON={formattedJSON} />
         </div>
       </div>
       <div class="flex justify-center mt-6">
@@ -30,14 +30,14 @@ const formattedJSON = formattedJSONStore.get();
 </RootElement>
 
 <script>
-import { formatJSON } from "./jsonFormatter";
+import { formatCode } from "./jsonFormatter";
 import { formattedJSONStore, inputJSONStore, jsonValidStore } from "./store";
 
 RootElement.ready(($) => {
   $("btn").addEventListener("click", async () => {
     const inputJSON = inputJSONStore.get();
     try {
-      const formatted = await formatJSON(inputJSON);
+      const formatted = await formatCode(inputJSON, "json");
       formattedJSONStore.set(formatted);
     } catch (error) {
       console.error("Invalid JSON:", error);
@@ -48,7 +48,7 @@ RootElement.ready(($) => {
     if (isValid) {
       const inputJSON = inputJSONStore.get();
 
-      formatJSON(inputJSON).then((formatted) => {
+      formatCode(inputJSON, "json").then((formatted) => {
         formattedJSONStore.set(formatted);
       });
     }
