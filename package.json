@@ -41,6 +41,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "daisyui": "^4.12.10",
     "dprint": "^0.47.2",
     "shiki": "^1.12.1"
   }

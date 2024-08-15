@@ -10,9 +10,11 @@ const formattedJSON = formattedJSONStore.get();
 ---
 
 <RootElement>
-  <div class="flex flex-col items-center justify-center h-screen bg-background">
-    <div class="w-full max-w-6xl bg-card p-6 rounded-lg shadow-lg">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-14">
+  <div
+    class="flex flex-col items-center justify-center min-h-screen bg-background p-4 sm:p-6"
+  >
+    <div class="w-full max-w-6xl bg-card p-4 sm:p-6 rounded-lg shadow-lg">
+      <div class="grid grid-cols-1 gap-6 sm:gap-14 md:grid-cols-2">
         <div class="relative">
           <CodePlayground inputJSON={inputJSON} />
           <JsonValidity />
@@ -22,36 +24,40 @@ const formattedJSON = formattedJSONStore.get();
         </div>
       </div>
       <div class="flex justify-center mt-6">
-        <Button size="lg" target={scope("btn")} variant="outline"
-        >Format</Button>
+        <Button size="lg" target={scope("format")} variant="outline"
+          >Format</Button
+        >
+        <Button size="lg" target={scope("minify")} variant="outline"
+          >Minify</Button
+        >
       </div>
     </div>
   </div>
 </RootElement>
 
 <script>
-import { formatCode } from "./jsonFormatter";
-import { formattedJSONStore, inputJSONStore, jsonValidStore } from "./store";
+  import { formatCode } from "./jsonFormatter";
+  import { formattedJSONStore, inputJSONStore, jsonValidStore } from "./store";
 
-RootElement.ready(($) => {
-  $("btn").addEventListener("click", async () => {
-    const inputJSON = inputJSONStore.get();
-    try {
-      const formatted = await formatCode(inputJSON, "json");
-      formattedJSONStore.set(formatted);
-    } catch (error) {
-      console.error("Invalid JSON:", error);
-    }
-  });
-
-  jsonValidStore.subscribe((isValid) => {
-    if (isValid) {
+  RootElement.ready(($) => {
+    $("format").addEventListener("click", async () => {
       const inputJSON = inputJSONStore.get();
-
-      formatCode(inputJSON, "json").then((formatted) => {
+      try {
+        const formatted = await formatCode(inputJSON, "json");
         formattedJSONStore.set(formatted);
-      });
-    }
+      } catch (error) {
+        console.error("Invalid JSON:", error);
+      }
+    });
+
+    jsonValidStore.subscribe((isValid) => {
+      if (isValid) {
+        const inputJSON = inputJSONStore.get();
+
+        formatCode(inputJSON, "json").then((formatted) => {
+          formattedJSONStore.set(formatted);
+        });
+      }
+    });
   });
-});
 </script>
