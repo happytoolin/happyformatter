@@ -3,7 +3,7 @@ import pluginEstree from "prettier/plugins/estree";
 import * as prettier from "prettier/standalone";
 
 // Define a type for the supported languages
-type SupportedLanguage = "json" | "javascript";
+export type SupportedLanguage = "json" | "javascript";
 
 // Mapping of languages to their respective parsers and plugins
 const languageConfig: Record<

@@ -27,6 +27,7 @@
     "astro": "^4.13.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "esbuild-wasm": "^0.23.0",
     "lucide-react": "^0.427.0",
     "nanostores": "^0.11.2",
     "prettier": "^3.3.3",
@@ -43,6 +44,8 @@
   "devDependencies": {
     "daisyui": "^4.12.10",
     "dprint": "^0.47.2",
-    "shiki": "^1.12.1"
+    "shiki": "^1.12.1",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "vite-plugin-wasm": "^3.3.0"
   }
 }
