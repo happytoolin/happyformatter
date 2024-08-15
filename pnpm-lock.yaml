@@ -86,6 +86,9 @@ importers:
         specifier: ^4.5.4
         version: 4.5.4(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
+      daisyui:
+        specifier: ^4.12.10
+        version: 4.12.10(postcss@8.4.41)
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
@@ -2159,6 +2162,11 @@ packages:
       integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==,
     }
 
+  css-selector-tokenizer@0.8.0:
+    resolution: {
+      integrity: sha512-Jd6Ig3/pe62/qe5SBPTN8h8LeUg/pT4lLgtavPf7updwwHpvFzxvOQBHYj2LZDMjUnBzgvIUSjRcf6oT5HzHFg==,
+    }
+
   css-tree@2.2.1:
     resolution: {
       integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==,
@@ -2194,6 +2202,18 @@ packages:
     resolution: {
       integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==,
     }
+
+  culori@3.3.0:
+    resolution: {
+      integrity: sha512-pHJg+jbuFsCjz9iclQBqyL3B2HLCBF71BwVNujUYEvCeQMvV97R59MNK3R2+jgJ3a1fcZgI9B3vYgz8lzr/BFQ==,
+    }
+    engines: { node: ^12.20.0 || ^14.13.1 || >=16.0.0 }
+
+  daisyui@4.12.10:
+    resolution: {
+      integrity: sha512-jp1RAuzbHhGdXmn957Z2XsTZStXGHzFfF0FgIOZj3Wv9sH7OZgLfXTRZNfKVYxltGUOBsG1kbWAdF5SrqjebvA==,
+    }
+    engines: { node: ">=16.9.0" }
 
   data-uri-to-buffer@2.0.2:
     resolution: {
@@ -2464,6 +2484,11 @@ packages:
       integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==,
     }
     engines: { node: ">=8.6.0" }
+
+  fastparse@1.1.2:
+    resolution: {
+      integrity: sha512-483XLLxTVIwWK3QTrMGRqUfUpoOs/0hbQrl2oz4J0pAcm3A3bu84wxTFqGqkJzewCLdME38xJLJAxBABfQT8sQ==,
+    }
 
   fastq@1.17.1:
     resolution: {
@@ -5934,6 +5959,11 @@ snapshots:
       domutils: 3.1.0
       nth-check: 2.1.1
 
+  css-selector-tokenizer@0.8.0:
+    dependencies:
+      cssesc: 3.0.0
+      fastparse: 1.1.2
+
   css-tree@2.2.1:
     dependencies:
       mdn-data: 2.0.28
@@ -5953,6 +5983,17 @@ snapshots:
       css-tree: 2.2.1
 
   csstype@3.1.3: {}
+
+  culori@3.3.0: {}
+
+  daisyui@4.12.10(postcss@8.4.41):
+    dependencies:
+      css-selector-tokenizer: 0.8.0
+      culori: 3.3.0
+      picocolors: 1.0.1
+      postcss-js: 4.0.1(postcss@8.4.41)
+    transitivePeerDependencies:
+      - postcss
 
   data-uri-to-buffer@2.0.2: {}
 
@@ -6174,6 +6215,8 @@ snapshots:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.7
+
+  fastparse@1.1.2: {}
 
   fastq@1.17.1:
     dependencies:

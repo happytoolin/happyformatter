@@ -1,12 +1,19 @@
 import { createHighlighter, type Highlighter } from "shiki";
 
+let cachedHighlighter: Highlighter | null = null;
+
 export const loadHighlighter = async (): Promise<Highlighter | null> => {
+  if (cachedHighlighter) {
+    return cachedHighlighter;
+  }
+
   try {
     const hl = await createHighlighter({
       langs: ["json"],
       themes: ["everforest-light"],
     });
     await hl.loadLanguage("json");
+    cachedHighlighter = hl;
     return hl;
   } catch (error) {
     console.error("Error loading highlighter:", error);
@@ -40,13 +47,13 @@ export const highlightJson = (
 
 export async function initializeHighlighter(): Promise<Highlighter> {
   try {
-    const highliter = await loadHighlighter();
+    const highlighter = await loadHighlighter();
 
-    if (!highliter) {
+    if (!highlighter) {
       throw new Error("Failed to load highlighter");
     }
 
-    return highliter;
+    return highlighter;
   } catch (error) {
     console.error("Failed to load highlighter:", error);
     throw error;

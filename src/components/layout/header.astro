@@ -1,0 +1,117 @@
+---
+import Icons from "@/icons/Icons.astro";
+import Logo from "../../icons/Logo.astro";
+---
+
+<header class="z-20 relative bg-background">
+  <nav
+    class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+    aria-label="Global"
+  >
+    <div class="flex lg:flex-1">
+      <a href="#" class="-m-1.5 p-1.5 flex gap-4">
+        <Logo class="h-10 w-auto" fill="#4c8382" />
+        <span>Happy Formatter</span>
+      </a>
+    </div>
+    <div class="flex lg:hidden">
+      <button
+        type="button"
+        class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        id="menu-button"
+      >
+        <span class="sr-only">Open main menu</span>
+        <Icons icon="menu" />
+      </button>
+    </div>
+    <div class="hidden lg:flex lg:gap-x-12">
+      <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+      >HTML Formatter</a>
+      <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+      >CSS Minifier</a>
+      <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+      >JavaScript Formatter</a>
+      <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+      >JSON Formatter</a>
+    </div>
+    <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">More
+        Tools
+      </a>
+    </div>
+  </nav>
+  <div
+    class="lg:hidden hidden"
+    role="dialog"
+    aria-modal="true"
+    id="mobile-menu"
+  >
+    <div class="fixed inset-0 z-10"></div>
+    <div
+      class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+    >
+      <div class="flex items-center justify-between">
+        <a href="#" class="-m-1.5 p-1.5">
+          <span class="sr-only">Happy Formatter</span>
+          <Logo class="h-10 w-auto" fill="#4c8382" />
+        </a>
+        <button
+          type="button"
+          class="-m-2.5 rounded-md p-2.5 text-gray-700"
+          id="close-menu-button"
+        >
+          <span class="sr-only">Close menu</span>
+          <Icons icon="cross" />
+        </button>
+      </div>
+      <div class="mt-6 flow-root">
+        <div class="-my-6 divide-y divide-gray-500/10">
+          <div class="space-y-2 py-6">
+            <a
+              href="#"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >HTML Formatter</a>
+            <a
+              href="#"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >CSS Minifier</a>
+            <a
+              href="#"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >JavaScript Formatter</a>
+            <a
+              href="#"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >JSON Formatter</a>
+          </div>
+          <div class="py-6">
+            <a
+              href="#"
+              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >More Tools</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+const menuButton = document.getElementById("menu-button");
+
+const mobileMenu = document.getElementById("mobile-menu");
+
+const closeMenuButton = document.getElementById("close-menu-button");
+
+if (!menuButton || !mobileMenu || !closeMenuButton) {
+  throw new Error("Could not find all elements");
+}
+
+menuButton.addEventListener("click", function() {
+  mobileMenu.classList.toggle("hidden");
+});
+
+closeMenuButton.addEventListener("click", function() {
+  mobileMenu.classList.add("hidden");
+});
+</script>
