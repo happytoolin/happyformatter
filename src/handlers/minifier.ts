@@ -1,4 +1,4 @@
-import stripJsonComments from "@/minifier/json/stripJsonComments";
+import stripJsonComments from "./utils/stripJsonComments";
 
 export const minifyJSON = async (input: string): Promise<string> => {
   try {
