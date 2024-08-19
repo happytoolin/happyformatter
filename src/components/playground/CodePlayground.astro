@@ -46,7 +46,7 @@ const highlightedHTML = await InitialCodeHTMLString();
 import { highlightJson, initializeHighlighter } from "@/lib/highlighter";
 import { throttle } from "@/lib/throttle";
 import type { Highlighter } from "shiki";
-import { inputJSONStore, jsonValidStore } from "./store";
+import { inputStore, jsonValidStore } from "./store";
 
 function syncScroll(
   preElement: HTMLElement,
@@ -66,7 +66,7 @@ function handleInputEvent(
   const code = element.value;
 
   if (code) {
-    inputJSONStore.set(code);
+    inputStore.set(code);
     const immediateHighlightedCode = highlightJson(code, highlighter);
     highlightDiv.innerHTML = immediateHighlightedCode;
 

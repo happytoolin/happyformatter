@@ -1,6 +1,6 @@
 import { atom } from "nanostores";
 
-export const inputJSONStore = atom(`{
+export const inputStore = atom(`{
   "greeting": "Welcome to HappyFormatter!",
   "instructions": [
     "Type or paste JSON here",
@@ -9,7 +9,7 @@ export const inputJSONStore = atom(`{
   ]
 }`);
 
-export const formattedJSONStore = atom(`{
+export const formattedStore = atom(`{
   "greeting": "Welcome to HappyFormatter!",
   "instructions": [
     "Type or paste JSON here",

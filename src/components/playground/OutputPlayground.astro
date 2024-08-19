@@ -44,7 +44,7 @@ const highlightedHTML = await InitialCodeHTMLString();
 </RootElement>
 <script>
 import { highlightJson, initializeHighlighter } from "@/lib/highlighter";
-import { formattedJSONStore } from "./store";
+import { formattedStore } from "./store";
 
 function syncScroll(textArea: HTMLElement, highlightDiv: HTMLElement): void {
   const preElement = highlightDiv.querySelector("pre");
@@ -70,7 +70,7 @@ RootElement.ready(async ($: any) => {
   try {
     const highlighter = await initializeHighlighter();
 
-    formattedJSONStore.subscribe((formattedJSON: string) => {
+    formattedStore.subscribe((formattedJSON: string) => {
       textArea.value = formattedJSON;
       const highlightedCode = highlightJson(formattedJSON, highlighter);
       highlightDiv.innerHTML = highlightedCode;
