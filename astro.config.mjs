@@ -22,7 +22,17 @@ export default defineConfig({
   vite: {
     plugins: [wasm(), topLevelAwait()],
     optimizeDeps: {
-      exclude: ["esbuild-wasm"],
+      exclude: [
+        "esbuild-wasm",
+        "dprint-node",
+        "@wasm-fmt/clang-format",
+        "@wasm-fmt/dart_fmt",
+        "@wasm-fmt/gofmt",
+        "@wasm-fmt/lua_fmt",
+        "@wasm-fmt/ruff_fmt",
+        "@wasm-fmt/sql_fmt",
+        "@wasm-fmt/yamlfmt",
+      ],
     },
   },
 });
