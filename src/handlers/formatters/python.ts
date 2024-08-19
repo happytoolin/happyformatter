@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/ruff_fmt";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class PythonFormatter extends Formatter {
   protected config: Config = {

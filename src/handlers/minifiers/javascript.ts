@@ -1,5 +1,5 @@
 import type { JsMinifyOptions } from "@swc/wasm-web";
-import { Minifier } from "../formatter";
+import { Minifier } from "../interface";
 
 export class JavascriptMinifier extends Minifier {
   protected config: JsMinifyOptions = {

@@ -1,4 +1,4 @@
-import { Minifier } from "../formatter";
+import { Minifier } from "../interface";
 import stripJsonComments from "../utils/stripJsonComments";
 
 export class JSONMinifier extends Minifier {

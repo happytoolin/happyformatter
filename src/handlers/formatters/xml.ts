@@ -1,5 +1,5 @@
 import type { XMLFormatterOptions } from "xml-formatter";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class XMLFormatter extends Formatter {
   protected config: XMLFormatterOptions = {

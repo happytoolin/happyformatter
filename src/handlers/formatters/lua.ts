@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/lua_fmt";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class LuaFormatter extends Formatter {
   protected config: Config = {

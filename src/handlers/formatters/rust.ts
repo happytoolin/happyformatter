@@ -1,5 +1,5 @@
 import type { Options } from "dprint-node/options";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class RustFormatter extends Formatter {
   protected config: Options = {

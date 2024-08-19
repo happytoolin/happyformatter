@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/yamlfmt";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class YamlFormatter extends Formatter {
   protected config: Config = {

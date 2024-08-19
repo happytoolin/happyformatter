@@ -1,5 +1,5 @@
 import type { LayoutConfig } from "@wasm-fmt/dart_fmt";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class DartFormatter extends Formatter {
   protected config: LayoutConfig = {

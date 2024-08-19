@@ -1,5 +1,5 @@
 import type { Options } from "prettier";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class JavascriptFormatter extends Formatter {
   protected config: Options = {
