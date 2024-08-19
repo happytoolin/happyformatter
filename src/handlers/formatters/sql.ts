@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/sql_fmt";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class SQLFormatter extends Formatter {
   protected config: Config = {

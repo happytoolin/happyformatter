@@ -1,5 +1,5 @@
 import init, { minify } from "@minify-html/wasm";
-import { Minifier } from "../formatter";
+import { Minifier } from "../interface";
 
 export class HTMLMinifier extends Minifier {
   async minifyCode(code: string): Promise<string> {

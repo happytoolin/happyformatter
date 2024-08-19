@@ -1,5 +1,5 @@
 import initLightningCSS, { transform } from "lightningcss-wasm";
-import { Minifier } from "../formatter";
+import { Minifier } from "../interface";
 
 export class CSSMiniFier extends Minifier {
   async minifyCode(code: string): Promise<string> {

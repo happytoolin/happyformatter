@@ -1,4 +1,4 @@
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class GoFormatter extends Formatter {
   async formatCode(code: string): Promise<string> {

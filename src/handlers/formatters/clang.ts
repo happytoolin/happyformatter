@@ -1,5 +1,5 @@
 import type { Style } from "@wasm-fmt/clang-format";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class CFormatter extends Formatter {
   protected config: Style = JSON.stringify({

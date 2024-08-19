@@ -1,6 +1,6 @@
 import type { Config } from "@wasm-fmt/web_fmt";
 import init, { format } from "@wasm-fmt/web_fmt";
-import { Formatter } from "../formatter";
+import { Formatter } from "../interface";
 
 export class HTMLFormatter extends Formatter {
   protected config: Config = {
