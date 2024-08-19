@@ -4,9 +4,9 @@ import Button from "../ui/button.astro";
 import CodePlayground from "./CodePlayground.astro";
 import JsonValidity from "./JsonValidity.astro";
 import OutputPlayground from "./OutputPlayground.astro";
-import { formattedJSONStore, inputJSONStore } from "./store";
-const inputJSON = inputJSONStore.get();
-const formattedJSON = formattedJSONStore.get();
+import { formattedStore, inputStore } from "./store";
+const input = inputStore.get();
+const formatted = formattedStore.get();
 ---
 
 <RootElement>
@@ -16,67 +16,65 @@ const formattedJSON = formattedJSONStore.get();
     <div class="w-full max-w-6xl bg-card p-4 sm:p-6 rounded-lg shadow-lg">
       <div class="grid grid-cols-1 gap-6 sm:gap-14 md:grid-cols-2">
         <div class="relative">
-          <CodePlayground inputJSON={inputJSON} />
+          <CodePlayground inputJSON={input} />
           <JsonValidity />
         </div>
         <div class="relative">
-          <OutputPlayground formattedJSON={formattedJSON} />
+          <OutputPlayground formattedJSON={formatted} />
         </div>
       </div>
       <div class="flex justify-center mt-6">
         <Button size="lg" target={scope("format")} variant="outline"
-          >Format</Button
-        >
+        >Format</Button>
         <Button size="lg" target={scope("minify")} variant="outline"
-          >Minify</Button
-        >
+        >Minify</Button>
       </div>
     </div>
   </div>
 </RootElement>
 
 <script>
-  import { JSONFormatter } from "@/handlers/formatters/json";
-  import { JSONMinifier } from "@/handlers/minifiers/json";
-  import { formattedJSONStore, inputJSONStore, jsonValidStore } from "./store";
+import { JSONFormatter } from "@/handlers/formatters/json";
+import { JSONMinifier } from "@/handlers/minifiers/json";
+import { formattedStore, inputStore, jsonValidStore } from "./store";
 
-  const formatter = new JSONFormatter();
+const formatter = new JSONFormatter();
 
-  RootElement.ready(($) => {
-    $("format").addEventListener("click", async () => {
-      const inputJSON = inputJSONStore.get();
-      try {
-        const formatted = await formatter.formatCode(inputJSON);
-        formattedJSONStore.set(formatted);
-      } catch (error) {
-        console.error("Invalid JSON:", error);
-      }
-    });
-
-    $("minify").addEventListener("click", async () => {
-      const inputJSON = inputJSONStore.get();
-      try {
-        const minifier = new JSONMinifier();
-        const minified = await minifier.minifyCode(inputJSON);
-        formattedJSONStore.set(minified);
-      } catch (error) {
-        console.error("Invalid JSON:", error);
-      }
-    });
-
-    jsonValidStore.subscribe((isValid) => {
-      if (isValid) {
-        const inputJSON = inputJSONStore.get();
-
-        formatter
-          .formatCode(inputJSON)
-          .then((formatted) => {
-            formattedJSONStore.set(formatted);
-          })
-          .catch((error) => {
-            console.error("Invalid JSON:", error);
-          });
-      }
-    });
+RootElement.ready(($) => {
+  $("format").addEventListener("click", async () => {
+    const inputJSON = inputStore.get();
+    try {
+      const formatted = await formatter.formatCode(inputJSON);
+      formattedStore.set(formatted);
+    } catch (error) {
+      console.error("Invalid JSON:", error);
+    }
   });
+
+  $("minify").addEventListener("click", async () => {
+    const inputJSON = inputStore.get();
+    try {
+      const minifier = new JSONMinifier();
+      const minified = await minifier.minifyCode(inputJSON);
+      formattedStore.set(minified);
+    } catch (error) {
+      console.error("Invalid JSON:", error);
+    }
+  });
+
+  jsonValidStore.subscribe((isValid) => {
+    if (isValid) {
+      const inputJSON = inputStore.get();
+
+      formatter
+        .formatCode(inputJSON)
+        .then((formatted) => {
+          formattedStore.set(formatted);
+        })
+        .catch((error) => {
+          console.error("Invalid JSON:", error);
+        });
+    }
+  });
+});
 </script>
