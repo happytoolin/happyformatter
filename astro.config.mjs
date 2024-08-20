@@ -35,6 +35,7 @@ export default defineConfig({
         "@minify-html/wasm",
         "@swc/wasm-web",
         "lightningcss-wasm",
+        "@wasm-fmt/web_fmt",
       ],
     },
   },

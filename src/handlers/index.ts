@@ -76,9 +76,9 @@ export async function getMinifier(language: string) {
     case "json":
       const { JSONMinifier } = await import("@/handlers/minifiers/json");
       return new JSONMinifier();
-    case "xml":
-      const { XMLMinifier } = await import("@/handlers/minifiers/xml");
-      return new XMLMinifier();
+    // case "xml":
+    //   const { XMLMinifier } = await import("@/handlers/minifiers/xml");
+    //   return new XMLMinifier();
     default:
       return null; // Return null if no minifier is available for the language
   }

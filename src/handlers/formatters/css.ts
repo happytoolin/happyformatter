@@ -1,3 +1,4 @@
+import initLightningCSS, { transform } from "lightningcss-wasm";
 import type { Options } from "prettier";
 import { Formatter } from "../interface";
 
@@ -8,13 +9,21 @@ export class CSSFormatter extends Formatter {
   };
 
   async formatCode(code: string): Promise<string> {
-    const prettier = await import("prettier/standalone");
-    const parserPostCSS = await import("prettier/parser-postcss");
-    return prettier.format(code, {
-      ...this.config,
-      parser: "css",
-      plugins: [parserPostCSS],
-    });
+    try {
+      await initLightningCSS();
+
+      const { code: formattedCode } = transform({
+        filename: "style.css",
+        code: new TextEncoder().encode(code),
+        minify: false,
+        ...this.config,
+      });
+
+      return new TextDecoder().decode(formattedCode);
+    } catch (error) {
+      console.error("Error formatting CSS code:", error);
+      throw error;
+    }
   }
 
   setConfig(config: Options): void {
@@ -29,13 +38,16 @@ export class SCSSFormatter extends Formatter {
   };
 
   async formatCode(code: string): Promise<string> {
-    const prettier = await import("prettier/standalone");
-    const parserPostCSS = await import("prettier/parser-postcss");
-    return prettier.format(code, {
+    await initLightningCSS();
+
+    const { code: formattedCode } = transform({
+      filename: "style.scss",
+      code: new TextEncoder().encode(code),
+      minify: false,
       ...this.config,
-      parser: "scss",
-      plugins: [parserPostCSS],
     });
+
+    return new TextDecoder().decode(formattedCode);
   }
 
   setConfig(config: Options): void {

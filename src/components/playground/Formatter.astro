@@ -5,6 +5,8 @@ import CodePlayground from "./CodePlayground.astro";
 import JsonValidity from "./JsonValidity.astro";
 import OutputPlayground from "./OutputPlayground.astro";
 import { formattedStore, inputStore } from "./store";
+import { getInitialCode } from "@/lib/initialCode";
+import { getFormatter } from "@/handlers";
 
 interface Props {
   minifier: boolean;
@@ -14,6 +16,16 @@ interface Props {
 const { language, minifier } = Astro.props;
 
 const input = inputStore.get();
+
+if (!input) {
+  const initialCode = getInitialCode(language);
+  const formatter = await getFormatter(language);
+  const formatted = await formatter.formatCode(initialCode);
+
+  inputStore.set(initialCode);
+  formattedStore.set(formatted);
+}
+
 const formatted = formattedStore.get();
 ---
 
@@ -43,7 +55,8 @@ const formatted = formattedStore.get();
       </div>
       <div class="flex justify-center mt-6">
         <Button size="lg" target={scope("format")} variant="outline"
-        >Format</Button>
+          >Format</Button
+        >
         {
           minifier && (
             <Button size="lg" target={scope("minify")} variant="outline">
@@ -57,45 +70,51 @@ const formatted = formattedStore.get();
 </RootElement>
 
 <script>
-import { getFormatter, getMinifier } from "@/handlers";
-import { formattedStore, getInitialCode, inputStore } from "./store";
+  import { getFormatter, getMinifier } from "@/handlers";
+  import { getInitialCode } from "@/lib/initialCode";
+  import { formattedStore, inputStore } from "./store";
 
-RootElement.ready(async ($) => {
-  const divElement = $("root");
-  const language = divElement.dataset.language!;
+  RootElement.ready(async ($) => {
+    const divElement = $("root");
+    const language = divElement.dataset.language!;
+    console.log("Language:", language);
 
-  const formatter = await getFormatter(language);
-  const minifier = await getMinifier(language);
+    const formatter = await getFormatter(language);
+    console.log("Formatter:", formatter);
+    const minifier = await getMinifier(language);
 
-  $("format").addEventListener("click", async () => {
-    let inputCode = inputStore.get();
-    if (!inputCode) {
-      inputCode = getInitialCode(language);
-      inputStore.set(inputCode);
-    }
-
-    try {
-      const formatted = await formatter.formatCode(inputCode);
-      formattedStore.set(formatted);
-    } catch (error) {
-      console.error("Invalid code:", error);
-    }
-  });
-
-  if (minifier) {
-    $("minify").addEventListener("click", async () => {
+    $("format").addEventListener("click", async () => {
       let inputCode = inputStore.get();
       if (!inputCode) {
+        console.log("No input code found, using initial code");
         inputCode = getInitialCode(language);
         inputStore.set(inputCode);
       }
+
+      console.log("Formatting code:", inputCode);
+
       try {
-        const minified = await minifier.minifyCode(inputCode);
-        formattedStore.set(minified);
+        const formatted = await formatter.formatCode(inputCode);
+        formattedStore.set(formatted);
       } catch (error) {
         console.error("Invalid code:", error);
       }
     });
-  }
-});
+
+    if (minifier) {
+      $("minify").addEventListener("click", async () => {
+        let inputCode = inputStore.get();
+        if (!inputCode) {
+          inputCode = getInitialCode(language);
+          inputStore.set(inputCode);
+        }
+        try {
+          const minified = await minifier.minifyCode(inputCode);
+          formattedStore.set(minified);
+        } catch (error) {
+          console.error("Invalid code:", error);
+        }
+      });
+    }
+  });
 </script>
