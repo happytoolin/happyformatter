@@ -1,19 +1,30 @@
-import { createHighlighter, type Highlighter } from "shiki";
+import {
+  type BundledLanguage,
+  createHighlighter,
+  type Highlighter,
+  type LanguageInput,
+  type SpecialLanguage,
+} from "shiki";
 
-let cachedHighlighter: Highlighter | null = null;
+const highlighterCache: Map<string, Highlighter> = new Map();
 
-export const loadHighlighter = async (): Promise<Highlighter | null> => {
-  if (cachedHighlighter) {
-    return cachedHighlighter;
+export const loadHighlighter = async (
+  language: string,
+  theme: string,
+): Promise<Highlighter | null> => {
+  if (highlighterCache.has(language)) {
+    return highlighterCache.get(language) || null;
   }
 
   try {
     const hl = await createHighlighter({
-      langs: ["json"],
-      themes: ["everforest-light"],
+      langs: [language],
+      themes: [theme],
     });
-    await hl.loadLanguage("json");
-    cachedHighlighter = hl;
+    await hl.loadLanguage(
+      language as BundledLanguage | LanguageInput | SpecialLanguage,
+    );
+    highlighterCache.set(language, hl);
     return hl;
   } catch (error) {
     console.error("Error loading highlighter:", error);
@@ -21,15 +32,17 @@ export const loadHighlighter = async (): Promise<Highlighter | null> => {
   }
 };
 
-export const highlightJson = (
-  json: string,
+export const highlightCode = (
+  code: string,
   hl: Highlighter | null,
+  language: string,
+  theme: string,
   id?: string,
 ): string => {
   if (hl) {
-    return hl.codeToHtml(json, {
-      lang: "json",
-      theme: "everforest-light",
+    return hl.codeToHtml(code, {
+      lang: language.toString(),
+      theme,
       transformers: [
         {
           pre(node) {
@@ -42,12 +55,15 @@ export const highlightJson = (
       ],
     });
   }
-  return json;
+  return code;
 };
 
-export async function initializeHighlighter(): Promise<Highlighter> {
+export async function initializeHighlighter(
+  language: string,
+  theme: string,
+): Promise<Highlighter> {
   try {
-    const highlighter = await loadHighlighter();
+    const highlighter = await loadHighlighter(language, theme);
 
     if (!highlighter) {
       throw new Error("Failed to load highlighter");

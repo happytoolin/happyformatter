@@ -1,4 +1,4 @@
-import init, { minify } from "@minify-html/wasm";
+import { minify } from "@minify-html/wasm";
 import { Minifier } from "../interface";
 
 export class HTMLMinifier extends Minifier {
@@ -6,7 +6,6 @@ export class HTMLMinifier extends Minifier {
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();
 
-    await init();
     const minified = minify(encoder.encode(code), this.config);
     return decoder.decode(minified);
   }
