@@ -7,6 +7,7 @@ export class HTMLMinifier extends Minifier {
     const decoder = new TextDecoder();
 
     const minified = minify(encoder.encode(code), this.config);
+
     return decoder.decode(minified);
   }
 }

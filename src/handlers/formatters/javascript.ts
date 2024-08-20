@@ -1,52 +1,33 @@
-import type { Options } from "prettier";
+import type { Config } from "@wasm-fmt/web_fmt";
+import init, { format } from "@wasm-fmt/web_fmt";
 import { Formatter } from "../interface";
 
 export class JavascriptFormatter extends Formatter {
-  protected config: Options = {
-    semi: true,
-    singleQuote: false,
-    tabWidth: 2,
-    useTabs: false,
+  protected config: Config = {
+    indent_style: "space",
   };
 
   async formatCode(code: string): Promise<string> {
-    const prettier = await import("prettier/standalone");
-    const parserBabel = await import("prettier/parser-babel");
-    const pluginEstree = (await import("prettier/plugins/estree")).default;
+    await init();
 
-    return prettier.format(code, {
-      ...this.config,
-      parser: "babel",
-      plugins: [parserBabel, pluginEstree],
-    });
+    return format(code, "index.js");
   }
 
-  setConfig(config: Options): void {
+  setConfig(config: Config): void {
     this.config = config;
   }
 }
 
 export class TypescriptFormatter extends Formatter {
-  protected config: Options = {
-    semi: true,
-    singleQuote: false,
-    tabWidth: 2,
-    useTabs: false,
-  };
+  protected config: Config = {};
 
   async formatCode(code: string): Promise<string> {
-    const prettier = await import("prettier/standalone");
-    const parserTypescript = await import("prettier/parser-typescript");
-    const pluginEstree = (await import("prettier/plugins/estree")).default;
+    await init();
 
-    return prettier.format(code, {
-      ...this.config,
-      parser: "typescript",
-      plugins: [parserTypescript, pluginEstree],
-    });
+    return format(code, "index.ts");
   }
 
-  setConfig(config: Options): void {
+  setConfig(config: Config): void {
     this.config = config;
   }
 }

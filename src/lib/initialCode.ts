@@ -2,53 +2,223 @@ export function getInitialCode(language: string): string {
   switch (language) {
     case "json":
       return `{
-        "greeting": "Welcome to HappyFormatter!",
-        "instructions": [
-          "Type or paste JSON here",
-          "Or choose a sample above",
-          "HappyFormatter will format your code"
-        ]
-      }`;
+  "greeting": "Welcome to HappyFormatter!",
+  "instructions": [
+    "Type or paste JSON here",
+    "HappyFormatter will format your code"
+  ],
+  "example": {
+    "name": "HappyFormatter",
+    "version": "1.0.0",
+    "features": ["formatting", "syntax highlighting", "auto-completion"]
+  },
+  "metadata": {
+    "author": "Happy Dev",
+    "license": "MIT"
+  }
+}`;
     case "js":
-      return `console.log("Welcome to HappyFormatter!");`;
+      return `// Welcome to HappyFormatter!
+function greet() {
+  console.log("Welcome to HappyFormatter!");
+}
+
+function showInstructions() {
+  const instructions = [
+    "Type or paste JavaScript here",
+    "HappyFormatter will format your code"
+  ];
+  instructions.forEach(instruction => console.log(instruction));
+}
+
+greet();
+showInstructions();
+
+// DOM Manipulation Example
+document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
     case "ts":
-      return `console.log("Welcome to HappyFormatter!");`;
+      return `// Welcome to HappyFormatter!
+function greet(): void {
+  console.log("Welcome to HappyFormatter!");
+}
+
+function showInstructions(): void {
+  const instructions: string[] = [
+    "Type or paste TypeScript here",
+    "HappyFormatter will format your code"
+  ];
+  instructions.forEach(instruction => console.log(instruction));
+}
+
+greet();
+showInstructions();
+
+// DOM Manipulation Example
+document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
     case "css":
-      return `@custom-media --modern (color), (hover);
+      return `/* Welcome to HappyFormatter! */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
+}
 
 .foo {
   background: yellow;
-
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
   border-radius: 2px;
-
-  -webkit-transition: background 200ms;
-  -moz-transition: background 200ms;
   transition: background 200ms;
+}
 
-  &.bar {
+.foo.bar {
+  color: green;
+}
+
+@media (color) and (hover) and (width > 1024px) {
+  .a {
     color: green;
   }
 }
 
-@media (--modern) and (width > 1024px) {
-  .a {
-    color: green;
+@media (max-width: 600px) {
+  body {
+    background-color: lightblue;
   }
 }`;
     case "html":
-      return `<p>Welcome to HappyFormatter!</p>`;
+      return `<!-- Welcome to HappyFormatter! -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HappyFormatter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to HappyFormatter!</h1>
+  <p>Type or paste HTML here, and HappyFormatter will format your code.</p>
+  <footer>
+    <p>&copy; 2024 HappyFormatter</p>
+  </footer>
+</body>
+</html>`;
     case "xml":
-      return `<greeting>Welcome to HappyFormatter!</greeting>`;
+      return `<!-- Welcome to HappyFormatter! -->
+<greeting>
+  <message>Welcome to HappyFormatter!</message>
+  <instructions>
+    <step>Type or paste XML here</step>
+    <step>HappyFormatter will format your code</step>
+  </instructions>
+  <metadata>
+    <author>Happy Dev</author>
+    <license>MIT</license>
+  </metadata>
+</greeting>`;
     case "go":
-      return `package main\nimport "fmt"\nfunc main() {\n  fmt.Println("Welcome to HappyFormatter!")\n}`;
+      return `// Welcome to HappyFormatter!
+package main
+
+import (
+  "fmt"
+  "time"
+)
+
+func greet() {
+  fmt.Println("Welcome to HappyFormatter!")
+}
+
+func showInstructions() {
+  instructions := []string{
+    "Type or paste Go code here",
+    "HappyFormatter will format your code",
+  }
+  for _, instruction := range instructions {
+    fmt.Println(instruction)
+  }
+}
+
+func main() {
+  greet()
+  showInstructions()
+
+  // Basic concurrency example
+  go func() {
+    time.Sleep(2 * time.Second)
+    fmt.Println("This message is from a goroutine!")
+  }()
+
+  time.Sleep(3 * time.Second)
+}`;
     case "java":
-      return `public class Main {\n  public static void main(String[] args) {\n    System.out.println("Welcome to HappyFormatter!");\n  }\n}`;
+      return `// Welcome to HappyFormatter!
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class HappyFormatter {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("HappyFormatter");
+        frame.add(label);
+
+        JButton button = new JButton("Click Me");
+        button.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+          label.setText("Button Clicked!");
+      }
+        });
+        frame.add(button, "South");
+
+        frame.setVisible(true);
+    }
+}`;
     case "cs":
-      return `using System;\nclass Program {\n  static void Main() {\n    Console.WriteLine("Welcome to HappyFormatter!");\n  }\n}`;
+      return `// Welcome to HappyFormatter!
+using System;
+
+class Program {
+  static void Main() {
+    Console.WriteLine("Welcome to HappyFormatter!");
+    ShowInstructions();
+  }
+
+  static void ShowInstructions() {
+    string[] instructions = {
+      "Type or paste C# code here",
+      "HappyFormatter will format your code"
+    };
+    foreach (string instruction in instructions) {
+      Console.WriteLine(instruction);
+    }
+  }
+}`;
     case "proto":
-      return `syntax = "proto3";\nmessage Greeting {\n  string message = 1;\n}`;
+      return `// Welcome to HappyFormatter!
+syntax = "proto3";
+
+message Greeting {
+  string message = 1;
+  repeated string instructions = 2;
+}
+
+message Metadata {
+  string author = 1;
+  string license = 2;
+}
+
+message Example {
+  string name = 1;
+  string version = 2;
+  repeated string features = 3;
+}`;
     default:
       return "";
   }

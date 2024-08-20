@@ -1,4 +1,5 @@
 import type { JsMinifyOptions } from "@swc/wasm-web";
+import initSwc, { transformSync } from "@swc/wasm-web";
 import { Minifier } from "../interface";
 
 export class JavascriptMinifier extends Minifier {
@@ -8,11 +9,10 @@ export class JavascriptMinifier extends Minifier {
   };
 
   async minifyCode(code: string): Promise<string> {
-    const swc = await import("@swc/wasm-web");
-    await swc.default();
+    await initSwc();
 
-    const minified = swc.minifySync(code, {
-      compress: true,
+    const minified = transformSync(code, {
+      minify: true,
     });
 
     return minified.code;
@@ -30,11 +30,19 @@ export class TypescriptMinifier extends Minifier {
   };
 
   async minifyCode(code: string): Promise<string> {
-    const swc = await import("@swc/wasm-web");
-    await swc.default();
+    await initSwc();
 
-    const minified = swc.minifySync(code, {
-      compress: true,
+    const minified = transformSync(code, {
+      jsc: {
+        parser: {
+          syntax: "typescript",
+        },
+        target: "es2020",
+        minify: {
+          compress: this.config.compress,
+        },
+      },
+      minify: true,
     });
 
     return minified.code;
