@@ -1,9 +1,9 @@
 ---
 import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
+import { getInitialCode } from "@/lib/initialCode";
 import { scope } from "simple:scope";
 import Textarea from "../ui/textarea.astro";
 import { formattedStore, inputStore } from "./store";
-import { getInitialCode } from "@/lib/initialCode";
 
 interface Props {
   inputCode: string;
@@ -56,130 +56,125 @@ const highlightedHTML = await InitialCodeHTMLString();
 </RootElement>
 
 <script>
-  import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
-  import { getInitialCode } from "@/lib/initialCode";
-  import { throttle } from "@/lib/throttle";
-  import type { Highlighter } from "shiki";
-  import { inputStore } from "./store";
+import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
+import { getInitialCode } from "@/lib/initialCode";
+import { throttle } from "@/lib/throttle";
+import type { Highlighter } from "shiki";
+import { inputStore } from "./store";
 
-  function syncScroll(
-    preElement: HTMLElement,
-    textArea: HTMLTextAreaElement
-  ): void {
-    preElement.scrollTop = textArea.scrollTop;
-    preElement.scrollLeft = textArea.scrollLeft;
-  }
+function syncScroll(
+  preElement: HTMLElement,
+  textArea: HTMLTextAreaElement,
+): void {
+  preElement.scrollTop = textArea.scrollTop;
+  preElement.scrollLeft = textArea.scrollLeft;
+}
 
-  function handleInputEvent(
-    e: Event,
-    highlighter: Highlighter,
-    highlightDiv: HTMLDivElement,
-    throttledHighlight: (code: string) => void,
-    language: string,
-    theme: string
-  ): void {
-    const element = e.target as HTMLTextAreaElement;
-    const code = element.value;
+function handleInputEvent(
+  e: Event,
+  highlighter: Highlighter,
+  highlightDiv: HTMLDivElement,
+  throttledHighlight: (code: string) => void,
+  language: string,
+  theme: string,
+): void {
+  const element = e.target as HTMLTextAreaElement;
+  const code = element.value;
 
-    if (code) {
-      inputStore.set(code);
-      const immediateHighlightedCode = highlightCode(
-        code,
-        highlighter,
-        language,
-        theme
-      );
-      highlightDiv.innerHTML = immediateHighlightedCode;
-
-      throttledHighlight(code);
-    }
-
-    // try {
-    //   JSON.parse(code);
-    //   if (!jsonValidStore.get()) {
-    //     jsonValidStore.set(true);
-    //   } else {
-    //     jsonValidStore.notify();
-    //   }
-    // } catch (error) {
-    //   jsonValidStore.set(false);
-    // }
-  }
-
-  function setupEventListeners(
-    textArea: HTMLTextAreaElement,
-    highlightDiv: HTMLDivElement,
-    highlighter: Highlighter,
-    language: string,
-    theme: string
-  ): void {
-    const throttledHighlight = throttle((code: string) => {
-      const highlightedCode = highlightCode(code, highlighter, language, theme);
-      highlightDiv.innerHTML = highlightedCode;
-
-      const preElement = highlightDiv.querySelector("pre");
-
-      if (!preElement) {
-        console.error("No pre element found");
-        return;
-      }
-
-      textArea.addEventListener("scroll", () =>
-        syncScroll(preElement, textArea)
-      );
-    }, 300);
-
-    textArea.addEventListener("input", (e) =>
-      handleInputEvent(
-        e,
-        highlighter,
-        highlightDiv,
-        throttledHighlight,
-        language,
-        theme
-      )
+  if (code) {
+    inputStore.set(code);
+    const immediateHighlightedCode = highlightCode(
+      code,
+      highlighter,
+      language,
+      theme,
     );
+    highlightDiv.innerHTML = immediateHighlightedCode;
 
-    textArea.addEventListener("paste", (e) => {
-      handleInputEvent(
-        e,
-        highlighter,
-        highlightDiv,
-        throttledHighlight,
-        language,
-        theme
-      );
-    });
-
-    textArea.addEventListener("scroll", () =>
-      syncScroll(highlightDiv, textArea)
-    );
+    throttledHighlight(code);
   }
 
-  RootElement.ready(async ($) => {
-    const highlightDiv = $("highlight") as HTMLDivElement;
-    const textArea = $("textarea") as HTMLTextAreaElement;
-    const divLanguage = $("root") as HTMLDivElement;
+  // try {
+  //   JSON.parse(code);
+  //   if (!jsonValidStore.get()) {
+  //     jsonValidStore.set(true);
+  //   } else {
+  //     jsonValidStore.notify();
+  //   }
+  // } catch (error) {
+  //   jsonValidStore.set(false);
+  // }
+}
 
-    const language = divLanguage.dataset.language as string;
+function setupEventListeners(
+  textArea: HTMLTextAreaElement,
+  highlightDiv: HTMLDivElement,
+  highlighter: Highlighter,
+  language: string,
+  theme: string,
+): void {
+  const throttledHighlight = throttle((code: string) => {
+    const highlightedCode = highlightCode(code, highlighter, language, theme);
+    highlightDiv.innerHTML = highlightedCode;
 
-    let initialCode = textArea.dataset.initial;
+    const preElement = highlightDiv.querySelector("pre");
 
-    const theme = "everforest-light" as string;
-
-    if (!initialCode) {
-      initialCode = getInitialCode(language);
-      inputStore.set(initialCode);
+    if (!preElement) {
+      console.error("No pre element found");
+      return;
     }
 
-    textArea.value = initialCode;
+    textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
+  }, 300);
 
-    try {
-      const highlighter = await initializeHighlighter(language, theme);
+  textArea.addEventListener("input", (e) =>
+    handleInputEvent(
+      e,
+      highlighter,
+      highlightDiv,
+      throttledHighlight,
+      language,
+      theme,
+    ));
 
-      setupEventListeners(textArea, highlightDiv, highlighter, language, theme);
-    } catch (error) {
-      console.error("Initialization failed:", error);
-    }
+  textArea.addEventListener("paste", (e) => {
+    handleInputEvent(
+      e,
+      highlighter,
+      highlightDiv,
+      throttledHighlight,
+      language,
+      theme,
+    );
   });
+
+  textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
+}
+
+RootElement.ready(async ($) => {
+  const highlightDiv = $("highlight") as HTMLDivElement;
+  const textArea = $("textarea") as HTMLTextAreaElement;
+  const divLanguage = $("root") as HTMLDivElement;
+
+  const language = divLanguage.dataset.language as string;
+
+  let initialCode = textArea.dataset.initial;
+
+  const theme = "everforest-light" as string;
+
+  if (!initialCode) {
+    initialCode = getInitialCode(language);
+    inputStore.set(initialCode);
+  }
+
+  textArea.value = initialCode;
+
+  try {
+    const highlighter = await initializeHighlighter(language, theme);
+
+    setupEventListeners(textArea, highlightDiv, highlighter, language, theme);
+  } catch (error) {
+    console.error("Initialization failed:", error);
+  }
+});
 </script>

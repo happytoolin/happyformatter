@@ -1,19 +1,19 @@
 export abstract class Formatter {
-  protected config: object = {};
+  protected config: any = {};
 
   abstract formatCode(code: string): Promise<string>;
 
-  setConfig(config: object): void {
+  setConfig(config: any): void {
     this.config = { ...this.config, ...config };
   }
 }
 
 export abstract class Minifier {
-  protected config: object = {};
+  protected config: any = {};
 
   abstract minifyCode(code: string): Promise<string>;
 
-  setConfig(config: object): void {
+  setConfig(config: any): void {
     this.config = { ...this.config, ...config };
   }
 }
