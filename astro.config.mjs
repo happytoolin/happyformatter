@@ -23,7 +23,6 @@ export default defineConfig({
     plugins: [wasm(), topLevelAwait()],
     optimizeDeps: {
       exclude: [
-        "esbuild-wasm",
         "dprint-node",
         "@wasm-fmt/clang-format",
         "@wasm-fmt/dart_fmt",
