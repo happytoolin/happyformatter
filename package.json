@@ -43,6 +43,7 @@
     "clsx": "^2.1.1",
     "dprint-node": "^1.0.8",
     "esbuild-wasm": "^0.23.0",
+    "jotai": "^2.9.3",
     "lightningcss": "^1.26.0",
     "lightningcss-wasm": "^1.26.0",
     "lucide-react": "^0.427.0",

@@ -1,25 +1,20 @@
-import type { Options } from "prettier";
 import { Formatter } from "../interface";
 
+import init, { format_json, type JsonConfig } from "@wasm-fmt/web_fmt";
+
 export class JSONFormatter extends Formatter {
-  protected config: Options = {
-    tabWidth: 2,
-    useTabs: false,
+  protected config: JsonConfig = {
+    indent_style: "space",
+    indent_width: 2,
   };
 
   async formatCode(code: string): Promise<string> {
-    const prettier = await import("prettier/standalone");
-    const parserBabel = await import("prettier/parser-babel");
-    const pluginEstree = (await import("prettier/plugins/estree")).default;
+    await init();
 
-    return prettier.format(code, {
-      ...this.config,
-      parser: "json",
-      plugins: [parserBabel, pluginEstree],
-    });
+    return format_json(code, this.config);
   }
 
-  setConfig(config: Options): void {
+  setConfig(config: JsonConfig): void {
     this.config = config;
   }
 }

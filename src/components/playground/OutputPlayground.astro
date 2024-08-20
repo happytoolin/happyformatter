@@ -2,6 +2,8 @@
 import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
 import { scope } from "simple:scope";
 import Textarea from "../ui/textarea.astro";
+import { getFormatter } from "@/handlers";
+import { getInitialCode } from "@/lib/initialCode";
 
 interface Props {
   formattedCode: string;
@@ -11,9 +13,15 @@ interface Props {
 
 const { formattedCode, language, theme } = Astro.props;
 
+const initialCode = getInitialCode(language);
+
 const InitialCodeHTMLString = async () => {
   const highlighter = await initializeHighlighter(language, theme);
-  return highlightCode(formattedCode, highlighter, language, theme);
+
+  const formatter = await getFormatter(language);
+
+  const updatedCode = await formatter.formatCode(initialCode);
+  return highlightCode(updatedCode, highlighter, language, theme);
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
@@ -48,57 +56,57 @@ const highlightedHTML = await InitialCodeHTMLString();
 </RootElement>
 
 <script>
-import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
-import { formattedStore } from "./store";
+  import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
+  import { formattedStore } from "./store";
 
-function syncScroll(textArea: HTMLElement, highlightDiv: HTMLElement): void {
-  const preElement = highlightDiv.querySelector("pre");
+  function syncScroll(textArea: HTMLElement, highlightDiv: HTMLElement): void {
+    const preElement = highlightDiv.querySelector("pre");
 
-  if (!preElement) {
-    console.error("No pre element found");
-    return;
-  }
+    if (!preElement) {
+      console.error("No pre element found");
+      return;
+    }
 
-  textArea.addEventListener("scroll", () => {
-    preElement.scrollTop = textArea.scrollTop;
-    preElement.scrollLeft = textArea.scrollLeft;
+    textArea.addEventListener("scroll", () => {
+      preElement.scrollTop = textArea.scrollTop;
+      preElement.scrollLeft = textArea.scrollLeft;
 
-    highlightDiv.scrollTop = textArea.scrollTop;
-    highlightDiv.scrollLeft = textArea.scrollLeft;
-  });
-}
-
-RootElement.ready(async ($: any) => {
-  const highlightDiv = $("highlight") as HTMLDivElement;
-  const textArea = $("textarea") as HTMLTextAreaElement;
-  const divElement = $("root") as HTMLElement;
-
-  const language = divElement.dataset.language as string;
-
-  const theme = "everforest-light";
-
-  try {
-    const highlighter = await initializeHighlighter(language, theme);
-
-    formattedStore.subscribe((formattedCode: string) => {
-      if (!formattedCode) {
-        return;
-      }
-      console.log("formattedCode", formattedCode);
-      textArea.value = formattedCode;
-
-      const highlightedCode = highlightCode(
-        formattedCode,
-        highlighter,
-        language,
-        theme,
-      );
-
-      highlightDiv.innerHTML = highlightedCode;
-      syncScroll(textArea, highlightDiv);
+      highlightDiv.scrollTop = textArea.scrollTop;
+      highlightDiv.scrollLeft = textArea.scrollLeft;
     });
-  } catch (error) {
-    console.error("Initialization failed:", error);
   }
-});
+
+  RootElement.ready(async ($: any) => {
+    const highlightDiv = $("highlight") as HTMLDivElement;
+    const textArea = $("textarea") as HTMLTextAreaElement;
+    const divElement = $("root") as HTMLElement;
+
+    const language = divElement.dataset.language as string;
+
+    const theme = "everforest-light";
+
+    try {
+      const highlighter = await initializeHighlighter(language, theme);
+
+      formattedStore.subscribe((formattedCode: string) => {
+        if (!formattedCode) {
+          return;
+        }
+        console.log("formattedCode", formattedCode);
+        textArea.value = formattedCode;
+
+        const highlightedCode = highlightCode(
+          formattedCode,
+          highlighter,
+          language,
+          theme
+        );
+
+        highlightDiv.innerHTML = highlightedCode;
+        syncScroll(textArea, highlightDiv);
+      });
+    } catch (error) {
+      console.error("Initialization failed:", error);
+    }
+  });
 </script>
