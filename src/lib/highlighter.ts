@@ -7,14 +7,28 @@ import {
 } from "shiki";
 
 const highlighterCache: Map<string, Highlighter> = new Map();
+let currentLanguage: string | null = null;
+let currentTheme: string | null = null;
+
+const disposeHighlighter = () => {
+  if (currentLanguage) {
+    const highlighter = highlighterCache.get(currentLanguage);
+    if (highlighter) {
+      highlighter.dispose();
+      highlighterCache.delete(currentLanguage);
+    }
+  }
+};
 
 export const loadHighlighter = async (
   language: string,
   theme: string,
 ): Promise<Highlighter | null> => {
-  if (highlighterCache.has(language)) {
+  if (currentLanguage === language && currentTheme === theme) {
     return highlighterCache.get(language) || null;
   }
+
+  disposeHighlighter();
 
   try {
     const hl = await createHighlighter({
@@ -25,6 +39,8 @@ export const loadHighlighter = async (
       language as BundledLanguage | LanguageInput | SpecialLanguage,
     );
     highlighterCache.set(language, hl);
+    currentLanguage = language;
+    currentTheme = theme;
     return hl;
   } catch (error) {
     console.error("Error loading highlighter:", error);
