@@ -3,6 +3,7 @@ import { Minifier } from "../interface";
 
 export class CSSMiniFier extends Minifier {
   async minifyCode(code: string): Promise<string> {
+    console.log("Minifying CSS code...", code);
     await initLightningCSS();
     const { code: minifiedCode } = transform({
       filename: "style.css",
