@@ -40,7 +40,7 @@
     "clsx": "^2.1.1",
     "dprint-node": "^1.0.8",
     "lightningcss-wasm": "^1.26.0",
-    "lucide-react": "^0.428.0",
+    "lucide-react": "^0.429.0",
     "nanostores": "^0.11.2",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
