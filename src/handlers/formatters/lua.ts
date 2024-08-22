@@ -1,4 +1,5 @@
 import type { Config } from "@wasm-fmt/lua_fmt";
+import init, { format } from "@wasm-fmt/lua_fmt";
 import { Formatter } from "../interface";
 
 export class LuaFormatter extends Formatter {
@@ -7,11 +8,10 @@ export class LuaFormatter extends Formatter {
     line_width: 80,
     line_ending: "lf",
   };
-
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/lua_fmt");
-
+  async init(): Promise<void> {
     await init();
+  }
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.lua", this.config);
   }
 

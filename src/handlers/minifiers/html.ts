@@ -2,6 +2,10 @@ import { minify } from "@minify-html/wasm";
 import { Minifier } from "../interface";
 
 export class HTMLMinifier extends Minifier {
+  init(): void {
+    // No initialization required
+  }
+
   async minifyCode(code: string): Promise<string> {
     const encoder = new TextEncoder();
     const decoder = new TextDecoder();

@@ -1,4 +1,5 @@
 import type { Config } from "@wasm-fmt/yamlfmt";
+import init, { format } from "@wasm-fmt/yamlfmt";
 import { Formatter } from "../interface";
 
 export class YamlFormatter extends Formatter {
@@ -9,10 +10,11 @@ export class YamlFormatter extends Formatter {
     line_width: 80,
   };
 
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/yamlfmt");
-
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "sample.yaml", this.config);
   }
 

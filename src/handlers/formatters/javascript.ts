@@ -7,9 +7,11 @@ export class JavascriptFormatter extends Formatter {
     indent_style: "space",
   };
 
-  async formatCode(code: string): Promise<string> {
+  async init(): Promise<void> {
     await init();
+  }
 
+  async formatCode(code: string): Promise<string> {
     return format(code, "index.js");
   }
 
@@ -21,9 +23,11 @@ export class JavascriptFormatter extends Formatter {
 export class TypescriptFormatter extends Formatter {
   protected config: Config = {};
 
-  async formatCode(code: string): Promise<string> {
+  async init(): Promise<void> {
     await init();
+  }
 
+  async formatCode(code: string): Promise<string> {
     return format(code, "index.ts");
   }
 

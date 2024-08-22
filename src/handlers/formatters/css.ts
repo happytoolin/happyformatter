@@ -8,10 +8,12 @@ export class CSSFormatter extends Formatter {
     useTabs: false,
   };
 
+  async init(): Promise<void> {
+    await initLightningCSS();
+  }
+
   async formatCode(code: string): Promise<string> {
     try {
-      await initLightningCSS();
-
       const { code: formattedCode } = transform({
         filename: "style.css",
         code: new TextEncoder().encode(code),
@@ -37,9 +39,11 @@ export class SCSSFormatter extends Formatter {
     useTabs: false,
   };
 
-  async formatCode(code: string): Promise<string> {
+  async init(): Promise<void> {
     await initLightningCSS();
+  }
 
+  async formatCode(code: string): Promise<string> {
     const { code: formattedCode } = transform({
       filename: "style.scss",
       code: new TextEncoder().encode(code),

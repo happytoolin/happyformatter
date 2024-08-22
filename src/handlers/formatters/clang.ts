@@ -1,4 +1,5 @@
 import type { Style } from "@wasm-fmt/clang-format";
+import init, { format } from "@wasm-fmt/clang-format";
 import { Formatter } from "../interface";
 
 export class CFormatter extends Formatter {
@@ -7,10 +8,12 @@ export class CFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.c");
   }
 
@@ -25,10 +28,12 @@ export class CppFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.cc");
   }
 
@@ -43,10 +48,12 @@ export class JavaFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.java");
   }
 
@@ -61,10 +68,12 @@ export class CSharpFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.cs");
   }
 
@@ -79,10 +88,12 @@ export class ObjectiveCFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.m");
   }
 
@@ -97,10 +108,12 @@ export class ObjectiveCppFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.mm");
   }
 
@@ -115,10 +128,12 @@ export class ProtoFormatter extends Formatter {
     IndentWidth: 4,
     ColumnLimit: 80,
   });
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/clang-format");
 
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "file.proto");
   }
 

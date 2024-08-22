@@ -8,9 +8,19 @@ export class JSONFormatter extends Formatter {
     indent_width: 2,
   };
 
-  async formatCode(code: string): Promise<string> {
-    await init();
+  constructor() {
+    super();
+  }
 
+  async init(): Promise<void> {
+    try {
+      await init();
+    } catch (err) {
+      console.error("err", err);
+    }
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format_json(code, this.config);
   }
 
