@@ -8,6 +8,7 @@ const config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
     "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
+    "./node_modules/flowbite/**/*.js",
   ],
   prefix: "",
   theme: {
@@ -75,7 +76,11 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("daisyui")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("daisyui"),
+    require("flowbite/plugin"),
+  ],
 } satisfies Config;
 
 export default config;
