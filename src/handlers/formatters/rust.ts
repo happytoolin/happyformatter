@@ -1,3 +1,4 @@
+import dprint from "dprint-node";
 import type { Options } from "dprint-node/options";
 import { Formatter } from "../interface";
 
@@ -8,8 +9,11 @@ export class RustFormatter extends Formatter {
     newLineKind: "auto",
   };
 
+  async init(): Promise<void> {
+    dprint.format("file.rs", "", this.config);
+  }
+
   async formatCode(code: string): Promise<string> {
-    const dprint = await import("dprint-node");
     return dprint.format("file.rs", code, this.config);
   }
 

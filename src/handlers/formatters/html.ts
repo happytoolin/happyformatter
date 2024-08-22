@@ -10,11 +10,14 @@ export class HTMLFormatter extends Formatter {
     },
   };
 
-  async formatCode(code: string): Promise<string> {
+  async init(): Promise<void> {
     await init();
+  }
 
+  async formatCode(code: string): Promise<string> {
     return format(code, "index.html");
   }
+
   setConfig(config: Config): void {
     this.config = config;
   }

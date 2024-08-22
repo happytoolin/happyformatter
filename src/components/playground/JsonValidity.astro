@@ -1,22 +1,26 @@
 ---
-
+import Check from "../../icons/check.svg?raw";
 ---
 
 <div id="json-validity-indicator" class="flex items-center justify-center">
+  <span
+    class="text-green-500 flex items-center justify-start w-full gap-3"
+    set:html={`<span class="text-green-500 flex items-center justify-start w-full gap-3"> ${Check} Valid JSON</span>`}
+  />
+
+  <script>
+  import Check from "../../icons/check.svg?raw";
+  import Cross from "../../icons/cross.svg?raw";
+  import { jsonValidStore } from "./store";
+
+  const validityElement = document.getElementById("json-validity-indicator");
+
+  jsonValidStore.subscribe((isValid) => {
+    if (validityElement) {
+      validityElement.innerHTML = isValid
+        ? `<span class="text-green-500 flex items-center justify-start w-full gap-3"> ${Check} Valid JSON</span>`
+        : `<span class="text-red-500 flex items-center justify-left  w-full gap-3"> ${Cross} Invalid JSON</span>`;
+    }
+  });
+  </script>
 </div>
-
-<script>
-import Check from "../../icons/check.svg?raw";
-import Cross from "../../icons/cross.svg?raw";
-import { jsonValidStore } from "./store";
-
-const validityElement = document.getElementById("json-validity-indicator");
-
-jsonValidStore.subscribe((isValid) => {
-  if (validityElement) {
-    validityElement.innerHTML = isValid
-      ? `<span class="text-green-500 flex items-center justify-start w-full gap-3"> ${Check} Valid JSON</span>`
-      : `<span class="text-red-500 flex items-center justify-left  w-full gap-3"> ${Cross} Invalid JSON</span>`;
-  }
-});
-</script>

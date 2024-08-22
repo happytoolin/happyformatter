@@ -8,11 +8,16 @@ export class JavascriptMinifier extends Minifier {
     ecma: 2020,
   };
 
-  async minifyCode(code: string): Promise<string> {
+  async init(): Promise<void> {
     await initSwc();
+  }
 
+  async minifyCode(code: string): Promise<string> {
     const minified = transformSync(code, {
       minify: true,
+      jsc: {
+        target: "es2020",
+      },
     });
 
     return minified.code;
@@ -29,18 +34,17 @@ export class TypescriptMinifier extends Minifier {
     ecma: 2020,
   };
 
-  async minifyCode(code: string): Promise<string> {
+  async init(): Promise<void> {
     await initSwc();
+  }
 
+  async minifyCode(code: string): Promise<string> {
     const minified = transformSync(code, {
       jsc: {
         parser: {
           syntax: "typescript",
         },
         target: "es2020",
-        minify: {
-          compress: this.config.compress,
-        },
       },
       minify: true,
     });

@@ -1,4 +1,5 @@
 import type { Config } from "@wasm-fmt/sql_fmt";
+import init, { format } from "@wasm-fmt/sql_fmt";
 import { Formatter } from "../interface";
 
 export class SQLFormatter extends Formatter {
@@ -9,10 +10,11 @@ export class SQLFormatter extends Formatter {
     uppercase: true,
   };
 
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/sql_fmt");
-
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "query.sql", this.config);
   }
 

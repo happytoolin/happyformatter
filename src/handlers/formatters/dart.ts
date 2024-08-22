@@ -1,4 +1,5 @@
 import type { LayoutConfig } from "@wasm-fmt/dart_fmt";
+import init, { format } from "@wasm-fmt/dart_fmt";
 import { Formatter } from "../interface";
 
 export class DartFormatter extends Formatter {
@@ -7,10 +8,11 @@ export class DartFormatter extends Formatter {
     line_width: 80,
   };
 
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/dart_fmt");
-
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "main.dart", this.config);
   }
   setConfig(config: LayoutConfig): void {

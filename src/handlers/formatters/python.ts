@@ -1,4 +1,5 @@
 import type { Config } from "@wasm-fmt/ruff_fmt";
+import init, { format } from "@wasm-fmt/ruff_fmt";
 import { Formatter } from "../interface";
 
 export class PythonFormatter extends Formatter {
@@ -9,10 +10,11 @@ export class PythonFormatter extends Formatter {
     line_width: 80,
   };
 
-  async formatCode(code: string): Promise<string> {
-    const { default: init, format } = await import("@wasm-fmt/ruff_fmt");
-
+  async init(): Promise<void> {
     await init();
+  }
+
+  async formatCode(code: string): Promise<string> {
     return format(code, "", this.config);
   }
 

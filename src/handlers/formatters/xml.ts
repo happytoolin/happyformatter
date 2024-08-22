@@ -1,4 +1,5 @@
 import type { XMLFormatterOptions } from "xml-formatter";
+import formatXML from "xml-formatter";
 import { Formatter } from "../interface";
 
 export class XMLFormatter extends Formatter {
@@ -8,8 +9,11 @@ export class XMLFormatter extends Formatter {
     lineSeparator: "\n",
   };
 
+  async init(): Promise<void> {
+    // No initialization needed
+  }
+
   async formatCode(code: string): Promise<string> {
-    const { default: formatXML } = await import("xml-formatter");
     return formatXML(code, this.config);
   }
 
