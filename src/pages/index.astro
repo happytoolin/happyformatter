@@ -1,4 +1,5 @@
 ---
+import { FAQ } from "@/components/faq/faq";
 import Header from "@/components/layout/header.astro";
 import Formatter from "@/components/playground/Formatter.astro";
 import "../styles/globals.css";
@@ -16,5 +17,6 @@ import "../styles/globals.css";
   <body>
     <Header />
     <Formatter minifier={true} language="json" />
+    <FAQ language="json" client:idle />
   </body>
 </html>
