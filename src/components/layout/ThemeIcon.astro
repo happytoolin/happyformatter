@@ -20,41 +20,43 @@
 </button>
 
 <style>
-  #themeToggle {
-    border: 0;
-    background: none;
-  }
-  .sun {
-    fill: black;
-  }
-  .moon {
-    fill: transparent;
-  }
+#themeToggle {
+  border: 0;
+  background: none;
+}
+.sun {
+  fill: black;
+}
+.moon {
+  fill: transparent;
+}
 
-  :global(.dark) .sun {
-    fill: transparent;
-  }
-  :global(.dark) .moon {
-    fill: white;
-  }
+:global(.dark) .sun {
+  fill: transparent;
+}
+:global(.dark) .moon {
+  fill: white;
+}
 </style>
 
 <script>
+const getCurrentTheme = () => {
+  return document.documentElement.getAttribute("data-theme")
+    || "everforest-light";
+};
 
-  const getCurrentTheme = () => {
-    return document.documentElement.getAttribute('data-theme') || 'everforest-light';
-  }
+const themeToggle = document.getElementById("themeToggle") as HTMLButtonElement;
 
-  const themeToggle = document.getElementById('themeToggle') as HTMLButtonElement;
-
-  if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = getCurrentTheme();
-      const baseTheme = currentTheme.split('-')[0];
-      const newTheme = currentTheme.includes('dark') ? `${baseTheme}` : `${baseTheme}-dark`;
-      document.documentElement.setAttribute('data-theme', newTheme);
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', newTheme);
-    });
-  }
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = getCurrentTheme();
+    const baseTheme = currentTheme.split("-")[0];
+    const newTheme = currentTheme.includes("dark")
+      ? `${baseTheme}`
+      : `${baseTheme}-dark`;
+    document.documentElement.setAttribute("data-theme", newTheme);
+    document.documentElement.classList.toggle("dark");
+    localStorage.setItem("theme", newTheme);
+  });
+}
 </script>
