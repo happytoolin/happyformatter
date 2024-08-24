@@ -25,6 +25,9 @@ importers:
       "@dprint/formatter":
         specifier: ^0.4.1
         version: 0.4.1
+      "@dprint/markdown":
+        specifier: ^0.17.6
+        version: 0.17.6
       "@minify-html/wasm":
         specifier: ^0.15.0
         version: 0.15.0
@@ -531,6 +534,11 @@ packages:
     }
     cpu: [x64]
     os: [linux]
+
+  "@dprint/markdown@0.17.6":
+    resolution: {
+      integrity: sha512-nDJO+7f87BFaO+41wIAo1BEXNE38ctKQxwT555345SBuYswPqipRY0ilWuSA2BVdlwg4bT/ccHymeaT1ExSnuQ==,
+    }
 
   "@dprint/win32-arm64@0.47.2":
     resolution: {
@@ -6011,6 +6019,8 @@ snapshots:
 
   "@dprint/linux-x64-musl@0.47.2":
     optional: true
+
+  "@dprint/markdown@0.17.6": {}
 
   "@dprint/win32-arm64@0.47.2":
     optional: true
