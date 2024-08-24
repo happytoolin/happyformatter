@@ -1,8 +1,9 @@
 ---
-import { FAQ } from "@/components/faq/faq";
 import Header from "@/components/layout/header.astro";
 import Formatter from "@/components/playground/Formatter.astro";
 import "../styles/globals.css";
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
 ---
 
 <html lang="en">
@@ -17,6 +18,7 @@ import "../styles/globals.css";
   <body>
     <Header />
     <Formatter minifier={false} language="markdown" />
+    <Info language="markdown" />
     <FAQ language="markdown" client:idle />
   </body>
 </html>
