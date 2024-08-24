@@ -1,6 +1,7 @@
 ---
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
+import ThemeIcon from "./ThemeIcon.astro";
 ---
 
 <header class="z-20 relative bg-background">
@@ -9,15 +10,20 @@ import Logo from "../../icons/Logo.astro";
     aria-label="Global"
   >
     <div class="flex lg:flex-1">
-      <a href="/" class="-m-1.5 flex gap-4 text-center items-center">
+      <a
+        data-astro-prefetch
+        href="/"
+        class="-m-1.5 flex gap-4 text-center items-center"
+      >
         <Logo class="h-10 w-auto" fill="#4c8382" />
         <span class="font-extrabold">Happy Formatter</span>
       </a>
     </div>
+    <ThemeIcon />
     <div class="flex lg:hidden">
       <button
         type="button"
-        class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
         id="menu-button"
       >
         <span class="sr-only">Open main menu</span>
@@ -25,20 +31,32 @@ import Logo from "../../icons/Logo.astro";
       </button>
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
-      <a href="/html" class="text-sm font-semibold leading-6 text-gray-900"
+      <a
+        data-astro-prefetch
+        href="/html"
+        class="text-sm font-semibold leading-6"
       >HTML Formatter</a>
-      <a href="/css" class="text-sm font-semibold leading-6 text-gray-900"
+      <a data-astro-prefetch href="/css" class="text-sm font-semibold leading-6"
       >CSS Minifier</a>
-      <a href="/js" class="text-sm font-semibold leading-6 text-gray-900"
+      <a
+        data-astro-prefetch
+        href="/javascript"
+        class="text-sm font-semibold leading-6"
       >JavaScript Formatter</a>
-      <a href="/ts" class="text-sm font-semibold leading-6 text-gray-900"
+      <a
+        data-astro-prefetch
+        href="/typescript"
+        class="text-sm font-semibold leading-6"
       >Typescript Formatter</a>
-      <a href="/" class="text-sm font-semibold leading-6 text-gray-900"
+      <a data-astro-prefetch href="/" class="text-sm font-semibold leading-6"
       >JSON Formatter</a>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">More
-        Tools
+      <a
+        data-astro-prefetch
+        href="#"
+        class="text-sm font-semibold leading-6"
+      >More Tools
       </a>
     </div>
   </nav>
@@ -53,13 +71,13 @@ import Logo from "../../icons/Logo.astro";
       class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
     >
       <div class="flex items-center justify-between">
-        <a href="#" class="-m-1.5 p-1.5">
+        <a data-astro-prefetch href="/" class="-m-1.5 p-1.5">
           <span class="sr-only">Happy Formatter</span>
           <Logo class="h-10 w-auto" fill="#4c8382" />
         </a>
         <button
           type="button"
-          class="-m-2.5 rounded-md p-2.5 text-gray-700"
+          class="-m-2.5 rounded-md p-2.5"
           id="close-menu-button"
         >
           <span class="sr-only">Close menu</span>
@@ -70,26 +88,36 @@ import Logo from "../../icons/Logo.astro";
         <div class="-my-6 divide-y divide-gray-500/10">
           <div class="space-y-2 py-6">
             <a
-              href="#"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              data-astro-prefetch
+              href="/html"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
             >HTML Formatter</a>
             <a
-              href="#"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              data-astro-prefetch
+              href="/css"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
             >CSS Minifier</a>
             <a
-              href="#"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              data-astro-prefetch
+              href="/javascript"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
             >JavaScript Formatter</a>
             <a
-              href="#"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              data-astro-prefetch
+              href="/typescript"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
+            >Typescript Formatter</a>
+            <a
+              data-astro-prefetch
+              href="/"
+              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
             >JSON Formatter</a>
           </div>
           <div class="py-6">
             <a
+              data-astro-prefetch
               href="#"
-              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 hover:bg-gray-50"
             >More Tools</a>
           </div>
         </div>

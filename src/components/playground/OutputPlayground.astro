@@ -8,20 +8,20 @@ import Textarea from "../ui/textarea.astro";
 interface Props {
   formattedCode: string;
   language: string;
-  theme: string;
+  themes: { [key: string]: string };
 }
 
-const { formattedCode, language, theme } = Astro.props;
+const { formattedCode, language, themes } = Astro.props;
 
 const initialCode = getInitialCode(language);
 
 const InitialCodeHTMLString = async () => {
-  const highlighter = await initializeHighlighter(language, theme);
+  const highlighter = await initializeHighlighter(language, themes);
 
   const formatter = await getFormatter(language);
 
   const updatedCode = await formatter.formatCode(initialCode);
-  return highlightCode(updatedCode, highlighter, language, theme);
+  return highlightCode(updatedCode, highlighter, language, themes);
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
@@ -83,23 +83,25 @@ RootElement.ready(async ($: any) => {
 
   const language = divElement.dataset.language as string;
 
-  const theme = "everforest-light";
+  const themes = {
+    light: "everforest-light",
+    dark: "everforest-dark",
+  };
 
   try {
-    const highlighter = await initializeHighlighter(language, theme);
+    const highlighter = await initializeHighlighter(language, themes);
 
     formattedStore.subscribe((formattedCode: string) => {
       if (!formattedCode) {
         return;
       }
-      console.log("formattedCode", formattedCode);
       textArea.value = formattedCode;
 
       const highlightedCode = highlightCode(
         formattedCode,
         highlighter,
         language,
-        theme,
+        themes,
       );
 
       highlightDiv.innerHTML = highlightedCode;

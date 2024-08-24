@@ -8,10 +8,10 @@ import { formattedStore, inputStore } from "./store";
 interface Props {
   inputCode: string;
   language: string;
-  theme: string;
+  themes: { [key: string]: string };
 }
 
-const { inputCode, language, theme } = Astro.props;
+const { inputCode, language, themes } = Astro.props;
 
 const initialCode = getInitialCode(language);
 inputStore.set(initialCode);
@@ -20,8 +20,8 @@ formattedStore.set(initialCode);
 const input = inputStore.get();
 
 const InitialCodeHTMLString = async () => {
-  const highlighter = await initializeHighlighter(language, theme);
-  return highlightCode(input, highlighter, language, theme);
+  const highlighter = await initializeHighlighter(language, themes);
+  return highlightCode(input, highlighter, language, themes);
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
@@ -76,7 +76,7 @@ function handleInputEvent(
   highlightDiv: HTMLDivElement,
   throttledHighlight: (code: string) => void,
   language: string,
-  theme: string,
+  themes: { [key: string]: string },
 ): void {
   const element = e.target as HTMLTextAreaElement;
   const code = element.value;
@@ -87,7 +87,7 @@ function handleInputEvent(
       code,
       highlighter,
       language,
-      theme,
+      themes,
     );
     highlightDiv.innerHTML = immediateHighlightedCode;
 
@@ -111,10 +111,15 @@ function setupEventListeners(
   highlightDiv: HTMLDivElement,
   highlighter: Highlighter,
   language: string,
-  theme: string,
+  themes: { [key: string]: string },
 ): void {
   const throttledHighlight = throttle((code: string) => {
-    const highlightedCode = highlightCode(code, highlighter, language, theme);
+    const highlightedCode = highlightCode(
+      code,
+      highlighter,
+      language,
+      themes,
+    );
     highlightDiv.innerHTML = highlightedCode;
 
     const preElement = highlightDiv.querySelector("pre");
@@ -134,7 +139,7 @@ function setupEventListeners(
       highlightDiv,
       throttledHighlight,
       language,
-      theme,
+      themes,
     ));
 
   textArea.addEventListener("paste", (e) => {
@@ -144,7 +149,7 @@ function setupEventListeners(
       highlightDiv,
       throttledHighlight,
       language,
-      theme,
+      themes,
     );
   });
 
@@ -160,7 +165,10 @@ RootElement.ready(async ($) => {
 
   let initialCode = textArea.dataset.initial;
 
-  const theme = "everforest-light" as string;
+  const themes = {
+    light: "everforest-light",
+    dark: "everforest-dark",
+  };
 
   if (!initialCode) {
     initialCode = getInitialCode(language);
@@ -170,9 +178,15 @@ RootElement.ready(async ($) => {
   textArea.value = initialCode;
 
   try {
-    const highlighter = await initializeHighlighter(language, theme);
+    const highlighter = await initializeHighlighter(language, themes);
 
-    setupEventListeners(textArea, highlightDiv, highlighter, language, theme);
+    setupEventListeners(
+      textArea,
+      highlightDiv,
+      highlighter,
+      language,
+      themes,
+    );
   } catch (error) {
     console.error("Initialization failed:", error);
   }

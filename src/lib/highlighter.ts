@@ -22,9 +22,10 @@ const disposeHighlighter = () => {
 
 export const loadHighlighter = async (
   language: string,
-  theme: string,
+  themes: { [key: string]: string },
 ): Promise<Highlighter | null> => {
-  if (currentLanguage === language && currentTheme === theme) {
+  const defaultTheme = "everforest-light";
+  if (currentLanguage === language && currentTheme === defaultTheme) {
     return highlighterCache.get(language) || null;
   }
 
@@ -33,14 +34,14 @@ export const loadHighlighter = async (
   try {
     const hl = await createHighlighter({
       langs: [language],
-      themes: [theme],
+      themes: Object.values(themes),
     });
     await hl.loadLanguage(
       language as BundledLanguage | LanguageInput | SpecialLanguage,
     );
     highlighterCache.set(language, hl);
     currentLanguage = language;
-    currentTheme = theme;
+    currentTheme = defaultTheme;
     return hl;
   } catch (error) {
     console.error("Error loading highlighter:", error);
@@ -52,19 +53,19 @@ export const highlightCode = (
   code: string,
   hl: Highlighter | null,
   language: string,
-  theme: string,
+  themes: { [key: string]: string },
   id?: string,
 ): string => {
   if (hl) {
     return hl.codeToHtml(code, {
       lang: language.toString(),
-      theme,
+      themes,
       transformers: [
         {
           pre(node) {
             node.properties.class = Array.isArray(node.properties.class)
-              ? node.properties.class.concat("code")
-              : ["code"];
+              ? node.properties.class.concat("code").concat("shiki")
+              : ["code" as string, "shiki" as string];
             node.properties.id = id ? id : "";
           },
         },
@@ -76,10 +77,10 @@ export const highlightCode = (
 
 export async function initializeHighlighter(
   language: string,
-  theme: string,
+  themes: { [key: string]: string },
 ): Promise<Highlighter> {
   try {
-    const highlighter = await loadHighlighter(language, theme);
+    const highlighter = await loadHighlighter(language, themes);
 
     if (!highlighter) {
       throw new Error("Failed to load highlighter");
