@@ -1,0 +1,51 @@
+---
+import { languageInfoData } from "./data";
+interface Props {
+  language: string;
+}
+
+const { language } = Astro.props;
+const info = languageInfoData[language];
+---
+
+<div class="container mx-auto px-4 py-8">
+  <div class="text-center mb-8">
+    <h1 class="text-4xl font-bold">{info.title}</h1>
+    <hr class="border-t-2 w-16 mx-auto my-4" />
+  </div>
+  <div class="md:flex md:justify-between">
+    <div class="flex flex-col gap-4">
+      <p class="mb-4">
+        {info.description}
+      </p>
+      <div class="flex flex-col gap-4">
+        <ul class="list-disc list-inside mb-4">
+          {info.features.map((feature) => <li class="">{feature}</li>)}
+        </ul>
+        <div>
+          <h3 class="mb-2">Know more about {language}:</h3>
+          <ul class="list-disc list-inside">
+            {info.additional_info.map((info) => <li>{info}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+  <div class="text-center my-8">
+    <h2 class="text-3xl font-bold">{info.validator.title}</h2>
+    <hr class="border-t-2 w-16 mx-auto my-4" />
+  </div>
+  <div class="flex flex-col gap-4">
+    <div class="mb-6 md:mb-0">
+      <p class="mb-4">
+        {info.validator.description}
+      </p>
+    </div>
+    <div class="">
+      <ul class="list-disc list-inside">
+        {info.validator.features.map((feature) => <li class="">{feature}</li>)}
+      </ul>
+    </div>
+  </div>
+</div>
