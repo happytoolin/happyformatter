@@ -1,0 +1,51 @@
+---
+import Moon from "@/icons/moon.astro";
+import Sun from "@/icons/sun.astro";
+import Button from "../ui/button.astro";
+---
+
+<Button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+  <Sun class="icon h-6 w-6" id="light-icon" />
+  <Moon class="icon h-6 w-6 hidden" id="dark-icon" />
+</Button>
+
+<script>
+const themeToggle = document.getElementById("theme-toggle");
+const themes = ["light", "dark"];
+let currentThemeIndex = 0;
+
+function applyTheme(newTheme: string) {
+  const baseTheme = document.documentElement.getAttribute("data-theme")
+    || "everforest";
+  const cleanedBaseTheme = baseTheme.split("-")[0];
+
+  const isDark = newTheme === "dark";
+
+  const finalTheme = isDark ? `${cleanedBaseTheme}-dark` : cleanedBaseTheme;
+
+  document.documentElement.classList.toggle("dark", isDark);
+  document.documentElement.setAttribute("data-theme", finalTheme);
+  localStorage.setItem("theme", finalTheme);
+
+  document.querySelectorAll(".icon").forEach(icon => {
+    icon.classList.add("hidden");
+  });
+  console.log(newTheme);
+
+  document.getElementById(`${newTheme}-icon`)?.classList.remove("hidden");
+}
+
+function setTheme(newTheme: string) {
+  applyTheme(newTheme);
+  currentThemeIndex = themes.indexOf(newTheme);
+}
+
+themeToggle!.addEventListener("click", () => {
+  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+  setTheme(themes[currentThemeIndex]);
+});
+
+const savedTheme = localStorage.getItem("theme") || "everforest";
+const initialTheme = savedTheme.includes("dark") ? "dark" : "light";
+setTheme(initialTheme);
+</script>

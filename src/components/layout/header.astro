@@ -1,8 +1,8 @@
 ---
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
-import { ThemeSelector } from "./ThemeSelector";
-import { ModeToggle } from "./ThemeToggle";
+import ModeToggle from "./ModeToggle.astro";
+import ThemeSelector from "./ThemeSelector.astro";
 ---
 
 <header class="z-20 relative bg-background border-b">
@@ -10,14 +10,14 @@ import { ModeToggle } from "./ThemeToggle";
     class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
     aria-label="Global"
   >
-    <div class="flex lg:flex-1">
+    <div class="flex lg:flex-1 w-max mr-4">
       <a
         data-astro-prefetch
         href="/"
         class="flex gap-2 items-center"
       >
-        <Logo class="h-8 w-auto" fill="currentColor" />
-        <span class="font-bold text-lg">Happy Formatter</span>
+        <Logo fill="currentColor" />
+        <span class="font-bold text-lg w-max">Happy Formatter</span>
       </a>
     </div>
 
@@ -38,10 +38,10 @@ import { ModeToggle } from "./ThemeToggle";
     </div>
     <div class="flex items-center gap-4 ml-4">
       <div class="hidden lg:flex">
-        <ThemeSelector client:idle />
+        <ThemeSelector />
       </div>
       <div class="hidden lg:flex">
-        <ModeToggle client:idle />
+        <ModeToggle />
       </div>
       <button
         type="button"
@@ -78,8 +78,8 @@ import { ModeToggle } from "./ThemeToggle";
         </button>
       </div>
       <div class="flex justify-between items-center mb-6">
-        <ThemeSelector client:idle />
-        <ModeToggle client:idle />
+        <ThemeSelector />
+        <ModeToggle />
       </div>
       <div class="mt-6 flow-root">
         <div class="-my-6 divide-y divide-foreground/10">

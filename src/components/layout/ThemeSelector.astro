@@ -2,24 +2,20 @@
 import { themes } from "./themes";
 ---
 
-<div class="flex items-center space-x-2">
+<div class="theme-selector relative w-[180px]">
   <select
     id="theme-select"
-    class="bg-background text-foreground border border-input rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-ring focus:outline-none"
+    class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
   >
+    <option value="" disabled selected>Select a theme</option>
     {themes.map((theme) => <option value={theme.value}>{theme.name}</option>)}
   </select>
 </div>
 
 <script>
-const theme = (() => {
-  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-    return localStorage.getItem("theme");
-  }
-  return "everforest";
-})();
-
-const handleThemeChange = (event: Event) => {
+const select = document.getElementById("theme-select") as HTMLSelectElement;
+select.value = localStorage.getItem("theme") || "everforest";
+select.addEventListener("change", (event) => {
   const newTheme = (event.target as HTMLSelectElement).value;
   const mode = document.documentElement.classList.contains("dark")
     ? "dark"
@@ -29,16 +25,5 @@ const handleThemeChange = (event: Event) => {
 
   document.documentElement.setAttribute("data-theme", finalTheme);
   localStorage.setItem("theme", finalTheme);
-};
-
-const themeSelect = document.getElementById(
-  "theme-select",
-) as HTMLSelectElement;
-if (themeSelect) {
-  themeSelect.addEventListener("change", handleThemeChange);
-  if (theme) {
-    document.documentElement.setAttribute("data-theme", theme);
-    themeSelect.value = theme;
-  }
-}
+});
 </script>
