@@ -2,6 +2,8 @@
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
 import ThemeIcon from "./ThemeIcon.astro";
+import ThemeSelector from "./ThemeSelector.astro";
+import { ModeToggle } from "./ThemeToggle";
 ---
 
 <header class="z-20 relative bg-background">
@@ -20,6 +22,8 @@ import ThemeIcon from "./ThemeIcon.astro";
       </a>
     </div>
     <ThemeIcon />
+    <ThemeSelector />
+    <ModeToggle client:load/>
     <div class="flex lg:hidden">
       <button
         type="button"
@@ -144,4 +148,24 @@ menuButton.addEventListener("click", function() {
 closeMenuButton.addEventListener("click", function() {
   mobileMenu.classList.add("hidden");
 });
+</script>
+
+
+<script is:inline>
+	const getThemePreference = () => {
+		if (typeof localStorage !== 'undefined' && localStorage.getItem('mode')) {
+			return localStorage.getItem('mode');
+		}
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	};
+	const isDark = getThemePreference() === 'dark';
+	document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+
+	if (typeof localStorage !== 'undefined') {
+		const observer = new MutationObserver(() => {
+			const isDark = document.documentElement.classList.contains('dark');
+			localStorage.setItem('mode', isDark ? 'dark' : 'light');
+		});
+		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+	}
 </script>

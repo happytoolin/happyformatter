@@ -1,0 +1,41 @@
+---
+import { themes } from "./themes";
+---
+
+<div class="flex items-center space-x-2">
+  <select
+    id="theme-select"
+    class="bg-background text-foreground border border-input rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-ring focus:outline-none"
+  >
+    {themes.map((theme) => <option value={theme.value}>{theme.name}</option>)}
+  </select>
+</div>
+
+<script >
+  const theme = (() => {
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme");
+    }
+    return "everforest";
+  })();
+
+  const handleThemeChange = (event: Event) => {
+    const newTheme = (event.target as HTMLSelectElement).value;
+    const mode = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    const isDark = mode === "dark"
+    const finalTheme = isDark ? `${newTheme}-dark` : newTheme
+
+    document.documentElement.setAttribute("data-theme", finalTheme);
+    localStorage.setItem("theme", finalTheme);
+  };
+
+  const themeSelect = document.getElementById("theme-select") as HTMLSelectElement;
+  if (themeSelect) {
+    themeSelect.addEventListener("change", handleThemeChange);
+    if (theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      themeSelect.value = theme;
+    }
+  }
+
+</script>
