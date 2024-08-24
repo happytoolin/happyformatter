@@ -30,8 +30,6 @@ function applyTheme(newTheme: string) {
   document.querySelectorAll(".icon").forEach(icon => {
     icon.classList.add("hidden");
   });
-  console.log(newTheme);
-
   document.getElementById(`${newTheme}-icon`)?.classList.remove("hidden");
 }
 

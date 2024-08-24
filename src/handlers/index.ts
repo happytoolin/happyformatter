@@ -83,6 +83,7 @@ export async function getFormatter(language: string) {
         "@/handlers/formatters/markdown"
       );
       const markdownFormatter = new MarkdownFormatter();
+      await markdownFormatter.init();
       return markdownFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
