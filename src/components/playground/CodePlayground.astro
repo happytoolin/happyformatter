@@ -63,7 +63,7 @@ import type { Highlighter } from "shiki";
 import { inputStore } from "./store";
 
 function syncScroll(
-  preElement: HTMLElement,
+  preElement: HTMLElement | HTMLPreElement,
   textArea: HTMLTextAreaElement,
 ): void {
   preElement.scrollTop = textArea.scrollTop;
@@ -93,17 +93,6 @@ function handleInputEvent(
 
     throttledHighlight(code);
   }
-
-  // try {
-  //   JSON.parse(code);
-  //   if (!jsonValidStore.get()) {
-  //     jsonValidStore.set(true);
-  //   } else {
-  //     jsonValidStore.notify();
-  //   }
-  // } catch (error) {
-  //   jsonValidStore.set(false);
-  // }
 }
 
 function setupEventListeners(
@@ -155,6 +144,15 @@ function setupEventListeners(
 
   textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
 }
+
+const textarea = document.getElementById("codeTextarea") as HTMLTextAreaElement;
+const highlightDiv = document.getElementById(
+  "highlight_code",
+) as HTMLDivElement;
+
+const preElement = highlightDiv.querySelector("pre")!;
+
+textarea.addEventListener("scroll", () => syncScroll(preElement, textarea));
 
 RootElement.ready(async ($) => {
   const highlightDiv = $("highlight") as HTMLDivElement;
