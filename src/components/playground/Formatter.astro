@@ -26,6 +26,11 @@ if (!input) {
   formattedStore.set(formatted);
 }
 
+const themes = {
+  dark: "everforest-dark",
+  light: "everforest-light",
+};
+
 const formatted = formattedStore.get();
 ---
 
@@ -41,7 +46,7 @@ const formatted = formattedStore.get();
           <CodePlayground
             inputCode={input}
             language={language}
-            theme="everforest-light"
+            themes={themes}
           />
           <JsonValidity />
         </div>
@@ -49,16 +54,15 @@ const formatted = formattedStore.get();
           <OutputPlayground
             formattedCode={formatted}
             language={language}
-            theme="everforest-light"
+            themes={themes}
           />
         </div>
       </div>
-      <div class="flex justify-center mt-6">
-        <Button size="lg" target={scope("format")} variant="outline"
-        >Format</Button>
+      <div class="flex justify-center mt-6 gap-4">
+        <Button size="lg" target={scope("format")}>Format</Button>
         {
           minifier && (
-            <Button size="lg" target={scope("minify")} variant="outline">
+            <Button size="lg" target={scope("minify")}>
               Minify
             </Button>
           )

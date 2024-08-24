@@ -22,6 +22,9 @@ importers:
       "@astrojs/tailwind":
         specifier: ^5.1.0
         version: 5.1.0(astro@4.14.4(@types/node@22.1.0)(lightningcss@1.26.0)(rollup@4.20.0)(sass@1.77.8)(terser@5.31.3)(typescript@5.5.4))(tailwindcss@3.4.10)
+      "@dprint/formatter":
+        specifier: ^0.4.1
+        version: 0.4.1
       "@minify-html/wasm":
         specifier: ^0.15.0
         version: 0.15.0
@@ -486,6 +489,11 @@ packages:
     }
     cpu: [x64]
     os: [darwin]
+
+  "@dprint/formatter@0.4.1":
+    resolution: {
+      integrity: sha512-IB/GXdlMOvi0UhQQ9mcY15Fxcrc2JPadmo6tqefCNV0bptFq7YBpggzpqYXldBXDa04CbKJ+rDwO2eNRPE2+/g==,
+    }
 
   "@dprint/linux-arm64-glibc@0.47.2":
     resolution: {
@@ -5652,6 +5660,8 @@ snapshots:
 
   "@dprint/darwin-x64@0.47.2":
     optional: true
+
+  "@dprint/formatter@0.4.1": {}
 
   "@dprint/linux-arm64-glibc@0.47.2":
     optional: true

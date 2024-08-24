@@ -17,7 +17,7 @@ export function getInitialCode(language: string): string {
     "license": "MIT"
   }
 }`;
-    case "js":
+    case "javascript":
       return `// Welcome to HappyFormatter!
 function greet() {
   console.log("Welcome to HappyFormatter!");
@@ -36,7 +36,7 @@ showInstructions();
 
 // DOM Manipulation Example
 document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
-    case "ts":
+    case "typescript":
       return `// Welcome to HappyFormatter!
 function greet(): void {
   console.log("Welcome to HappyFormatter!");
@@ -219,6 +219,22 @@ message Example {
   string version = 2;
   repeated string features = 3;
 }`;
+    case "markdown":
+      return `<!-- Welcome to HappyFormatter! -->
+
+# HappyFormatter
+
+- Type or paste Markdown here
+
+- HappyFormatter will format your code
+
+## Features
+
+1. Formatting
+2. Syntax highlighting
+
+      `;
+
     default:
       return "";
   }

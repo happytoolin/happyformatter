@@ -18,7 +18,7 @@ export default defineConfig({
     simpleStackQuery(),
   ],
   output: "static",
-
+  prefetch: true,
   vite: {
     plugins: [wasm(), topLevelAwait()],
     optimizeDeps: {

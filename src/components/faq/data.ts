@@ -536,4 +536,31 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "No, login is not required to use the Protocol Buffers formatter. You can format your proto files directly from the tool without needing to create an account or log in.",
     },
   ],
+  markdown: [
+    {
+      title: "How does HappyFormatter ensure my Markdown content remains private?",
+      content:
+        "HappyFormatter processes all Markdown content locally using WebAssembly (WASM), ensuring that your content never leaves your device. This guarantees maximum privacy and security.",
+    },
+    {
+      title: "Why use a Markdown formatter?",
+      content:
+        "Using a Markdown formatter helps to ensure that your Markdown content is properly structured and easy to read. It also helps in maintaining a consistent styling across your documents.",
+    },
+    {
+      title: "How do I format Markdown content?",
+      content:
+        "To format Markdown content, you can use an online Markdown formatter tool. Simply paste your content into the tool, and it will automatically format it for you.",
+    },
+    {
+      title: "Can I use HappyFormatter for converting Markdown to HTML?",
+      content:
+        "Yes, HappyFormatter can also be used to convert Markdown content to HTML, making it easier to publish your documents online.",
+    },
+    {
+      title: "Is login required to use the Markdown formatter?",
+      content:
+        "No, login is not required to use the Markdown formatter. You can format your Markdown content directly from the tool without needing to create an account or log in.",
+    },
+  ],
 };

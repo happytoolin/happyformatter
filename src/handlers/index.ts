@@ -78,6 +78,12 @@ export async function getFormatter(language: string) {
       const protoFormatter = new ProtoFormatter();
       await protoFormatter.init();
       return protoFormatter;
+    case "markdown":
+      const { MarkdownFormatter } = await import(
+        "@/handlers/formatters/markdown"
+      );
+      const markdownFormatter = new MarkdownFormatter();
+      return markdownFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }
