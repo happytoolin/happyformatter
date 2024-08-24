@@ -1,39 +1,37 @@
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
+import { Moon, Sun } from "lucide-react";
+import * as React from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export function ModeToggle() {
-
   React.useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") || "everforest"
-    applyTheme(savedTheme)
-  }, [])
+    const savedTheme = localStorage.getItem("theme") || "everforest";
+    applyTheme(savedTheme);
+  }, []);
 
   const applyTheme = (newTheme: string) => {
-    const baseTheme = document.documentElement.getAttribute('data-theme') || 'everforest';
-    const cleanedBaseTheme = baseTheme.split('-')[0];
+    const baseTheme = document.documentElement.getAttribute("data-theme") || "everforest";
+    const cleanedBaseTheme = baseTheme.split("-")[0];
 
-    const isDark = 
-      newTheme.includes('dark') || 
-      (newTheme === "system" && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    
-    const finalTheme = isDark ? `${cleanedBaseTheme}-dark` : cleanedBaseTheme
+    const isDark = newTheme.includes("dark")
+      || (newTheme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-    document.documentElement.classList.toggle("dark", isDark)
-    document.documentElement.setAttribute('data-theme', finalTheme)
-    localStorage.setItem('theme', finalTheme)
-  }
+    const finalTheme = isDark ? `${cleanedBaseTheme}-dark` : cleanedBaseTheme;
+
+    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.setAttribute("data-theme", finalTheme);
+    localStorage.setItem("theme", finalTheme);
+  };
 
   const setTheme = (newTheme: string) => {
-    applyTheme(newTheme)
-  }
+    applyTheme(newTheme);
+  };
 
   return (
     <DropdownMenu>
@@ -56,5 +54,5 @@ export function ModeToggle() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

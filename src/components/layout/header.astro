@@ -1,67 +1,56 @@
 ---
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
-import ThemeIcon from "./ThemeIcon.astro";
-import ThemeSelector from "./ThemeSelector.astro";
+import { ThemeSelector } from "./ThemeSelector";
 import { ModeToggle } from "./ThemeToggle";
 ---
 
-<header class="z-20 relative bg-background">
+<header class="z-20 relative bg-background border-b">
   <nav
-    class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+    class="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8"
     aria-label="Global"
   >
     <div class="flex lg:flex-1">
       <a
         data-astro-prefetch
         href="/"
-        class="-m-1.5 flex gap-4 text-center items-center"
+        class="flex gap-2 items-center"
       >
-        <Logo class="h-10 w-auto" fill="#4c8382" />
-        <span class="font-extrabold">Happy Formatter</span>
+        <Logo class="h-8 w-auto" fill="currentColor" />
+        <span class="font-bold text-lg">Happy Formatter</span>
       </a>
     </div>
-    <ThemeIcon />
-    <ThemeSelector />
-    <ModeToggle client:load/>
-    <div class="flex lg:hidden">
+
+    <div class="hidden lg:flex lg:gap-x-8">
+      <a data-astro-prefetch href="/html" class="text-sm font-medium"
+      >HTML Formatter</a>
+      <a data-astro-prefetch href="/css" class="text-sm font-medium"
+      >CSS Minifier</a>
+      <a data-astro-prefetch href="/javascript" class="text-sm font-medium"
+      >JavaScript Formatter</a>
+      <a data-astro-prefetch href="/typescript" class="text-sm font-medium"
+      >Typescript Formatter</a>
+      <a data-astro-prefetch href="/" class="text-sm font-medium"
+      >JSON Formatter</a>
+    </div>
+    <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+      <a data-astro-prefetch href="#" class="text-sm font-medium">More Tools</a>
+    </div>
+    <div class="flex items-center gap-4 ml-4">
+      <div class="hidden lg:flex">
+        <ThemeSelector client:idle />
+      </div>
+      <div class="hidden lg:flex">
+        <ModeToggle client:idle />
+      </div>
       <button
         type="button"
-        class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
+        class="lg:hidden inline-flex items-center justify-center rounded-md p-2.5"
         id="menu-button"
       >
         <span class="sr-only">Open main menu</span>
         <Icons icon="menu" />
       </button>
-    </div>
-    <div class="hidden lg:flex lg:gap-x-12">
-      <a
-        data-astro-prefetch
-        href="/html"
-        class="text-sm font-semibold leading-6"
-      >HTML Formatter</a>
-      <a data-astro-prefetch href="/css" class="text-sm font-semibold leading-6"
-      >CSS Minifier</a>
-      <a
-        data-astro-prefetch
-        href="/javascript"
-        class="text-sm font-semibold leading-6"
-      >JavaScript Formatter</a>
-      <a
-        data-astro-prefetch
-        href="/typescript"
-        class="text-sm font-semibold leading-6"
-      >Typescript Formatter</a>
-      <a data-astro-prefetch href="/" class="text-sm font-semibold leading-6"
-      >JSON Formatter</a>
-    </div>
-    <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a
-        data-astro-prefetch
-        href="#"
-        class="text-sm font-semibold leading-6"
-      >More Tools
-      </a>
     </div>
   </nav>
   <div
@@ -70,58 +59,62 @@ import { ModeToggle } from "./ThemeToggle";
     aria-modal="true"
     id="mobile-menu"
   >
-    <div class="fixed inset-0 z-10"></div>
+    <div class="fixed inset-0 z-10 bg-background/80 backdrop-blur-sm"></div>
     <div
-      class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+      class="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-foreground/10"
     >
-      <div class="flex items-center justify-between">
-        <a data-astro-prefetch href="/" class="-m-1.5 p-1.5">
-          <span class="sr-only">Happy Formatter</span>
-          <Logo class="h-10 w-auto" fill="#4c8382" />
+      <div class="flex items-center justify-between mb-6">
+        <a data-astro-prefetch href="/" class="flex gap-2 items-center">
+          <Logo class="h-8 w-auto" fill="currentColor" />
+          <span class="font-bold text-lg">Happy Formatter</span>
         </a>
         <button
           type="button"
-          class="-m-2.5 rounded-md p-2.5"
+          class="rounded-md p-2.5"
           id="close-menu-button"
         >
           <span class="sr-only">Close menu</span>
           <Icons icon="cross" />
         </button>
       </div>
+      <div class="flex justify-between items-center mb-6">
+        <ThemeSelector client:idle />
+        <ModeToggle client:idle />
+      </div>
       <div class="mt-6 flow-root">
-        <div class="-my-6 divide-y divide-gray-500/10">
+        <div class="-my-6 divide-y divide-foreground/10">
           <div class="space-y-2 py-6">
             <a
               data-astro-prefetch
               href="/html"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
+              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >HTML Formatter</a>
             <a
               data-astro-prefetch
               href="/css"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
+              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >CSS Minifier</a>
             <a
               data-astro-prefetch
               href="/javascript"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
+              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >JavaScript Formatter</a>
             <a
               data-astro-prefetch
               href="/typescript"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
+              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >Typescript Formatter</a>
             <a
               data-astro-prefetch
               href="/"
-              class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50"
+              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >JSON Formatter</a>
           </div>
           <div class="py-6">
             <a
               data-astro-prefetch
               href="#"
-              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 hover:bg-gray-50"
+              class="block rounded-lg px-3 py-2.5 text-base font-medium hover:bg-muted"
             >More Tools</a>
           </div>
         </div>
@@ -132,9 +125,7 @@ import { ModeToggle } from "./ThemeToggle";
 
 <script>
 const menuButton = document.getElementById("menu-button");
-
 const mobileMenu = document.getElementById("mobile-menu");
-
 const closeMenuButton = document.getElementById("close-menu-button");
 
 if (!menuButton || !mobileMenu || !closeMenuButton) {
@@ -142,30 +133,36 @@ if (!menuButton || !mobileMenu || !closeMenuButton) {
 }
 
 menuButton.addEventListener("click", function() {
-  mobileMenu.classList.toggle("hidden");
+  mobileMenu.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
 });
 
 closeMenuButton.addEventListener("click", function() {
   mobileMenu.classList.add("hidden");
+  document.body.style.overflow = "";
 });
 </script>
 
-
 <script is:inline>
-	const getThemePreference = () => {
-		if (typeof localStorage !== 'undefined' && localStorage.getItem('mode')) {
-			return localStorage.getItem('mode');
-		}
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	};
-	const isDark = getThemePreference() === 'dark';
-	document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+const getThemePreference = () => {
+  if (typeof localStorage !== "undefined" && localStorage.getItem("mode")) {
+    return localStorage.getItem("mode");
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+const isDark = getThemePreference() === "dark";
+document.documentElement.classList[isDark ? "add" : "remove"]("dark");
 
-	if (typeof localStorage !== 'undefined') {
-		const observer = new MutationObserver(() => {
-			const isDark = document.documentElement.classList.contains('dark');
-			localStorage.setItem('mode', isDark ? 'dark' : 'light');
-		});
-		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-	}
+if (typeof localStorage !== "undefined") {
+  const observer = new MutationObserver(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    localStorage.setItem("mode", isDark ? "dark" : "light");
+  });
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+}
 </script>

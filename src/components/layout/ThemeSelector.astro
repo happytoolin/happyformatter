@@ -11,31 +11,34 @@ import { themes } from "./themes";
   </select>
 </div>
 
-<script >
-  const theme = (() => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    return "everforest";
-  })();
-
-  const handleThemeChange = (event: Event) => {
-    const newTheme = (event.target as HTMLSelectElement).value;
-    const mode = document.documentElement.classList.contains("dark") ? "dark" : "light";
-    const isDark = mode === "dark"
-    const finalTheme = isDark ? `${newTheme}-dark` : newTheme
-
-    document.documentElement.setAttribute("data-theme", finalTheme);
-    localStorage.setItem("theme", finalTheme);
-  };
-
-  const themeSelect = document.getElementById("theme-select") as HTMLSelectElement;
-  if (themeSelect) {
-    themeSelect.addEventListener("change", handleThemeChange);
-    if (theme) {
-      document.documentElement.setAttribute("data-theme", theme);
-      themeSelect.value = theme;
-    }
+<script>
+const theme = (() => {
+  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+    return localStorage.getItem("theme");
   }
+  return "everforest";
+})();
 
+const handleThemeChange = (event: Event) => {
+  const newTheme = (event.target as HTMLSelectElement).value;
+  const mode = document.documentElement.classList.contains("dark")
+    ? "dark"
+    : "light";
+  const isDark = mode === "dark";
+  const finalTheme = isDark ? `${newTheme}-dark` : newTheme;
+
+  document.documentElement.setAttribute("data-theme", finalTheme);
+  localStorage.setItem("theme", finalTheme);
+};
+
+const themeSelect = document.getElementById(
+  "theme-select",
+) as HTMLSelectElement;
+if (themeSelect) {
+  themeSelect.addEventListener("change", handleThemeChange);
+  if (theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    themeSelect.value = theme;
+  }
+}
 </script>
