@@ -1,13 +1,13 @@
 export async function getFormatter(language: string) {
   switch (language) {
-    case "js":
+    case "javascript":
       const { JavascriptFormatter } = await import(
         "@/handlers/formatters/javascript"
       );
       const jsFormatter = new JavascriptFormatter();
       await jsFormatter.init();
       return jsFormatter;
-    case "ts":
+    case "typescript":
       const { TypescriptFormatter } = await import(
         "@/handlers/formatters/javascript"
       );
