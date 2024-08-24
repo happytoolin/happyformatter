@@ -1,24 +1,12 @@
 ---
-import Header from "@/components/layout/header.astro";
-import Formatter from "@/components/playground/Formatter.astro";
-import "../styles/globals.css";
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter.astro";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>Astro</title>
-  </head>
-  <body>
-    <Header />
-    <Formatter minifier={false} language="markdown" />
-    <Info language="markdown" />
-    <FAQ language="markdown" client:idle />
-  </body>
-</html>
+<Layout title="Home" description="Home">
+  <Formatter minifier={true} language="markdown" />
+  <Info language="markdown" />
+  <FAQ language="markdown" client:idle />
+</Layout>

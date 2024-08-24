@@ -5,7 +5,7 @@ export function FAQ({ language }: { language: string }): JSX.Element {
   const data = accordionData[language];
 
   return (
-    <div className="w-full bg-secondary">
+    <div className="w-full">
       <div className="w-full max-w-3xl mx-auto p-6">
         <h2 className="text-3xl font-bold mb-6 text-center">Frequently Asked Questions</h2>
         <Accordion type="single" collapsible className="w-full">
