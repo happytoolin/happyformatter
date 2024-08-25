@@ -19,6 +19,11 @@ export async function getFormatter(language: string) {
       const cssFormatter = new CSSFormatter();
       await cssFormatter.init();
       return cssFormatter;
+    case "scss":
+      const { CSSFormatter: SCSSFormatter } = await import("@/handlers/formatters/css");
+      const scssFormatter = new SCSSFormatter();
+      await scssFormatter.init();
+      return scssFormatter;
     case "html":
       const { HTMLFormatter } = await import("@/handlers/formatters/html");
       const htmlFormatter = new HTMLFormatter();
@@ -136,6 +141,11 @@ export async function getMinifier(language: string) {
       const cssMinifier = new CSSMiniFier();
       await cssMinifier.init();
       return cssMinifier;
+    case "scss":
+      const { CSSMiniFier: SCSSMinifier } = await import("@/handlers/minifiers/css");
+      const scssMinifier = new SCSSMinifier();
+      await scssMinifier.init();
+      return scssMinifier;
     // case "html":
     //   const { HTMLMinifier } = await import("@/handlers/minifiers/html");
     //   const htmlMinifier = new HTMLMinifier();
