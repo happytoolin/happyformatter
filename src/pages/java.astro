@@ -5,8 +5,11 @@ import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter.astro";
 ---
 
-<Layout title="Home" description="Home">
-  <Formatter minifier={true} language="java" />
+<Layout
+  title="Java Formatter"
+  description="Java Formatter that formats Java data, locally in your browser"
+>
+  <Formatter minifier={false} language="java" />
   <Info language="java" />
   <FAQ language="java" client:idle />
 </Layout>

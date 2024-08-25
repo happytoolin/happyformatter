@@ -29,6 +29,16 @@ export async function getFormatter(language: string) {
       const jsonFormatter = new JSONFormatter();
       await jsonFormatter.init();
       return jsonFormatter;
+    case "dart":
+      const { DartFormatter } = await import("@/handlers/formatters/dart");
+      const dartFormatter = new DartFormatter();
+      await dartFormatter.init();
+      return dartFormatter;
+    case "lua":
+      const { LuaFormatter } = await import("@/handlers/formatters/lua");
+      const luaFormatter = new LuaFormatter();
+      await luaFormatter.init();
+      return luaFormatter;
     case "xml":
       const { XMLFormatter } = await import("@/handlers/formatters/xml");
       const xmlFormatter = new XMLFormatter();
@@ -85,6 +95,21 @@ export async function getFormatter(language: string) {
       const markdownFormatter = new MarkdownFormatter();
       await markdownFormatter.init();
       return markdownFormatter;
+    case "python":
+      const { PythonFormatter } = await import("@/handlers/formatters/python");
+      const pythonFormatter = new PythonFormatter();
+      await pythonFormatter.init();
+      return pythonFormatter;
+    case "sql":
+      const { SQLFormatter } = await import("@/handlers/formatters/sql");
+      const sqlFormatter = new SQLFormatter();
+      await sqlFormatter.init();
+      return sqlFormatter;
+    // case "rust":
+    //   const { RustFormatter } = await import("@/handlers/formatters/rust");
+    //   const rustFormatter = new RustFormatter();
+    //   await rustFormatter.init();
+    //   return rustFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }
@@ -111,21 +136,20 @@ export async function getMinifier(language: string) {
       const cssMinifier = new CSSMiniFier();
       await cssMinifier.init();
       return cssMinifier;
-    case "html":
-      const { HTMLMinifier } = await import("@/handlers/minifiers/html");
-      const htmlMinifier = new HTMLMinifier();
-      htmlMinifier.init();
-      return htmlMinifier;
+    // case "html":
+    //   const { HTMLMinifier } = await import("@/handlers/minifiers/html");
+    //   const htmlMinifier = new HTMLMinifier();
+    //   htmlMinifier.init();
+    //   return htmlMinifier;
     case "json":
       const { JSONMinifier } = await import("@/handlers/minifiers/json");
       const jsonMinifier = new JSONMinifier();
       jsonMinifier.init();
       return jsonMinifier;
-    // case "xml":
-    //   const { XMLMinifier } = await import("@/handlers/minifiers/xml");
-    //   const xmlMinifier = new XMLMinifier();
-    //   await xmlMinifier.init();
-    //   return xmlMinifier;
+    case "xml":
+      const { XMLMinifier } = await import("@/handlers/minifiers/xml");
+      const xmlMinifier = new XMLMinifier();
+      return xmlMinifier;
     default:
       return null; // Return null if no minifier is available for the language
   }

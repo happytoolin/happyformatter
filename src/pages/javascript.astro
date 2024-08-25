@@ -5,7 +5,10 @@ import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter.astro";
 ---
 
-<Layout title="Home" description="Home">
+<Layout
+  title="JavaScript Formatter and Minifier"
+  description="JavaScript Formatter that formats JavaScript data and minifies it, locally in your browser"
+>
   <Formatter minifier={true} language="javascript" />
   <Info language="javascript" />
   <FAQ language="javascript" client:idle />

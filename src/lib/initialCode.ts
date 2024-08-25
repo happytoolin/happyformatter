@@ -127,9 +127,8 @@ body {
       return `// Welcome to HappyFormatter!
 package main
 
-import (
-  "fmt"
-  "time"
+import ("fmt"
+"time"
 )
 
 func greet() {
@@ -234,7 +233,28 @@ message Example {
 2. Syntax highlighting
 
       `;
+    case "dart":
+      return `// Welcome to HappyFormatter!
+import 'dart:io';
 
+void main() {
+  print('Welcome to HappyFormatter!');
+}`;
+    case "lua":
+      return `-- Welcome to HappyFormatter!
+print("Welcome to HappyFormatter!")`;
+    case "python":
+      return `# Welcome to HappyFormatter!
+
+print("Welcome to HappyFormatter!")`;
+    case "sql":
+      return `-- Welcome to HappyFormatter!
+SELECT * FROM users;`;
+    case "rust":
+      return `// Welcome to HappyFormatter!
+fn main() {
+  println!("Welcome to HappyFormatter!");
+}`;
     default:
       return "";
   }
