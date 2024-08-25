@@ -5,7 +5,10 @@ import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter.astro";
 ---
 
-<Layout title="Home" description="Home">
+<Layout
+  title="Typescript Formatter and Minifier"
+  description="Typescript Formatter that formats Typescript data and minifies it, locally in your browser"
+>
   <Formatter minifier={true} language="typescript" />
   <Info language="typescript" />
   <FAQ language="typescript" client:idle />

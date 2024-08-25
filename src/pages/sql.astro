@@ -6,10 +6,10 @@ import Formatter from "@/components/playground/Formatter.astro";
 ---
 
 <Layout
-  title="CSS Formatter and Minifier"
-  description="CSS Formatter that formats CSS data and minifies it, locally in your browser"
+  title="SQL Formatter"
+  description="SQL Formatter that formats SQL data, locally in your browser"
 >
-  <Formatter minifier={true} language="css" />
-  <Info language="css" />
-  <FAQ language="css" client:idle />
+  <Formatter minifier={false} language="sql" />
+  <Info language="sql" />
+  <FAQ language="sql" client:idle />
 </Layout>

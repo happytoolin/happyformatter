@@ -1,67 +1,74 @@
 ---
+import Monitor from "@/icons/monitor.astro";
 import Moon from "@/icons/moon.astro";
 import Sun from "@/icons/sun.astro";
 import Button from "../ui/button.astro";
 ---
 
-<Button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-  <Sun class="icon h-6 w-6" id="light-icon" />
-  <Moon class="icon h-6 w-6 hidden" id="dark-icon" />
-</Button>
+<div class="flex space-x-2">
+  <Button
+    id="system-toggle"
+    class="theme-toggle"
+    aria-label="System theme"
+    variant="outline"
+  >
+    <Monitor class="icon h-6 w-6" />
+  </Button>
+  <Button
+    id="light-toggle"
+    class="theme-toggle"
+    aria-label="Light theme"
+    variant="outline"
+  >
+    <Sun class="icon h-6 w-6" />
+  </Button>
+  <Button
+    id="dark-toggle"
+    class="theme-toggle"
+    aria-label="Dark theme"
+    variant="outline"
+  >
+    <Moon class="icon h-6 w-6" />
+  </Button>
+</div>
 
 <script>
-const themeToggle = document.getElementById("theme-toggle");
-const themes = ["light", "dark"];
-let currentThemeIndex = 0;
+const systemToggle = document.getElementById("system-toggle");
+const lightToggle = document.getElementById("light-toggle");
+const darkToggle = document.getElementById("dark-toggle");
 
 function applyTheme(newTheme: string) {
   const baseTheme = document.documentElement.getAttribute("data-theme")
     || "everforest";
   const cleanedBaseTheme = baseTheme.split("-")[0];
 
-  const isDark = newTheme === "dark";
+  const effectiveTheme = getEffectiveTheme(newTheme);
+  const isDark = effectiveTheme === "dark";
 
   const finalTheme = isDark ? `${cleanedBaseTheme}-dark` : cleanedBaseTheme;
 
   document.documentElement.classList.toggle("dark", isDark);
   document.documentElement.setAttribute("data-theme", finalTheme);
-  localStorage.setItem("theme", finalTheme);
+  localStorage.setItem("mode", newTheme);
 
-  document.querySelectorAll(".icon").forEach(icon => {
-    icon.classList.add("hidden");
+  updateActiveButton(newTheme);
+}
+
+function updateActiveButton(theme: string) {
+  [systemToggle, lightToggle, darkToggle].forEach(button => {
+    button?.classList.remove("bg-secondary");
   });
-  document.getElementById(`${newTheme}-icon`)?.classList.remove("hidden");
-}
-
-function setTheme(newTheme: string) {
-  applyTheme(newTheme);
-  currentThemeIndex = themes.indexOf(newTheme);
-}
-
-themeToggle!.addEventListener("click", () => {
-  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-  setTheme(themes[currentThemeIndex]);
-});
-
-function updateIcon(theme: string) {
-  console.log(theme);
-  const lightIcon = document.getElementById("light-icon");
-  const darkIcon = document.getElementById("dark-icon");
-
-  if (theme === "dark") {
-    lightIcon?.classList.add("hidden");
-    darkIcon?.classList.remove("hidden");
-  } else {
-    lightIcon?.classList.remove("hidden");
-    darkIcon?.classList.add("hidden");
-  }
+  const activeButton = document.getElementById(`${theme}-toggle`);
+  activeButton?.classList.add("bg-secondary");
 }
 
 const getCurrentTheme = () => {
   // Check localStorage first
-  const storedTheme = localStorage.getItem("theme");
+  const storedTheme = localStorage.getItem("mode");
   if (storedTheme) {
-    return storedTheme.includes("dark") ? "dark" : "light";
+    return storedTheme === "system"
+      ? "system"
+      : (storedTheme.includes("dark") ? "dark" : "light");
   }
 
   // Check if the dark class is present on the document element
@@ -69,17 +76,35 @@ const getCurrentTheme = () => {
     return "dark";
   }
 
-  // Check system preference
-  if (
-    window.matchMedia
-    && window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    return "dark";
-  }
-
-  // Default to light
-  return "light";
+  // If no theme is set, default to system
+  return "system";
 };
 
-updateIcon(getCurrentTheme());
+const getEffectiveTheme = (theme: string) => {
+  if (theme === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return theme;
+};
+
+systemToggle?.addEventListener("click", () => applyTheme("system"));
+lightToggle?.addEventListener("click", () => applyTheme("light"));
+darkToggle?.addEventListener("click", () => applyTheme("dark"));
+
+// Initialize theme
+const initialTheme = getCurrentTheme();
+applyTheme(initialTheme);
+
+// Listen for system theme changes
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener(
+  "change",
+  () => {
+    const currentTheme = getCurrentTheme();
+    if (currentTheme === "system") {
+      applyTheme("system");
+    }
+  },
+);
 </script>

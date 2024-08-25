@@ -5,8 +5,11 @@ import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter.astro";
 ---
 
-<Layout title="Home" description="Home">
-  <Formatter minifier={true} language="markdown" />
+<Layout
+  title="Markdown Formatter"
+  description="Markdown Formatter that formats Markdown data, locally in your browser"
+>
+  <Formatter minifier={false} language="markdown" />
   <Info language="markdown" />
   <FAQ language="markdown" client:idle />
 </Layout>
