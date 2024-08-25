@@ -1,0 +1,59 @@
+---
+import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+
+const tools = [
+  { name: "HTML Formatter", url: "/html" },
+  { name: "HTML Minifier", url: "/html" },
+  { name: "CSS Formatter", url: "/css" },
+  { name: "CSS Minifier", url: "/css" },
+  { name: "JavaScript Formatter", url: "/javascript" },
+  { name: "JavaScript Minifier", url: "/javascript" },
+  { name: "JSON Formatter", url: "/json" },
+  { name: "JSON Minifier", url: "/json" },
+  { name: "XML Formatter", url: "/xml" },
+  { name: "XML Minifier", url: "/xml" },
+  { name: "YAML Formatter", url: "/yaml" },
+  { name: "TOML Formatter", url: "/toml" },
+  { name: "SQL Formatter", url: "/sql" },
+  { name: "Go Formatter", url: "/go" },
+  { name: "Dart Formatter", url: "/dart" },
+  { name: "SCSS Formatter", url: "/scss" },
+  { name: "SCSS Minifier", url: "/scss" },
+  { name: "Java Formatter", url: "/java" },
+  { name: "Lua Formatter", url: "/lua" },
+  { name: "Python Formatter", url: "/python" },
+  { name: "Ruby Formatter", url: "/ruby" },
+  { name: "Swift Formatter", url: "/swift" },
+  { name: "TypeScript Formatter", url: "/typescript" },
+  { name: "TypeScript Minifier", url: "/typescript" },
+];
+---
+
+<div class="py-16 bg-gradient-to-b from-primary/5 to-secondary/5">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-extrabold text-center mb-12 text-primary">
+      Explore Our Tools
+    </h2>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+      {
+        tools.map((tool) => {
+        return (
+          <a
+            href={tool.url}
+            class="group bg-white dark:bg-primary/5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+          >
+            <div class="p-6 flex flex-col items-center">
+              <LanguageIcon icon={tool.url.replace("/", "")} />
+              <span
+                class="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-primary transition-colors duration-300"
+              >{tool.name}</span>
+            </div>
+          </a>
+        );
+        })
+      }
+    </div>
+  </div>
+</div>

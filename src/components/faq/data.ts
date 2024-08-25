@@ -111,6 +111,28 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "No, login is not required to use the CSS formatter. You can format your CSS code directly from the tool without needing to create an account or log in.",
     },
   ],
+  scss: [
+    {
+      title: "How does HappyFormatter ensure my SCSS code remains private?",
+      content:
+        "HappyFormatter processes all SCSS code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+    },
+    {
+      title: "How do I format SCSS code?",
+      content:
+        "To format SCSS code, you can use an online SCSS formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
+    },
+    {
+      title: "Can I use HappyFormatter for minifying SCSS?",
+      content:
+        "Yes, HappyFormatter can also be used to minify SCSS code, reducing its size and improving load times for web applications.",
+    },
+    {
+      title: "Is login required to use the SCSS formatter?",
+      content:
+        "No, login is not required to use the SCSS formatter. You can format your SCSS code directly from the tool without needing to create an account or log in.",
+    },
+  ],
   java: [
     {
       title: "How does HappyFormatter ensure my Java code remains private?",

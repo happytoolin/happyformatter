@@ -85,6 +85,24 @@ body {
     background-color: lightblue;
   }
 }`;
+    case "scss":
+      return `/* Welcome to HappyFormatter! */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
+}
+
+.foo {
+  background: yellow;
+  border-radius: 2px;
+  transition: background 200ms;
+}
+
+.foo.bar {
+  color: green;
+}`;
     case "html":
       return `<!-- Welcome to HappyFormatter! -->
 <!DOCTYPE html>
