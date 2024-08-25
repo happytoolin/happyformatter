@@ -43,7 +43,43 @@ themeToggle!.addEventListener("click", () => {
   setTheme(themes[currentThemeIndex]);
 });
 
-const savedTheme = localStorage.getItem("theme") || "everforest";
-const initialTheme = savedTheme.includes("dark") ? "dark" : "light";
-setTheme(initialTheme);
+function updateIcon(theme: string) {
+  console.log(theme);
+  const lightIcon = document.getElementById("light-icon");
+  const darkIcon = document.getElementById("dark-icon");
+
+  if (theme === "dark") {
+    lightIcon?.classList.add("hidden");
+    darkIcon?.classList.remove("hidden");
+  } else {
+    lightIcon?.classList.remove("hidden");
+    darkIcon?.classList.add("hidden");
+  }
+}
+
+const getCurrentTheme = () => {
+  // Check localStorage first
+  const storedTheme = localStorage.getItem("theme");
+  if (storedTheme) {
+    return storedTheme.includes("dark") ? "dark" : "light";
+  }
+
+  // Check if the dark class is present on the document element
+  if (document.documentElement.classList.contains("dark")) {
+    return "dark";
+  }
+
+  // Check system preference
+  if (
+    window.matchMedia
+    && window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return "dark";
+  }
+
+  // Default to light
+  return "light";
+};
+
+updateIcon(getCurrentTheme());
 </script>
