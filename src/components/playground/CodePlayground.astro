@@ -3,7 +3,7 @@ import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
 import { getInitialCode } from "@/lib/initialCode";
 import { scope } from "simple:scope";
 import Textarea from "../ui/textarea.astro";
-import { formattedStore, inputStore } from "./store";
+import { resetStores } from "./store";
 
 interface Props {
   inputCode: string;
@@ -13,11 +13,7 @@ interface Props {
 
 const { inputCode, language, themes } = Astro.props;
 
-const initialCode = getInitialCode(language);
-inputStore.set(initialCode);
-formattedStore.set(initialCode);
-
-const input = inputStore.get();
+const input = getInitialCode(language);
 
 const InitialCodeHTMLString = async () => {
   const highlighter = await initializeHighlighter(language, themes);
@@ -25,6 +21,8 @@ const InitialCodeHTMLString = async () => {
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
+
+resetStores();
 ---
 
 <RootElement>
@@ -49,6 +47,7 @@ const highlightedHTML = await InitialCodeHTMLString();
         autocapitalize="off"
         spellcheck="false"
         data-initial={inputCode}
+        value={inputCode}
         target={scope("textarea")}
       />
     </div>
@@ -59,7 +58,7 @@ const highlightedHTML = await InitialCodeHTMLString();
 import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
 import { getInitialCode } from "@/lib/initialCode";
 import { throttle } from "@/lib/throttle";
-import type { Highlighter } from "shiki";
+import type { Highlighter } from "shiki/bundle-web.d.mts";
 import { inputStore } from "./store";
 
 function syncScroll(

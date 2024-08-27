@@ -17,3 +17,9 @@ export function initializeStores(language: string) {
   inputStore.set(initialCode);
   formattedStore.set(initialCode);
 }
+
+export function resetStores() {
+  inputStore.set("");
+  formattedStore.set("");
+  jsonValidStore.set(true);
+}
