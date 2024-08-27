@@ -4,7 +4,7 @@ import {
   type Highlighter,
   type LanguageInput,
   type SpecialLanguage,
-} from "shiki/bundle-web.mjs";
+} from "shiki";
 
 const highlighterCache: Map<string, Highlighter> = new Map();
 
@@ -20,9 +20,12 @@ export const loadHighlighter = async (
 
   try {
     const hl = await createHighlighter({
-      langs: [language],
+      langs: [],
       themes: Object.values(themes),
     });
+
+    await hl.loadLanguage(language as BundledLanguage | LanguageInput | SpecialLanguage);
+
     await hl.loadLanguage(
       language as BundledLanguage | LanguageInput | SpecialLanguage,
     );

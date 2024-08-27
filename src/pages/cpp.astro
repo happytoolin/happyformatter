@@ -1,0 +1,16 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter.astro";
+---
+
+<Layout
+  title="C++ Formatter"
+  description="C++ Formatter that formats C++ data, locally in your browser"
+  language="cpp"
+>
+  <Formatter minifier={false} language="cpp" />
+  <Info language="cpp" />
+  <FAQ language="cpp" client:idle />
+</Layout>

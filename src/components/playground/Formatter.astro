@@ -4,7 +4,6 @@ import { getInitialCode } from "@/lib/initialCode";
 import { scope } from "simple:scope";
 import Button from "../ui/button.astro";
 import CodePlayground from "./CodePlayground.astro";
-import JsonValidity from "./JsonValidity.astro";
 import OutputPlayground from "./OutputPlayground.astro";
 import { formattedStore, inputStore } from "./store";
 
@@ -49,7 +48,7 @@ const formatted = formattedStore.get();
             language={language}
             themes={themes}
           />
-          <JsonValidity />
+          <!-- <JsonValidity /> -->
         </div>
         <div class="relative">
           <OutputPlayground

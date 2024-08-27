@@ -59,7 +59,7 @@ export async function getFormatter(language: string) {
       const javaFormatter = new JavaFormatter();
       await javaFormatter.init();
       return javaFormatter;
-    case "cs":
+    case "csharp":
       const { CSharpFormatter } = await import("@/handlers/formatters/clang");
       const csFormatter = new CSharpFormatter();
       await csFormatter.init();
@@ -110,11 +110,16 @@ export async function getFormatter(language: string) {
       const sqlFormatter = new SQLFormatter();
       await sqlFormatter.init();
       return sqlFormatter;
-    // case "rust":
-    //   const { RustFormatter } = await import("@/handlers/formatters/rust");
-    //   const rustFormatter = new RustFormatter();
-    //   await rustFormatter.init();
-    //   return rustFormatter;
+    case "php":
+      const { PHPFormatter } = await import("@/handlers/formatters/php");
+      const phpFormatter = new PHPFormatter();
+      await phpFormatter.init();
+      return phpFormatter;
+    case "zig":
+      const { ZigFormatter } = await import("@/handlers/formatters/zig");
+      const zigFormatter = new ZigFormatter();
+      await zigFormatter.init();
+      return zigFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }

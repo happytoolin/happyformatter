@@ -273,6 +273,44 @@ SELECT * FROM users;`;
 fn main() {
   println!("Welcome to HappyFormatter!");
 }`;
+    case "csharp":
+      return `// Welcome to HappyFormatter!
+using System;
+
+class Program {
+  static void Main() {
+    Console.WriteLine("Welcome to HappyFormatter!");
+  }
+}`;
+    case "c":
+      return `// Welcome to HappyFormatter!
+#include <stdio.h>
+
+int main() {
+  printf("Welcome to HappyFormatter!");
+         return 0;
+}
+`;
+    case "cpp":
+      return `// Welcome to HappyFormatter!
+#include <iostream>
+
+int main() {
+  std::cout << "Welcome to HappyFormatter!" << std::endl;
+  return 0;
+}
+`;
+    case "php":
+      return `<?php
+// Welcome to HappyFormatter!
+echo "Welcome to HappyFormatter!";
+?>`;
+    case "zig":
+      return `// Welcome to HappyFormatter!
+pub fn main() void {
+  println!("Welcome to HappyFormatter!");
+}
+`;
     default:
       return "";
   }

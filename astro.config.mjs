@@ -35,6 +35,7 @@ export default defineConfig({
         "@swc/wasm-web",
         "lightningcss-wasm",
         "@wasm-fmt/web_fmt",
+        "@wasm-fmt/zig_fmt",
       ],
     },
   },

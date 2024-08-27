@@ -45,25 +45,8 @@ import ThemeSelector from "./ThemeSelector.astro";
       >YAML Formatter</a>
       <a data-astro-prefetch href="/xml" class="text-sm font-medium"
       >XML Formatter</a>
-      <div class="relative">
-        <button
-          class="text-sm font-medium w-max flex items-center gap-1"
-          id="desktop-more-tools-button"
-        >
-          More Tools
-          <ChevronDown id="desktop-more-tools-icon" />
-        </button>
-        <div
-          class="absolute top-full left-0 mt-2 bg-background border border-foreground/10 rounded-md shadow-lg hidden"
-          id="desktop-more-tools-menu"
-        >
-          <div class="py-2 px-4 flex gap-4">
-            <a href="/markdown" class="text-sm hover:underline">Markdown</a>
-            <a href="/python" class="text-sm hover:underline">Python</a>
-            <a href="/ruby" class="text-sm hover:underline">Ruby</a>
-          </div>
-        </div>
-      </div>
+      <a data-astro-prefetch href="#more-tools" class="text-sm font-medium"
+      >More Tools</a>
     </div>
 
     <div class="flex items-center gap-4 ml-4">
@@ -170,29 +153,6 @@ import ThemeSelector from "./ThemeSelector.astro";
               class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >XML Formatter</a>
           </div>
-          <div class="py-6">
-            <button
-              class="flex items-center justify-between w-full rounded-lg px-3 py-2.5 text-base font-medium hover:bg-muted"
-              id="mobile-more-tools-button"
-            >
-              More Tools
-              <ChevronDown />
-            </button>
-            <div class="hidden mt-2 space-y-2" id="mobile-more-tools-menu">
-              <a
-                href="/markdown"
-                class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted ml-4"
-              >Markdown Formatter</a>
-              <a
-                href="/python"
-                class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted ml-4"
-              >Python Formatter</a>
-              <a
-                href="/ruby"
-                class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted ml-4"
-              >Ruby Formatter</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -217,78 +177,6 @@ closeMenuButton.addEventListener("click", function() {
   mobileMenu.classList.add("hidden");
   document.body.style.overflow = "";
 });
-
-const mobileMoreToolsButton = document.getElementById(
-  "mobile-more-tools-button",
-);
-const mobileMoreToolsMenu = document.getElementById("mobile-more-tools-menu");
-
-if (mobileMoreToolsButton && mobileMoreToolsMenu) {
-  let isMenuOpen = false;
-
-  mobileMoreToolsButton.addEventListener("click", function() {
-    isMenuOpen = !isMenuOpen;
-    mobileMoreToolsMenu.classList.toggle("hidden");
-    const icon = mobileMoreToolsButton.querySelector("svg");
-    if (icon) {
-      icon.style.transform = isMenuOpen ? "rotate(180deg)" : "";
-    }
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener("click", function(event) {
-    if (
-      isMenuOpen
-      && !mobileMoreToolsButton.contains(event.target as Node)
-      && !mobileMoreToolsMenu.contains(event.target as Node)
-    ) {
-      isMenuOpen = false;
-      mobileMoreToolsMenu.classList.add("hidden");
-      const icon = mobileMoreToolsButton.querySelector("svg");
-      if (icon) {
-        icon.style.transform = "";
-      }
-    }
-  });
-
-  // Prevent menu from closing when clicking inside it
-  mobileMoreToolsMenu.addEventListener("click", function(event) {
-    event.stopPropagation();
-  });
-}
-
-const desktopMoreToolsButton = document.getElementById(
-  "desktop-more-tools-button",
-);
-const desktopMoreToolsMenu = document.getElementById("desktop-more-tools-menu");
-const desktopMoreToolsIcon = document.getElementById("desktop-more-tools-icon");
-
-if (desktopMoreToolsButton && desktopMoreToolsMenu && desktopMoreToolsIcon) {
-  let isDesktopMenuOpen = false;
-
-  desktopMoreToolsButton.addEventListener("click", function(event) {
-    event.stopPropagation();
-    isDesktopMenuOpen = !isDesktopMenuOpen;
-    desktopMoreToolsMenu.classList.toggle("hidden");
-    desktopMoreToolsIcon.style.transform = isDesktopMenuOpen
-      ? "rotate(180deg)"
-      : "";
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener("click", function() {
-    if (isDesktopMenuOpen) {
-      isDesktopMenuOpen = false;
-      desktopMoreToolsMenu.classList.add("hidden");
-      desktopMoreToolsIcon.style.transform = "";
-    }
-  });
-
-  // Prevent menu from closing when clicking inside it
-  desktopMoreToolsMenu.addEventListener("click", function(event) {
-    event.stopPropagation();
-  });
-}
 </script>
 
 <script is:inline>
