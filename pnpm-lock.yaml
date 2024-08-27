@@ -26,14 +26,20 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1
       "@dprint/markdown":
-        specifier: ^0.17.6
-        version: 0.17.6
+        specifier: ^0.17.8
+        version: 0.17.8
       "@minify-html/wasm":
         specifier: ^0.15.0
         version: 0.15.0
       "@playform/compress":
         specifier: ^0.1.1
         version: 0.1.1(@types/node@22.1.0)(rollup@4.20.0)(sass@1.77.8)(typescript@5.5.4)
+      "@prettier/plugin-php":
+        specifier: ^0.22.2
+        version: 0.22.2(prettier@3.3.3)
+      "@prettier/plugin-ruby":
+        specifier: ^4.0.4
+        version: 4.0.4(prettier@3.3.3)
       "@radix-ui/react-accordion":
         specifier: ^1.2.0
         version: 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -82,6 +88,9 @@ importers:
       "@wasm-fmt/yamlfmt":
         specifier: ^0.0.2
         version: 0.0.2
+      "@wasm-fmt/zig_fmt":
+        specifier: ^0.0.5
+        version: 0.0.5
       astro:
         specifier: ^4.14.5
         version: 4.14.5(@types/node@22.1.0)(lightningcss@1.26.0)(rollup@4.20.0)(sass@1.77.8)(terser@5.31.3)(typescript@5.5.4)
@@ -101,8 +110,11 @@ importers:
         specifier: ^0.436.0
         version: 0.436.0(react@18.3.1)
       nanostores:
-        specifier: ^0.11.2
-        version: 0.11.2
+        specifier: ^0.11.3
+        version: 0.11.3
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -517,9 +529,9 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  "@dprint/markdown@0.17.6":
+  "@dprint/markdown@0.17.8":
     resolution: {
-      integrity: sha512-nDJO+7f87BFaO+41wIAo1BEXNE38ctKQxwT555345SBuYswPqipRY0ilWuSA2BVdlwg4bT/ccHymeaT1ExSnuQ==,
+      integrity: sha512-ukHFOg+RpG284aPdIg7iPrCYmMs3Dqy43S1ejybnwlJoFiW02b+6Bbr5cfZKFRYNP3dKGM86BqHEnMzBOyLvvA==,
     }
 
   "@dprint/win32-arm64@0.47.2":
@@ -1515,6 +1527,20 @@ packages:
       integrity: sha512-EiY5y81BKSIBduFDM9UAN9RISQptYd8TR1UWTx1H/5Tm86AHxjAm/fiGqUuWwZShBqc5K1TY4ynkT6dpp1r7UQ==,
     }
 
+  "@prettier/plugin-php@0.22.2":
+    resolution: {
+      integrity: sha512-md0+7tNbsP0oy+wIP3KZZc6fzx1k1jtWaMjOy/gM8yU9f2BDYEi+iHOc/UNPihYvPI28zFTbjvlhH4QXQjQwNg==,
+    }
+    peerDependencies:
+      prettier: ^3.0.0
+
+  "@prettier/plugin-ruby@4.0.4":
+    resolution: {
+      integrity: sha512-lCpvfS/dQU5WrwN3AQ5vR8qrvj2h5gE41X08NNzAAXvHdM4zwwGRcP2sHSxfu6n6No+ljWCVx95NvJPFTTjCTg==,
+    }
+    peerDependencies:
+      prettier: ^3.0.0
+
   "@radix-ui/number@1.1.0":
     resolution: {
       integrity: sha512-V3gRzhVNU1ldS5XhAPTom1fOIo4ccrjjJgmE+LI2h/WaFpHmx0MQApT+KZHnx8abG6Avtfcz4WoEciMnpFT3HQ==,
@@ -2363,6 +2389,11 @@ packages:
   "@wasm-fmt/yamlfmt@0.0.2":
     resolution: {
       integrity: sha512-I5vgaoKV7kXEvjicpZjqw4AL4/573TkEbmtg8NzZ5jubMCW4riPj/iiXPSWM6uJ9S3Q0Ad63IyPLY+q8ND9oOQ==,
+    }
+
+  "@wasm-fmt/zig_fmt@0.0.5":
+    resolution: {
+      integrity: sha512-djNL+AuMT9NlTxSxHqKIJlViX2mflqTjfixXf2CQnM3AOFHRrYS/XNtXL+upnBGuMRRqIKaW7PXB1PAcM6aLkA==,
     }
 
   acorn-walk@8.3.3:
@@ -3723,6 +3754,11 @@ packages:
       integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==,
     }
 
+  linguist-languages@7.27.0:
+    resolution: {
+      integrity: sha512-Wzx/22c5Jsv2ag+uKy+ITanGA5hzvBZngrNGDXLTC7ZjGM6FLCYGgomauTkxNJeP9of353OM0pWqngYA180xgw==,
+    }
+
   load-yaml-file@0.2.0:
     resolution: {
       integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==,
@@ -4098,9 +4134,9 @@ packages:
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
 
-  nanostores@0.11.2:
+  nanostores@0.11.3:
     resolution: {
-      integrity: sha512-6bucNxMJA5rNV554WQl+MWGng0QVMzlRgpKTHHfIbVLrhQ+yRXBychV9ECGVuuUfCMQPjfIG9bj8oJFZ9hYP/Q==,
+      integrity: sha512-TUes3xKIX33re4QzdxwZ6tdbodjmn3tWXCEc1uokiEmo14sI1EaGYNs2k3bU2pyyGNmBqFGAVl6jAGWd06AVIg==,
     }
     engines: { node: ^18.0.0 || >=20.0.0 }
 
@@ -4292,6 +4328,11 @@ packages:
   pathe@1.1.2:
     resolution: {
       integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==,
+    }
+
+  php-parser@3.1.5:
+    resolution: {
+      integrity: sha512-jEY2DcbgCm5aclzBdfW86GM6VEIWcSlhTBSHN1qhJguVePlYe28GhwS0yoeLYXpM2K8y6wzLwrbq814n2PHSoQ==,
     }
 
   picocolors@1.0.1:
@@ -5907,7 +5948,7 @@ snapshots:
   "@dprint/linux-x64-musl@0.47.2":
     optional: true
 
-  "@dprint/markdown@0.17.6": {}
+  "@dprint/markdown@0.17.8": {}
 
   "@dprint/win32-arm64@0.47.2":
     optional: true
@@ -6344,6 +6385,16 @@ snapshots:
       "@types/node": 20.14.12
       deepmerge-ts: 7.1.0
       fast-glob: 3.3.2
+
+  "@prettier/plugin-php@0.22.2(prettier@3.3.3)":
+    dependencies:
+      linguist-languages: 7.27.0
+      php-parser: 3.1.5
+      prettier: 3.3.3
+
+  "@prettier/plugin-ruby@4.0.4(prettier@3.3.3)":
+    dependencies:
+      prettier: 3.3.3
 
   "@radix-ui/number@1.1.0": {}
 
@@ -6940,6 +6991,8 @@ snapshots:
 
   "@wasm-fmt/yamlfmt@0.0.2": {}
 
+  "@wasm-fmt/zig_fmt@0.0.5": {}
+
   acorn-walk@8.3.3:
     dependencies:
       acorn: 8.12.1
@@ -7072,7 +7125,7 @@ snapshots:
       unist-util-visit: 5.0.0
       vfile: 6.0.2
       vite: 5.4.2(@types/node@22.1.0)(lightningcss@1.25.1)(sass@1.77.8)(terser@5.31.3)
-      vitefu: 0.2.5(vite@5.4.2(@types/node@22.1.0)(lightningcss@1.25.1)(sass@1.77.8)(terser@5.31.3))
+      vitefu: 0.2.5(vite@5.4.2(@types/node@22.1.0)(lightningcss@1.26.0)(sass@1.77.8)(terser@5.31.3))
       which-pm: 3.0.0
       xxhash-wasm: 1.0.2
       yargs-parser: 21.1.1
@@ -7989,6 +8042,8 @@ snapshots:
 
   lines-and-columns@1.2.4: {}
 
+  linguist-languages@7.27.0: {}
+
   load-yaml-file@0.2.0:
     dependencies:
       graceful-fs: 4.2.11
@@ -8407,7 +8462,7 @@ snapshots:
 
   nanoid@3.3.7: {}
 
-  nanostores@0.11.2: {}
+  nanostores@0.11.3: {}
 
   neotraverse@0.6.18: {}
 
@@ -8527,6 +8582,8 @@ snapshots:
 
   pathe@1.1.2: {}
 
+  php-parser@3.1.5: {}
+
   picocolors@1.0.1: {}
 
   picomatch@2.3.1: {}
@@ -8587,8 +8644,7 @@ snapshots:
   prettier@2.8.7:
     optional: true
 
-  prettier@3.3.3:
-    optional: true
+  prettier@3.3.3: {}
 
   printable-characters@1.0.42: {}
 
@@ -9264,10 +9320,6 @@ snapshots:
       lightningcss: 1.26.0
       sass: 1.77.8
       terser: 5.31.3
-
-  vitefu@0.2.5(vite@5.4.2(@types/node@22.1.0)(lightningcss@1.25.1)(sass@1.77.8)(terser@5.31.3)):
-    optionalDependencies:
-      vite: 5.4.2(@types/node@22.1.0)(lightningcss@1.25.1)(sass@1.77.8)(terser@5.31.3)
 
   vitefu@0.2.5(vite@5.4.2(@types/node@22.1.0)(lightningcss@1.26.0)(sass@1.77.8)(terser@5.31.3)):
     optionalDependencies:

@@ -3,9 +3,35 @@ import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 
 interface Props {
   language: string;
+  minify: boolean;
 }
 
-const { language } = Astro.props;
+const { language, minify } = Astro.props;
+
+const languageMap: Record<string, string> = {
+  csharp: "C#",
+  cpp: "C++",
+  c: "C",
+  java: "Java",
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  python: "Python",
+  go: "Go",
+  rust: "Rust",
+  lua: "Lua",
+  sql: "SQL",
+  html: "HTML",
+  css: "CSS",
+  json: "JSON",
+  xml: "XML",
+  yaml: "YAML",
+  markdown: "Markdown",
+  php: "PHP",
+  ruby: "Ruby",
+  proto: "Protobuf",
+};
+
+const title = languageMap[language] || language;
 ---
 
 <div
@@ -14,21 +40,17 @@ const { language } = Astro.props;
   <div class="flex items-center space-x-4">
     <LanguageIcon icon={language.toLowerCase()} />
     <h1 class="text-4xl font-bold">
-      Format or minify {
-        language.split("-").map((word) =>
-          word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(" ")
-      }
+      Format or {minify ? "minify" : "beautify"} {title}
     </h1>
   </div>
   <p class="text-lg">
-    Format or minify your code in {language} locally in your browser using
-    WebAssembly.
+    Format or {minify ? "minify" : "beautify"} your code in {title} locally in
+    your browser using WebAssembly.
   </p>
   <a
     href="#formatter"
     class="mt-4 px-6 py-2 cursor-pointer bg-white text-blue-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300"
   >
-    Get Started
+    Format your code now!
   </a>
 </div>

@@ -1,0 +1,16 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter.astro";
+---
+
+<Layout
+  title="Proto Formatter"
+  description="Proto Formatter that formats Proto data, locally in your browser"
+  language="proto"
+>
+  <Formatter minifier={false} language="proto" />
+  <Info language="proto" />
+  <FAQ language="proto" client:idle />
+</Layout>

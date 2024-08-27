@@ -425,7 +425,7 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "No, login is not required to use the C formatter. You can format your C code directly from the tool without needing to create an account or log in.",
     },
   ],
-  cplusplus: [
+  cpp: [
     {
       title: "How does HappyFormatter ensure my C++ code remains private?",
       content:
@@ -583,6 +583,58 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "Is login required to use the Markdown formatter?",
       content:
         "No, login is not required to use the Markdown formatter. You can format your Markdown content directly from the tool without needing to create an account or log in.",
+    },
+  ],
+  php: [
+    {
+      title: "How does HappyFormatter ensure my PHP code remains private?",
+      content:
+        "HappyFormatter processes all PHP code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+    },
+    {
+      title: "Why use a PHP formatter?",
+      content:
+        "Using a PHP formatter helps to ensure that your PHP code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.",
+    },
+    {
+      title: "How do I format PHP code?",
+      content:
+        "To format PHP code, you can use an online PHP formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
+    },
+    {
+      title: "Can I use HappyFormatter for optimizing PHP code?",
+      content: "Yes, HappyFormatter can also be used to optimize PHP code, improving its performance and readability.",
+    },
+    {
+      title: "Is login required to use the PHP formatter?",
+      content:
+        "No, login is not required to use the PHP formatter. You can format your PHP code directly from the tool without needing to create an account or log in.",
+    },
+  ],
+  zig: [
+    {
+      title: "How does HappyFormatter ensure my Zig code remains private?",
+      content:
+        "HappyFormatter processes all Zig code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+    },
+    {
+      title: "Why use a Zig formatter?",
+      content:
+        "Using a Zig formatter helps to ensure that your Zig code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.",
+    },
+    {
+      title: "How do I format Zig code?",
+      content:
+        "To format Zig code, you can use an online Zig formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
+    },
+    {
+      title: "Can I use HappyFormatter for optimizing Zig code?",
+      content: "Yes, HappyFormatter can also be used to optimize Zig code, improving its performance and readability.",
+    },
+    {
+      title: "Is login required to use the Zig formatter?",
+      content:
+        "No, login is not required to use the Zig formatter. You can format your Zig code directly from the tool without needing to create an account or log in.",
     },
   ],
 };

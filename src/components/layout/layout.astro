@@ -12,9 +12,10 @@ type Props = {
   description: string;
   language: string;
   image?: string;
+  minify?: boolean;
 };
 
-const { title, description, image, language } = Astro.props;
+const { title, description, image, language, minify } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -30,7 +31,7 @@ const { title, description, image, language } = Astro.props;
   <body>
     <Header />
     <main>
-      <FormatHeading language={language} />
+      <FormatHeading language={language} minify={minify ?? false} />
       <slot />
     </main>
     <MoreTools />
