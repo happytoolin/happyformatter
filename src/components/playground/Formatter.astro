@@ -85,6 +85,13 @@ RootElement.ready(async ($) => {
   const minifier = await getMinifier(language);
 
   $("format").addEventListener("click", async () => {
+    // Google Analytics event for format button click
+    gtag("event", "click", {
+      "event_category": "Button",
+      "event_label": "Format",
+      "value": language,
+    });
+
     let inputCode = inputStore.get();
     if (!inputCode) {
       inputCode = getInitialCode(language);
@@ -101,6 +108,13 @@ RootElement.ready(async ($) => {
 
   if (minifier) {
     $("minify").addEventListener("click", async () => {
+      // Google Analytics event for minify button click
+      gtag("event", "click", {
+        "event_category": "Button",
+        "event_label": "Minify",
+        "value": language,
+      });
+
       let inputCode = inputStore.get();
 
       if (!inputCode) {
