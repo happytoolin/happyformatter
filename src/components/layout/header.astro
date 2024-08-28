@@ -50,12 +50,6 @@ import ThemeSelector from "./ThemeSelector.astro";
     </div>
 
     <div class="flex items-center gap-4 ml-4">
-      <div class="hidden lg:flex">
-        <ThemeSelector />
-      </div>
-      <div class="hidden lg:flex">
-        <ModeToggle />
-      </div>
       <button
         type="button"
         class="lg:hidden inline-flex items-center justify-center rounded-md p-2.5"
@@ -152,6 +146,11 @@ import ThemeSelector from "./ThemeSelector.astro";
               href="/xml"
               class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
             >XML Formatter</a>
+            <a
+              data-astro-prefetch
+              href="#more-tools"
+              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
+            >More Tools</a>
           </div>
         </div>
       </div>

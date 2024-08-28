@@ -14,9 +14,7 @@ export class CFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    const formattedCode = format(code, "file.c");
-    console.log(formattedCode);
-    return formattedCode;
+    return format(code, "file.c");
   }
 
   setConfig(config: Style): void {
