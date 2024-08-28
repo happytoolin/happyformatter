@@ -7,6 +7,8 @@ import simpleStackQuery from "simple-stack-query";
 import topLevelAwait from "vite-plugin-top-level-await";
 import wasm from "vite-plugin-wasm";
 
+import partytown from "@astrojs/partytown";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
@@ -16,6 +18,11 @@ export default defineConfig({
     react(),
     playformCompress(),
     simpleStackQuery(),
+    partytown({
+      config: {
+        forward: ["dataLayer.push"],
+      },
+    }),
   ],
   output: "static",
   prefetch: true,
