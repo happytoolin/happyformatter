@@ -84,14 +84,23 @@ RootElement.ready(async ($) => {
   const formatter = await getFormatter(language);
   const minifier = await getMinifier(language);
 
-  $("format").addEventListener("click", async () => {
-    // Google Analytics event for format button click
-    gtag("event", "click", {
-      "event_category": "Button",
-      "event_label": "Format",
-      "value": language,
-    });
+  const trackEvent = (eventName: string, eventLabel: string) => {
+    try {
+      gtag("event", eventName, {
+        "event_category": "Button",
+        "event_label": eventLabel,
+        "value": language,
+      });
+    } catch (err) {
+      console.error(
+        `Error sending ${eventName} event to Google Analytics:`,
+        err,
+      );
+    }
+  };
 
+  const formatButton = $("format");
+  formatButton.addEventListener("click", async () => {
     let inputCode = inputStore.get();
     if (!inputCode) {
       inputCode = getInitialCode(language);
@@ -104,17 +113,23 @@ RootElement.ready(async ($) => {
     } catch (error) {
       console.error("Invalid code:", error);
     }
+
+    trackEvent("click", "Format");
   });
 
-  if (minifier) {
-    $("minify").addEventListener("click", async () => {
-      // Google Analytics event for minify button click
-      gtag("event", "click", {
-        "event_category": "Button",
-        "event_label": "Minify",
-        "value": language,
-      });
+  formatButton.addEventListener(
+    "mouseover",
+    () => trackEvent("mouseover", "Format"),
+  );
+  formatButton.addEventListener(
+    "mouseleave",
+    () => trackEvent("mouseleave", "Format"),
+  );
+  formatButton.addEventListener("focus", () => trackEvent("focus", "Format"));
 
+  if (minifier) {
+    const minifyButton = $("minify");
+    minifyButton.addEventListener("click", async () => {
       let inputCode = inputStore.get();
 
       if (!inputCode) {
@@ -128,7 +143,19 @@ RootElement.ready(async ($) => {
       } catch (error) {
         console.error("Invalid code:", error);
       }
+
+      trackEvent("click", "Minify");
     });
+
+    minifyButton.addEventListener(
+      "mouseover",
+      () => trackEvent("mouseover", "Minify"),
+    );
+    minifyButton.addEventListener(
+      "mouseleave",
+      () => trackEvent("mouseleave", "Minify"),
+    );
+    minifyButton.addEventListener("focus", () => trackEvent("focus", "Minify"));
   }
 });
 </script>

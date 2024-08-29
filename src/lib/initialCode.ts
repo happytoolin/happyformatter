@@ -311,6 +311,26 @@ pub fn main() void {
   println!("Welcome to HappyFormatter!");
 }
 `;
+    case "yaml":
+      return `# Welcome to HappyFormatter!
+
+greeting: Welcome to HappyFormatter!
+instructions:
+  - Type or paste YAML here
+  - HappyFormatter will format your code
+
+example:
+      `;
+    case "toml":
+      return `# Welcome to HappyFormatter!
+
+greeting = "Welcome to HappyFormatter!"
+instructions = [
+  "Type or paste TOML code here",
+  "HappyFormatter will format your code"
+]
+
+      `;
     default:
       return "";
   }
