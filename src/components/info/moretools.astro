@@ -13,7 +13,7 @@ const tools = [
   { name: "XML Formatter", url: "/xml" },
   { name: "XML Minifier", url: "/xml" },
   { name: "YAML Formatter", url: "/yaml" },
-  { name: "TOML Formatter", url: "/toml" },
+  // { name: "TOML Formatter", url: "/toml" },
   { name: "SQL Formatter", url: "/sql" },
   { name: "Go Formatter", url: "/go" },
   { name: "Dart Formatter", url: "/dart" },
@@ -50,7 +50,7 @@ const tools = [
         return (
           <a
             href={tool.url}
-            class="group bg-white dark:bg-primary/5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+            class="tool group bg-white dark:bg-primary/5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             <div class="p-6 flex flex-col items-center">
               <LanguageIcon icon={tool.url.replace("/", "")} />
@@ -65,3 +65,44 @@ const tools = [
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tools = document.querySelectorAll(".tool");
+  tools.forEach((tool) => {
+    const toolName = tool.getAttribute("href")?.replace("/", "") || "";
+
+    tool.addEventListener("mouseover", () => {
+      gtag("event", "mouseover", {
+        "event_category": "Tool Interaction",
+        "event_label": "Mouse Over",
+        "value": toolName,
+      });
+    });
+
+    tool.addEventListener("mouseleave", () => {
+      gtag("event", "mouseleave", {
+        "event_category": "Tool Interaction",
+        "event_label": "Mouse Leave",
+        "value": toolName,
+      });
+    });
+
+    tool.addEventListener("focus", () => {
+      gtag("event", "focus", {
+        "event_category": "Tool Interaction",
+        "event_label": "Focus",
+        "value": toolName,
+      });
+    });
+
+    tool.addEventListener("click", () => {
+      gtag("event", "click", {
+        "event_category": "Tool Interaction",
+        "event_label": "Click",
+        "value": toolName,
+      });
+    });
+  });
+});
+</script>

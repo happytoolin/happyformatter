@@ -637,4 +637,30 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "No, login is not required to use the Zig formatter. You can format your Zig code directly from the tool without needing to create an account or log in.",
     },
   ],
+  toml: [
+    {
+      title: "How does HappyFormatter ensure my TOML code remains private?",
+      content:
+        "HappyFormatter processes all TOML code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+    },
+    {
+      title: "Why use a TOML formatter?",
+      content:
+        "Using a TOML formatter helps to ensure that your TOML code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.",
+    },
+    {
+      title: "How do I format TOML code?",
+      content:
+        "To format TOML code, you can use an online TOML formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
+    },
+    {
+      title: "Can I use HappyFormatter for optimizing TOML code?",
+      content: "Yes, HappyFormatter can also be used to optimize TOML code, improving its performance and readability.",
+    },
+    {
+      title: "Is login required to use the TOML formatter?",
+      content:
+        "No, login is not required to use the TOML formatter. You can format your TOML code directly from the tool without needing to create an account or log in.",
+    },
+  ],
 };

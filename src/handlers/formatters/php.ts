@@ -1,6 +1,7 @@
 // @ts-ignore
 import phpPlugin from "@prettier/plugin-php/standalone";
 import type { Options } from "prettier";
+// @ts-ignore
 import prettier from "prettier/standalone";
 import { Formatter } from "../interface";
 

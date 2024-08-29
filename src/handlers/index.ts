@@ -120,6 +120,16 @@ export async function getFormatter(language: string) {
       const zigFormatter = new ZigFormatter();
       await zigFormatter.init();
       return zigFormatter;
+    case "yaml":
+      const { YamlFormatter } = await import("@/handlers/formatters/yaml");
+      const yamlFormatter = new YamlFormatter();
+      await yamlFormatter.init();
+      return yamlFormatter;
+    // case "toml":
+    //   const { TomlFormatter } = await import("@/handlers/formatters/toml");
+    //   const tomlFormatter = new TomlFormatter();
+    //   await tomlFormatter.init();
+    //   return tomlFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }

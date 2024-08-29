@@ -20,7 +20,7 @@ export default defineConfig({
     simpleStackQuery(),
     partytown({
       config: {
-        forward: ["dataLayer.push"],
+        forward: ["dataLayer.push", "gtag"],
       },
     }),
   ],
@@ -28,6 +28,9 @@ export default defineConfig({
   prefetch: true,
   vite: {
     plugins: [wasm(), topLevelAwait()],
+    ssr: {
+      // noExternal: ["@taplo/lib"]
+    },
     optimizeDeps: {
       exclude: [
         "dprint-node",
@@ -43,6 +46,7 @@ export default defineConfig({
         "lightningcss-wasm",
         "@wasm-fmt/web_fmt",
         "@wasm-fmt/zig_fmt",
+        // "@taplo/lib"
       ],
     },
   },

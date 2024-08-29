@@ -49,9 +49,11 @@ const { title, description, image = "/images/og.png" } = Astro.props;
 ></script>
 <script type="text/partytown">
 window.dataLayer = window.dataLayer || [];
-function gtag() {
+
+window.gtag = function gtag() {
   dataLayer.push(arguments);
-}
+};
+
 gtag("js", new Date());
 
 gtag("config", "G-6SQ50M5SK0");
