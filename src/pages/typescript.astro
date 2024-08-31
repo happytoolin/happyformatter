@@ -6,12 +6,12 @@ import Formatter from "@/components/playground/Formatter.astro";
 ---
 
 <Layout
-  title="Typescript Formatter and Minifier"
-  description="Typescript Formatter that formats Typescript data and minifies it, locally in your browser"
+  title="Typescript Formatter"
+  description="Typescript Formatter that formats Typescript data, locally in your browser"
   language="typescript"
-  minify={true}
+  minify={false}
 >
-  <Formatter minifier={true} language="typescript" />
+  <Formatter minifier={false} language="typescript" />
   <Info language="typescript" />
   <FAQ language="typescript" client:idle />
 </Layout>

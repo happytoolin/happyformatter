@@ -1,12 +1,18 @@
 import {
   type BundledLanguage,
   createHighlighter,
+  createJavaScriptRegexEngine,
   type Highlighter,
   type LanguageInput,
   type SpecialLanguage,
 } from "shiki";
 
-const highlighterCache: Map<string, Highlighter> = new Map();
+// Check if window is available and attach highlighterCache to it
+const highlighterCache: Map<string, Highlighter> = typeof window !== "undefined"
+  ? (window.highlighterCache = window.highlighterCache || new Map())
+  : new Map();
+
+const jsEngine = createJavaScriptRegexEngine();
 
 export const loadHighlighter = async (
   language: string,
@@ -22,6 +28,7 @@ export const loadHighlighter = async (
     const hl = await createHighlighter({
       langs: [],
       themes: Object.values(themes),
+      engine: jsEngine,
     });
 
     await hl.loadLanguage(language as BundledLanguage | LanguageInput | SpecialLanguage);

@@ -119,13 +119,13 @@ RootElement.ready(async ($) => {
 
   formatButton.addEventListener(
     "mouseover",
-    () => trackEvent("mouseover", "Format"),
+    () => trackEvent("Format", "mouseover"),
   );
   formatButton.addEventListener(
     "mouseleave",
-    () => trackEvent("mouseleave", "Format"),
+    () => trackEvent("Format", "mouseleave"),
   );
-  formatButton.addEventListener("focus", () => trackEvent("focus", "Format"));
+  formatButton.addEventListener("focus", () => trackEvent("Format", "focus"));
 
   if (minifier) {
     const minifyButton = $("minify");
@@ -149,13 +149,13 @@ RootElement.ready(async ($) => {
 
     minifyButton.addEventListener(
       "mouseover",
-      () => trackEvent("mouseover", "Minify"),
+      () => trackEvent("Minify", "mouseover"),
     );
     minifyButton.addEventListener(
       "mouseleave",
-      () => trackEvent("mouseleave", "Minify"),
+      () => trackEvent("Minify", "mouseleave"),
     );
-    minifyButton.addEventListener("focus", () => trackEvent("focus", "Minify"));
+    minifyButton.addEventListener("focus", () => trackEvent("Minify", "focus"));
   }
 });
 </script>
