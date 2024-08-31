@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "dprint": "^0.47.2",
-    "shiki": "^1.15.0",
+    "shiki": "^1.15.1",
     "vite-plugin-top-level-await": "^1.4.4",
     "vite-plugin-wasm": "^3.3.0"
   }

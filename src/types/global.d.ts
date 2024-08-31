@@ -5,3 +5,7 @@ declare function gtag(
     [key: string]: any;
   },
 ): void;
+
+interface Window {
+  highlighterCache: Map<string, Highlighter>;
+}
