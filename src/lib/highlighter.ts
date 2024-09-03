@@ -45,11 +45,31 @@ export const loadHighlighter = async (
   }
 };
 
+const themes = {
+  light: "rose-pine-dawn",
+  dark: "rose-pine-moon",
+  everforest_light: "everforest-light",
+  everforest_dark: "everforest-dark",
+  nord_light: "nord",
+  nord_dark: "nord",
+  github_light: "github-light",
+  github_dark: "github-dark",
+  material_light: "material-theme-lighter",
+  material_dark: "material-theme",
+  rose_pine_light: "rose-pine-dawn",
+  rose_pine_dark: "rose-pine-moon",
+  night_owl_light: "night-owl",
+  night_owl_dark: "night-owl",
+  catppuccin_light: "catppuccin-latte",
+  catppuccin_dark: "catppuccin-mocha",
+  solarized_light: "solarized-light",
+  solarized_dark: "solarized-dark",
+};
+
 export const highlightCode = (
   code: string,
   hl: Highlighter,
   language: string,
-  themes: { [key: string]: string },
   id?: string,
 ): string => {
   return hl.codeToHtml(code, {
@@ -70,7 +90,6 @@ export const highlightCode = (
 
 export async function initializeHighlighter(
   language: string,
-  themes: { [key: string]: string },
 ): Promise<Highlighter> {
   return loadHighlighter(language, themes);
 }

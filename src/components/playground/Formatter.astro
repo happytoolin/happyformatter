@@ -25,11 +25,6 @@ if (!input) {
   formattedStore.set(formatted);
 }
 
-const themes = {
-  light: "rose-pine-dawn",
-  dark: "rose-pine-moon",
-};
-
 const formatted = formattedStore.get();
 ---
 
@@ -46,7 +41,6 @@ const formatted = formattedStore.get();
           <CodePlayground
             inputCode={input}
             language={language}
-            themes={themes}
           />
           <!-- <JsonValidity /> -->
         </div>
@@ -54,7 +48,6 @@ const formatted = formattedStore.get();
           <OutputPlayground
             formattedCode={formatted}
             language={language}
-            themes={themes}
           />
         </div>
       </div>
