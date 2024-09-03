@@ -8,16 +8,15 @@ import { resetStores } from "./store";
 interface Props {
   inputCode: string;
   language: string;
-  themes: { [key: string]: string };
 }
 
-const { inputCode, language, themes } = Astro.props;
+const { inputCode, language } = Astro.props;
 
 const input = getInitialCode(language);
 
 const InitialCodeHTMLString = async () => {
-  const highlighter = await initializeHighlighter(language, themes);
-  return highlightCode(input, highlighter, language, themes);
+  const highlighter = await initializeHighlighter(language);
+  return highlightCode(input, highlighter, language);
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
@@ -77,7 +76,6 @@ function handleInputEvent(
   highlightDiv: HTMLDivElement,
   throttledHighlight: (code: string) => void,
   language: string,
-  themes: { [key: string]: string },
 ): void {
   const element = e.target as HTMLTextAreaElement;
   const code = element.value;
@@ -88,7 +86,6 @@ function handleInputEvent(
       code,
       highlighter,
       language,
-      themes,
     );
     highlightDiv.innerHTML = immediateHighlightedCode;
 
@@ -101,7 +98,6 @@ function setupEventListeners(
   highlightDiv: HTMLDivElement,
   highlighter: Highlighter,
   language: string,
-  themes: { [key: string]: string },
 ): void {
   const throttledHighlight = throttle((code: string) => {
     const highlightedCode = highlightCode(
@@ -129,7 +125,6 @@ function setupEventListeners(
       highlightDiv,
       throttledHighlight,
       language,
-      themes,
     ));
 
   textArea.addEventListener("paste", (e) => {
@@ -139,7 +134,6 @@ function setupEventListeners(
       highlightDiv,
       throttledHighlight,
       language,
-      themes,
     );
   });
 
@@ -164,11 +158,6 @@ RootElement.ready(async ($) => {
 
   let initialCode = textArea.dataset.initial;
 
-  const themes = {
-    light: "rose-pine-dawn",
-    dark: "rose-pine-moon",
-  };
-
   if (!initialCode) {
     initialCode = getInitialCode(language);
     inputStore.set(initialCode);
@@ -177,14 +166,13 @@ RootElement.ready(async ($) => {
   textArea.value = initialCode;
 
   try {
-    const highlighter = await initializeHighlighter(language, themes);
+    const highlighter = await initializeHighlighter(language);
 
     setupEventListeners(
       textArea,
       highlightDiv,
       highlighter,
       language,
-      themes,
     );
   } catch (error) {
     console.error("Initialization failed:", error);

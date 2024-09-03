@@ -88,13 +88,8 @@ RootElement.ready(async ($: any) => {
 
   const language = divElement.dataset.language as string;
 
-  const themes = {
-    light: "rose-pine-dawn",
-    dark: "rose-pine-moon",
-  };
-
   try {
-    const highlighter = await initializeHighlighter(language, themes);
+    const highlighter = await initializeHighlighter(language);
 
     let initialCode = textArea.dataset.initial;
     if (!initialCode) {
@@ -109,7 +104,6 @@ RootElement.ready(async ($: any) => {
       initialCode,
       highlighter,
       language,
-      themes,
     );
     highlightDiv.innerHTML = highlightedCode;
     syncScroll(textArea, highlightDiv);
@@ -124,7 +118,6 @@ RootElement.ready(async ($: any) => {
         formattedCode,
         highlighter,
         language,
-        themes,
       );
 
       highlightDiv.innerHTML = highlightedCode;
