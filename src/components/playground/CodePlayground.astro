@@ -58,7 +58,7 @@ resetStores();
 import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
 import { getInitialCode } from "@/lib/initialCode";
 import { throttle } from "@/lib/throttle";
-import type { Highlighter } from "shiki/bundle-web.d.mts";
+import type { Highlighter } from "shiki";
 import { inputStore } from "./store";
 
 function syncScroll(
@@ -163,8 +163,8 @@ RootElement.ready(async ($) => {
   let initialCode = textArea.dataset.initial;
 
   const themes = {
-    light: "everforest-light",
-    dark: "everforest-dark",
+    light: "rose-pine-dawn",
+    dark: "rose-pine-moon",
   };
 
   if (!initialCode) {

@@ -179,7 +179,7 @@ closeMenuButton.addEventListener("click", function() {
 </script>
 
 <script is:inline>
-const getThemePreference = () => {
+const getModePreference = () => {
   if (typeof localStorage !== "undefined" && localStorage.getItem("mode")) {
     return localStorage.getItem("mode");
   }
@@ -187,8 +187,7 @@ const getThemePreference = () => {
     ? "dark"
     : "light";
 };
-
-const isDark = getThemePreference() === "dark";
+const isDark = getModePreference() === "dark";
 document.documentElement.classList[isDark ? "add" : "remove"]("dark");
 
 if (typeof localStorage !== "undefined") {

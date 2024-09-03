@@ -1,5 +1,7 @@
 ---
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import ThemeSelector from "./ThemeSelector.astro";
+import { ModeToggle } from "./ThemeToggle.tsx";
 
 interface Props {
   language: string;
@@ -37,6 +39,10 @@ const title = languageMap[language] || language;
 <div
   class="flex flex-col items-center justify-center space-y-4 py-8 px-4 md:px-8 bg-gradient-to-r rounded-lg shadow-lg"
 >
+  <div class="flex space-x-4 justify-end items-end w-full -mt-4">
+    <ThemeSelector />
+    <ModeToggle client:load />
+  </div>
   <div
     class="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0"
   >
