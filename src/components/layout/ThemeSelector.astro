@@ -15,14 +15,13 @@ import { themes } from "./themes";
 </RootElement>
 
 <script is:inline>
-// Prevent initial flash
-const getThemePreference = () => {
+const getInitialTheme = () => {
   if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
     return localStorage.getItem("theme");
   }
-  return "rose-pine"; // Or any default theme you prefer
+  return "rose-pine";
 };
-const theme = getThemePreference();
+const theme = getInitialTheme();
 document.documentElement.setAttribute("data-theme", theme);
 </script>
 

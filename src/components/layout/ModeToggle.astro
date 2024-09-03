@@ -1,58 +1,34 @@
 ---
 import Moon from "@/icons/moon.astro";
 import Sun from "@/icons/sun.astro";
+import { scope } from "simple:scope";
 import Button from "../ui/button.astro";
 ---
-
-<Button
-  id="theme-toggle"
-  class="theme-toggle"
-  aria-label="Toggle theme"
-  variant="outline"
->
-  <Sun class="icon h-6 w-6 dark:hidden" />
-  <Moon class="icon h-6 w-6 hidden dark:block" />
-</Button>
+<RootElement>
+  <Button
+    id="mode-toggle"
+    target={scope("mode-toggle")}
+    size="icon"
+    class="inline-flex items-center justify-center rounded-md p-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground"
+    aria-label="Toggle theme"
+  >
+    <Sun
+      class="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+    />
+    <Moon
+      class="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+    />
+    <span class="sr-only">Toggle theme</span>
+  </Button>
+</RootElement>
 
 <script>
-// const themeToggle = document.getElementById("theme-toggle");
+RootElement.ready(($) => {
+  const modeToggle = $("mode-toggle") as HTMLButtonElement;
 
-// function toggleTheme() {
-//   const baseTheme = document.documentElement.getAttribute("data-theme")
-//     || "everforest";
-//   const cleanedBaseTheme = baseTheme.split("-")[0];
-//   const isDark = document.documentElement.classList.contains("dark");
-
-//   const newTheme = isDark ? cleanedBaseTheme : `${cleanedBaseTheme}-dark`;
-
-//   document.documentElement.classList.toggle("dark");
-//   document.documentElement.setAttribute("data-theme", newTheme);
-//   localStorage.setItem("theme", isDark ? "light" : "dark");
-// }
-
-// const getCurrentTheme = () => {
-//   const storedTheme = localStorage.getItem("theme");
-//   if (
-//     storedTheme === "dark"
-//     || (!storedTheme
-//       && window.matchMedia("(prefers-color-scheme: dark)").matches)
-//   ) {
-//     return "dark";
-//   }
-//   return "light";
-// };
-
-// themeToggle?.addEventListener("click", toggleTheme);
-
-// // Initialize theme
-// const initialTheme = getCurrentTheme();
-// if (initialTheme === "dark") {
-//   document.documentElement.classList.add("dark");
-//   document.documentElement.setAttribute(
-//     "data-theme",
-//     `${
-//       document.documentElement.getAttribute("data-theme")?.split("-")[0]
-//     }-dark`,
-//   );
-// }
+  modeToggle.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("mode", isDark ? "dark" : "light");
+  });
+});
 </script>
