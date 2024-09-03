@@ -1,110 +1,58 @@
 ---
-import Monitor from "@/icons/monitor.astro";
 import Moon from "@/icons/moon.astro";
 import Sun from "@/icons/sun.astro";
 import Button from "../ui/button.astro";
 ---
 
-<div class="flex space-x-2">
-  <Button
-    id="system-toggle"
-    class="theme-toggle"
-    aria-label="System theme"
-    variant="outline"
-  >
-    <Monitor class="icon h-6 w-6" />
-  </Button>
-  <Button
-    id="light-toggle"
-    class="theme-toggle"
-    aria-label="Light theme"
-    variant="outline"
-  >
-    <Sun class="icon h-6 w-6" />
-  </Button>
-  <Button
-    id="dark-toggle"
-    class="theme-toggle"
-    aria-label="Dark theme"
-    variant="outline"
-  >
-    <Moon class="icon h-6 w-6" />
-  </Button>
-</div>
+<Button
+  id="theme-toggle"
+  class="theme-toggle"
+  aria-label="Toggle theme"
+  variant="outline"
+>
+  <Sun class="icon h-6 w-6 dark:hidden" />
+  <Moon class="icon h-6 w-6 hidden dark:block" />
+</Button>
 
 <script>
-const systemToggle = document.getElementById("system-toggle");
-const lightToggle = document.getElementById("light-toggle");
-const darkToggle = document.getElementById("dark-toggle");
+// const themeToggle = document.getElementById("theme-toggle");
 
-function applyTheme(newTheme: string) {
-  const baseTheme = document.documentElement.getAttribute("data-theme")
-    || "everforest";
-  const cleanedBaseTheme = baseTheme.split("-")[0];
+// function toggleTheme() {
+//   const baseTheme = document.documentElement.getAttribute("data-theme")
+//     || "everforest";
+//   const cleanedBaseTheme = baseTheme.split("-")[0];
+//   const isDark = document.documentElement.classList.contains("dark");
 
-  const effectiveTheme = getEffectiveTheme(newTheme);
-  const isDark = effectiveTheme === "dark";
+//   const newTheme = isDark ? cleanedBaseTheme : `${cleanedBaseTheme}-dark`;
 
-  const finalTheme = isDark ? `${cleanedBaseTheme}-dark` : cleanedBaseTheme;
+//   document.documentElement.classList.toggle("dark");
+//   document.documentElement.setAttribute("data-theme", newTheme);
+//   localStorage.setItem("theme", isDark ? "light" : "dark");
+// }
 
-  document.documentElement.classList.toggle("dark", isDark);
-  document.documentElement.setAttribute("data-theme", finalTheme);
-  localStorage.setItem("mode", newTheme);
+// const getCurrentTheme = () => {
+//   const storedTheme = localStorage.getItem("theme");
+//   if (
+//     storedTheme === "dark"
+//     || (!storedTheme
+//       && window.matchMedia("(prefers-color-scheme: dark)").matches)
+//   ) {
+//     return "dark";
+//   }
+//   return "light";
+// };
 
-  updateActiveButton(newTheme);
-}
+// themeToggle?.addEventListener("click", toggleTheme);
 
-function updateActiveButton(theme: string) {
-  [systemToggle, lightToggle, darkToggle].forEach(button => {
-    button?.classList.remove("bg-secondary");
-  });
-  const activeButton = document.getElementById(`${theme}-toggle`);
-  activeButton?.classList.add("bg-secondary");
-}
-
-const getCurrentTheme = () => {
-  // Check localStorage first
-  const storedTheme = localStorage.getItem("mode");
-  if (storedTheme) {
-    return storedTheme === "system"
-      ? "system"
-      : (storedTheme.includes("dark") ? "dark" : "light");
-  }
-
-  // Check if the dark class is present on the document element
-  if (document.documentElement.classList.contains("dark")) {
-    return "dark";
-  }
-
-  // If no theme is set, default to system
-  return "system";
-};
-
-const getEffectiveTheme = (theme: string) => {
-  if (theme === "system") {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  }
-  return theme;
-};
-
-systemToggle?.addEventListener("click", () => applyTheme("system"));
-lightToggle?.addEventListener("click", () => applyTheme("light"));
-darkToggle?.addEventListener("click", () => applyTheme("dark"));
-
-// Initialize theme
-const initialTheme = getCurrentTheme();
-applyTheme(initialTheme);
-
-// Listen for system theme changes
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener(
-  "change",
-  () => {
-    const currentTheme = getCurrentTheme();
-    if (currentTheme === "system") {
-      applyTheme("system");
-    }
-  },
-);
+// // Initialize theme
+// const initialTheme = getCurrentTheme();
+// if (initialTheme === "dark") {
+//   document.documentElement.classList.add("dark");
+//   document.documentElement.setAttribute(
+//     "data-theme",
+//     `${
+//       document.documentElement.getAttribute("data-theme")?.split("-")[0]
+//     }-dark`,
+//   );
+// }
 </script>

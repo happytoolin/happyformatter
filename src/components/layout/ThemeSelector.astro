@@ -1,29 +1,63 @@
 ---
 import { themes } from "./themes";
 ---
+<RootElement>
+  <div class="theme-selector relative w-[180px]">
+    <select
+      id="theme-select"
+      data-target="theme-select"
+      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      <option value="" disabled selected>Select theme</option>
+      {themes.map((theme) => <option value={theme.value}>{theme.name}</option>)}
+    </select>
+  </div>
+</RootElement>
 
-<div class="theme-selector relative w-[180px]">
-  <select
-    id="theme-select"
-    class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <option value="" disabled selected>Select a theme</option>
-    {themes.map((theme) => <option value={theme.value}>{theme.name}</option>)}
-  </select>
-</div>
+<script is:inline>
+// Prevent initial flash
+const getThemePreference = () => {
+  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+    return localStorage.getItem("theme");
+  }
+  return "rose-pine"; // Or any default theme you prefer
+};
+const theme = getThemePreference();
+document.documentElement.setAttribute("data-theme", theme);
+</script>
 
 <script>
-const select = document.getElementById("theme-select") as HTMLSelectElement;
-select.value = localStorage.getItem("theme") || "everforest";
-select.addEventListener("change", (event) => {
-  const newTheme = (event.target as HTMLSelectElement).value;
-  const mode = document.documentElement.classList.contains("dark")
-    ? "dark"
-    : "light";
-  const isDark = mode === "dark";
-  const finalTheme = isDark ? `${newTheme}-dark` : newTheme;
+RootElement.ready(($) => {
+  const selectElement = $("theme-select") as HTMLSelectElement;
 
-  document.documentElement.setAttribute("data-theme", finalTheme);
-  localStorage.setItem("theme", finalTheme);
+  // Load the saved theme from localStorage
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    selectElement.value = savedTheme;
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }
+
+  selectElement.addEventListener("change", () => {
+    const selectedTheme = selectElement.value;
+
+    if (selectedTheme) {
+      document.documentElement.setAttribute("data-theme", selectedTheme);
+      localStorage.setItem("theme", selectedTheme);
+    }
+  });
+
+  // Add observer
+  const observer = new MutationObserver(() => {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    localStorage.setItem("theme", currentTheme || "default");
+    if (currentTheme) {
+      selectElement.value = currentTheme;
+    }
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
 });
 </script>

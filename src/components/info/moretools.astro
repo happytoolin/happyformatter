@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toolName = tool.getAttribute("href")?.replace("/", "") || "";
 
     tool.addEventListener("mouseover", () => {
-      gtag("event", "mouseover", {
+      gtag("event", `Mouse Over ${toolName}`, {
         "event_category": "Tool Interaction",
         "event_label": "Mouse Over",
         "value": toolName,
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     tool.addEventListener("mouseleave", () => {
-      gtag("event", "mouseleave", {
+      gtag("event", `Mouse Leave ${toolName}`, {
         "event_category": "Tool Interaction",
         "event_label": "Mouse Leave",
         "value": toolName,
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     tool.addEventListener("focus", () => {
-      gtag("event", "focus", {
+      gtag("event", `Focus ${toolName}`, {
         "event_category": "Tool Interaction",
         "event_label": "Focus",
         "value": toolName,
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     tool.addEventListener("click", () => {
-      gtag("event", "click", {
+      gtag("event", `Click ${toolName}`, {
         "event_category": "Tool Interaction",
         "event_label": "Click",
         "value": toolName,

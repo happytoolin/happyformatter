@@ -26,8 +26,8 @@ if (!input) {
 }
 
 const themes = {
-  dark: "everforest-dark",
-  light: "everforest-light",
+  light: "rose-pine-dawn",
+  dark: "rose-pine-moon",
 };
 
 const formatted = formattedStore.get();
@@ -114,18 +114,20 @@ RootElement.ready(async ($) => {
       console.error("Invalid code:", error);
     }
 
-    trackEvent("click", "Format");
+    trackEvent(`Format ${language} Click`, "click");
   });
-
   formatButton.addEventListener(
     "mouseover",
-    () => trackEvent("Format", "mouseover"),
+    () => trackEvent(`Format ${language} Hover`, "mouseover"),
   );
   formatButton.addEventListener(
     "mouseleave",
-    () => trackEvent("Format", "mouseleave"),
+    () => trackEvent(`Format ${language} Hover`, "mouseleave"),
   );
-  formatButton.addEventListener("focus", () => trackEvent("Format", "focus"));
+  formatButton.addEventListener(
+    "focus",
+    () => trackEvent(`Format ${language} Focus`, "focus"),
+  );
 
   if (minifier) {
     const minifyButton = $("minify");
@@ -144,18 +146,21 @@ RootElement.ready(async ($) => {
         console.error("Invalid code:", error);
       }
 
-      trackEvent("click", "Minify");
+      trackEvent(`Minify ${language} Click`, "click");
     });
 
     minifyButton.addEventListener(
       "mouseover",
-      () => trackEvent("Minify", "mouseover"),
+      () => trackEvent(`Minify ${language} Hover`, "mouseover"),
     );
     minifyButton.addEventListener(
       "mouseleave",
-      () => trackEvent("Minify", "mouseleave"),
+      () => trackEvent(`Minify ${language} Hover`, "mouseleave"),
     );
-    minifyButton.addEventListener("focus", () => trackEvent("Minify", "focus"));
+    minifyButton.addEventListener(
+      "focus",
+      () => trackEvent(`Minify ${language} Focus`, "focus"),
+    );
   }
 });
 </script>
