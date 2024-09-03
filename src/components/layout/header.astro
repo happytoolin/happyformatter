@@ -200,4 +200,13 @@ if (typeof localStorage !== "undefined") {
     attributeFilter: ["class"],
   });
 }
+
+const getInitialTheme = () => {
+  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+    return localStorage.getItem("theme");
+  }
+  return "rose-pine";
+};
+const theme = getInitialTheme();
+document.documentElement.setAttribute("data-theme", theme);
 </script>

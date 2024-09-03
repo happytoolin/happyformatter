@@ -4,6 +4,7 @@ import { themes } from "./themes";
 <RootElement>
   <div class="theme-selector relative w-[180px]">
     <select
+      aria-label="Theme selector"
       id="theme-select"
       data-target="theme-select"
       class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -13,17 +14,6 @@ import { themes } from "./themes";
     </select>
   </div>
 </RootElement>
-
-<script is:inline>
-const getInitialTheme = () => {
-  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-    return localStorage.getItem("theme");
-  }
-  return "rose-pine";
-};
-const theme = getInitialTheme();
-document.documentElement.setAttribute("data-theme", theme);
-</script>
 
 <script>
 RootElement.ready(($) => {
