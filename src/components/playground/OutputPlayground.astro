@@ -8,20 +8,19 @@ import Textarea from "../ui/textarea.astro";
 interface Props {
   formattedCode: string;
   language: string;
-  themes: { [key: string]: string };
 }
 
-const { formattedCode, language, themes } = Astro.props;
+const { formattedCode, language } = Astro.props;
 
 const initialCode = getInitialCode(language);
 
 const InitialCodeHTMLString = async () => {
-  const highlighter = await initializeHighlighter(language, themes);
+  const highlighter = await initializeHighlighter(language);
 
   const formatter = await getFormatter(language);
 
   const updatedCode = await formatter.formatCode(initialCode);
-  return highlightCode(updatedCode, highlighter, language, themes);
+  return highlightCode(updatedCode, highlighter, language);
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
