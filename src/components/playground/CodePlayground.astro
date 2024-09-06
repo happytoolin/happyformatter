@@ -1,8 +1,6 @@
 ---
-import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
 import { getInitialCode } from "@/lib/initialCode";
 import { scope } from "simple:scope";
-import Textarea from "../ui/textarea.astro";
 import { resetStores } from "./store";
 
 interface Props {
@@ -14,167 +12,80 @@ const { inputCode, language } = Astro.props;
 
 const input = getInitialCode(language);
 
-const InitialCodeHTMLString = async () => {
-  const highlighter = await initializeHighlighter(language);
-  return highlightCode(input, highlighter, language);
-};
-
-const highlightedHTML = await InitialCodeHTMLString();
-
 resetStores();
 ---
 
-<RootElement>
-  <div
-    class="transition-none"
-    style="color-scheme: inherit;"
-    data-target="root"
-    data-language={language}
-  >
-    <div class="relative mt-10 min-h-[400px] max-h-[600px] overflow-auto">
-      <div
-        class="block max-h-[600px] overflow-auto min-h-[400px]"
-        data-target="highlight"
-        id="highlight_code"
-        set:html={highlightedHTML}
-      />
-      <Textarea
-        aria-label="CodePlayground"
-        label="CodePlayground"
-        id="codeTextarea"
-        class="whitespace-pre overflow-auto w-full h-full font-mono bg-transparent absolute inset-0 py-5 px-6 text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[400px]"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        data-initial={inputCode}
-        value={inputCode}
-        target={scope("textarea")}
-      />
-    </div>
-  </div>
-</RootElement>
+<div
+  class="mt-10 h-[600px]"
+  id="monaco-editor-container"
+  data-language={language}
+>
+</div>
 
 <script>
-import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
+import { loadHighlighter } from "@/lib/highlighter";
 import { getInitialCode } from "@/lib/initialCode";
-import { throttle } from "@/lib/throttle";
-import type { Highlighter } from "shiki";
-import { inputStore } from "./store";
+import { shikiToMonaco } from "@shikijs/monaco";
+import * as monaco from "monaco-editor";
 
-function syncScroll(
-  preElement: HTMLElement | HTMLPreElement,
-  textArea: HTMLTextAreaElement,
-): void {
-  preElement.scrollTop = textArea.scrollTop;
-  preElement.scrollLeft = textArea.scrollLeft;
-}
+self.MonacoEnvironment = {
+  getWorker: function(workerId, label) {
+    const getWorkerModule = (moduleUrl: string, label: string) => {
+      return new Worker(self.MonacoEnvironment.getWorkerUrl(moduleUrl), {
+        name: label,
+        type: "module",
+      });
+    };
 
-function handleInputEvent(
-  e: Event,
-  highlighter: Highlighter,
-  highlightDiv: HTMLDivElement,
-  throttledHighlight: (code: string) => void,
-  language: string,
-): void {
-  const element = e.target as HTMLTextAreaElement;
-  const code = element.value;
-
-  if (code) {
-    inputStore.set(code);
-    const immediateHighlightedCode = highlightCode(
-      code,
-      highlighter,
-      language,
-    );
-    highlightDiv.innerHTML = immediateHighlightedCode;
-
-    throttledHighlight(code);
-  }
-}
-
-function setupEventListeners(
-  textArea: HTMLTextAreaElement,
-  highlightDiv: HTMLDivElement,
-  highlighter: Highlighter,
-  language: string,
-): void {
-  const throttledHighlight = throttle((code: string) => {
-    const highlightedCode = highlightCode(
-      code,
-      highlighter,
-      language,
-    );
-    highlightDiv.innerHTML = highlightedCode;
-
-    const preElement = highlightDiv.querySelector("pre");
-
-    if (!preElement) {
-      console.error("No pre element found");
-      return;
+    switch (label) {
+      case "json":
+        return getWorkerModule(
+          "/monaco-editor/esm/vs/language/json/json.worker?worker",
+          label,
+        );
+      case "css":
+      case "scss":
+      case "less":
+        return getWorkerModule(
+          "/monaco-editor/esm/vs/language/css/css.worker?worker",
+          label,
+        );
+      case "html":
+      case "handlebars":
+      case "razor":
+        return getWorkerModule(
+          "/monaco-editor/esm/vs/language/html/html.worker?worker",
+          label,
+        );
+      case "typescript":
+      case "javascript":
+        return getWorkerModule(
+          "/monaco-editor/esm/vs/language/typescript/ts.worker?worker",
+          label,
+        );
+      default:
+        return getWorkerModule(
+          "/monaco-editor/esm/vs/editor/editor.worker?worker",
+          label,
+        );
     }
+  },
+};
 
-    textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
-  }, 300);
+const language = document.getElementById("monaco-editor-container")!
+  .getAttribute("data-language")!;
+const initialCode = getInitialCode(language);
 
-  textArea.addEventListener("input", (e) =>
-    handleInputEvent(
-      e,
-      highlighter,
-      highlightDiv,
-      throttledHighlight,
-      language,
-    ));
+const highlighter = await loadHighlighter(language);
 
-  textArea.addEventListener("paste", (e) => {
-    handleInputEvent(
-      e,
-      highlighter,
-      highlightDiv,
-      throttledHighlight,
-      language,
-    );
-  });
+monaco.languages.register({ id: language });
 
-  textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
-}
+shikiToMonaco(highlighter, monaco);
 
-const textarea = document.getElementById("codeTextarea") as HTMLTextAreaElement;
-const highlightDiv = document.getElementById(
-  "highlight_code",
-) as HTMLDivElement;
-
-const preElement = highlightDiv.querySelector("pre")!;
-
-textarea.addEventListener("scroll", () => syncScroll(preElement, textarea));
-
-RootElement.ready(async ($) => {
-  const highlightDiv = $("highlight") as HTMLDivElement;
-  const textArea = $("textarea") as HTMLTextAreaElement;
-  const divLanguage = $("root") as HTMLDivElement;
-
-  const language = divLanguage.dataset.language as string;
-
-  let initialCode = textArea.dataset.initial;
-
-  if (!initialCode) {
-    initialCode = getInitialCode(language);
-    inputStore.set(initialCode);
-  }
-
-  textArea.value = initialCode;
-
-  try {
-    const highlighter = await initializeHighlighter(language);
-
-    setupEventListeners(
-      textArea,
-      highlightDiv,
-      highlighter,
-      language,
-    );
-  } catch (error) {
-    console.error("Initialization failed:", error);
-  }
+monaco.editor.create(document.getElementById("monaco-editor-container")!, {
+  value: initialCode,
+  language: language,
+  theme: "rose-pine-moon",
+  minimap: { enabled: false },
 });
 </script>

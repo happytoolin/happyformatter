@@ -106,6 +106,9 @@ importers:
       lucide-react:
         specifier: ^0.438.0
         version: 0.438.0(react@18.3.1)
+      monaco-editor:
+        specifier: ^0.51.0
+        version: 0.51.0
       nanostores:
         specifier: ^0.11.3
         version: 0.11.3
@@ -143,6 +146,9 @@ importers:
         specifier: ^3.6.3
         version: 3.6.3
     devDependencies:
+      "@shikijs/monaco":
+        specifier: ^1.16.2
+        version: 1.16.2
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
@@ -2079,6 +2085,16 @@ packages:
   "@shikijs/core@1.16.1":
     resolution: {
       integrity: sha512-aI0hBtw+a6KsJp2jcD4YuQqKpeCbURMZbhHVozDknJpm+KJqeMRkEnfBC8BaKE/5XC+uofPgCLsa/TkTk0Ba0w==,
+    }
+
+  "@shikijs/core@1.16.2":
+    resolution: {
+      integrity: sha512-XSVH5OZCvE4WLMgdoBqfPMYmGHGmCC3OgZhw0S7KcSi2XKZ+5oHGe71GFnTljgdOxvxx5WrRks6QoTLKrl1eAA==,
+    }
+
+  "@shikijs/monaco@1.16.2":
+    resolution: {
+      integrity: sha512-aNiZF+6z/g92pMz1YVH38LbMO3L1BDyVHzoBpsyX/eBcVKBt0xc7a6yjqxvqa8dJt0eU11GosuWB5AuxAqs8kQ==,
     }
 
   "@shikijs/vscode-textmate@9.2.0":
@@ -4099,6 +4115,11 @@ packages:
       integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==,
     }
     engines: { node: ">=16 || 14 >=14.17" }
+
+  monaco-editor@0.51.0:
+    resolution: {
+      integrity: sha512-xaGwVV1fq343cM7aOYB6lVE4Ugf0UyimdD/x5PWcWBMKENwectaEu77FAN7c5sFiyumqeJdX1RPTh1ocioyDjw==,
+    }
 
   mrmime@2.0.0:
     resolution: {
@@ -6769,6 +6790,16 @@ snapshots:
       "@shikijs/vscode-textmate": 9.2.0
       "@types/hast": 3.0.4
 
+  "@shikijs/core@1.16.2":
+    dependencies:
+      "@shikijs/vscode-textmate": 9.2.0
+      "@types/hast": 3.0.4
+
+  "@shikijs/monaco@1.16.2":
+    dependencies:
+      "@shikijs/core": 1.16.2
+      "@shikijs/vscode-textmate": 9.2.0
+
   "@shikijs/vscode-textmate@9.2.0": {}
 
   "@swc/core-darwin-arm64@1.7.11":
@@ -8433,6 +8464,8 @@ snapshots:
       brace-expansion: 2.0.1
 
   minipass@7.1.2: {}
+
+  monaco-editor@0.51.0: {}
 
   mrmime@2.0.0: {}
 

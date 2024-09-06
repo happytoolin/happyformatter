@@ -7,26 +7,14 @@ import {
   type SpecialLanguage,
 } from "shiki";
 
-// Check if window is available and attach highlighterCache to it
-const highlighterCache: Map<string, Highlighter> = typeof window !== "undefined"
-  ? (window.highlighterCache = window.highlighterCache || new Map())
-  : new Map();
-
 const jsEngine = createJavaScriptRegexEngine();
 
 export const loadHighlighter = async (
   language: string,
-  themes: { [key: string]: string },
 ): Promise<Highlighter> => {
-  if (highlighterCache.has(language)) {
-    return highlighterCache.get(language)!;
-  }
-
-  highlighterCache.clear();
-
   try {
     const hl = await createHighlighter({
-      langs: [],
+      langs: [language],
       themes: Object.values(themes),
       engine: jsEngine,
     });
@@ -36,7 +24,6 @@ export const loadHighlighter = async (
     await hl.loadLanguage(
       language as BundledLanguage | LanguageInput | SpecialLanguage,
     );
-    highlighterCache.set(language, hl);
 
     return hl;
   } catch (error) {
@@ -91,5 +78,5 @@ export const highlightCode = (
 export async function initializeHighlighter(
   language: string,
 ): Promise<Highlighter> {
-  return loadHighlighter(language, themes);
+  return loadHighlighter(language);
 }

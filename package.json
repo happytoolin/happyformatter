@@ -47,6 +47,7 @@
     "dprint-node": "^1.0.8",
     "lightningcss-wasm": "^1.26.0",
     "lucide-react": "^0.438.0",
+    "monaco-editor": "^0.51.0",
     "nanostores": "^0.11.3",
     "prettier": "^3.3.3",
     "prettier-plugin-toml": "^2.0.1",
@@ -61,6 +62,7 @@
     "xml-formatter": "^3.6.3"
   },
   "devDependencies": {
+    "@shikijs/monaco": "^1.16.2",
     "dprint": "^0.47.2",
     "shiki": "^1.16.1",
     "vite-plugin-top-level-await": "^1.4.4",
