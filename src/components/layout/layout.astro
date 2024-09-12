@@ -1,11 +1,11 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import "../../styles/globals.css";
 import MoreTools from "../info/moretools.astro";
 import Footer from "./Footer.astro";
+import FormatHeading from "./FormatHeading.astro";
 import Head from "./Head.astro";
 import Header from "./header.astro";
-import "../../styles/globals.css";
-import FormatHeading from "./FormatHeading.astro";
 
 type Props = {
   title: string;
@@ -16,6 +16,36 @@ type Props = {
 };
 
 const { title, description, image, language, minify } = Astro.props;
+
+const faviconMap: Record<string, string> = {
+  cpp: "/favicons/cpp.ico",
+  dart: "/favicons/dart.ico",
+  html: "/favicons/html.ico",
+  json: "/favicons/json.ico",
+  php: "/favicons/php.ico",
+  ruby: "/favicons/ruby.ico",
+  swift: "/favicons/swift.ico",
+  xml: "/favicons/xml.ico",
+  csharp: "/favicons/csharp.ico",
+  default: "/favicons/default.ico",
+  java: "/favicons/java.ico",
+  lua: "/favicons/lua.ico",
+  proto: "/favicons/proto.ico",
+  scss: "/favicons/scss.ico",
+  toml: "/favicons/toml.ico",
+  yaml: "/favicons/yaml.ico",
+  c: "/favicons/c.ico",
+  css: "/favicons/css.ico",
+  go: "/favicons/go.ico",
+  javascript: "/favicons/javascript.ico",
+  markdown: "/favicons/markdown.ico",
+  python: "/favicons/python.ico",
+  sql: "/favicons/sql.ico",
+  typescript: "/favicons/typescript.ico",
+  zig: "/favicons/zig.ico",
+};
+
+const favicon = faviconMap[language] || "/favicons/default.ico";
 ---
 
 <!DOCTYPE html>
@@ -25,6 +55,7 @@ const { title, description, image, language, minify } = Astro.props;
       title={`${title} | Happy Formatter, the best online formatter`}
       description={description}
       image={image}
+      favicon={favicon}
     />
     <ViewTransitions />
   </head>
