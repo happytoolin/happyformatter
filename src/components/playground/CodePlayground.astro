@@ -31,18 +31,12 @@ resetStores();
     data-target="root"
     data-language={language}
   >
-    <div class="relative mt-10 min-h-[400px] max-h-[600px] overflow-auto">
-      <div
-        class="block max-h-[600px] overflow-auto min-h-[400px]"
-        data-target="highlight"
-        id="highlight_code"
-        set:html={highlightedHTML}
-      />
+    <div class="relative mt-10 min-h-[800px] max-h-[800px] overflow-auto">
       <Textarea
         aria-label="CodePlayground"
         label="CodePlayground"
         id="codeTextarea"
-        class="whitespace-pre overflow-auto w-full h-full font-mono bg-transparent absolute inset-0 py-5 px-6 text-transparent caret-gray-600 tab-4 resize-none z-10 max-h-[600px] min-h-[400px]"
+        class="playground-text whitespace-pre overflow-auto w-full h-full font-mono text-transparent bg-transparent absolute inset-0 py-5 px-6 caret-gray-600 tab-4 resize-none z-20 max-h-[800px] min-h-[800px]"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
@@ -50,6 +44,12 @@ resetStores();
         data-initial={inputCode}
         value={inputCode}
         target={scope("textarea")}
+      />
+      <div
+        class="block max-h-[800px] overflow-auto min-h-[800px] z-10"
+        data-target="highlight"
+        id="highlight_code"
+        set:html={highlightedHTML}
       />
     </div>
   </div>
@@ -82,12 +82,13 @@ function handleInputEvent(
 
   if (code) {
     inputStore.set(code);
-    const immediateHighlightedCode = highlightCode(
-      code,
-      highlighter,
-      language,
-    );
-    highlightDiv.innerHTML = immediateHighlightedCode;
+    element.classList.remove("text-transparent");
+    element.classList.add("text-visible");
+    // add background color to the textarea
+    element.style.backgroundColor = "var(--background)";
+
+    // Remove existing highlight
+    highlightDiv.innerHTML = '';
 
     throttledHighlight(code);
   }
@@ -113,6 +114,10 @@ function setupEventListeners(
       console.error("No pre element found");
       return;
     }
+
+    textArea.classList.remove("text-visible");
+    textArea.classList.add("text-transparent");
+    textArea.style.backgroundColor = "";
 
     textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
   }, 300);
@@ -178,3 +183,13 @@ RootElement.ready(async ($) => {
   }
 });
 </script>
+
+<style>
+.text-transparent {
+  color: transparent;
+}
+
+.text-visible {
+  color: inherit;
+}
+</style>
