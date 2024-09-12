@@ -95,10 +95,6 @@ function handleInputEvent(
     element.style.color = textColor;
     element.style.fontFamily = textStyle;
     element.style.fontSize = fontSize;
-
-    // Remove existing highlight
-    highlightDiv.innerHTML = "";
-
     throttledHighlight(code);
   }
 }
