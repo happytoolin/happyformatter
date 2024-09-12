@@ -85,10 +85,19 @@ function handleInputEvent(
     element.classList.remove("text-transparent");
     element.classList.add("text-visible");
     // add background color to the textarea
-    element.style.backgroundColor = "var(--background)";
+    // get current background color of the .shiki class
+    const shiki = document.querySelector(".shiki") as HTMLElement;
+    const backgroundColor = window.getComputedStyle(shiki).backgroundColor;
+    const textColor = window.getComputedStyle(shiki).color;
+    const textStyle = window.getComputedStyle(shiki).fontFamily;
+    const fontSize = window.getComputedStyle(shiki).fontSize;
+    element.style.backgroundColor = backgroundColor;
+    element.style.color = textColor;
+    element.style.fontFamily = textStyle;
+    element.style.fontSize = fontSize;
 
     // Remove existing highlight
-    highlightDiv.innerHTML = '';
+    highlightDiv.innerHTML = "";
 
     throttledHighlight(code);
   }
@@ -118,9 +127,10 @@ function setupEventListeners(
     textArea.classList.remove("text-visible");
     textArea.classList.add("text-transparent");
     textArea.style.backgroundColor = "";
+    textArea.style.color = "";
 
     textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
-  }, 300);
+  }, 0);
 
   textArea.addEventListener("input", (e) =>
     handleInputEvent(
