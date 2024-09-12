@@ -564,7 +564,7 @@
   padding: 20px 0;
   background: transparent;
   overflow-x: auto;
-  min-height: 600px;
+  min-height: 800px;
 }
 
 .code code {
@@ -578,27 +578,3 @@
 pre {
   border-radius: var(--radius);
 }
-
-/* html.dark .shiki, html.dark .shiki span {
-  color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
-  font-style: var(--shiki-dark-font-style) !important;
-  font-weight: var(--shiki-dark-font-weight) !important;
-  text-decoration: var(--shiki-dark-text-decoration) !important;
-} */
-
-/* html {
-  &.dark {
-    &[data-theme="everforest"] {
-      .shiki {
-        color: var(--shiki-everforest_dark) !important;
-        background-color: var(--shiki-everforest_dark-bg) !important;
-      
-        font-style: var(--shiki-everforest_dark-font-style) !important;
-        font-weight: var(--shiki-everforest_dark-font-weight) !important;
-        text-decoration: var(--shiki-everforest_dark-text-decoration)
-          !important;
-      }
-    }
-  }
-} */
