@@ -41,7 +41,7 @@
     "@wasm-fmt/web_fmt": "^0.1.10",
     "@wasm-fmt/yamlfmt": "^0.0.2",
     "@wasm-fmt/zig_fmt": "^0.0.5",
-    "astro": "^4.15.4",
+    "astro": "^4.15.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dprint-node": "^1.0.8",
@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "dprint": "^0.47.2",
-    "shiki": "^1.17.0",
+    "shiki": "^1.17.6",
     "vite-plugin-top-level-await": "^1.4.4",
     "vite-plugin-wasm": "^3.3.0"
   }
