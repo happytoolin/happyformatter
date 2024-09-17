@@ -4,20 +4,16 @@ export const languageInfoData: LanguageInfo = {
   "json": {
     "title": "JSON Formatter",
     "description":
-      "Happy Formatter's JSON Formatter and JSON Validator help to auto format JSON and validate your JSON text. It also provides a tree view that helps to navigate your formatted JSON data.",
+      "Happy Formatter's JSON Formatter and JSON Validator help to auto format JSON and validate your JSON text.",
     "features": [
       "JSON formatter online is the best tool to format JSON data.",
       "JSON minifier online is the best tool to minify JSON data.",
       "It helps to validate JSON online with error messages.",
       "It's also a JSON Beautifier that supports indentation levels: 2 spaces, 3 spaces, and 4 spaces.",
       "Supports printing of JSON data.",
-      "JSON File Formatter provides functionality to upload JSON file and download formatted JSON file. This functionality helps to format JSON file.",
       "95% of APIs use JSON to transfer data between client and server. This tool can work as an API formatter.",
-      "Supports JSON Graph View of JSON string which works as a JSON debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last JSON formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for JSON beautification.",
       "This JSON online formatter can also work as JSON Lint.",
-      "Use the auto switch to turn auto-update on or off for beautification.",
-      "It uses WebAssembly (WASM) to beautify JSON, making it easy for a human to read and analyze.",
       "Download JSON once it's created or modified, and it can be opened in Notepad++, Sublime, or VSCode alternative.",
       "JSON Format Checker helps to fix the missing quotes; click the setting icon which looks like a screwdriver on the left side of the editor to fix the format.",
     ],
@@ -47,16 +43,13 @@ export const languageInfoData: LanguageInfo = {
   "javascript": {
     "title": "JavaScript Formatter",
     "description":
-      "Happy Formatter's JavaScript Formatter and JavaScript Validator help to auto format JavaScript code and validate your JavaScript text. It also provides a tree view that helps to navigate your formatted JavaScript data.",
+      "Happy Formatter's JavaScript Formatter and JavaScript Validator help to auto format JavaScript code and validate your JavaScript text.",
     "features": [
       "JavaScript formatter online is the best tool to format JavaScript data.",
       "JavaScript minifier online is the best tool to minify JavaScript data.",
       "It helps to validate JavaScript online with error messages.",
       "It's also a JavaScript Beautifier that supports indentation levels: 2 spaces, 3 spaces, and 4 spaces.",
       "Supports printing of JavaScript data.",
-      "JavaScript File Formatter provides functionality to upload JavaScript file and download formatted JavaScript file. This functionality helps to format JavaScript file.",
-      "95% of APIs use JavaScript to transfer data between client and server. This tool can work as an API formatter.",
-      "Supports JavaScript Graph View of JavaScript string which works as a JavaScript debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last JavaScript formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for JavaScript beautification.",
       "This JavaScript online formatter can also work as JavaScript Lint.",
       "Use the auto switch to turn auto-update on or off for beautification.",
@@ -90,16 +83,13 @@ export const languageInfoData: LanguageInfo = {
   "typescript": {
     "title": "TypeScript Formatter",
     "description":
-      "Happy Formatter's TypeScript Formatter and TypeScript Validator help to auto format TypeScript code and validate your TypeScript text. It also provides a tree view that helps to navigate your formatted TypeScript data.",
+      "Happy Formatter's TypeScript Formatter and TypeScript Validator help to auto format TypeScript code and validate your TypeScript text.",
     "features": [
       "TypeScript formatter online is the best tool to format TypeScript data.",
       "TypeScript minifier online is the best tool to minify TypeScript data.",
       "It helps to validate TypeScript online with error messages.",
       "It's also a TypeScript Beautifier that supports indentation levels: 2 spaces, 3 spaces, and 4 spaces.",
       "Supports printing of TypeScript data.",
-      "TypeScript File Formatter provides functionality to upload TypeScript file and download formatted TypeScript file. This functionality helps to format TypeScript file.",
-      "95% of APIs use TypeScript to transfer data between client and server. This tool can work as an API formatter.",
-      "Supports TypeScript Graph View of TypeScript string which works as a TypeScript debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last TypeScript formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for TypeScript beautification.",
       "This TypeScript online formatter can also work as TypeScript Lint.",
       "Use the auto switch to turn auto-update on or off for beautification.",
@@ -132,16 +122,13 @@ export const languageInfoData: LanguageInfo = {
   "css": {
     "title": "CSS Formatter",
     "description":
-      "Happy Formatter's CSS Formatter and CSS Validator help to auto format CSS code and validate your CSS text. It also provides a tree view that helps to navigate your formatted CSS data.",
+      "Happy Formatter's CSS Formatter and CSS Validator help to auto format CSS code and validate your CSS text.",
     "features": [
       "CSS formatter online is the best tool to format CSS data.",
       "CSS minifier online is the best tool to minify CSS data.",
       "It helps to validate CSS online with error messages.",
       "It's also a CSS Beautifier that supports indentation levels: 2 spaces, 3 spaces, and 4 spaces.",
       "Supports printing of CSS data.",
-      "CSS File Formatter provides functionality to upload CSS file and download formatted CSS file. This functionality helps to format CSS file.",
-      "95% of APIs use CSS to transfer data between client and server. This tool can work as an API formatter.",
-      "Supports CSS Graph View of CSS string which works as a CSS debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last CSS formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for CSS beautification.",
       "This CSS online formatter can also work as CSS Lint.",
       "Use the auto switch to turn auto-update on or off for beautification.",
@@ -173,16 +160,13 @@ export const languageInfoData: LanguageInfo = {
   "html": {
     "title": "HTML Formatter",
     "description":
-      "Happy Formatter's HTML Formatter and HTML Validator help to auto format HTML code and validate your HTML text. It also provides a tree view that helps to navigate your formatted HTML data.",
+      "Happy Formatter's HTML Formatter and HTML Validator help to auto format HTML code and validate your HTML text.",
     "features": [
       "HTML formatter online is the best tool to format HTML data.",
       "HTML minifier online is the best tool to minify HTML data.",
       "It helps to validate HTML online with error messages.",
       "It's also a HTML Beautifier that supports indentation levels: 2 spaces, 3 spaces, and 4 spaces.",
       "Supports printing of HTML data.",
-      "HTML File Formatter provides functionality to upload HTML file and download formatted HTML file. This functionality helps to format HTML file.",
-      "95% of APIs use HTML to transfer data between client and server. This tool can work as an API formatter.",
-      "Supports HTML Graph View of HTML string which works as a HTML debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last HTML formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for HTML beautification.",
       "This HTML online formatter can also work as HTML Lint.",
       "Use the auto switch to turn auto-update on or off for beautification.",
@@ -217,15 +201,13 @@ export const languageInfoData: LanguageInfo = {
   "markdown": {
     "title": "Markdown Formatter",
     "description":
-      "Happy Formatter's Markdown Formatter and Markdown Validator help to auto format Markdown text and validate your Markdown syntax. It also provides a preview that helps to visualize your formatted Markdown content.",
+      "Happy Formatter's Markdown Formatter and Markdown Validator help to auto format Markdown text and validate your Markdown syntax.",
     "features": [
       "Markdown formatter online is the best tool to format Markdown data.",
       "Markdown validator online is the best tool to validate Markdown data.",
       "It helps to validate Markdown online with error messages.",
       "It's also a Markdown Beautifier that supports various indentation levels.",
       "Supports printing of Markdown data.",
-      "Markdown File Formatter provides functionality to upload Markdown file and download formatted Markdown file. This functionality helps to format Markdown file.",
-      "Supports Markdown Graph View of Markdown string which works as a Markdown debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last Markdown formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for Markdown beautification.",
       "This Markdown online formatter can also work as Markdown Lint.",
       "Use the auto switch to turn auto-update on or off for beautification.",
@@ -257,16 +239,13 @@ export const languageInfoData: LanguageInfo = {
   "java": {
     "title": "Java Formatter",
     "description":
-      "Happy Formatter's Java Formatter and Java Validator help to auto format Java code and validate your Java syntax. It also provides a tree view that helps to navigate your formatted Java code.",
+      "Happy Formatter's Java Formatter and Java Validator help to auto format Java code and validate your Java syntax.",
     "features": [
       "Java formatter online is the best tool to format Java data.",
       "Java validator online is the best tool to validate Java data.",
       "It helps to validate Java online with error messages.",
       "It's also a Java Beautifier that supports indentation levels: 2 spaces, 3 spaces, and 4 spaces.",
       "Supports printing of Java data.",
-      "Java File Formatter provides functionality to upload Java file and download formatted Java file. This functionality helps to format Java file.",
-      "95% of APIs use Java to transfer data between client and server. This tool can work as an API formatter.",
-      "Supports Java Graph View of Java string which works as a Java debugger or corrector and can format arrays and objects.",
       "Stores data locally for the last Java formatted in the browser's local storage. This can be used as a Notepad++, Sublime, or VSCode alternative for Java beautification.",
       "This Java online formatter can also work as Java Lint.",
       "Use the auto switch to turn auto-update on or off for beautification.",
@@ -281,7 +260,7 @@ export const languageInfoData: LanguageInfo = {
       "The syntax of Java is similar to C and C++, but has fewer low-level facilities than either of them.",
     ],
     "tools": [
-      "Online Java Formatter and Online Java Validator provide Java converter tools to convert Java to XML, Java to CSV, and Java to YAML. Also includes Java Editor, JavaLint, Java Checker, and Java Cleaner.",
+      "Online Java Formatter and Online Java Validator provide Java formatting and validation services.",
       "Free Java Formatting Online and Java Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -314,7 +293,7 @@ export const languageInfoData: LanguageInfo = {
       "Dart is a mobile-first language, which means that the code is designed to run on mobile devices.",
     ],
     "tools": [
-      "Online Dart Formatter and Online Dart Validator provide Dart converter tools to convert Dart to XML, Dart to CSV, and Dart to YAML. Also includes Dart Editor, DartLint, Dart Checker, and Dart Cleaner.",
+      "Online Dart Formatter and Online Dart Validator provide Dart formatting and validation services.",
       "Free Dart Formatting Online and Dart Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -345,7 +324,7 @@ export const languageInfoData: LanguageInfo = {
       "Go is a mobile-first language, which means that the code is designed to run on mobile devices.",
     ],
     "tools": [
-      "Online Go Formatter and Online Go Validator provide Go converter tools to convert Go to XML, Go to CSV, and Go to YAML. Also includes Go Editor, GoLint, Go Checker, and Go Cleaner.",
+      "Online Go Formatter and Online Go Validator provide Go formatting and validation services.",
       "Free Go Formatting Online and Go Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -376,7 +355,7 @@ export const languageInfoData: LanguageInfo = {
       "Lua is an object-oriented language with a focus on modern web development.",
     ],
     "tools": [
-      "Online Lua Formatter and Online Lua Validator provide Lua converter tools to convert Lua to XML, Lua to CSV, and Lua to YAML. Also includes Lua Editor, LuaLint, Lua Checker, and Lua Cleaner.",
+      "Online Lua Formatter and Online Lua Validator provide Lua formatting and validation services.",
       "Free Lua Formatting Online and Lua Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -408,7 +387,7 @@ export const languageInfoData: LanguageInfo = {
       "Python is an object-oriented language with a focus on modern web development.",
     ],
     "tools": [
-      "Online Python Formatter and Online Python Validator provide Python converter tools to convert Python to XML, Python to CSV, and Python to YAML. Also includes Python Editor, PythonLint, Python Checker, and Python Cleaner.",
+      "Online Python Formatter and Online Python Validator provide Python formatting and validation services.",
       "Free Python Formatting Online and Python Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -439,7 +418,7 @@ export const languageInfoData: LanguageInfo = {
       "SQL is a declarative language, which means that you only need to specify what you want to retrieve, and the database system will figure out how to do it.",
     ],
     "tools": [
-      "Online SQL Formatter and Online SQL Validator provide SQL converter tools to convert SQL to XML, SQL to CSV, and SQL to YAML. Also includes SQL Editor, SQLLint, SQL Checker, and SQL Cleaner.",
+      "Online SQL Formatter and Online SQL Validator provide SQL formatting and validation services.",
       "Free SQL Formatting Online and SQL Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -474,7 +453,7 @@ export const languageInfoData: LanguageInfo = {
       "C# is a high-level language, which means that it is easier to read and write than low-level languages.",
     ],
     "tools": [
-      "Online C# Formatter and Online C# Validator provide C# converter tools to convert C# to XML, C# to CSV, and C# to YAML. Also includes C# Editor, C#Lint, C# Checker, and C# Cleaner.",
+      "Online C# Formatter and Online C# Validator provide C# formatting and validation services.",
       "Free C# Formatting Online and C# Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -509,7 +488,7 @@ export const languageInfoData: LanguageInfo = {
       "C is a high-level language, which means that it is easier to read and write than low-level languages.",
     ],
     "tools": [
-      "Online C Formatter and Online C Validator provide C converter tools to convert C to XML, C to CSV, and C to YAML. Also includes C Editor, CLint, C Checker, and C Cleaner.",
+      "Online C Formatter and Online C Validator provide C formatting and validation services.",
       "Free C Formatting Online and C Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -543,7 +522,7 @@ export const languageInfoData: LanguageInfo = {
       "C++ is a high-level language, which means that it is easier to read and write than low-level languages.",
     ],
     "tools": [
-      "Online C++ Formatter and Online C++ Validator provide C++ converter tools to convert C++ to XML, C++ to CSV, and C++ to YAML. Also includes C++ Editor, C++Lint, C++ Checker, and C++ Cleaner.",
+      "Online C++ Formatter and Online C++ Validator provide C++ formatting and validation services.",
       "Free C++ Formatting Online and C++ Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -578,7 +557,7 @@ export const languageInfoData: LanguageInfo = {
       "Protobuf is a platform-neutral format, which means that it can be used on any platform.",
     ],
     "tools": [
-      "Online Proto Formatter and Online Proto Validator provide Proto converter tools to convert Proto to XML, Proto to CSV, and Proto to YAML. Also includes Proto Editor, ProtoLint, Proto Checker, and Proto Cleaner.",
+      "Online Proto Formatter and Online Proto Validator provide Proto formatting and validation services.",
       "Free Proto Formatting Online and Proto Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -609,7 +588,7 @@ export const languageInfoData: LanguageInfo = {
       "Zig is a strongly typed language, which means that the type of a variable is known at compile time.",
     ],
     "tools": [
-      "Online Zig Formatter and Online Zig Validator provide Zig converter tools to convert Zig to XML, Zig to CSV, and Zig to YAML. Also includes Zig Editor, ZigLint, Zig Checker, and Zig Cleaner.",
+      "Online Zig Formatter and Online Zig Validator provide Zig formatting and validation services.",
       "Free Zig Formatting Online and Zig Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
@@ -644,7 +623,7 @@ export const languageInfoData: LanguageInfo = {
       "Python Load Data From File",
     ],
     "tools": [
-      "Online Data Formatter and Online Data Validator provide Data converter tools to convert Data to XML, Data to CSV, and Data to YAML. Also includes Data Editor, DataLint, Data Checker, and Data Cleaner.",
+      "Online Data Formatter and Online Data Validator provide Data formatting and validation services.",
       "Free Data Formatting Online and Data Validator work well in Windows, Mac, Linux, Chrome, Firefox, Safari, and Edge.",
     ],
     "validator": {
