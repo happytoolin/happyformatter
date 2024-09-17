@@ -61,22 +61,12 @@ export const accordionData: Record<string, AccordionItem[]> = {
     {
       title: "How does HappyFormatter ensure my JSON data remains private?",
       content:
-        "HappyFormatter processes all JSON data locally using WebAssembly (WASM), ensuring that your data never leaves your device. This guarantees maximum privacy and security.",
+        "HappyFormatter processes all JSON data locally, ensuring that your data never leaves your device. This guarantees maximum privacy and security.",
     },
     {
       title: "Why use a JSON formatter?",
       content:
         "Using a JSON formatter helps to ensure that your JSON data is properly structured and easy to read. It also allows you to validate and edit JSON data without the need for additional software.",
-    },
-    {
-      title: "How do I format a JSON file?",
-      content:
-        "To format a JSON file, you can use an online JSON formatter tool. Simply paste your JSON data into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "How to use JSON formatter with URL?",
-      content:
-        "To use a JSON formatter with a URL, you can paste the URL containing the JSON data into the formatter tool. The tool will fetch the JSON data from the URL and format it for you.",
     },
     {
       title: "Is login required to save JSON data?",
@@ -150,10 +140,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format Java code, you can use an online Java formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for optimizing Java code?",
-      content: "Yes, HappyFormatter can also be used to optimize Java code, improving its performance and readability.",
-    },
-    {
       title: "Is login required to use the Java formatter?",
       content:
         "No, login is not required to use the Java formatter. You can format your Java code directly from the tool without needing to create an account or log in.",
@@ -174,11 +160,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format Dart code?",
       content:
         "To format Dart code, you can use an online Dart formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for compiling Dart to JavaScript?",
-      content:
-        "Yes, HappyFormatter can also be used to compile Dart code to JavaScript, making it easier to integrate Dart applications into web environments.",
     },
     {
       title: "Is login required to use the Dart formatter?",
@@ -203,11 +184,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format Go code, you can use an online Go formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for generating Go documentation?",
-      content:
-        "Yes, HappyFormatter can also be used to generate Go documentation, making it easier to understand and maintain your code.",
-    },
-    {
       title: "Is login required to use the Go formatter?",
       content:
         "No, login is not required to use the Go formatter. You can format your Go code directly from the tool without needing to create an account or log in.",
@@ -228,10 +204,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format Rust code?",
       content:
         "To format Rust code, you can use an online Rust formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for optimizing Rust code?",
-      content: "Yes, HappyFormatter can also be used to optimize Rust code, improving its performance and readability.",
     },
     {
       title: "Is login required to use the Rust formatter?",
@@ -282,11 +254,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format Lua code, you can use an online Lua formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for running Lua scripts?",
-      content:
-        "Yes, HappyFormatter can also be used to run Lua scripts, providing immediate feedback on your code execution.",
-    },
-    {
       title: "Is login required to use the Lua formatter?",
       content:
         "No, login is not required to use the Lua formatter. You can format your Lua code directly from the tool without needing to create an account or log in.",
@@ -306,12 +273,7 @@ export const accordionData: Record<string, AccordionItem[]> = {
     {
       title: "How do I format Python code?",
       content:
-        "To format Python code, you can use an online Python formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for linting Python code?",
-      content:
-        "Yes, HappyFormatter can also be used to lint Python code, identifying potential issues and enforcing coding standards.",
+        "To format Python code, you can use our online Python formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
       title: "Is login required to use the Python formatter?",
@@ -336,11 +298,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format SQL code, you can use an online SQL formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for optimizing SQL queries?",
-      content:
-        "Yes, HappyFormatter can also be used to optimize SQL queries, improving their performance and readability.",
-    },
-    {
       title: "Is login required to use the SQL formatter?",
       content:
         "No, login is not required to use the SQL formatter. You can format your SQL code directly from the tool without needing to create an account or log in.",
@@ -350,7 +307,7 @@ export const accordionData: Record<string, AccordionItem[]> = {
     {
       title: "How does HappyFormatter ensure my XML data remains private?",
       content:
-        "HappyFormatter processes all XML data locally using WebAssembly (WASM), ensuring that your data never leaves your device. This guarantees maximum privacy and security.",
+        "HappyFormatter processes all XML data locally, ensuring that your data never leaves your device. This guarantees maximum privacy and security.",
     },
     {
       title: "Why use an XML formatter?",
@@ -389,11 +346,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format YAML data, you can use an online YAML formatter tool. Simply paste your data into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for converting YAML to JSON?",
-      content:
-        "Yes, HappyFormatter can also be used to convert YAML data to JSON, making it easier to integrate with various applications.",
-    },
-    {
       title: "Is login required to use the YAML formatter?",
       content:
         "No, login is not required to use the YAML formatter. You can format your YAML data directly from the tool without needing to create an account or log in.",
@@ -414,10 +366,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format C code?",
       content:
         "To format C code, you can use an online C formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for optimizing C code?",
-      content: "Yes, HappyFormatter can also be used to optimize C code, improving its performance and readability.",
     },
     {
       title: "Is login required to use the C formatter?",
@@ -442,10 +390,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format C++ code, you can use an online C++ formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for optimizing C++ code?",
-      content: "Yes, HappyFormatter can also be used to optimize C++ code, improving its performance and readability.",
-    },
-    {
       title: "Is login required to use the C++ formatter?",
       content:
         "No, login is not required to use the C++ formatter. You can format your C++ code directly from the tool without needing to create an account or log in.",
@@ -466,10 +410,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format C# code?",
       content:
         "To format C# code, you can use an online C# formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for optimizing C# code?",
-      content: "Yes, HappyFormatter can also be used to optimize C# code, improving its performance and readability.",
     },
     {
       title: "Is login required to use the C# formatter?",
@@ -494,11 +434,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format Objective-C code, you can use an online Objective-C formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for optimizing Objective-C code?",
-      content:
-        "Yes, HappyFormatter can also be used to optimize Objective-C code, improving its performance and readability.",
-    },
-    {
       title: "Is login required to use the Objective-C formatter?",
       content:
         "No, login is not required to use the Objective-C formatter. You can format your Objective-C code directly from the tool without needing to create an account or log in.",
@@ -519,11 +454,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format Objective-C++ code?",
       content:
         "To format Objective-C++ code, you can use an online Objective-C++ formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for optimizing Objective-C++ code?",
-      content:
-        "Yes, HappyFormatter can also be used to optimize Objective-C++ code, improving its performance and readability.",
     },
     {
       title: "Is login required to use the Objective-C++ formatter?",
@@ -575,11 +505,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format Markdown content, you can use an online Markdown formatter tool. Simply paste your content into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for converting Markdown to HTML?",
-      content:
-        "Yes, HappyFormatter can also be used to convert Markdown content to HTML, making it easier to publish your documents online.",
-    },
-    {
       title: "Is login required to use the Markdown formatter?",
       content:
         "No, login is not required to use the Markdown formatter. You can format your Markdown content directly from the tool without needing to create an account or log in.",
@@ -600,10 +525,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format PHP code?",
       content:
         "To format PHP code, you can use an online PHP formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for optimizing PHP code?",
-      content: "Yes, HappyFormatter can also be used to optimize PHP code, improving its performance and readability.",
     },
     {
       title: "Is login required to use the PHP formatter?",
@@ -628,10 +549,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format Zig code, you can use an online Zig formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for optimizing Zig code?",
-      content: "Yes, HappyFormatter can also be used to optimize Zig code, improving its performance and readability.",
-    },
-    {
       title: "Is login required to use the Zig formatter?",
       content:
         "No, login is not required to use the Zig formatter. You can format your Zig code directly from the tool without needing to create an account or log in.",
@@ -652,10 +569,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format TOML code?",
       content:
         "To format TOML code, you can use an online TOML formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for optimizing TOML code?",
-      content: "Yes, HappyFormatter can also be used to optimize TOML code, improving its performance and readability.",
     },
     {
       title: "Is login required to use the TOML formatter?",
