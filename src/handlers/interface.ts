@@ -8,6 +8,8 @@ export abstract class Formatter {
   setConfig(config: any): void {
     this.config = { ...this.config, ...config };
   }
+
+  validateCode?(code: string): Promise<boolean>;
 }
 
 export abstract class Minifier {

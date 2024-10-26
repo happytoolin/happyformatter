@@ -18,4 +18,13 @@ export class DartFormatter extends Formatter {
   setConfig(config: LayoutConfig): void {
     this.config = config;
   }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      await this.formatCode(code);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

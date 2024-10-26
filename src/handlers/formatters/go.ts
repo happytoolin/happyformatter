@@ -9,4 +9,13 @@ export class GoFormatter extends Formatter {
   async formatCode(code: string): Promise<string> {
     return format(code);
   }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      await this.formatCode(code);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

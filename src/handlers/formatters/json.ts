@@ -27,4 +27,13 @@ export class JSONFormatter extends Formatter {
   setConfig(config: JsonConfig): void {
     this.config = config;
   }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      JSON.parse(code);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

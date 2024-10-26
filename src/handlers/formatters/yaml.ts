@@ -21,4 +21,14 @@ export class YamlFormatter extends Formatter {
   setConfig(config: Config): void {
     this.config = config;
   }
+
+  async validateCode(code: string): Promise<boolean> {
+    // do a formatting and see if its returning error or not
+    try {
+      await this.formatCode(code);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
