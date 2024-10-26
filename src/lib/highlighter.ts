@@ -1,6 +1,7 @@
 import {
   type BundledLanguage,
   createHighlighter,
+  createJavaScriptRegexEngine,
   type Highlighter,
   type LanguageInput,
   type SpecialLanguage,
@@ -11,7 +12,7 @@ const highlighterCache: Map<string, Highlighter> = typeof window !== "undefined"
   ? (window.highlighterCache = window.highlighterCache || new Map())
   : new Map();
 
-// const jsEngine = createJavaScriptRegexEngine();
+const jsEngine = createJavaScriptRegexEngine();
 
 export const loadHighlighter = async (
   language: string,
@@ -23,17 +24,17 @@ export const loadHighlighter = async (
 
   highlighterCache.clear();
 
+  const jsEngineBannedLanguages = ["cpp", "csharp"];
+
   try {
     const hl = await createHighlighter({
       langs: [],
       themes: Object.values(themes),
+      engine: jsEngineBannedLanguages.includes(language.toLowerCase()) ? undefined : jsEngine,
     });
 
     await hl.loadLanguage(language as BundledLanguage | LanguageInput | SpecialLanguage);
 
-    await hl.loadLanguage(
-      language as BundledLanguage | LanguageInput | SpecialLanguage,
-    );
     highlighterCache.set(language, hl);
 
     return hl;
