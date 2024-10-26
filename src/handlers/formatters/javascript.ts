@@ -18,6 +18,15 @@ export class JavascriptFormatter extends Formatter {
   setConfig(config: Config): void {
     this.config = config;
   }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      new Function(code);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 export class TypescriptFormatter extends Formatter {
@@ -33,5 +42,18 @@ export class TypescriptFormatter extends Formatter {
 
   setConfig(config: Config): void {
     this.config = config;
+  }
+
+  async validateCode(code: string): Promise<boolean> {
+    // import typescript from 'typescript';
+    const typescript = await import("typescript");
+    try {
+      const res = typescript.transpileModule(code, {});
+      const jscode = res.outputText;
+      new Function(jscode);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { createStreaming, type Formatter as DprintFormatter, type GlobalConfiguration } from "@dprint/formatter";
+import { createStreaming, type Formatter as DprintFormatter } from "@dprint/formatter";
 import { Formatter } from "../interface";
 
 export class MarkdownFormatter extends Formatter {

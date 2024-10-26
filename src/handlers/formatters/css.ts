@@ -31,6 +31,15 @@ export class CSSFormatter extends Formatter {
   setConfig(config: Options): void {
     this.config = config;
   }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      await this.formatCode(code);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 export class SCSSFormatter extends Formatter {
@@ -56,5 +65,14 @@ export class SCSSFormatter extends Formatter {
 
   setConfig(config: Options): void {
     this.config = config;
+  }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      const valid = await this.validateCode(code);
+      return valid;
+    } catch (error) {
+      return false;
+    }
   }
 }

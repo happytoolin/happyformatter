@@ -3,7 +3,7 @@ import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
 import { getInitialCode } from "@/lib/initialCode";
 import { scope } from "simple:scope";
 import Textarea from "../ui/textarea.astro";
-import { resetStores } from "./store";
+import { inputStore, resetStores } from "./store";
 
 interface Props {
   inputCode: string;
@@ -106,11 +106,7 @@ function setupEventListeners(
   language: string,
 ): void {
   const throttledHighlight = throttle((code: string) => {
-    const highlightedCode = highlightCode(
-      code,
-      highlighter,
-      language,
-    );
+    const highlightedCode = highlightCode(code, highlighter, language);
     highlightDiv.innerHTML = highlightedCode;
 
     const preElement = highlightDiv.querySelector("pre");
@@ -150,7 +146,9 @@ function setupEventListeners(
   textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
 }
 
-const textarea = document.getElementById("codeTextarea") as HTMLTextAreaElement;
+const textarea = document.getElementById(
+  "codeTextarea",
+) as HTMLTextAreaElement;
 const highlightDiv = document.getElementById(
   "highlight_code",
 ) as HTMLDivElement;
@@ -178,12 +176,7 @@ RootElement.ready(async ($) => {
   try {
     const highlighter = await initializeHighlighter(language);
 
-    setupEventListeners(
-      textArea,
-      highlightDiv,
-      highlighter,
-      language,
-    );
+    setupEventListeners(textArea, highlightDiv, highlighter, language);
   } catch (error) {
     console.error("Initialization failed:", error);
   }
