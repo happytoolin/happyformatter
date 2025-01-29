@@ -55,7 +55,7 @@ importers:
         version: 1.1.0(@types/react@19.0.2)(react@19.0.0)
       '@swc/wasm-web':
         specifier: ^1.10.1
-        version: 1.10.1
+        version: 1.10.11
       '@wasm-fmt/clang-format':
         specifier: ^19.1.5
         version: 19.1.5
@@ -1591,8 +1591,8 @@ packages:
   '@swc/types@0.1.13':
     resolution: {integrity: sha512-JL7eeCk6zWCbiYQg2xQSdLXQJl8Qoc9rXmG2cEKvHe3CKwMHwHGpfOb8frzNLmbycOo6I51qxnLnn9ESf4I20Q==}
 
-  '@swc/wasm-web@1.10.1':
-    resolution: {integrity: sha512-b3SfbFaiOovRy+TcEIu4hk1XAThTm8HKz4a4lonZcj7Hjxh3axFPDx0HjeLO/OM4LzsJwyAyTN4mGG594ZcvaA==}
+  '@swc/wasm-web@1.10.11':
+    resolution: {integrity: sha512-0UN+aGFVWZbCNPdb8rtgF3pysA7CWzoLmIdpN8XK4EqFs25gSAmF0ZasQBNFZ+YAc7LHdU+iioAZijjRu3uKvg==}
 
   '@taplo/core@0.1.1':
     resolution: {integrity: sha512-BG/zLGf5wiNXGEVPvUAAX/4ilB3PwDUY2o0MV0y47mZbDZ9ad9UK/cIQsILat3bqbPJsALVbU6k3cskNZ3vAQg==}
@@ -5018,7 +5018,7 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
-  '@swc/wasm-web@1.10.1': {}
+  '@swc/wasm-web@1.10.11': {}
 
   '@taplo/core@0.1.1': {}
 
