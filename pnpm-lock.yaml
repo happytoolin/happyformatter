@@ -40,7 +40,7 @@ importers:
         version: 0.1.6(@types/node@22.8.1)(jiti@1.21.6)(rollup@4.24.4)(sass@1.77.8)(typescript@5.7.2)(yaml@2.6.0)
       '@prettier/plugin-php':
         specifier: ^0.22.2
-        version: 0.22.2(prettier@3.4.2)
+        version: 0.22.4(prettier@3.4.2)
       '@radix-ui/react-accordion':
         specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@19.0.2(@types/react@19.0.2))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1058,8 +1058,8 @@ packages:
   '@playform/pipe@0.1.1':
     resolution: {integrity: sha512-qofwa/+UKbvyHw4NiVwQZ5Z4UNEDSKmrtKFUL6JO9NhtaEuio3a90QuvTTsTw4g4tGHCmj0is/7p1igkRJ2EyA==}
 
-  '@prettier/plugin-php@0.22.2':
-    resolution: {integrity: sha512-md0+7tNbsP0oy+wIP3KZZc6fzx1k1jtWaMjOy/gM8yU9f2BDYEi+iHOc/UNPihYvPI28zFTbjvlhH4QXQjQwNg==}
+  '@prettier/plugin-php@0.22.4':
+    resolution: {integrity: sha512-uZWqfyrwsxScIYkmVcfnoQGFmKVMXTHD5pqYT4l8fxzm5P3XY94hTPbf8X6TFCi2QTZBIot7GS8lfIjQjldc2g==}
     peerDependencies:
       prettier: ^3.0.0
 
@@ -2855,8 +2855,8 @@ packages:
   pathe@1.1.2:
     resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
 
-  php-parser@3.1.5:
-    resolution: {integrity: sha512-jEY2DcbgCm5aclzBdfW86GM6VEIWcSlhTBSHN1qhJguVePlYe28GhwS0yoeLYXpM2K8y6wzLwrbq814n2PHSoQ==}
+  php-parser@3.2.2:
+    resolution: {integrity: sha512-voj3rzCJmEbwHwH3QteON28wA6K+JbcaJEofyUZkUXmcViiXofjbSbcE5PtqtjX6nstnnAEYCFoRq0mkjP5/cg==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -4550,10 +4550,10 @@ snapshots:
       deepmerge-ts: 7.1.0
       fast-glob: 3.3.2
 
-  '@prettier/plugin-php@0.22.2(prettier@3.4.2)':
+  '@prettier/plugin-php@0.22.4(prettier@3.4.2)':
     dependencies:
       linguist-languages: 7.27.0
-      php-parser: 3.1.5
+      php-parser: 3.2.2
       prettier: 3.4.2
 
   '@radix-ui/number@1.1.0': {}
@@ -6579,7 +6579,7 @@ snapshots:
 
   pathe@1.1.2: {}
 
-  php-parser@3.1.5: {}
+  php-parser@3.2.2: {}
 
   picocolors@1.1.1: {}
 
