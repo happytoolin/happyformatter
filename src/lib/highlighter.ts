@@ -1,3 +1,4 @@
+import { shikiThemes } from "@/components/layout/themes";
 import {
   type BundledLanguage,
   createHighlighter,
@@ -19,7 +20,6 @@ let sharedHighlighter: Highlighter | null = null;
 
 export const loadHighlighter = async (
   language: string,
-  themes: { [key: string]: string },
 ): Promise<Highlighter> => {
   if (highlighterCache.has(language)) {
     return highlighterCache.get(language)!;
@@ -30,7 +30,7 @@ export const loadHighlighter = async (
     if (!sharedHighlighter) {
       sharedHighlighter = await createHighlighter({
         langs: [],
-        themes: Object.values(themes),
+        themes: Object.values(shikiThemes),
         engine: jsEngine,
       });
     }
@@ -50,27 +50,6 @@ export const loadHighlighter = async (
   }
 };
 
-const themes = {
-  light: "rose-pine-dawn",
-  dark: "rose-pine-moon",
-  everforest_light: "everforest-light",
-  everforest_dark: "everforest-dark",
-  nord_light: "nord",
-  nord_dark: "nord",
-  github_light: "github-light",
-  github_dark: "github-dark",
-  material_light: "material-theme-lighter",
-  material_dark: "material-theme",
-  rose_pine_light: "rose-pine-dawn",
-  rose_pine_dark: "rose-pine-moon",
-  night_owl_light: "night-owl",
-  night_owl_dark: "night-owl",
-  catppuccin_light: "catppuccin-latte",
-  catppuccin_dark: "catppuccin-mocha",
-  solarized_light: "solarized-light",
-  solarized_dark: "solarized-dark",
-};
-
 export const highlightCode = (
   code: string,
   hl: Highlighter,
@@ -79,7 +58,7 @@ export const highlightCode = (
 ): string => {
   return hl.codeToHtml(code, {
     lang: language.toString(),
-    themes,
+    themes: shikiThemes,
     transformers: [
       {
         pre(node) {
@@ -96,5 +75,5 @@ export const highlightCode = (
 export async function initializeHighlighter(
   language: string,
 ): Promise<Highlighter> {
-  return loadHighlighter(language, themes);
+  return loadHighlighter(language);
 }

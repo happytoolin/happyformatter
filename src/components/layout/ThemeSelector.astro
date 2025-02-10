@@ -1,6 +1,7 @@
 ---
-import { themes } from "./themes";
+import { shikiThemes } from "./themes";
 ---
+
 <RootElement>
   <div class="theme-selector relative w-[180px]">
     <select
@@ -10,7 +11,11 @@ import { themes } from "./themes";
       class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <option value="" disabled selected>Select theme</option>
-      {themes.map((theme) => <option value={theme.value}>{theme.name}</option>)}
+      {
+        shikiThemes.map((theme) => (
+          <option value={theme.value}>{theme.name}</option>
+        ))
+      }
     </select>
   </div>
 </RootElement>

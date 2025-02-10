@@ -72,10 +72,7 @@ function syncScroll(
 
 function handleInputEvent(
   e: Event,
-  highlighter: Highlighter,
-  highlightDiv: HTMLDivElement,
   throttledHighlight: (code: string) => void,
-  language: string,
 ): void {
   const element = e.target as HTMLTextAreaElement;
   const code = element.value;
@@ -124,23 +121,13 @@ function setupEventListeners(
     textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
   }, 0);
 
-  textArea.addEventListener("input", (e) =>
-    handleInputEvent(
-      e,
-      highlighter,
-      highlightDiv,
-      throttledHighlight,
-      language,
-    ));
+  textArea.addEventListener(
+    "input",
+    (e) => handleInputEvent(e, throttledHighlight),
+  );
 
   textArea.addEventListener("paste", (e) => {
-    handleInputEvent(
-      e,
-      highlighter,
-      highlightDiv,
-      throttledHighlight,
-      language,
-    );
+    handleInputEvent(e, throttledHighlight);
   });
 
   textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
