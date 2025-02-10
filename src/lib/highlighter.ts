@@ -14,6 +14,9 @@ const highlighterCache: Map<string, Highlighter> = typeof window !== "undefined"
 
 const jsEngine = createJavaScriptRegexEngine();
 
+// Create a single shared highlighter instance for all languages
+let sharedHighlighter: Highlighter | null = null;
+
 export const loadHighlighter = async (
   language: string,
   themes: { [key: string]: string },
@@ -22,20 +25,25 @@ export const loadHighlighter = async (
     return highlighterCache.get(language)!;
   }
 
-  highlighterCache.clear();
-
   try {
-    const hl = await createHighlighter({
-      langs: [],
-      themes: Object.values(themes),
-      engine: createJavaScriptRegexEngine(),
-    });
+    // Initialize shared highlighter if not exists
+    if (!sharedHighlighter) {
+      sharedHighlighter = await createHighlighter({
+        langs: [],
+        themes: Object.values(themes),
+        engine: jsEngine,
+      });
+    }
 
-    await hl.loadLanguage(language as BundledLanguage | LanguageInput | SpecialLanguage);
+    // Load the language into shared highlighter if not already loaded
+    if (!sharedHighlighter.getLoadedLanguages().includes(language as any)) {
+      await sharedHighlighter.loadLanguage(language as BundledLanguage | LanguageInput | SpecialLanguage);
+    }
 
-    highlighterCache.set(language, hl);
+    // Store the shared highlighter in the cache
+    highlighterCache.set(language, sharedHighlighter);
 
-    return hl;
+    return sharedHighlighter;
   } catch (error) {
     console.error("Error loading highlighter:", error);
     throw error;

@@ -9,6 +9,7 @@ export class PHPFormatter extends Formatter {
     // Dynamically import prettier and php plugin to avoid cycle
     const [{ default: prettier }, { default: phpPlugin }] = await Promise.all([
       import("prettier/standalone"),
+      // @ts-ignore
       import("@prettier/plugin-php/standalone"),
     ]);
 
