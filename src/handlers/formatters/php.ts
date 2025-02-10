@@ -1,25 +1,34 @@
-// @ts-ignore
-import phpPlugin from "@prettier/plugin-php/standalone";
-import type { Options } from "prettier";
-// @ts-ignore
-import prettier from "prettier/standalone";
 import { Formatter } from "../interface";
 
 export class PHPFormatter extends Formatter {
-  protected config: Options = {};
+  protected config = {};
+  private prettier: any;
+  private phpPlugin: any;
 
   async init(): Promise<void> {
-    return;
+    // Dynamically import prettier and php plugin to avoid cycle
+    const [{ default: prettier }, { default: phpPlugin }] = await Promise.all([
+      import("prettier/standalone"),
+      import("@prettier/plugin-php/standalone"),
+    ]);
+
+    this.prettier = prettier;
+    this.phpPlugin = phpPlugin;
   }
 
   async formatCode(code: string): Promise<string> {
-    return prettier.format(code, {
-      plugins: [phpPlugin],
+    if (!this.prettier || !this.phpPlugin) {
+      await this.init();
+    }
+
+    return this.prettier.format(code, {
+      plugins: [this.phpPlugin],
       parser: "php",
+      ...this.config,
     });
   }
 
-  setConfig(config: Options): void {
+  setConfig(config: any): void {
     this.config = config;
   }
 

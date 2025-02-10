@@ -3,6 +3,9 @@ import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter.astro";
+
+// Add a loading state if needed
+const loading = false;
 ---
 
 <Layout
@@ -10,7 +13,15 @@ import Formatter from "@/components/playground/Formatter.astro";
   description="PHP Formatter that formats PHP data, locally in your browser"
   language="php"
 >
-  <Formatter minifier={false} language="php" />
+  {
+    loading ? <div>Loading formatter...</div> : (
+      <Formatter minifier={false} language="php" />
+    )
+  }
   <Info language="php" />
   <FAQ language="php" client:idle />
 </Layout>
+
+<script>
+// Add any client-side initialization if needed
+</script>

@@ -1,7 +1,7 @@
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 import playformCompress from "@playform/compress";
+import tailwind from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import simpleStackQuery from "simple-stack-query";
 import topLevelAwait from "vite-plugin-top-level-await";
@@ -14,7 +14,6 @@ export default defineConfig({
   site: "https://happyformatter.com",
   integrations: [
     sitemap(),
-    tailwind(),
     react(),
     playformCompress(),
     simpleStackQuery(),
@@ -27,7 +26,7 @@ export default defineConfig({
   output: "static",
   prefetch: true,
   vite: {
-    plugins: [wasm(), topLevelAwait()],
+    plugins: [wasm(), topLevelAwait(), tailwind()],
     ssr: {
       // noExternal: ["@taplo/lib"]
     },
