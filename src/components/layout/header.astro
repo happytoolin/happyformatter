@@ -2,7 +2,6 @@
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
 import ModeToggle from "./ModeToggle.astro";
-import ThemeSelector from "./ThemeSelector.astro";
 ---
 
 <header class="z-20 relative bg-background border-b">
@@ -11,11 +10,7 @@ import ThemeSelector from "./ThemeSelector.astro";
     aria-label="Global"
   >
     <div class="flex lg:flex-1 w-max mr-4">
-      <a
-        data-astro-prefetch
-        href="/"
-        class="flex gap-2 items-center"
-      >
+      <a data-astro-prefetch href="/" class="flex gap-2 items-center">
         <Logo fill="currentColor" />
         <span class="font-bold text-lg w-max">Happy Formatter</span>
       </a>
@@ -74,17 +69,12 @@ import ThemeSelector from "./ThemeSelector.astro";
           <Logo class="h-8 w-auto" fill="currentColor" />
           <span class="font-bold text-lg">Happy Formatter</span>
         </a>
-        <button
-          type="button"
-          class="rounded-md p-2.5"
-          id="close-menu-button"
-        >
+        <button type="button" class="rounded-md p-2.5" id="close-menu-button">
           <span class="sr-only">Close menu</span>
           <Icons icon="cross" />
         </button>
       </div>
       <div class="flex justify-between items-center mb-6">
-        <ThemeSelector />
         <ModeToggle />
       </div>
       <div class="mt-6 flow-root">
