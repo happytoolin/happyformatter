@@ -24,13 +24,11 @@ export const loadHighlighter = async (
 
   highlighterCache.clear();
 
-  const jsEngineBannedLanguages = ["cpp", "csharp"];
-
   try {
     const hl = await createHighlighter({
       langs: [],
       themes: Object.values(themes),
-      engine: jsEngineBannedLanguages.includes(language.toLowerCase()) ? undefined : jsEngine,
+      engine: createJavaScriptRegexEngine(),
     });
 
     await hl.loadLanguage(language as BundledLanguage | LanguageInput | SpecialLanguage);
