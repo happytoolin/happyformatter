@@ -136,7 +136,7 @@ importers:
         version: 5.7.3
       xml-formatter:
         specifier: ^3.6.4
-        version: 3.6.4
+        version: 3.6.7
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.0.6
@@ -3884,12 +3884,12 @@ packages:
       utf-8-validate:
         optional: true
 
-  xml-formatter@3.6.4:
-    resolution: {integrity: sha512-vkvTNw4u9mp72lMmJHw771NE9EJLX0kfwIcP+ZEo9eJ6HmotX23vmykyROyIQ9Y3a+ckdUdhxIE2ZO66rYuPrg==}
+  xml-formatter@3.6.7:
+    resolution: {integrity: sha512-IsfFYJQuoDqtUlKhm4EzeoBOb+fQwzQVeyxxAQ0sThn/nFnQmyLPTplqq4yRhaOENH/tAyujD2TBfIYzUKB6hg==}
     engines: {node: '>= 16'}
 
-  xml-parser-xo@4.1.2:
-    resolution: {integrity: sha512-Z/DRB0ZAKj5vAQg++XsfQQKfT73Vfj5n5lKIVXobBDQEva6NHWUTxOA6OohJmEcpoy8AEqBmSGkXXAnFwt5qAA==}
+  xml-parser-xo@4.1.5:
+    resolution: {integrity: sha512-TxyRxk9sTOUg3glxSIY6f0nfuqRll2OEF8TspLgh5mZkLuBgheCn3zClcDSGJ58TvNmiwyCCuat4UajPud/5Og==}
     engines: {node: '>= 16'}
 
   xxhash-wasm@1.1.0:
@@ -7832,11 +7832,11 @@ snapshots:
 
   ws@8.18.0: {}
 
-  xml-formatter@3.6.4:
+  xml-formatter@3.6.7:
     dependencies:
-      xml-parser-xo: 4.1.2
+      xml-parser-xo: 4.1.5
 
-  xml-parser-xo@4.1.2: {}
+  xml-parser-xo@4.1.5: {}
 
   xxhash-wasm@1.1.0: {}
 
