@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@astrojs/check':
         specifier: ^0.9.4
-        version: 0.9.4(prettier@3.5.0)(typescript@5.7.3)
+        version: 0.9.4(prettier@3.7.1)(typescript@5.7.3)
       '@astrojs/cloudflare':
         specifier: ^12.2.1
         version: 12.2.3(@types/node@22.13.14)(astro@5.4.1(@types/node@22.13.14)(jiti@2.4.2)(lightningcss@1.29.3)(rollup@4.34.9)(sass@1.77.8)(terser@5.39.0)(typescript@5.7.3)(yaml@2.6.0))(jiti@2.4.2)(lightningcss@1.29.3)(sass@1.77.8)(terser@5.39.0)(yaml@2.6.0)
@@ -40,7 +40,7 @@ importers:
         version: 0.1.8(@types/node@22.13.14)(jiti@2.4.2)(rollup@4.34.9)(sass@1.77.8)(typescript@5.7.3)(yaml@2.6.0)
       '@prettier/plugin-php':
         specifier: ^0.22.4
-        version: 0.22.4(prettier@3.5.0)
+        version: 0.22.4(prettier@3.7.1)
       '@radix-ui/react-accordion':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -106,10 +106,10 @@ importers:
         version: 0.11.3
       prettier:
         specifier: ^3.5.0
-        version: 3.5.0
+        version: 3.7.1
       prettier-plugin-toml:
         specifier: ^2.0.1
-        version: 2.0.1(prettier@3.5.0)
+        version: 2.0.1(prettier@3.7.1)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -3104,8 +3104,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  prettier@3.5.0:
-    resolution: {integrity: sha512-quyMrVt6svPS7CjQ9gKb3GLEX/rl3BCL2oa/QkNcXv4YNVBC9olt3s+H7ukto06q7B1Qz46PbrKLO34PR6vXcA==}
+  prettier@3.7.1:
+    resolution: {integrity: sha512-RWKXE4qB3u5Z6yz7omJkjWwmTfLdcbv44jUVHC5NpfXwFGzvpQM798FGv/6WNK879tc+Cn0AAyherCl1KjbyZQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3343,6 +3343,7 @@ packages:
   sitemap@8.0.0:
     resolution: {integrity: sha512-+AbdxhM9kJsHtruUF39bwS/B0Fytw6Fr1o4ZAIAEqA6cke2xcoO2GleBw9Zw7nRzILVEgz7zBM5GiTJjie1G9A==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    deprecated: 'SECURITY: Multiple vulnerabilities fixed in 8.0.1 (XML injection, path traversal, command injection, protocol injection). Upgrade immediately: npm install sitemap@8.0.1'
     hasBin: true
 
   smol-toml@1.3.1:
@@ -3968,9 +3969,9 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@astrojs/check@0.9.4(prettier@3.5.0)(typescript@5.7.3)':
+  '@astrojs/check@0.9.4(prettier@3.7.1)(typescript@5.7.3)':
     dependencies:
-      '@astrojs/language-server': 2.15.4(prettier@3.5.0)(typescript@5.7.3)
+      '@astrojs/language-server': 2.15.4(prettier@3.7.1)(typescript@5.7.3)
       chokidar: 4.0.1
       kleur: 4.1.5
       typescript: 5.7.3
@@ -4013,7 +4014,7 @@ snapshots:
 
   '@astrojs/internal-helpers@0.6.0': {}
 
-  '@astrojs/language-server@2.15.4(prettier@3.5.0)(typescript@5.7.3)':
+  '@astrojs/language-server@2.15.4(prettier@3.7.1)(typescript@5.7.3)':
     dependencies:
       '@astrojs/compiler': 2.10.3
       '@astrojs/yaml2ts': 0.2.2
@@ -4027,14 +4028,14 @@ snapshots:
       volar-service-css: 0.0.62(@volar/language-service@2.4.7)
       volar-service-emmet: 0.0.62(@volar/language-service@2.4.7)
       volar-service-html: 0.0.62(@volar/language-service@2.4.7)
-      volar-service-prettier: 0.0.62(@volar/language-service@2.4.7)(prettier@3.5.0)
+      volar-service-prettier: 0.0.62(@volar/language-service@2.4.7)(prettier@3.7.1)
       volar-service-typescript: 0.0.62(@volar/language-service@2.4.7)
       volar-service-typescript-twoslash-queries: 0.0.62(@volar/language-service@2.4.7)
       volar-service-yaml: 0.0.62(@volar/language-service@2.4.7)
       vscode-html-languageservice: 5.3.1
       vscode-uri: 3.0.8
     optionalDependencies:
-      prettier: 3.5.0
+      prettier: 3.7.1
     transitivePeerDependencies:
       - typescript
 
@@ -4746,11 +4747,11 @@ snapshots:
       deepmerge-ts: 7.1.5
       fast-glob: 3.3.3
 
-  '@prettier/plugin-php@0.22.4(prettier@3.5.0)':
+  '@prettier/plugin-php@0.22.4(prettier@3.7.1)':
     dependencies:
       linguist-languages: 7.27.0
       php-parser: 3.1.5
-      prettier: 3.5.0
+      prettier: 3.7.1
 
   '@qwik.dev/partytown@0.11.0':
     dependencies:
@@ -7009,15 +7010,15 @@ snapshots:
       find-yarn-workspace-root2: 1.2.16
       which-pm: 3.0.1
 
-  prettier-plugin-toml@2.0.1(prettier@3.5.0):
+  prettier-plugin-toml@2.0.1(prettier@3.7.1):
     dependencies:
       '@taplo/lib': 0.4.0-alpha.2
-      prettier: 3.5.0
+      prettier: 3.7.1
 
   prettier@2.8.7:
     optional: true
 
-  prettier@3.5.0: {}
+  prettier@3.7.1: {}
 
   printable-characters@1.0.42: {}
 
@@ -7692,12 +7693,12 @@ snapshots:
     optionalDependencies:
       '@volar/language-service': 2.4.7
 
-  volar-service-prettier@0.0.62(@volar/language-service@2.4.7)(prettier@3.5.0):
+  volar-service-prettier@0.0.62(@volar/language-service@2.4.7)(prettier@3.7.1):
     dependencies:
       vscode-uri: 3.0.8
     optionalDependencies:
       '@volar/language-service': 2.4.7
-      prettier: 3.5.0
+      prettier: 3.7.1
 
   volar-service-typescript-twoslash-queries@0.0.62(@volar/language-service@2.4.7):
     dependencies:
