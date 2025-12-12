@@ -149,8 +149,23 @@ import { lazy, Workspace } from "modern-monaco";
       // Set the model on the editor - this switches the displayed content and language
       editor.setModel(model);
 
+      // Ensure theme is properly applied
+      try {
+        // Force theme re-application by setting it again
+        monaco.editor.setTheme('vitesse-dark');
+        console.log("Re-applied theme: vitesse-dark");
+      } catch (themeError) {
+        console.warn("Failed to re-apply theme:", themeError);
+      }
+
       // Force a refresh of the editor's theme and language services
       editor.updateOptions({});
+
+      // Additional refresh to ensure theme is properly applied
+      setTimeout(() => {
+        editor.layout();
+        editor.updateOptions({});
+      }, 50);
 
       // Verify the switch immediately
       const finalModel = editor.getModel();
@@ -173,12 +188,18 @@ import { lazy, Workspace } from "modern-monaco";
 
     const playground = document.getElementById("monaco-playground");
     const editor = document.getElementById("monaco-editor");
-    const language = playground?.dataset.language as string;
+
+    // Get language from URL to be more reliable
+    const path = window.location.pathname;
+    const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
+    const language = pathMatch ? pathMatch[1] : playground?.dataset.language as string;
 
     const extension =
       languageExtensions[language as keyof typeof languageExtensions];
 
     if (!language || !editor) return;
+
+    console.log(`Initializing Monaco for language: ${language} (from URL: ${path})`);
 
     try {
       workspace = new Workspace({
@@ -190,7 +211,7 @@ import { lazy, Workspace } from "modern-monaco";
       });
 
       // Initialize the editor with all supported languages
-      void lazy({
+      const monaco = lazy({
         workspace,
         theme: "vitesse-dark",
         langs: [
@@ -220,8 +241,29 @@ import { lazy, Workspace } from "modern-monaco";
         ],
       });
 
+      // Ensure theme is properly set after initialization
+      // Wait a bit for Monaco to be ready
+      setTimeout(() => {
+        try {
+          (window as any).monaco?.editor?.setTheme('vitesse-dark');
+          console.log("Theme set during initialization: vitesse-dark");
+        } catch (themeError) {
+          console.warn("Failed to set theme during initialization:", themeError);
+        }
+      }, 300);
+
       isInitialized = true;
       console.log("Monaco workspace initialized with all language files");
+
+      // Immediately switch to the correct language file for the current page
+      // This ensures that on page reload, we show the correct language instead of the entry file
+      setTimeout(async () => {
+        if (language) {
+          console.log(`Post-initialization switch to ${language}`);
+          await switchToLanguageFile(language);
+        }
+      }, 200);
+
     } catch (error) {
       console.error("Failed to initialize Monaco editor:", error);
     }
@@ -288,6 +330,28 @@ import { lazy, Workspace } from "modern-monaco";
   document.addEventListener("astro:after-preparation", async () => {
     console.log("astro:after-preparation triggered");
     // This might be a better time to prepare for the switch
+  });
+
+  // Also listen for page visibility changes to re-apply theme if needed
+  document.addEventListener("visibilitychange", async () => {
+    if (!document.hidden && workspace && isInitialized) {
+      console.log("Page became visible, ensuring theme is applied");
+      try {
+        const monaco = await (workspace as any)._monaco.promise;
+        if (monaco) {
+          monaco.editor.setTheme('vitesse-dark');
+
+          // Refresh all editors
+          const editors = monaco.editor.getEditors();
+          editors.forEach((editor: any) => {
+            editor.layout();
+            editor.updateOptions({});
+          });
+        }
+      } catch (error) {
+        console.warn("Failed to re-apply theme on visibility change:", error);
+      }
+    }
   });
 
   document.addEventListener("astro:after-swap", async () => {
