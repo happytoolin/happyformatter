@@ -56,17 +56,15 @@ const formatted = formattedStore.get();
           class="flex items-center gap-2"
         >
           <Format class="w-4 h-4 mr-2" /> Format</Button>
-        {
-          minifier && (
-            <Button
-              size="lg"
-              target={scope("minify")}
-              class="flex items-center gap-2"
-            >
-              {" "} <Minify class="w-4 h-4 mr-2" /> Minify
-            </Button>
-          )
-        }
+        {minifier && (
+          <Button
+            size="lg"
+            target={scope("minify")}
+            class="flex items-center gap-2"
+          >
+            {" "} <Minify class="w-4 h-4 mr-2" /> Minify
+          </Button>
+        )}
         <Button
           size="lg"
           target={scope("copy")}

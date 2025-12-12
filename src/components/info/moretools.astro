@@ -42,12 +42,9 @@ const tools = [
     <h2 class="text-4xl font-extrabold text-center mb-12 text-primary">
       Explore Our Tools
     </h2>
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-    >
-      {
-        tools.map((tool) => {
-          return (
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {tools.map((tool) => {
+        return (
           <a
             href={tool.url}
             class="tool group bg-white dark:bg-primary/5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
@@ -60,8 +57,7 @@ const tools = [
             </div>
           </a>
         );
-        })
-      }
+      })}
     </div>
   </div>
 </div>
