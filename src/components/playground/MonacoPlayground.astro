@@ -94,11 +94,14 @@ import { lazy, Workspace } from "modern-monaco";
   let isInitialized = false;
 
   async function switchToLanguageFile(language: string) {
-    if (!workspace) return;
+    if (!workspace) {
+      console.error("Workspace not available");
+      return;
+    }
 
     try {
       const fileName = `example.${language}`;
-      console.log(`Switching to ${language} file: ${fileName}`);
+      console.log(`=== SWITCHING TO ${language} file: ${fileName} ===`);
 
       // Get the Monaco instance from workspace
       const monaco = await (workspace as any)._monaco.promise;
@@ -114,34 +117,34 @@ import { lazy, Workspace } from "modern-monaco";
       }
 
       const editor = editors[0];
+      console.log("Editor found, current model:", editor.getModel()?.getLanguageId());
+
       const modelUri = monaco.Uri.parse(`file:///${fileName}`);
 
-      // Try to get existing model first
-      let model = monaco.editor.getModel(modelUri);
-
-      if (!model) {
-        // Read the content from workspace filesystem
-        let content: string;
-        try {
-          content = await workspace.fs.readTextFile(fileName);
-        } catch (fileError) {
-          console.warn(`File ${fileName} not found in workspace, using initial code`);
-          const { getInitialCode } = await import("@/lib/initialCode");
-          content = getInitialCode(language);
-        }
-
-        // Create model with proper language
-        model = monaco.editor.createModel(content, language, modelUri);
-        console.log(`Created new model for ${fileName} with language: ${language}`);
-      } else {
-        // Ensure the existing model has the correct language set
-        const currentLanguage = model.getLanguageId();
-        if (currentLanguage !== language) {
-          // Use Monaco's built-in method to set the language
-          monaco.editor.setModelLanguage(model, language);
-          console.log(`Updated model language from ${currentLanguage} to ${language}`);
-        }
+      // Always force create a new model to ensure fresh state
+      // Dispose of old model for this URI if it exists
+      const existingModel = monaco.editor.getModel(modelUri);
+      if (existingModel) {
+        console.log("Disposing existing model for:", fileName);
+        existingModel.dispose();
       }
+
+      // Always read fresh content
+      let content: string;
+      try {
+        content = await workspace.fs.readTextFile(fileName);
+        console.log(`Read ${content.length} chars from workspace file: ${fileName}`);
+      } catch (fileError) {
+        console.warn(`File ${fileName} not found in workspace, using initial code`);
+        const { getInitialCode } = await import("@/lib/initialCode");
+        content = getInitialCode(language);
+        console.log(`Using initial code for ${language}: ${content.length} chars`);
+      }
+
+      // Create a fresh model with the correct language
+      const model = monaco.editor.createModel(content, language, modelUri);
+      console.log(`Created new model for ${fileName} with language: ${language}`);
+      console.log(`Model URI: ${modelUri.toString()}`);
 
       // Set the model on the editor - this switches the displayed content and language
       editor.setModel(model);
@@ -149,8 +152,17 @@ import { lazy, Workspace } from "modern-monaco";
       // Force a refresh of the editor's theme and language services
       editor.updateOptions({});
 
-      console.log(`Successfully switched to ${language} file: ${fileName}`);
-      console.log(`Final model language: ${model.getLanguageId()}`);
+      // Verify the switch immediately
+      const finalModel = editor.getModel();
+      const finalLanguage = finalModel ? finalModel.getLanguageId() : 'none';
+      const finalContent = finalModel ? finalModel.getValue().substring(0, 50) + '...' : 'empty';
+
+      console.log(`=== SWITCH COMPLETED ===`);
+      console.log(`Target: ${language}`);
+      console.log(`Actual language: ${finalLanguage}`);
+      console.log(`Content preview: ${finalContent}`);
+      console.log(`Model matches target: ${finalLanguage === language}`);
+
     } catch (error) {
       console.error(`Failed to switch to ${language} file:`, error);
     }
@@ -272,32 +284,45 @@ import { lazy, Workspace } from "modern-monaco";
     // The editor should remain intact since we're using view transitions
   });
 
+  // Use multiple event listeners to catch the right timing
+  document.addEventListener("astro:after-preparation", async () => {
+    console.log("astro:after-preparation triggered");
+    // This might be a better time to prepare for the switch
+  });
+
   document.addEventListener("astro:after-swap", async () => {
-    const playground = document.getElementById("monaco-playground");
-    if (playground && isInitialized) {
-      const newLanguage = playground.dataset.language;
-      console.log("astro:after-swap detected, new language:", newLanguage);
+    console.log("=== astro:after-swap triggered ===");
 
-      // Wait a bit longer to ensure DOM is stable and Monaco is ready
-      await new Promise(resolve => setTimeout(resolve, 150));
+    // Always derive language from URL to be more reliable
+    const path = window.location.pathname;
+    const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
+    const newLanguage = pathMatch ? pathMatch[1] : null;
 
-      try {
-        // Check if the Monaco editor is still available
-        const monaco = await (workspace as any)._monaco.promise;
-        const editors = monaco.editor.getEditors();
-        console.log("Available editors after swap:", editors.length);
+    console.log("URL:", path);
+    console.log("Derived language:", newLanguage);
 
-        if (editors.length === 0) {
-          console.warn("No editors found after swap, this might indicate a DOM replacement issue");
-          return;
-        }
+    if (!newLanguage || !isInitialized) {
+      console.log("Skipping language switch - language:", newLanguage, "initialized:", isInitialized);
+      return;
+    }
 
-        if (newLanguage) {
-          await switchToLanguageFile(newLanguage);
-        }
-      } catch (error) {
-        console.error("Error in after-swap handling:", error);
+    // Wait for DOM to be ready
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    try {
+      const monaco = await (workspace as any)._monaco.promise;
+      const editors = monaco.editor.getEditors();
+
+      if (editors.length === 0) {
+        console.warn("No editors found");
+        return;
       }
+
+      console.log("Switching to language:", newLanguage);
+      await switchToLanguageFile(newLanguage);
+
+    } catch (error) {
+      console.error("Error switching language:", error);
     }
   });
 </script>
