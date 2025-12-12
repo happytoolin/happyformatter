@@ -13,9 +13,7 @@ const loading = false;
   description="PHP Formatter that formats PHP data, locally in your browser"
   language="php"
 >
-  {loading ? <div>Loading formatter...</div> : (
-     <MonacoFormatter minifier={false} language="php" />
-   )}
+  <MonacoFormatter minifier={false} language="php" />
   <Info language="php" />
   <FAQ language="php" client:idle />
 </Layout>
