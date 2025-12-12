@@ -197,3 +197,35 @@
 pre {
   border-radius: var(--radius);
 }
+
+/* Monaco Editor Loading Transitions */
+#monaco-playground {
+  position: relative;
+}
+
+#skeleton-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#monaco-editor {
+  position: relative;
+  z-index: 5;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  background: transparent;
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+monaco-editor {
+  /* Ensure the editor starts with the correct color scheme */
+  color-scheme: dark;
+}
+
+/* Dark theme specific fixes */
+.dark monaco-editor {
+  color-scheme: dark;
+}
