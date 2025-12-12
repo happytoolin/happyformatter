@@ -2,7 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter.astro";
+import MonacoFormatter from "@/components/playground/MonacoFormatter.astro";
 
 // Add a loading state if needed
 const loading = false;
@@ -14,7 +14,7 @@ const loading = false;
   language="php"
 >
   {loading ? <div>Loading formatter...</div> : (
-     <Formatter minifier={false} language="php" />
+     <MonacoFormatter minifier={false} language="php" />
    )}
   <Info language="php" />
   <FAQ language="php" client:idle />

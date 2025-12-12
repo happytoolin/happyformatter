@@ -1,4 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import type { JSX } from "react";
 import { accordionData } from "./data";
 
 export function FAQ({ language }: { language: string }): JSX.Element {

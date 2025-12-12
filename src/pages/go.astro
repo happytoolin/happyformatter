@@ -2,7 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter.astro";
+import MonacoFormatter from "@/components/playground/MonacoFormatter.astro";
 ---
 
 <Layout
@@ -10,7 +10,7 @@ import Formatter from "@/components/playground/Formatter.astro";
   description="Go Formatter that formats Go data, locally in your browser"
   language="go"
 >
-  <Formatter minifier={false} language="go" />
+  <MonacoFormatter minifier={false} language="go" />
   <Info language="go" />
   <FAQ language="go" client:idle />
 </Layout>
