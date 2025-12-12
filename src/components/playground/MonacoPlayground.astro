@@ -1,0 +1,150 @@
+---
+import { inputStore } from './store';
+
+interface Props {
+  inputCode: string;
+  language: string;
+}
+
+const { inputCode, language } = Astro.props;
+---
+
+<div
+  class="transition-none"
+  style="color-scheme: inherit"
+  data-language={language}
+  data-initial-code={inputCode}
+  id="monaco-playground"
+>
+  <monaco-editor
+    id="monaco-editor"
+    style="width: 100%; height: 800px;"
+    theme="github-light"
+    font-family="ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace"
+    font-size="14"
+    line-numbers="on"
+    minimap-enabled="false"
+    scrollBeyondLastLine="false"
+    word-wrap="on"
+    automatic-layout="true"
+  />
+</div>
+
+<script>
+  import { inputStore } from './store';
+  import { lazy, Workspace } from 'modern-monaco';
+
+  let workspace = null;
+  let isInitialized = false;
+
+  function getMonacoLanguageId(lang) {
+    const languageMap = {
+      'json': 'json',
+      'javascript': 'javascript',
+      'typescript': 'typescript',
+      'html': 'html',
+      'css': 'css',
+      'scss': 'scss',
+      'xml': 'xml',
+      'go': 'go',
+      'java': 'java',
+      'csharp': 'csharp',
+      'c': 'c',
+      'cpp': 'cpp',
+      'python': 'python',
+      'sql': 'sql',
+      'rust': 'rust',
+      'dart': 'dart',
+      'lua': 'lua',
+      'markdown': 'markdown',
+      'yaml': 'yaml',
+      'toml': 'toml',
+      'zig': 'zig',
+      'proto': 'proto',
+      'php': 'php'
+    };
+    return languageMap[lang] || 'plaintext';
+  }
+
+  async function initializeMonacoEditor() {
+    if (isInitialized) return;
+
+    const playground = document.getElementById('monaco-playground');
+    const editor = document.getElementById('monaco-editor');
+    const language = playground?.dataset.language;
+    const initialCode = playground?.dataset.initialCode || '';
+
+    if (!language || !editor) return;
+
+    try {
+      const fileName = `input.${getMonacoLanguageId(language)}`;
+
+      // Create workspace with initial file
+      workspace = new Workspace({
+        name: 'formatter-workspace',
+        initialFiles: {
+          [fileName]: initialCode
+        },
+        entryFile: fileName
+      });
+
+      // Store workspace reference on the playground element for access by formatter
+      playground.workspace = workspace;
+
+      // Initialize the editor
+      await lazy({
+        workspace,
+        theme: 'github-light',
+        langs: [getMonacoLanguageId(language)]
+      });
+
+      isInitialized = true;
+
+      // Set up change detection using polling (simpler approach)
+      let lastContent = initialCode;
+
+      // Initialize store with current content (ensure it's a string)
+      inputStore.set(String(initialCode || ''));
+
+      // Set up polling for file changes using workspace file system
+      setInterval(async () => {
+        try {
+          // workspace.fs.readFile returns a Promise with Uint8Array
+          const fileContentPromise = workspace.fs.readFile(fileName);
+          const binaryContent = await fileContentPromise;
+
+          // Decode Uint8Array to string using TextDecoder
+          let stringContent = '';
+          if (binaryContent) {
+            if (binaryContent instanceof Uint8Array) {
+              stringContent = new TextDecoder().decode(binaryContent);
+            } else {
+              // Fallback if it's somehow not a Uint8Array
+              stringContent = String(binaryContent);
+            }
+          }
+
+          // Only update if content actually changed
+          if (stringContent !== lastContent) {
+            lastContent = stringContent;
+            inputStore.set(stringContent);
+            console.log('Updated store with Monaco content:', stringContent.substring(0, 50) + '...');
+          }
+        } catch (err) {
+          // Ignore errors during polling
+          console.log('Polling error:', err);
+        }
+      }, 500); // Moderate polling interval
+
+    } catch (error) {
+      console.error('Failed to initialize Monaco editor:', error);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeMonacoEditor);
+  } else {
+    initializeMonacoEditor();
+  }
+</script>

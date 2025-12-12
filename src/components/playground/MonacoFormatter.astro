@@ -1,0 +1,248 @@
+---
+import { getFormatter, getMinifier } from "@/handlers";
+import Copy from "@/icons/copy.astro";
+import Format from "@/icons/format.astro";
+import Minify from "@/icons/minify.astro";
+import { getInitialCode } from "@/lib/initialCode";
+import { scope } from "simple:scope";
+import Button from "../ui/button.astro";
+import MonacoPlayground from "./MonacoPlayground.astro";
+import CodeValid from "./CodeValid.astro";
+import { formattedStore, inputStore } from "./store";
+
+interface Props {
+  minifier: boolean;
+  language: string;
+}
+
+const { language, minifier } = Astro.props;
+
+// Initialize with default code if store is empty
+const input = inputStore.get();
+const initialCode = input || getInitialCode(language);
+
+// Set initial values in store
+inputStore.set(initialCode);
+
+// Initialize formatted output
+const formatter = await getFormatter(language);
+const formatted = formattedStore.get() || await formatter.formatCode(initialCode);
+formattedStore.set(formatted);
+---
+
+<RootElement>
+  <div
+    class="flex flex-col items-center justify-center mt-20 bg-background p-4 sm:p-6"
+    data-language={language}
+    data-target="root"
+    id="formatter"
+  >
+    <div class="w-2/3 bg-card p-4 sm:p-6 rounded-lg shadow-lg">
+      <div class="grid grid-cols-1 gap-6">
+        <div class="relative">
+          <MonacoPlayground inputCode={initialCode} language={language} />
+          <CodeValid language={language} />
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row justify-center mt-6 gap-4">
+        <Button
+          size="lg"
+          target={scope("format")}
+          class="flex items-center gap-2"
+        >
+          <Format class="w-4 h-4 mr-2" /> Format</Button>
+        {minifier && (
+          <Button
+            size="lg"
+            target={scope("minify")}
+            class="flex items-center gap-2"
+          >
+            {" "} <Minify class="w-4 h-4 mr-2" /> Minify
+          </Button>
+        )}
+        <Button
+          size="lg"
+          target={scope("copy")}
+          class="flex items-center gap-2"
+        >
+          <Copy class="w-4 h-4 mr-2" /> Copy</Button>
+      </div>
+    </div>
+  </div>
+</RootElement>
+
+<script>
+  import { getFormatter, getMinifier } from "@/handlers";
+  import { getInitialCode } from "@/lib/initialCode";
+  import { formattedStore, inputStore } from "./store";
+
+  RootElement.ready(async ($) => {
+    const divElement = $("root");
+    const language = divElement.dataset.language!;
+
+    const formatter = await getFormatter(language);
+    const minifier = await getMinifier(language);
+
+    const trackEvent = (eventName: string, eventLabel: string) => {
+      try {
+        gtag("event", eventName, {
+          event_category: "Button",
+          event_label: eventLabel,
+          value: language,
+        });
+      } catch (err) {
+        console.error(
+          `Error sending ${eventName} event to Google Analytics:`,
+          err,
+        );
+      }
+    };
+
+    const showTickAnimation = (button: HTMLButtonElement, text: string) => {
+      const originalIcon = button.innerHTML;
+      button.innerHTML =
+        "<svg class=\"w-4 h-4 mr-2\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\" /></svg> "
+        + text;
+      setTimeout(() => {
+        button.innerHTML = originalIcon;
+      }, 2000);
+    };
+
+    const formatButton = $("format") as HTMLButtonElement;
+    formatButton.addEventListener("click", async () => {
+      let inputCode = inputStore.get();
+
+      // Ensure we have valid input
+      let stringInput = String(inputCode || '');
+
+      // If no valid input from store, try to get it from workspace or use initial code
+      if (!stringInput || stringInput.trim() === '') {
+        // Get the initial JSON code as fallback
+        stringInput = getInitialCode(language);
+
+        // Update the store with the initial code
+        inputStore.set(stringInput);
+
+        console.log('Using initial JSON code as input');
+      }
+
+      // Final validation - ensure we have a non-empty string
+      if (!stringInput || stringInput.trim() === '') {
+        console.error('No valid input code available for formatting');
+        alert('No code to format. Please enter some JSON code first.');
+        return;
+      }
+
+      // Use the validated string input
+      inputCode = stringInput;
+
+      try {
+        console.log('Formatting JSON:', inputCode.substring(0, 100) + '...');
+        const formatted = await formatter.formatCode(inputCode);
+        formattedStore.set(formatted);
+        showTickAnimation(formatButton, "Formatted");
+
+        // Update the Monaco editor using the workspace file system
+        // This is the proper way to update content in modern-monaco
+        try {
+          // Get the workspace from the Monaco playground
+          const playground = document.getElementById('monaco-playground');
+          if (playground && playground.workspace) {
+            // Write formatted content back to the workspace file
+            const fileName = `input.${language}`;
+            await playground.workspace.fs.writeFile(fileName, formatted);
+            console.log('Updated Monaco editor via workspace:', fileName);
+          } else {
+            console.log('No workspace available to update Monaco editor');
+          }
+        } catch (error) {
+          console.error('Failed to update Monaco editor via workspace:', error);
+        }
+      } catch (error) {
+        console.error("Invalid code:", error);
+        alert('Invalid JSON code. Please check your syntax and try again.');
+      }
+
+      trackEvent(`Format ${language} Click`, "click");
+    });
+
+    if (minifier) {
+      const minifyButton = $("minify") as HTMLButtonElement;
+      minifyButton.addEventListener("click", async () => {
+        let inputCode = inputStore.get();
+
+        // Ensure we have valid input
+        let stringInput = String(inputCode || '');
+
+        // If no valid input from store, try to get it from workspace or use initial code
+        if (!stringInput || stringInput.trim() === '') {
+          // Get the initial JSON code as fallback
+          stringInput = getInitialCode(language);
+
+          // Update the store with the initial code
+          inputStore.set(stringInput);
+
+          console.log('Using initial JSON code as input for minifying');
+        }
+
+        // Final validation - ensure we have a non-empty string
+        if (!stringInput || stringInput.trim() === '') {
+          console.error('No valid input code available for minifying');
+          alert('No code to minify. Please enter some JSON code first.');
+          return;
+        }
+
+        // Use the validated string input
+        inputCode = stringInput;
+
+        try {
+          console.log('Minifying JSON:', inputCode.substring(0, 100) + '...');
+          const minified = await minifier.minifyCode(inputCode);
+          formattedStore.set(minified);
+          showTickAnimation(minifyButton, "Minified");
+
+          // Update the Monaco editor using the workspace file system
+          try {
+            // Get the workspace from the Monaco playground
+            const playground = document.getElementById('monaco-playground');
+            if (playground && playground.workspace) {
+              // Write minified content back to the workspace file
+              const fileName = `input.${language}`;
+              await playground.workspace.fs.writeFile(fileName, minified);
+              console.log('Updated Monaco editor with minified content via workspace:', fileName);
+            } else {
+              console.log('No workspace available to update Monaco editor for minify');
+            }
+          } catch (error) {
+            console.error('Failed to update Monaco editor via workspace for minify:', error);
+          }
+        } catch (error) {
+          console.error("Invalid code:", error);
+          alert('Invalid JSON code. Please check your syntax and try again.');
+        }
+
+        trackEvent(`Minify ${language} Click`, "click");
+      });
+    }
+
+    const copyButton = $("copy") as HTMLButtonElement;
+    copyButton.addEventListener("click", () => {
+      // Get current content from Monaco editor
+      let contentToCopy = formattedStore.get() || getInitialCode(language);
+
+      // Try to get current content from Monaco editor first
+      const monaco = globalThis.monaco;
+      if (monaco) {
+        const models = monaco.editor.getModels();
+        const model = models.find(m => m.uri.path.endsWith('.json'));
+        if (model) {
+          contentToCopy = model.getValue();
+        }
+      }
+
+      navigator.clipboard.writeText(contentToCopy);
+      showTickAnimation(copyButton, "Copied");
+      trackEvent(`Copy ${language} Click`, "click");
+    });
+  });
+</script>
