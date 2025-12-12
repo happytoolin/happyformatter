@@ -81,6 +81,30 @@ import { lazy, Workspace } from "modern-monaco";
   } as const;
 
   const initialFiles: Record<string, string> = {};
+
+  // Add a welcome file with ASCII art as the default entry
+  const welcomeContent = `/*
+ *   ⭐ WELCOME TO HAPPY FORMATTER ⭐
+ *
+ *   🚀 Choose your language from the navigation above
+ *   ✨ Format your code with beautiful syntax highlighting
+ *   🎨 Enjoy the dark theme experience
+ *
+ *   Supported languages:
+ *   - JavaScript, TypeScript, HTML, CSS, SCSS
+ *   - Python, Java, C, C++, Go, Rust
+ *   - SQL, JSON, XML, YAML, Markdown
+ *   - PHP, Dart, Lua, Zig, Protocol Buffers
+ *   - ...and many more!
+ *
+ *   Ready to format some code? Select a language to get started! 🎯
+ */
+
+console.log("🎉 Welcome to Happy Formatter!");`;
+
+  initialFiles["welcome.txt"] = welcomeContent;
+
+  // Add all language files
   supportedLanguages.forEach((lang) => {
     const fileName = `example.${
       languageExtensions[lang as keyof typeof languageExtensions]
@@ -88,7 +112,7 @@ import { lazy, Workspace } from "modern-monaco";
     initialFiles[fileName] = getInitialCode(lang);
   });
 
-  console.log(initialFiles);
+  console.log("Initial files created with welcome.txt as entry point");
 
   let workspace: Workspace | null = null;
   let isInitialized = false;
@@ -149,23 +173,29 @@ import { lazy, Workspace } from "modern-monaco";
       // Set the model on the editor - this switches the displayed content and language
       editor.setModel(model);
 
-      // Ensure theme is properly applied
+      // Force theme application multiple times to ensure it sticks
       try {
-        // Force theme re-application by setting it again
+        // Set theme immediately
         monaco.editor.setTheme('vitesse-dark');
-        console.log("Re-applied theme: vitesse-dark");
+        console.log("Applied theme: vitesse-dark");
+
+        // Force editor refresh
+        editor.updateOptions({});
+
+        // Additional immediate refresh
+        editor.layout();
+
+        // Another refresh after a short delay
+        setTimeout(() => {
+          monaco.editor.setTheme('vitesse-dark');
+          editor.layout();
+          editor.updateOptions({});
+          console.log("Re-applied theme after delay");
+        }, 100);
+
       } catch (themeError) {
         console.warn("Failed to re-apply theme:", themeError);
       }
-
-      // Force a refresh of the editor's theme and language services
-      editor.updateOptions({});
-
-      // Additional refresh to ensure theme is properly applied
-      setTimeout(() => {
-        editor.layout();
-        editor.updateOptions({});
-      }, 50);
 
       // Verify the switch immediately
       const finalModel = editor.getModel();
@@ -194,24 +224,20 @@ import { lazy, Workspace } from "modern-monaco";
     const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
     const language = pathMatch ? pathMatch[1] : playground?.dataset.language as string;
 
-    const extension =
-      languageExtensions[language as keyof typeof languageExtensions];
-
     if (!language || !editor) return;
 
     console.log(`Initializing Monaco for language: ${language} (from URL: ${path})`);
 
     try {
       workspace = new Workspace({
-        // name: `${language}-workspacea`,
         name: "formatter-workspace",
-        initialFiles: initialFiles,
-        entryFile: `example.${extension}`,
+        initialFiles: initialFiles, // Use the original order with welcome.txt first
+        entryFile: "welcome.txt", // Always start with welcome file
         browserHistory: false,
       });
 
       // Initialize the editor with all supported languages
-      const monaco = lazy({
+      void lazy({
         workspace,
         theme: "vitesse-dark",
         langs: [
@@ -241,28 +267,54 @@ import { lazy, Workspace } from "modern-monaco";
         ],
       });
 
-      // Ensure theme is properly set after initialization
-      // Wait a bit for Monaco to be ready
-      setTimeout(() => {
+      // Aggressive theme setting during initialization
+      const setThemeAggressively = () => {
         try {
-          (window as any).monaco?.editor?.setTheme('vitesse-dark');
-          console.log("Theme set during initialization: vitesse-dark");
+          // Try multiple ways to set the theme
+          if ((window as any).monaco?.editor) {
+            (window as any).monaco.editor.setTheme('vitesse-dark');
+          }
+
+          // Also try through the workspace's Monaco instance if available
+          setTimeout(async () => {
+            try {
+              const workspaceMonaco = await (workspace as any)._monaco.promise;
+              if (workspaceMonaco?.editor) {
+                workspaceMonaco.editor.setTheme('vitesse-dark');
+
+                // Refresh all editors to ensure theme applies
+                const editors = workspaceMonaco.editor.getEditors();
+                editors.forEach((editor: any) => {
+                  editor.layout();
+                  editor.updateOptions({});
+                });
+              }
+            } catch (error) {
+              console.warn("Failed to set theme via workspace:", error);
+            }
+          }, 100);
+
+          console.log("Theme aggressively applied during initialization");
         } catch (themeError) {
-          console.warn("Failed to set theme during initialization:", themeError);
+          console.warn("Failed to set theme aggressively:", themeError);
         }
-      }, 300);
+      };
+
+      // Set theme immediately, then again after delays
+      setThemeAggressively();
+      setTimeout(setThemeAggressively, 200);
+      setTimeout(setThemeAggressively, 500);
 
       isInitialized = true;
-      console.log("Monaco workspace initialized with all language files");
+      console.log("Monaco workspace initialized with welcome.txt as entry point");
 
-      // Immediately switch to the correct language file for the current page
-      // This ensures that on page reload, we show the correct language instead of the entry file
-      setTimeout(async () => {
-        if (language) {
+      // If we're on a language page, switch to that language after initialization
+      if (language && language !== "welcome") {
+        setTimeout(async () => {
           console.log(`Post-initialization switch to ${language}`);
           await switchToLanguageFile(language);
-        }
-      }, 200);
+        }, 300);
+      }
 
     } catch (error) {
       console.error("Failed to initialize Monaco editor:", error);
