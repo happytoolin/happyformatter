@@ -70,31 +70,35 @@ const languageExtensions = {
 
 const initialFiles: Record<string, string> = {};
 
-// Add a minimal skeleton placeholder as the default entry
 const skeletonContent = `//`;
 
 initialFiles["welcome.txt"] = skeletonContent;
 
-// Add all language files
 supportedLanguages.forEach((lang) => {
   const fileName = `example.${languageExtensions[lang as keyof typeof languageExtensions]}`;
-  initialFiles[fileName] = getInitialCode(lang);
+  const code = getInitialCode(lang);
+  initialFiles[fileName] = code;
+  if (lang === "json") {
+    console.log("JSON initial code:", code.substring(0, 100));
+  }
 });
 
-console.log("Monaco singleton: Initial files created");
-
 function showEditor() {
+  console.log("showEditor() called");
   const monacoEditor = document.getElementById("monaco-editor");
   const skeletonLoader = document.getElementById("skeleton-loader");
 
+  console.log("monacoEditor:", monacoEditor);
+  console.log("skeletonLoader:", skeletonLoader);
+
   if (monacoEditor && skeletonLoader) {
-    // Fade out skeleton
     skeletonLoader.style.opacity = "0";
     skeletonLoader.style.visibility = "hidden";
-
-    // Fade in editor
     monacoEditor.style.opacity = "1";
     monacoEditor.style.visibility = "visible";
+    console.log("Editor visibility set to visible");
+  } else {
+    console.error("Missing monacoEditor or skeletonLoader elements");
   }
 }
 
@@ -114,13 +118,9 @@ function hideEditor() {
 }
 
 export function createMonacoSingleton() {
-  // Only create if it doesn't exist
   if (window.__MONACO_PLAYGROUND__) {
-    console.log("Monaco singleton already exists, reusing");
     return window.__MONACO_PLAYGROUND__;
   }
-
-  console.log("Creating new Monaco singleton");
 
   window.__MONACO_PLAYGROUND__ = {
     workspace: null,
@@ -129,93 +129,84 @@ export function createMonacoSingleton() {
     initPromise: null,
 
     async ensureInitialized() {
-      // Return existing promise if initialization is already in progress
       if (this.initPromise) {
         return this.initPromise;
       }
 
-      // If already initialized, just ensure theme is applied
       if (this.isInitialized && this.workspace) {
-        try {
-          const monaco = await (this.workspace as any)._monaco.promise;
-          if (monaco?.editor) {
-            monaco.editor.setTheme("vitesse-dark");
-          }
-        } catch (error) {
-          console.warn("Failed to re-apply theme:", error);
+        const monaco = await (this.workspace as any)._monaco.promise;
+        if (monaco?.editor) {
+          monaco.editor.setTheme("vitesse-dark");
         }
         return;
       }
 
-      console.log("Starting Monaco initialization");
-
-      // Get language from URL
       const path = window.location.pathname;
       const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
       const language = pathMatch ? pathMatch[1] : "welcome";
 
-      // Create initialization promise
+      console.log("Language detection - Path:", path, "Language:", language);
+
+      // Set the correct entry file based on language
+      const entryFile = language && language !== "welcome"
+        ? `example.${languageExtensions[language as keyof typeof languageExtensions] || language}`
+        : "welcome.txt";
+      console.log("Setting entryFile to:", entryFile);
+
       this.initPromise = (async () => {
         try {
+          console.log("Starting Monaco workspace creation...");
           this.workspace = new Workspace({
             name: "formatter-workspace",
             initialFiles: initialFiles,
-            entryFile: "welcome.txt",
+            entryFile: entryFile,
             browserHistory: false,
           });
 
-          // Initialize the editor with all supported languages and theme
+          console.log("Calling lazy() to initialize Monaco...");
           await lazy({
             workspace: this.workspace!,
             theme: "vitesse-dark",
             langs: supportedLanguages,
           });
 
-          // Single theme setting after everything is loaded
-          try {
-            const monaco = await (this.workspace! as any)._monaco.promise;
-            if (monaco?.editor) {
-              monaco.editor.setTheme("vitesse-dark");
-              console.log("Monaco singleton: Theme set: vitesse-dark");
+          console.log("Monaco lazy initialization completed");
 
-              // Ensure the editor is properly attached to DOM and sized
-              setTimeout(() => {
-                const monacoEditorElement = document.getElementById(
-                  "monaco-editor",
-                ) as any;
-                const editors = monaco.editor.getEditors();
+          const monaco = await (this.workspace! as any)._monaco.promise;
+          if (monaco?.editor) {
+            monaco.editor.setTheme("vitesse-dark");
 
-                if (editors.length > 0 && monacoEditorElement) {
-                  const editor = editors[0];
-                  // Force a layout to ensure proper rendering
-                  editor.layout();
-                  // Re-attach theme after DOM is ready
-                  monaco.editor.setTheme("vitesse-dark");
-                }
-              }, 100);
-            }
-          } catch (themeError) {
-            console.warn("Failed to set theme:", themeError);
+            setTimeout(() => {
+              const monacoEditorElement = document.getElementById(
+                "monaco-editor",
+              ) as any;
+              const editors = monaco.editor.getEditors();
+
+              if (editors.length > 0 && monacoEditorElement) {
+                const editor = editors[0];
+                editor.layout();
+                monaco.editor.setTheme("vitesse-dark");
+              }
+            }, 100);
           }
 
           this.isInitialized = true;
-          console.log("Monaco singleton: Workspace initialized successfully");
+          console.log("Monaco initialization completed, language:", language);
 
-          // If we're on a language page, switch to that language after initialization
           if (language && language !== "welcome") {
+            console.log("Will call switchToLanguage for:", language, "in 100ms");
             setTimeout(async () => {
-              console.log(
-                `Monaco singleton: Post-initialization switch to ${language}`,
-              );
+              console.log("Now calling switchToLanguage for:", language);
               await this.switchToLanguage(language);
             }, 100);
           } else {
+            console.log("Language is welcome or not set, calling showEditor()");
             showEditor();
           }
         } catch (error) {
-          console.error("Monaco singleton: Failed to initialize:", error);
+          console.error("Monaco initialization failed:", error);
           showEditor();
-          this.initPromise = null; // Reset promise on error
+          this.initPromise = null;
         }
       })();
 
@@ -223,9 +214,13 @@ export function createMonacoSingleton() {
     },
 
     async switchToLanguage(language: string) {
+      console.log("switchToLanguage called with:", language);
       if (!this.workspace || this.isTransitioning) {
-        console.error(
-          "Monaco singleton: Workspace not available or already transitioning",
+        console.log(
+          "switchToLanguage returning early - workspace:",
+          !!this.workspace,
+          "isTransitioning:",
+          this.isTransitioning,
         );
         return;
       }
@@ -234,18 +229,14 @@ export function createMonacoSingleton() {
 
       try {
         const fileName = `example.${language}`;
-        console.log(
-          `=== MONACO SINGLETON: SWITCHING TO ${language} file: ${fileName} ===`,
-        );
-
-        // Get the Monaco instance from workspace
+        console.log("switchToLanguage: fileName =", fileName, "for language:", language);
+        console.log("Getting Monaco instance...");
         const monaco = await (this.workspace as any)._monaco.promise;
 
         if (!monaco) {
           throw new Error("Monaco instance not available");
         }
 
-        // Get the monaco-editor element from DOM
         const monacoEditorElement = document.getElementById(
           "monaco-editor",
         ) as any;
@@ -253,103 +244,53 @@ export function createMonacoSingleton() {
           throw new Error("Monaco editor element not found in DOM");
         }
 
-        // Get or create the editor instance
+        console.log("Getting editors...");
         let editors = monaco.editor.getEditors();
         let editor: any;
 
         if (editors.length === 0) {
-          console.log("Creating new Monaco editor instance");
-          // Create new editor if none exists
+          console.log("Creating new editor");
           editor = monaco.editor.create(monacoEditorElement);
         } else {
           editor = editors[0];
-          // If editor exists but might be detached from DOM, reattach it
           if (
             editor.getContainerDomNode()?.parentElement !== monacoEditorElement
           ) {
-            console.log("Reattaching Monaco editor to DOM");
-            // Clear the monaco-editor element and reattach
             monacoEditorElement.innerHTML = "";
             monaco.editor.attach(editor, monacoEditorElement);
           }
         }
 
-        // Ensure the editor is properly sized and themed
         editor.layout();
-        try {
-          monaco.editor.setTheme("vitesse-dark");
-        } catch (themeError) {
-          console.warn("Failed to set theme:", themeError);
-        }
-
-        const currentModel = editor.getModel();
-        console.log(
-          "Editor found, current model:",
-          currentModel?.getLanguageId(),
-        );
+        monaco.editor.setTheme("vitesse-dark");
 
         const modelUri = monaco.Uri.parse(`file:///${fileName}`);
 
-        // Check if model already exists and reuse it
         let model = monaco.editor.getModel(modelUri);
 
         if (!model) {
-          // Create new model only if it doesn't exist
           let content: string;
           try {
             content = await this.workspace!.fs.readTextFile(fileName);
-            console.log(
-              `Read ${content.length} chars from workspace file: ${fileName}`,
-            );
+            console.log("Read content from workspace:", content.substring(0, 50));
           } catch {
-            console.warn(
-              `File ${fileName} not found in workspace, using initial code`,
-            );
             content = getInitialCode(language);
-            console.log(
-              `Using initial code for ${language}: ${content.length} chars`,
-            );
+            console.log("Using getInitialCode for", language, ":", content.substring(0, 50));
           }
 
           model = monaco.editor.createModel(content, language, modelUri);
-          console.log(
-            `Created new model for ${fileName} with language: ${language}`,
-          );
-        } else {
-          console.log(`Reusing existing model for ${fileName}`);
+          console.log("Created model for", language, "with content length:", content.length);
         }
 
-        // Set the model on the editor - this switches the displayed content and language
         editor.setModel(model);
 
-        // Minimal theme and layout refresh
-        try {
-          monaco.editor.setTheme("vitesse-dark");
-          editor.layout();
-        } catch (themeError) {
-          console.warn("Failed to refresh editor:", themeError);
-        }
+        monaco.editor.setTheme("vitesse-dark");
+        editor.layout();
 
-        // Smooth transition: show editor immediately since content is ready
+        console.log("switchToLanguage completed, calling showEditor");
         showEditor();
-
-        // Verify the switch
-        const finalModel = editor.getModel();
-        const finalLanguage = finalModel ? finalModel.getLanguageId() : "none";
-        const finalContent = finalModel
-          ? finalModel.getValue().substring(0, 50) + "..."
-          : "empty";
-
-        console.log(`=== MONACO SINGLETON: SWITCH COMPLETED ===`);
-        console.log(`Target: ${language}`);
-        console.log(`Actual language: ${finalLanguage}`);
-        console.log(`Content preview: ${finalContent}`);
-        console.log(`Model matches target: ${finalLanguage === language}`);
       } catch (error) {
-        console.error(
-          `Monaco singleton: Failed to switch to ${language} file:`,
-          error,
-        );
+        console.error("switchToLanguage failed:", error);
         showEditor();
       } finally {
         this.isTransitioning = false;
@@ -364,46 +305,32 @@ export function createMonacoSingleton() {
 export function exposeMonacoAPI() {
   const monacoPlayground = window.__MONACO_PLAYGROUND__;
   if (!monacoPlayground) {
-    console.error("Monaco playground singleton not found");
     return;
   }
 
   (window as any).MonacoPlayground = {
     async getCurrentContent(_playgroundElement: HTMLElement): Promise<string> {
-      // Ensure the singleton exists and is initialized
-      if (!window.__MONACO_PLAYGROUND__) {
-        console.error("Monaco playground singleton not found");
+      if (!window.__MONACO_PLAYGROUND__?.workspace || !window.__MONACO_PLAYGROUND__.isInitialized) {
         return "";
       }
 
       try {
-        // Wait a bit for initialization to complete
         await new Promise(resolve => setTimeout(resolve, 100));
-
-        if (!monacoPlayground.workspace || !monacoPlayground.isInitialized) {
-          console.error("Workspace not available or not initialized");
-          return "";
-        }
 
         const monaco = await (monacoPlayground.workspace as any)._monaco.promise;
         const editors = monaco.editor.getEditors();
         if (editors.length === 0) {
-          console.warn("No editors found");
           return "";
         }
 
         const editor = editors[0];
         const model = editor.getModel();
         if (!model) {
-          console.warn("No model found in editor");
           return "";
         }
 
-        const content = model.getValue();
-        console.log("Successfully retrieved content from Monaco:", content.length, "characters");
-        return content;
+        return model.getValue();
       } catch (error) {
-        console.error("Failed to get current content:", error);
         return "";
       }
     },
@@ -412,136 +339,89 @@ export function exposeMonacoAPI() {
       _playgroundElement: HTMLElement,
       newContent: string,
     ): Promise<void> {
-      // Ensure the singleton exists and is initialized
-      if (!window.__MONACO_PLAYGROUND__) {
-        console.error("Monaco playground singleton not found");
+      if (!window.__MONACO_PLAYGROUND__?.workspace || !window.__MONACO_PLAYGROUND__.isInitialized) {
         return;
       }
 
       try {
-        // Wait a bit for initialization to complete
         await new Promise(resolve => setTimeout(resolve, 100));
-
-        if (!monacoPlayground.workspace || !monacoPlayground.isInitialized) {
-          console.error("Workspace not available or not initialized");
-          return;
-        }
 
         const monaco = await (monacoPlayground.workspace as any)._monaco.promise;
         const editors = monaco.editor.getEditors();
         if (editors.length === 0) {
-          console.warn("No editors found for update");
           return;
         }
 
         const editor = editors[0];
         const model = editor.getModel();
         if (!model) {
-          console.warn("No model found in editor for update");
           return;
         }
 
         model.setValue(newContent);
-        console.log("Successfully updated Monaco content:", newContent.length, "characters");
       } catch (error) {
-        console.error("Failed to update content:", error);
       }
     },
   };
-
-  console.log("MonacoPlayground API successfully exposed to window");
 }
 
 // Initialize event listeners for SPA navigation
 export function setupEventListeners() {
-  console.log("Setting up Monaco SPA navigation listeners");
-
-  // Listen for Astro's SPA navigation events
   document.addEventListener("astro:before-swap", () => {
-    console.log("astro:before-swap detected - preserving Monaco editor state");
   });
 
-  // Use multiple event listeners to catch the right timing
   document.addEventListener("astro:after-preparation", async () => {
-    console.log("astro:after-preparation triggered");
   });
 
-  // Also listen for page visibility changes to re-apply theme if needed
   document.addEventListener("visibilitychange", async () => {
     const monacoPlayground = window.__MONACO_PLAYGROUND__;
     if (
-      !document.hidden &&
-      monacoPlayground?.workspace &&
-      monacoPlayground.isInitialized
+      !document.hidden
+      && monacoPlayground?.workspace
+      && monacoPlayground.isInitialized
     ) {
-      console.log("Page became visible, ensuring theme is applied");
       try {
         const monaco = await (monacoPlayground.workspace as any)._monaco
           .promise;
         if (monaco) {
           monaco.editor.setTheme("vitesse-dark");
 
-          // Refresh all editors
           const editors = monaco.editor.getEditors();
           editors.forEach((editor: any) => {
             editor.layout();
           });
         }
       } catch (error) {
-        console.warn("Failed to re-apply theme on visibility change:", error);
       }
     }
   });
 
   document.addEventListener("astro:after-swap", async () => {
-    console.log("=== astro:after-swap triggered ===");
-
     const monacoPlayground = window.__MONACO_PLAYGROUND__;
     if (!monacoPlayground) {
-      console.error("Monaco playground singleton not found");
       return;
     }
 
-    // Wait a bit for DOM to be fully ready after swap
     await new Promise((resolve) => setTimeout(resolve, 50));
 
-    // Ensure monaco-editor element exists and is ready
     const monacoEditorElement = document.getElementById("monaco-editor");
     if (!monacoEditorElement) {
-      console.error("Monaco editor element not found after swap");
       return;
     }
 
-    // Always derive language from URL to be more reliable
     const path = window.location.pathname;
     const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
     const newLanguage = pathMatch ? pathMatch[1] : null;
 
-    console.log("URL:", path);
-    console.log("Derived language:", newLanguage);
-
     if (!newLanguage || !monacoPlayground.isInitialized) {
-      console.log(
-        "Skipping language switch - language:",
-        newLanguage,
-        "initialized:",
-        monacoPlayground.isInitialized,
-      );
       return;
     }
 
     try {
-      console.log("Switching to language:", newLanguage);
-
-      // Force the editor to be visible and properly attached before switching
       hideEditor();
-
-      // Give the DOM time to render the skeleton
       await new Promise((resolve) => setTimeout(resolve, 50));
-
       await monacoPlayground.switchToLanguage(newLanguage);
     } catch (error) {
-      console.error("Error switching language:", error);
       showEditor();
     }
   });

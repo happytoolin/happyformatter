@@ -71,14 +71,6 @@
   }
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -198,7 +190,6 @@ pre {
   border-radius: var(--radius);
 }
 
-/* Monaco Editor Loading Transitions */
 #monaco-playground {
   position: relative;
 }
@@ -219,7 +210,6 @@ pre {
   background: transparent;
 }
 
-/* Modern loading animations */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -293,7 +283,6 @@ pre {
   animation: float-up 3s ease-in-out infinite;
 }
 
-/* Grid pattern for background */
 .bg-grid-pattern {
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
@@ -301,13 +290,10 @@ pre {
   background-size: 40px 40px;
 }
 
-/* Prevent FOUC (Flash of Unstyled Content) */
 monaco-editor {
-  /* Ensure the editor starts with the correct color scheme */
   color-scheme: dark;
 }
 
-/* Dark theme specific fixes */
 .dark monaco-editor {
   color-scheme: dark;
 }

@@ -70,23 +70,19 @@ RootElement.ready(async ($) => {
   const formatter = await getFormatter(language);
   const minifier = await getMinifier(language);
 
-  // Function to get current content from Monaco editor using the proper workspace API
   async function getCurrentMonacoContent(): Promise<string> {
     const playground = document.getElementById("monaco-playground");
 
     if (!playground) {
-      console.error("Monaco playground element not found");
       return getInitialCode(language);
     }
 
     try {
-      // Use the proper workspace API to get current content
       const content = await window.MonacoPlayground.getCurrentContent(
         playground,
       );
       return content || getInitialCode(language);
     } catch (error) {
-      console.error("Failed to get current Monaco content:", error);
       return getInitialCode(language);
     }
   }
@@ -99,10 +95,6 @@ RootElement.ready(async ($) => {
         value: language,
       });
     } catch (err) {
-      console.error(
-        `Error sending ${eventName} event to Google Analytics:`,
-        err,
-      );
     }
   };
 
@@ -119,35 +111,25 @@ RootElement.ready(async ($) => {
   const formatButton = $("format") as HTMLButtonElement;
   formatButton.addEventListener("click", async () => {
     try {
-      // Get current content directly from Monaco editor
       const inputCode = await getCurrentMonacoContent();
 
-      // Final validation - ensure we have a non-empty string
       if (!inputCode || inputCode.trim() === "") {
-        console.error("No valid input code available for formatting");
         alert("No code to format. Please enter some code first.");
         return;
       }
 
-      console.log("Formatting:", inputCode.substring(0, 100) + "...");
       const formatted = await formatter.formatCode(inputCode);
       showTickAnimation(formatButton, "Formatted");
 
-      // Update the Monaco editor using the workspace API
       try {
         const playground = document.getElementById("monaco-playground");
         if (playground) {
           await window.MonacoPlayground.updateContent(playground, formatted);
-          console.log("Updated Monaco editor via workspace API");
-        } else {
-          console.error("Monaco playground element not found");
         }
       } catch (error) {
-        console.error("Failed to update Monaco editor via workspace:", error);
         alert("Failed to update editor with formatted code.");
       }
     } catch (error) {
-      console.error("Invalid code:", error);
       alert("Invalid code. Please check your syntax and try again.");
     }
 
@@ -158,40 +140,25 @@ RootElement.ready(async ($) => {
     const minifyButton = $("minify") as HTMLButtonElement;
     minifyButton.addEventListener("click", async () => {
       try {
-        // Get current content directly from Monaco editor
         const inputCode = await getCurrentMonacoContent();
 
-        // Final validation - ensure we have a non-empty string
         if (!inputCode || inputCode.trim() === "") {
-          console.error("No valid input code available for minifying");
           alert("No code to minify. Please enter some code first.");
           return;
         }
 
-        console.log("Minifying:", inputCode.substring(0, 100) + "...");
         const minified = await minifier.minifyCode(inputCode);
         showTickAnimation(minifyButton, "Minified");
 
-        // Update the Monaco editor using the workspace API
         try {
           const playground = document.getElementById("monaco-playground");
           if (playground) {
             await window.MonacoPlayground.updateContent(playground, minified);
-            console.log(
-              "Updated Monaco editor with minified content via workspace API",
-            );
-          } else {
-            console.error("Monaco playground element not found for minify");
           }
         } catch (error) {
-          console.error(
-            "Failed to update Monaco editor via workspace for minify:",
-            error,
-          );
           alert("Failed to update editor with minified code.");
         }
       } catch (error) {
-        console.error("Invalid code:", error);
         alert("Invalid code. Please check your syntax and try again.");
       }
 
@@ -202,13 +169,11 @@ RootElement.ready(async ($) => {
   const copyButton = $("copy") as HTMLButtonElement;
   copyButton.addEventListener("click", async () => {
     try {
-      // Get current content directly from Monaco editor
       const contentToCopy = await getCurrentMonacoContent();
       await navigator.clipboard.writeText(contentToCopy);
       showTickAnimation(copyButton, "Copied");
       trackEvent(`Copy ${language} Click`, "click");
     } catch (error) {
-      console.error("Failed to copy content:", error);
       alert("Failed to copy content to clipboard.");
     }
   });
