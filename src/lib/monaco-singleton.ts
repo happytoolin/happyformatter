@@ -362,7 +362,7 @@ export function createMonacoSingleton() {
 
 // Expose API globally for the formatter component
 export function exposeMonacoAPI() {
-  const monacoPlayground = window.__MONACO_PLAYGROUND;
+  const monacoPlayground = window.__MONACO_PLAYGROUND__;
   if (!monacoPlayground) {
     console.error("Monaco playground singleton not found");
     return;
@@ -370,20 +370,38 @@ export function exposeMonacoAPI() {
 
   (window as any).MonacoPlayground = {
     async getCurrentContent(_playgroundElement: HTMLElement): Promise<string> {
-      if (!monacoPlayground.workspace) {
-        console.error("Workspace not available");
+      // Ensure the singleton exists and is initialized
+      if (!window.__MONACO_PLAYGROUND__) {
+        console.error("Monaco playground singleton not found");
         return "";
       }
 
       try {
-        const monaco = await (monacoPlayground.workspace as any)._monaco
-          .promise;
+        // Wait a bit for initialization to complete
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        if (!monacoPlayground.workspace || !monacoPlayground.isInitialized) {
+          console.error("Workspace not available or not initialized");
+          return "";
+        }
+
+        const monaco = await (monacoPlayground.workspace as any)._monaco.promise;
         const editors = monaco.editor.getEditors();
-        if (editors.length === 0) return "";
+        if (editors.length === 0) {
+          console.warn("No editors found");
+          return "";
+        }
 
         const editor = editors[0];
         const model = editor.getModel();
-        return model ? model.getValue() : "";
+        if (!model) {
+          console.warn("No model found in editor");
+          return "";
+        }
+
+        const content = model.getValue();
+        console.log("Successfully retrieved content from Monaco:", content.length, "characters");
+        return content;
       } catch (error) {
         console.error("Failed to get current content:", error);
         return "";
@@ -394,27 +412,44 @@ export function exposeMonacoAPI() {
       _playgroundElement: HTMLElement,
       newContent: string,
     ): Promise<void> {
-      if (!monacoPlayground.workspace) {
-        console.error("Workspace not available");
+      // Ensure the singleton exists and is initialized
+      if (!window.__MONACO_PLAYGROUND__) {
+        console.error("Monaco playground singleton not found");
         return;
       }
 
       try {
-        const monaco = await (monacoPlayground.workspace as any)._monaco
-          .promise;
+        // Wait a bit for initialization to complete
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        if (!monacoPlayground.workspace || !monacoPlayground.isInitialized) {
+          console.error("Workspace not available or not initialized");
+          return;
+        }
+
+        const monaco = await (monacoPlayground.workspace as any)._monaco.promise;
         const editors = monaco.editor.getEditors();
-        if (editors.length === 0) return;
+        if (editors.length === 0) {
+          console.warn("No editors found for update");
+          return;
+        }
 
         const editor = editors[0];
         const model = editor.getModel();
-        if (model) {
-          model.setValue(newContent);
+        if (!model) {
+          console.warn("No model found in editor for update");
+          return;
         }
+
+        model.setValue(newContent);
+        console.log("Successfully updated Monaco content:", newContent.length, "characters");
       } catch (error) {
         console.error("Failed to update content:", error);
       }
     },
   };
+
+  console.log("MonacoPlayground API successfully exposed to window");
 }
 
 // Initialize event listeners for SPA navigation
