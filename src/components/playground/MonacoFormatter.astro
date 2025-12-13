@@ -97,6 +97,25 @@ const initialCode = getInitialCode(language);
         <div class="flex items-center gap-4">
           <span>{language}</span>
           <span>UTF-8</span>
+          <span
+            class="hidden sm:inline-flex items-center gap-1.5 text-green-600 dark:text-green-400"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+            Processed Locally
+          </span>
         </div>
         <div class="flex gap-4">
           <span class="flex items-center gap-1.5">
@@ -106,6 +125,27 @@ const initialCode = getInitialCode(language);
             Ready
           </span>
         </div>
+      </div>
+    </div>
+
+    <div class="w-full max-w-[1400px] mt-4 flex justify-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted/50 border border-border text-xs text-muted-foreground">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Your code is processed entirely in your browser and is never sent to any
+        server.
       </div>
     </div>
   </div>

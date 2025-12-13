@@ -12,6 +12,9 @@ import MonacoFormatter from "@/components/playground/MonacoFormatter.astro";
   minify={true}
 >
   <MonacoFormatter minifier={true} language="json" />
-  <Info language="json" />
-  <FAQ language="json" client:idle />
+
+  <Fragment slot="info">
+    <Info language="json" />
+    <FAQ language="json" client:idle />
+  </Fragment>
 </Layout>

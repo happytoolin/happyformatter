@@ -33,6 +33,12 @@ const perf = {
 function getMonacoTheme(): string {
   if (typeof document !== "undefined") {
     const theme = document.documentElement.getAttribute("data-theme");
+    // If the theme is not a shiki theme (e.g. "dark" or "light" from system/toggle),
+    // we should map it to a shiki theme or return a default.
+    // Assuming "data-theme" contains values from our ThemeSelector (shiki themes)
+    // AND potentially "dark"/"light" from ThemeToggle if they conflict.
+    // The ThemeSelector sets data-theme. The ThemeToggle sets class="dark".
+    // We should prioritize data-theme if it matches a known shiki theme.
     if (theme) return theme;
   }
   return "vitesse-dark"; // Default modern dark theme
@@ -40,7 +46,6 @@ function getMonacoTheme(): string {
 
 // Lazy load Monaco modules
 let monacoPromise: Promise<any> | null = null;
-let availableThemes: string[] = [];
 
 async function loadMonaco() {
   if (monacoPromise) return monacoPromise;
@@ -184,7 +189,9 @@ export function createMonacoSingleton(): MonacoPlayground {
       if (this.isInitialized && this.workspace) {
         const monaco = await (this.workspace as any)._monaco.promise;
         if (monaco?.editor) {
-          monaco.editor.setTheme(getMonacoTheme());
+          const currentTheme = getMonacoTheme();
+          // Ensure theme is applied on re-init check
+          monaco.editor.setTheme(currentTheme);
         }
         return;
       }
