@@ -1,5 +1,6 @@
 // Global Monaco playground singleton that persists across SPA navigation
 import { getInitialCode } from "@/lib/initialCode";
+import { InMemoryFileSystem } from "@/lib/InMemoryFileSystem";
 import type { MonacoPlayground } from "@/types/monaco";
 
 // Performance monitoring utilities
@@ -267,11 +268,25 @@ export function createMonacoSingleton(): MonacoPlayground {
             Object.keys(initialFiles),
           );
 
+          // Create the in-memory filesystem and pre-populate it with initial files
+          const memoryFS = new InMemoryFileSystem();
+
+          // Write all initial files to the filesystem before creating the Workspace
+          // This ensures files exist when Workspace tries to stat them
+          for (const [filename, content] of Object.entries(initialFiles)) {
+            try {
+              await memoryFS.writeFile(filename, content);
+            } catch (error) {
+              console.warn(`Failed to pre-populate file ${filename}:`, error);
+            }
+          }
+
           this.workspace = new Workspace({
             name: "formatter-workspace",
             initialFiles: initialFiles,
             entryFile: entryFile,
             browserHistory: false,
+            customFS: memoryFS,
           });
           perf.end("workspace-creation");
 
