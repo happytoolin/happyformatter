@@ -1,4 +1,5 @@
 ---
+import Reload from "@/icons/reload.astro";
 import { shikiThemes } from "./themes";
 
 interface Props {
@@ -9,30 +10,44 @@ const { class: className } = Astro.props;
 ---
 
 <RootElement>
-  <div class:list={["theme-selector relative", className]}>
-    <select
-      aria-label="Theme selector"
-      id="theme-select"
-      data-target="theme-select"
-      class="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-xs shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+  <div class:list={["theme-selector-wrapper flex items-center gap-2", className]}>
+    <button
+      id="theme-reload-btn"
+      data-target="theme-reload-btn"
+      class="hidden h-9 w-9 rounded-md border border-input bg-transparent p-2 text-xs shadow-xs transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      title="Reload page to apply theme"
+      aria-label="Reload page"
     >
-      <option value="" disabled selected>Theme</option>
-      {shikiThemes.map((theme) => (
-        <option value={theme.value}>{theme.name}</option>
-      ))}
-    </select>
+      <Reload class="w-4 h-4" />
+    </button>
+    <div class:list={["theme-selector relative flex-1", className]}>
+      <select
+        aria-label="Theme selector"
+        id="theme-select"
+        data-target="theme-select"
+        class="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-xs shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <option value="" disabled selected>Theme</option>
+        {shikiThemes.map((theme) => (
+          <option value={theme.value}>{theme.name}</option>
+        ))}
+      </select>
+    </div>
   </div>
 </RootElement>
 
 <script>
 RootElement.ready(($) => {
   const selectElement = $("theme-select") as HTMLSelectElement;
+  const reloadButton = $("theme-reload-btn") as HTMLButtonElement;
+  let initialTheme = document.documentElement.getAttribute("data-theme");
 
   // Load the saved theme from localStorage
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
     selectElement.value = savedTheme;
     document.documentElement.setAttribute("data-theme", savedTheme);
+    initialTheme = savedTheme;
   }
 
   selectElement.addEventListener("change", () => {
@@ -41,15 +56,32 @@ RootElement.ready(($) => {
     if (selectedTheme) {
       document.documentElement.setAttribute("data-theme", selectedTheme);
       localStorage.setItem("theme", selectedTheme);
+
+      // Show reload button if theme changed
+      if (selectedTheme !== initialTheme) {
+        reloadButton.classList.remove("hidden");
+      }
     }
   });
 
-  // Add observer
+  // Reload button click handler
+  reloadButton.addEventListener("click", () => {
+    window.location.reload();
+  });
+
+  // Add observer to detect external theme changes
   const observer = new MutationObserver(() => {
     const currentTheme = document.documentElement.getAttribute("data-theme");
     localStorage.setItem("theme", currentTheme || "default");
     if (currentTheme) {
       selectElement.value = currentTheme;
+
+      // Show reload button if theme changed from initial
+      if (currentTheme !== initialTheme) {
+        reloadButton.classList.remove("hidden");
+      } else {
+        reloadButton.classList.add("hidden");
+      }
     }
   });
 

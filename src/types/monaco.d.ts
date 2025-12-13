@@ -13,7 +13,7 @@ export interface MonacoPlayground {
   isTransitioning: boolean;
   initPromise: Promise<void> | null;
   ensureInitialized(): Promise<void>;
-  switchToLanguage(language: string): Promise<void>;
+  switchToLanguage(language: string, allowDuringReload?: boolean): Promise<void>;
 }
 
 // Extend Workspace type to include _monaco property

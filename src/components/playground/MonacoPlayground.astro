@@ -74,12 +74,17 @@ const { inputCode, language } = Astro.props;
 </div>
 
 <script>
-import { createMonacoSingleton, exposeMonacoAPI } from "@/lib/monaco-singleton";
+import {
+  createMonacoSingleton,
+  exposeMonacoAPI,
+  setupEventListeners,
+} from "@/lib/monaco-singleton";
 
 const monacoPlayground = createMonacoSingleton();
 
 monacoPlayground.ensureInitialized().then(() => {
   exposeMonacoAPI();
+  setupEventListeners();
 }).catch((error) => {
   console.error("[Monaco] Failed to initialize:", error);
 });
