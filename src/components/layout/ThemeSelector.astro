@@ -10,28 +10,34 @@ const { class: className } = Astro.props;
 ---
 
 <RootElement>
-  <div class:list={["theme-selector-wrapper flex items-center gap-2", className]}>
+  <div class:list={["theme-selector-wrapper flex items-center gap-1.5", className]}>
     <button
       id="theme-reload-btn"
       data-target="theme-reload-btn"
-      class="hidden h-9 w-9 rounded-md border border-input bg-transparent p-2 text-xs shadow-xs transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-      title="Reload page to apply theme"
+      class="hidden h-7 items-center justify-center rounded-md px-2 text-[10px] font-medium text-amber-500 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-all animate-in fade-in slide-in-from-right-4 duration-300"
+      title="Reload page to apply theme changes completely"
       aria-label="Reload page"
     >
-      <Reload class="w-4 h-4" />
+      <Reload class="w-3 h-3 mr-1.5" />
+      Reload
     </button>
-    <div class:list={["theme-selector relative flex-1", className]}>
-      <select
-        aria-label="Theme selector"
-        id="theme-select"
-        data-target="theme-select"
-        class="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-xs shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        <option value="" disabled selected>Theme</option>
-        {shikiThemes.map((theme) => (
-          <option value={theme.value}>{theme.name}</option>
-        ))}
-      </select>
+    <div class:list={["theme-selector relative flex-1 min-w-[120px]", className]}>
+      <div class="relative">
+        <select
+          aria-label="Theme selector"
+          id="theme-select"
+          data-target="theme-select"
+          class="w-full appearance-none h-7 rounded-md bg-muted/40 border border-transparent hover:border-border hover:bg-muted/60 pl-2.5 pr-7 py-0 text-xs font-medium text-muted-foreground focus:text-foreground transition-all focus:outline-hidden focus:ring-2 focus:ring-ring/20 cursor-pointer"
+        >
+          <option value="" disabled selected>Theme</option>
+          {shikiThemes.map((theme) => (
+            <option value={theme.value}>{theme.name}</option>
+          ))}
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground/50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
     </div>
   </div>
 </RootElement>
@@ -60,6 +66,7 @@ RootElement.ready(($) => {
       // Show reload button if theme changed
       if (selectedTheme !== initialTheme) {
         reloadButton.classList.remove("hidden");
+        reloadButton.classList.add("flex");
       }
     }
   });
@@ -79,8 +86,10 @@ RootElement.ready(($) => {
       // Show reload button if theme changed from initial
       if (currentTheme !== initialTheme) {
         reloadButton.classList.remove("hidden");
+        reloadButton.classList.add("flex");
       } else {
         reloadButton.classList.add("hidden");
+        reloadButton.classList.remove("flex");
       }
     }
   });
