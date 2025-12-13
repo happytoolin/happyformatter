@@ -1,7 +1,6 @@
 ---
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
-import ModeToggle from "./ModeToggle.astro";
 ---
 
 <header class="z-20 relative bg-background border-b">
@@ -71,9 +70,6 @@ import ModeToggle from "./ModeToggle.astro";
           <span class="sr-only">Close menu</span>
           <Icons icon="cross" />
         </button>
-      </div>
-      <div class="flex justify-between items-center mb-6">
-        <ModeToggle />
       </div>
       <div class="mt-6 flow-root">
         <div class="-my-6 divide-y divide-foreground/10">
@@ -166,34 +162,9 @@ closeMenuButton.addEventListener("click", function() {
 </script>
 
 <script is:inline>
-const getModePreference = () => {
-  if (typeof localStorage !== "undefined" && localStorage.getItem("mode")) {
-    return localStorage.getItem("mode");
-  }
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-};
-const isDark = getModePreference() === "dark";
-document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+// Default to dark mode
+document.documentElement.classList.add("dark");
 
-if (typeof localStorage !== "undefined") {
-  const observer = new MutationObserver(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    localStorage.setItem("mode", isDark ? "dark" : "light");
-  });
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-}
-
-const getInitialTheme = () => {
-  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-    return localStorage.getItem("theme");
-  }
-  return "rose-pine";
-};
-const theme = getInitialTheme();
-document.documentElement.setAttribute("data-theme", theme);
+// Set default theme
+document.documentElement.setAttribute("data-theme", "rose-pine");
 </script>

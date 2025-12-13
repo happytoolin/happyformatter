@@ -1,18 +1,73 @@
 // Global Monaco playground singleton that persists across SPA navigation
 import { getInitialCode } from "@/lib/initialCode";
-import { lazy, Workspace } from "modern-monaco";
+import type { MonacoPlayground, MonacoPlaygroundAPI } from "@/types/monaco";
 
-declare global {
-  interface Window {
-    __MONACO_PLAYGROUND__?: {
-      workspace: Workspace | null;
-      isInitialized: boolean;
-      isTransitioning: boolean;
-      initPromise: Promise<void> | null;
-      ensureInitialized(): Promise<void>;
-      switchToLanguage(language: string): Promise<void>;
-    };
+// Performance monitoring utilities
+const perf = {
+  start: (name: string) => {
+    if (typeof window !== "undefined" && window.performance?.mark) {
+      window.performance.mark(`${name}-start`);
+    }
+  },
+  end: (name: string) => {
+    if (typeof window !== "undefined" && window.performance?.measure) {
+      window.performance.mark(`${name}-end`);
+      window.performance.measure(name, `${name}-start`, `${name}-end`);
+
+      const measure = window.performance.getEntriesByName(name)[0];
+      console.debug(`[Monaco] ${name}: ${measure?.duration?.toFixed(2)}ms`);
+
+      // Send to analytics if available
+      if (typeof gtag !== "undefined") {
+        gtag("event", "monaco_performance", {
+          metric_name: name,
+          metric_value: Math.round(measure?.duration || 0),
+          custom_map: { metric_value: "dimension_1" },
+        });
+      }
+    }
+  },
+};
+
+// Always use dark theme for Monaco
+function getMonacoTheme(): string {
+  return "dark-plus";
+}
+
+// Lazy load Monaco modules
+let monacoPromise: Promise<any> | null = null;
+let availableThemes: string[] = [];
+
+async function loadMonaco() {
+  if (monacoPromise) return monacoPromise;
+
+  monacoPromise = import("modern-monaco").then(({ Workspace, lazy }) => ({ Workspace, lazy }));
+  return monacoPromise;
+}
+
+// Retry mechanism with exponential backoff
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000,
+): Promise<T> {
+  let lastError: Error;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+
+      if (attempt === maxRetries) break;
+
+      const delay = baseDelay * Math.pow(2, attempt - 1);
+      console.warn(`[Monaco] Attempt ${attempt} failed, retrying in ${delay}ms:`, error);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
   }
+
+  throw lastError!;
 }
 
 // Get all supported languages and their initial code
@@ -106,7 +161,7 @@ function hideEditor() {
   }
 }
 
-export function createMonacoSingleton() {
+export function createMonacoSingleton(): MonacoPlayground {
   if (window.__MONACO_PLAYGROUND__) {
     return window.__MONACO_PLAYGROUND__;
   }
@@ -117,7 +172,7 @@ export function createMonacoSingleton() {
     isTransitioning: false,
     initPromise: null,
 
-    async ensureInitialized() {
+    async ensureInitialized(): Promise<void> {
       if (this.initPromise) {
         return this.initPromise;
       }
@@ -125,7 +180,7 @@ export function createMonacoSingleton() {
       if (this.isInitialized && this.workspace) {
         const monaco = await (this.workspace as any)._monaco.promise;
         if (monaco?.editor) {
-          monaco.editor.setTheme("vitesse-dark");
+          monaco.editor.setTheme(getMonacoTheme());
         }
         return;
       }
@@ -139,23 +194,52 @@ export function createMonacoSingleton() {
         : "welcome.txt";
 
       this.initPromise = (async () => {
+        perf.start("monaco-initialization");
+
         try {
+          // Lazy load Monaco
+          const { Workspace, lazy } = await retryWithBackoff(() => loadMonaco());
+
+          perf.start("workspace-creation");
           this.workspace = new Workspace({
             name: "formatter-workspace",
             initialFiles: initialFiles,
             entryFile: entryFile,
             browserHistory: false,
           });
+          perf.end("workspace-creation");
 
-          await lazy({
-            workspace: this.workspace!,
-            theme: "vitesse-dark",
-            langs: supportedLanguages,
-          });
+          perf.start("monaco-lazy-load");
+          const theme = getMonacoTheme();
+
+          await retryWithBackoff(() =>
+            lazy({
+              workspace: this.workspace!,
+              theme: theme,
+              langs: supportedLanguages,
+            })
+          );
+          perf.end("monaco-lazy-load");
 
           const monaco = await (this.workspace! as any)._monaco.promise;
           if (monaco?.editor) {
-            monaco.editor.setTheme("vitesse-dark");
+            perf.start("theme-setup");
+            // Set the theme after Monaco is ready
+            const currentTheme = getMonacoTheme();
+            try {
+              monaco.editor.setTheme(currentTheme);
+            } catch (error) {
+              console.warn(`[Monaco] Failed to set theme ${currentTheme}, will retry...`);
+              // Retry after a short delay
+              setTimeout(() => {
+                try {
+                  const retryTheme = getMonacoTheme();
+                  monaco.editor.setTheme(retryTheme);
+                } catch (retryError) {
+                  console.error("[Monaco] Theme setting failed completely:", retryError);
+                }
+              }, 500);
+            }
 
             setTimeout(() => {
               const monacoEditorElement = document.getElementById(
@@ -166,8 +250,9 @@ export function createMonacoSingleton() {
               if (editors.length > 0 && monacoEditorElement) {
                 const editor = editors[0];
                 editor.layout();
-                monaco.editor.setTheme("vitesse-dark");
+                monaco.editor.setTheme(getMonacoTheme());
               }
+              perf.end("theme-setup");
             }, 100);
           }
 
@@ -180,16 +265,26 @@ export function createMonacoSingleton() {
           } else {
             showEditor();
           }
+
+          perf.end("monaco-initialization");
         } catch (error) {
-          showEditor();
+          perf.end("monaco-initialization");
+          console.error("[Monaco] Initialization failed:", error);
+
+          // Show error boundary
+          if (window.MonacoErrorBoundary) {
+            window.MonacoErrorBoundary.show(error as Error);
+          }
+
           this.initPromise = null;
+          throw error;
         }
       })();
 
       return this.initPromise;
     },
 
-    async switchToLanguage(language: string) {
+    async switchToLanguage(language: string): Promise<void> {
       if (!this.workspace || this.isTransitioning) {
         return;
       }
@@ -197,7 +292,7 @@ export function createMonacoSingleton() {
       this.isTransitioning = true;
 
       try {
-        const fileName = `example.${language}`;
+        const fileName = `example.${languageExtensions[language as keyof typeof languageExtensions] || language}`;
         const monaco = await (this.workspace as any)._monaco.promise;
 
         if (!monaco) {
@@ -211,6 +306,7 @@ export function createMonacoSingleton() {
           throw new Error("Monaco editor element not found in DOM");
         }
 
+        perf.start("language-switch");
         let editors = monaco.editor.getEditors();
         let editor: any;
 
@@ -227,7 +323,7 @@ export function createMonacoSingleton() {
         }
 
         editor.layout();
-        monaco.editor.setTheme("vitesse-dark");
+        monaco.editor.setTheme(getMonacoTheme());
 
         const modelUri = monaco.Uri.parse(`file:///${fileName}`);
 
@@ -245,12 +341,14 @@ export function createMonacoSingleton() {
         }
 
         editor.setModel(model);
-
-        monaco.editor.setTheme("vitesse-dark");
+        monaco.editor.setTheme(getMonacoTheme());
         editor.layout();
 
         showEditor();
+        perf.end("language-switch");
       } catch (error) {
+        perf.end("language-switch");
+        console.error("[Monaco] Language switch failed:", error);
         showEditor();
       } finally {
         this.isTransitioning = false;
@@ -261,36 +359,69 @@ export function createMonacoSingleton() {
   return window.__MONACO_PLAYGROUND__;
 }
 
+// Helper function to wait for Monaco initialization
+async function waitForMonacoReady(maxRetries = 20, delay = 100): Promise<any> {
+  for (let i = 0; i < maxRetries; i++) {
+    const monacoPlayground = window.__MONACO_PLAYGROUND__;
+    if (monacoPlayground?.workspace && monacoPlayground.isInitialized) {
+      try {
+        const monaco = await monacoPlayground.workspace._monaco.promise;
+        if (monaco?.editor?.getEditors && monaco.editor.getEditors().length > 0) {
+          return monaco;
+        }
+      } catch {
+        // Continue trying
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  return null;
+}
+
 // Expose API globally for the formatter component
-export function exposeMonacoAPI() {
+export function exposeMonacoAPI(): void {
   const monacoPlayground = window.__MONACO_PLAYGROUND__;
   if (!monacoPlayground) {
+    console.warn("[Monaco] Playground not initialized");
     return;
   }
 
-  (window as any).MonacoPlayground = {
+  window.MonacoPlayground = {
     async getCurrentContent(_playgroundElement: HTMLElement): Promise<string> {
+      perf.start("get-current-content");
+
       if (!window.__MONACO_PLAYGROUND__?.workspace || !window.__MONACO_PLAYGROUND__.isInitialized) {
+        console.warn("[Monaco] Attempted to get content before initialization");
+        perf.end("get-current-content");
         return "";
       }
 
       try {
+        // Small delay to ensure Monaco is ready
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const monaco = await (monacoPlayground.workspace as any)._monaco.promise;
         const editors = monaco.editor.getEditors();
         if (editors.length === 0) {
+          console.warn("[Monaco] No editors found");
+          perf.end("get-current-content");
           return "";
         }
 
         const editor = editors[0];
         const model = editor.getModel();
         if (!model) {
+          console.warn("[Monaco] No model found");
+          perf.end("get-current-content");
           return "";
         }
 
-        return model.getValue();
+        const content = model.getValue();
+        perf.end("get-current-content");
+        return content;
       } catch (error) {
+        console.error("[Monaco] Failed to get current content:", error);
+        perf.end("get-current-content");
         return "";
       }
     },
@@ -299,34 +430,63 @@ export function exposeMonacoAPI() {
       _playgroundElement: HTMLElement,
       newContent: string,
     ): Promise<void> {
+      perf.start("update-content");
+
       if (!window.__MONACO_PLAYGROUND__?.workspace || !window.__MONACO_PLAYGROUND__.isInitialized) {
+        console.warn("[Monaco] Attempted to update content before initialization");
+        perf.end("update-content");
+        return;
+      }
+
+      if (newContent === undefined || newContent === null) {
+        console.warn("[Monaco] Attempted to update with null/undefined content");
+        perf.end("update-content");
         return;
       }
 
       try {
+        // Small delay to ensure Monaco is ready
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const monaco = await (monacoPlayground.workspace as any)._monaco.promise;
         const editors = monaco.editor.getEditors();
         if (editors.length === 0) {
+          console.warn("[Monaco] No editors found for update");
+          perf.end("update-content");
           return;
         }
 
         const editor = editors[0];
         const model = editor.getModel();
         if (!model) {
+          console.warn("[Monaco] No model found for update");
+          perf.end("update-content");
           return;
         }
 
         model.setValue(newContent);
+        perf.end("update-content");
       } catch (error) {
+        console.error("[Monaco] Failed to update content:", error);
+        perf.end("update-content");
       }
+    },
+
+    async switchLanguage(language: string): Promise<void> {
+      if (!window.__MONACO_PLAYGROUND__) {
+        console.warn("[Monaco] Playground not initialized");
+        return;
+      }
+
+      await window.__MONACO_PLAYGROUND__.switchToLanguage(language);
     },
   };
 }
 
 // Initialize event listeners for SPA navigation
 export function setupEventListeners() {
+  // No theme change listeners needed since we always use dark mode
+
   document.addEventListener("astro:before-swap", () => {
   });
 
@@ -344,7 +504,15 @@ export function setupEventListeners() {
         const monaco = await (monacoPlayground.workspace as any)._monaco
           .promise;
         if (monaco) {
-          monaco.editor.setTheme("vitesse-dark");
+          const currentTheme = getMonacoTheme();
+          // Wait a bit for the editor to be ready
+          setTimeout(() => {
+            try {
+              monaco.editor.setTheme(currentTheme);
+            } catch (themeError) {
+              console.warn("[Monaco] Theme setting failed on visibility change:", themeError);
+            }
+          }, 100);
 
           const editors = monaco.editor.getEditors();
           editors.forEach((editor: any) => {
@@ -352,6 +520,7 @@ export function setupEventListeners() {
           });
         }
       } catch (error) {
+        console.error("[Monaco] Visibility change failed:", error);
       }
     }
   });
@@ -382,6 +551,7 @@ export function setupEventListeners() {
       await new Promise((resolve) => setTimeout(resolve, 50));
       await monacoPlayground.switchToLanguage(newLanguage);
     } catch (error) {
+      console.error("[Monaco] After swap language switch failed:", error);
       showEditor();
     }
   });

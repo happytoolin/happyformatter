@@ -16,6 +16,9 @@ const {
   image = "/images/og.png",
   favicon = "/favicons/default.ico",
 } = Astro.props;
+
+// Check if we're on a formatter page
+const isFormatterPage = /^\/[a-z]+(?:\.[a-z]+)?$/.test(Astro.url.pathname);
 ---
 
 <!-- Global Metadata -->
@@ -43,7 +46,7 @@ const {
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
-<!-- <ViewTransitions /> -->
+{isFormatterPage ? null : <ViewTransitions />}
 
 <!-- Google tag (gtag.js) -->
 <script

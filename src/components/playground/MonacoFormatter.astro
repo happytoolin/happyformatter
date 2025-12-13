@@ -27,6 +27,9 @@ const initialCode = getInitialCode(language);
     id="formatter"
   >
     <div class="w-2/3 bg-card p-4 sm:p-6 rounded-lg shadow-lg">
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-foreground">Code Editor</h2>
+      </div>
       <div class="grid grid-cols-1 gap-6">
         <div class="relative">
           <MonacoPlayground inputCode={initialCode} language={language} />
