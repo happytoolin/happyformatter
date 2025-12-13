@@ -1,5 +1,7 @@
 ---
+import { buttonVariants } from "@/components/ui/button";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import { cn } from "@/lib/utils";
 
 interface Props {
   language: string;
@@ -34,21 +36,20 @@ const languageMap: Record<string, string> = {
 const title = languageMap[language] || language;
 ---
 
-<div class="flex flex-col items-center justify-center space-y-4 py-8 px-4 md:px-8 bg-linear-to-r rounded-lg shadow-lg">
-  <div class="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-    <LanguageIcon icon={language.toLowerCase()} />
-    <h1 class="text-2xl md:text-4xl font-bold text-center md:text-left">
-      Format or {minify ? "minify" : "beautify"} {title}
-    </h1>
+<section class="flex flex-col items-center justify-center pt-8 pb-8 text-center space-y-6 animate-in fade-in zoom-in duration-500">
+  <div class="flex flex-col items-center space-y-4">
+    <div class="flex items-center gap-3">
+      <div class="p-2 rounded-xl bg-muted/50 backdrop-blur-sm border border-border/50 shadow-sm">
+        <LanguageIcon icon={language.toLowerCase()} class="w-8 h-8" />
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight lg:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+        {title} <span class="text-muted-foreground font-normal">Formatter</span>
+      </h1>
+    </div>
   </div>
-  <p class="text-base md:text-lg text-center md:text-left">
-    Format or {minify ? "minify" : "beautify"} your code in {title} locally in
-    your browser using WebAssembly.
+
+  <p class="max-w-[600px] text-base text-muted-foreground md:text-lg leading-relaxed">
+    Format, {minify ? "minify" : "beautify"}, and validate your {title} code.
+    Secure & client-side.
   </p>
-  <a
-    href="#formatter"
-    class="mt-4 px-4 md:px-6 py-2 cursor-pointer bg-white text-blue-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300"
-  >
-    Format your code now!
-  </a>
-</div>
+</section>

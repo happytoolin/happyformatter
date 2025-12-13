@@ -2,21 +2,22 @@
 
 ---
 
-<footer class="animate p-4">
-  <div class="container mx-auto flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-    <div class="text-center md:text-left text-lg font-semibold">
-      &copy; {new Date().getFullYear()} • Happy Formatter
+<footer class="border-t border-border/40 py-8 mt-12 bg-background/50 backdrop-blur-sm">
+  <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4 px-4">
+    <div class="text-center md:text-left text-sm text-muted-foreground">
+      &copy; {new Date().getFullYear()} <span
+        class="font-semibold text-foreground"
+      >Happy Formatter</span>. All rights reserved.
     </div>
 
-    <div class="flex space-x-4 text-sm">
+    <div class="flex items-center space-x-6 text-sm font-medium text-muted-foreground">
       <a
         href="/privacy-policy"
-        class="text-white hover:underline transition duration-300 ease-in-out transform hover:scale-105"
+        class="hover:text-foreground transition-colors"
       >Privacy Policy</a>
-      <span class="hidden md:inline">|</span>
       <a
         href="/terms-of-service"
-        class="text-white hover:underline transition duration-300 ease-in-out transform hover:scale-105"
+        class="hover:text-foreground transition-colors"
       >Terms of Service</a>
     </div>
   </div>

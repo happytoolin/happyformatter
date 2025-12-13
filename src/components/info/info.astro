@@ -9,45 +9,69 @@ const defaultLanguage = "default";
 const info = languageInfoData[language] || languageInfoData[defaultLanguage];
 ---
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-  <div class="text-center mb-8">
-    <h1 class="text-4xl font-bold">{info.title}</h1>
-    <hr class="border-t-2 w-16 mx-auto my-4 border-gray-300" />
+<div class="container mx-auto px-4 py-12 max-w-4xl space-y-12">
+  <div class="text-center space-y-4">
+    <h1 class="text-3xl md:text-4xl font-bold">{info.title}</h1>
+    <div class="h-1 w-20 mx-auto bg-primary rounded-full"></div>
   </div>
   <div class="md:flex md:justify-between">
-    <div class="flex flex-col gap-4">
-      <p class="mb-4">
+    <div class="flex flex-col gap-6 text-muted-foreground text-lg leading-relaxed">
+      <p>
         {info.description}
       </p>
-      <div class="flex flex-col gap-4">
-        <ul class="list-disc list-inside mb-4">
-          {info.features.map((feature) => <li class="">{feature}</li>)}
+      <div class="flex flex-col gap-6">
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 list-none">
+          {info.features.map((feature) => (
+            <li class="flex items-start gap-2">
+              <span
+                class="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0"
+              />
+              <span>{feature}</span>
+            </li>
+          ))}
         </ul>
-        <div>
-          <h3 class="mb-2 text-xl font-semibold">
+        <div class="space-y-4">
+          <h3 class="text-xl font-semibold text-foreground">
             Know more about {language}:
           </h3>
-          <ul class="list-disc list-inside">
-            {info.additional_info.map((info) => <li>{info}</li>)}
+          <ul class="space-y-2 list-none">
+            {info.additional_info.map((info) => (
+              <li class="flex items-start gap-2">
+                <span
+                  class="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0"
+                />
+                <span>{info}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
     </div>
   </div>
-  <div class="text-center my-8">
-    <h2 class="text-3xl font-bold">{info.validator.title}</h2>
-    <hr class="border-t-2 w-16 mx-auto my-4 border-gray-300" />
-  </div>
-  <div class="flex flex-col gap-4">
-    <div class="mb-6 md:mb-0">
-      <p class="mb-4">
-        {info.validator.description}
-      </p>
+
+  <div class="space-y-8">
+    <div class="text-center space-y-4">
+      <h2 class="text-2xl md:text-3xl font-bold">{info.validator.title}</h2>
+      <div class="h-1 w-20 mx-auto bg-primary rounded-full"></div>
     </div>
-    <div class="">
-      <ul class="list-disc list-inside">
-        {info.validator.features.map((feature) => <li class="">{feature}</li>)}
-      </ul>
+    <div class="flex flex-col gap-6 text-muted-foreground text-lg leading-relaxed">
+      <div class="mb-6 md:mb-0">
+        <p>
+          {info.validator.description}
+        </p>
+      </div>
+      <div>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 list-none">
+          {info.validator.features.map((feature) => (
+            <li class="flex items-start gap-2">
+              <span
+                class="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0"
+              />
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </div>
 </div>

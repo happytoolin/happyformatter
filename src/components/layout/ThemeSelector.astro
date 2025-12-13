@@ -1,16 +1,22 @@
 ---
 import { shikiThemes } from "./themes";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
 ---
 
 <RootElement>
-  <div class="theme-selector relative w-[180px]">
+  <div class:list={["theme-selector relative", className]}>
     <select
       aria-label="Theme selector"
       id="theme-select"
       data-target="theme-select"
-      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      class="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-xs shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <option value="" disabled selected>Select theme</option>
+      <option value="" disabled selected>Theme</option>
       {shikiThemes.map((theme) => (
         <option value={theme.value}>{theme.name}</option>
       ))}

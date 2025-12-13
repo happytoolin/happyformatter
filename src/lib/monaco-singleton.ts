@@ -31,7 +31,11 @@ const perf = {
 
 // Always use dark theme for Monaco
 function getMonacoTheme(): string {
-  return "dark-plus";
+  if (typeof document !== "undefined") {
+    const theme = document.documentElement.getAttribute("data-theme");
+    if (theme) return theme;
+  }
+  return "vitesse-dark"; // Default modern dark theme
 }
 
 // Lazy load Monaco modules
@@ -485,7 +489,40 @@ export function exposeMonacoAPI(): void {
 
 // Initialize event listeners for SPA navigation
 export function setupEventListeners() {
-  // No theme change listeners needed since we always use dark mode
+  // Listen for theme changes
+  if (typeof document !== "undefined") {
+    const observer = new MutationObserver(async (mutations) => {
+      for (const mutation of mutations) {
+        if (
+          mutation.type === "attributes"
+          && mutation.attributeName === "data-theme"
+        ) {
+          const monacoPlayground = window.__MONACO_PLAYGROUND__;
+          if (
+            monacoPlayground?.workspace
+            && monacoPlayground.isInitialized
+          ) {
+            try {
+              const monaco = await (monacoPlayground.workspace as any)._monaco
+                .promise;
+              if (monaco?.editor) {
+                const newTheme = getMonacoTheme();
+                console.debug(`[Monaco] Switching theme to: ${newTheme}`);
+                monaco.editor.setTheme(newTheme);
+              }
+            } catch (error) {
+              console.warn("[Monaco] Failed to update theme:", error);
+            }
+          }
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+  }
 
   document.addEventListener("astro:before-swap", () => {
   });

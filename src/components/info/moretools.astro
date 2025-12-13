@@ -35,26 +35,33 @@ const tools = [
 ---
 
 <div
-  class="py-16 bg-linear-to-b from-primary/5 to-secondary/5"
+  class="py-16 border-t border-border/40"
   id="more-tools"
 >
   <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-extrabold text-center mb-12 text-primary">
-      Explore Our Tools
-    </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="flex items-center gap-4 mb-8">
+      <h2 class="text-2xl font-bold">
+        All Tools
+      </h2>
+      <div class="h-px flex-1 bg-border"></div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       {tools.map((tool) => {
         return (
           <a
             href={tool.url}
-            class="tool group bg-white dark:bg-primary/5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+            class="group flex items-center gap-3 p-3 rounded-lg border border-transparent hover:border-border hover:bg-muted/50 transition-all duration-200"
           >
-            <div class="p-6 flex flex-col items-center">
-              <LanguageIcon icon={tool.url.replace("/", "")} />
-              <span
-                class="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-primary transition-colors duration-300"
-              >{tool.name}</span>
+            <div class="w-8 h-8 flex items-center justify-center rounded bg-muted group-hover:bg-background transition-colors">
+              <LanguageIcon
+                icon={tool.url.replace("/", "")}
+                class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity"
+              />
             </div>
+            <span
+              class="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors"
+            >{tool.name}</span>
           </a>
         );
       })}

@@ -58,8 +58,10 @@ const favicon = faviconMap[language] || "/favicons/default.ico";
     />
   </head>
   <body>
+    <div class="fixed inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
+    </div>
     <Header />
-    <main>
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-theme(spacing.16))]">
       <FormatHeading language={language} minify={minify ?? false} />
       <slot />
     </main>

@@ -1,60 +1,54 @@
 ---
 import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
+import { Navigation } from "./Navigation";
+import { ThemeToggle } from "./ThemeToggle";
 ---
 
-<header class="z-20 relative bg-background border-b">
+<header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
   <nav
-    class="mx-auto flex items-center justify-between p-4 lg:px-8"
+    class="container flex h-14 items-center justify-between px-4 md:px-8 mx-auto"
     aria-label="Global"
   >
-    <div class="flex lg:flex-1 w-max mr-4">
-      <a data-astro-prefetch href="/" class="flex gap-2 items-center">
-        <Logo fill="currentColor" />
-        <span class="font-bold text-lg w-max">Happy Formatter</span>
+    <div class="flex items-center gap-6">
+      <a
+        data-astro-prefetch
+        href="/"
+        class="flex gap-2 items-center hover:opacity-80 transition-opacity"
+      >
+        <Logo fill="currentColor" class="h-6 w-6 text-primary" />
+        <span class="font-bold text-lg hidden sm:inline-block tracking-tight"
+        >Happy Formatter</span>
       </a>
+      <div class="hidden md:flex h-6 w-px bg-border/60 mx-2"></div>
+      <Navigation client:load />
     </div>
 
-    <div class="hidden lg:flex lg:gap-x-8">
-      <a data-astro-prefetch href="/html" class="text-sm font-medium w-max"
-      >HTML Formatter</a>
-      <a data-astro-prefetch href="/css" class="text-sm font-medium"
-      >CSS Minifier</a>
-      <a data-astro-prefetch href="/javascript" class="text-sm font-medium"
-      >JavaScript Formatter</a>
-      <a data-astro-prefetch href="/typescript" class="text-sm font-medium"
-      >Typescript Formatter</a>
-      <a data-astro-prefetch href="/" class="text-sm font-medium"
-      >JSON Formatter</a>
-      <a data-astro-prefetch href="/go" class="text-sm font-medium"
-      >Go Formatter</a>
-      <a data-astro-prefetch href="/dart" class="text-sm font-medium"
-      >Dart Formatter</a>
-      <a data-astro-prefetch href="/lua" class="text-sm font-medium"
-      >Lua Formatter</a>
-      <a data-astro-prefetch href="/sql" class="text-sm font-medium"
-      >SQL Formatter</a>
-      <a data-astro-prefetch href="/yaml" class="text-sm font-medium"
-      >YAML Formatter</a>
-      <a data-astro-prefetch href="/xml" class="text-sm font-medium"
-      >XML Formatter</a>
-      <a data-astro-prefetch href="#more-tools" class="text-sm font-medium"
-      >More Tools</a>
-    </div>
+    <div class="flex items-center gap-2">
+      <a
+        href="https://github.com/atlantic/happyformatter"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
+      >
+        <Icons icon="github" class="h-4 w-4" />
+        <span class="sr-only">GitHub</span>
+      </a>
 
-    <div class="flex items-center gap-4 ml-4">
+      <ThemeToggle client:load />
+
       <button
         type="button"
-        class="lg:hidden inline-flex items-center justify-center rounded-md p-2.5"
+        class="lg:hidden inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground ml-2"
         id="menu-button"
       >
         <span class="sr-only">Open main menu</span>
-        <Icons icon="menu" />
+        <Icons icon="menu" class="h-5 w-5" />
       </button>
     </div>
   </nav>
   <div
-    class="lg:hidden hidden"
+    class="lg:hidden hidden border-t"
     role="dialog"
     aria-modal="true"
     id="mobile-menu"
