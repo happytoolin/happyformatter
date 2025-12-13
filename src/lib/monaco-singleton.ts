@@ -85,6 +85,37 @@ async function retryWithBackoff<T>(
   throw lastError!;
 }
 
+// Map our language names to Monaco language IDs
+function getMonacoLanguageId(language: string): string {
+  const monacoMapping: Record<string, string> = {
+    javascript: "javascript",
+    typescript: "typescript",
+    json: "json",
+    html: "html",
+    css: "css",
+    scss: "scss",
+    xml: "xml",
+    yaml: "yaml",
+    markdown: "markdown",
+    go: "go",
+    python: "python",
+    sql: "sql",
+    rust: "rust",
+    dart: "dart",
+    lua: "lua",
+    c: "c",
+    cpp: "cpp",
+    java: "java",
+    csharp: "csharp",
+    php: "php",
+    proto: "protobuf",
+    zig: "zig",
+    toml: "toml",
+  };
+
+  return monacoMapping[language] || language;
+}
+
 // Get all supported languages and their initial code
 const supportedLanguages = [
   "json",
@@ -146,7 +177,8 @@ initialFiles["welcome.txt"] = skeletonContent;
 
 supportedLanguages.forEach((lang) => {
   const fileName = `example.${languageExtensions[lang as keyof typeof languageExtensions]}`;
-  initialFiles[fileName] = getInitialCode(lang);
+  const initialCode = getInitialCode(lang);
+  initialFiles[fileName] = initialCode;
 });
 
 function showEditor() {
@@ -206,18 +238,35 @@ export function createMonacoSingleton(): MonacoPlayground {
       const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
       const language = pathMatch ? pathMatch[1] : "welcome";
 
-      const entryFile = language && language !== "welcome"
-        ? `example.${languageExtensions[language as keyof typeof languageExtensions] || language}`
-        : "welcome.txt";
+      console.log("=== MONACO INITIALIZATION ===");
+      console.log("Path:", path);
+      console.log("Language match:", pathMatch);
+      console.log("Detected language:", language);
+
+      const entryFile =
+        language && language !== "welcome"
+          ? `example.${languageExtensions[language as keyof typeof languageExtensions] || language}`
+          : "welcome.txt";
+
+      console.log("Entry file:", entryFile);
 
       this.initPromise = (async () => {
         perf.start("monaco-initialization");
 
         try {
           // Lazy load Monaco
-          const { Workspace, lazy } = await retryWithBackoff(() => loadMonaco());
+          const { Workspace, lazy } = await retryWithBackoff(() =>
+            loadMonaco(),
+          );
 
           perf.start("workspace-creation");
+          console.log("=== CREATING WORKSPACE ===");
+          console.log("Entry file:", entryFile);
+          console.log(
+            "Available files in initialFiles:",
+            Object.keys(initialFiles),
+          );
+
           this.workspace = new Workspace({
             name: "formatter-workspace",
             initialFiles: initialFiles,
@@ -234,7 +283,7 @@ export function createMonacoSingleton(): MonacoPlayground {
               workspace: this.workspace!,
               theme: theme,
               langs: supportedLanguages,
-            })
+            }),
           );
           perf.end("monaco-lazy-load");
 
@@ -280,9 +329,14 @@ export function createMonacoSingleton(): MonacoPlayground {
           this.isInitialized = true;
 
           if (language && language !== "welcome") {
+            console.log(
+              "=== INITIALIZATION: SWITCHING TO LANGUAGE ===",
+              language,
+            );
             // Switch language immediately - Monaco should be ready
             try {
-              await this.switchToLanguage(language, this.isTransitioning);
+              // Allow language switching during initialization
+              await this.switchToLanguage(language, true);
             } catch (error) {
               console.error(
                 "[Monaco] Failed to switch language after init:",
@@ -291,6 +345,7 @@ export function createMonacoSingleton(): MonacoPlayground {
               showEditor(); // Show editor even if language switch fails
             }
           } else {
+            console.log("=== INITIALIZATION: SHOWING WELCOME SCREEN ===");
             showEditor();
           }
 
@@ -317,6 +372,14 @@ export function createMonacoSingleton(): MonacoPlayground {
       allowDuringReload: boolean = false,
     ): Promise<void> {
       if (!this.workspace || (this.isTransitioning && !allowDuringReload)) {
+        console.log(
+          "Monaco singleton: Workspace not available or already transitioning",
+          {
+            workspace: !!this.workspace,
+            isTransitioning: this.isTransitioning,
+            allowDuringReload,
+          },
+        );
         return;
       }
 
@@ -326,7 +389,14 @@ export function createMonacoSingleton(): MonacoPlayground {
       }
 
       try {
-        const fileName = `example.${languageExtensions[language as keyof typeof languageExtensions] || language}`;
+        const extension =
+          languageExtensions[language as keyof typeof languageExtensions];
+        const fileName = `example.${extension || language}`;
+        console.log(
+          `=== MONACO SINGLETON: SWITCHING TO ${language} file: ${fileName} ===`,
+        );
+        console.log("Language extension mapping:", { language, extension });
+
         const monaco = await (this.workspace as any)._monaco.promise;
 
         if (!monaco) {
@@ -360,24 +430,101 @@ export function createMonacoSingleton(): MonacoPlayground {
         monaco.editor.setTheme(getMonacoTheme());
 
         const modelUri = monaco.Uri.parse(`file:///${fileName}`);
+        console.log("=== MODEL CREATION DEBUG ===");
+        console.log("Looking for model with URI:", modelUri.toString());
+        console.log("Available models in workspace:");
+
+        // List all available models
+        monaco.editor.getModels().forEach((model: any, index: number) => {
+          console.log(
+            `  ${index}: URI=${model.uri.toString()}, Language=${model.getLanguageId()}, Content Preview=${model.getValue().substring(0, 50)}...`,
+          );
+        });
 
         let model = monaco.editor.getModel(modelUri);
 
-        if (!model) {
-          let content: string;
-          try {
-            content = await this.workspace!.fs.readTextFile(fileName);
-          } catch {
-            content = getInitialCode(language);
-          }
+        // Always get fresh content when switching languages
+        let content: string;
+        try {
+          content = await this.workspace!.fs.readTextFile(fileName);
+          console.log(
+            "Content read from workspace file:",
+            content.substring(0, 100) + "...",
+          );
+        } catch {
+          content = getInitialCode(language);
+          console.log(
+            "Using initial code for language:",
+            language,
+            content.substring(0, 100) + "...",
+          );
 
-          model = monaco.editor.createModel(content, language, modelUri);
+          // Ensure the file exists in workspace for future reads
+          try {
+            await this.workspace!.fs.writeFile(fileName, content);
+            console.log("Wrote initial content to workspace file:", fileName);
+          } catch (writeError) {
+            console.warn("Failed to write to workspace file:", writeError);
+          }
         }
 
+        const monacoLanguageId = getMonacoLanguageId(language);
+        console.log(
+          "Using Monaco language ID:",
+          monacoLanguageId,
+          "for language:",
+          language,
+        );
+
+        if (!model) {
+          console.log("Model not found, creating new model for:", fileName);
+          model = monaco.editor.createModel(
+            content,
+            monacoLanguageId,
+            modelUri,
+          );
+          console.log(
+            "New model created with content:",
+            content.substring(0, 50) + "...",
+          );
+        } else {
+          console.log(
+            "Found existing model with language:",
+            model.getLanguageId(),
+          );
+          console.log(
+            "Current model content:",
+            model.getValue().substring(0, 50) + "...",
+          );
+          console.log(
+            "New content should be:",
+            content.substring(0, 50) + "...",
+          );
+
+          // Always update content when switching languages
+          if (model.getValue() !== content) {
+            console.log("Updating model content for language switch");
+            model.setValue(content);
+          }
+
+          // Update the language if needed
+          if (model.getLanguageId() !== monacoLanguageId) {
+            console.log(
+              "Updating model language from",
+              model.getLanguageId(),
+              "to",
+              monacoLanguageId,
+            );
+            monaco.editor.setModelLanguage(model, monacoLanguageId);
+          }
+        }
+
+        console.log("Setting model on editor...");
         editor.setModel(model);
         monaco.editor.setTheme(getMonacoTheme());
         editor.layout();
 
+        console.log("=== LANGUAGE SWITCH SUCCESS ===", { language, fileName });
         showEditor();
         perf.end("language-switch");
       } catch (error) {
@@ -386,35 +533,18 @@ export function createMonacoSingleton(): MonacoPlayground {
         showEditor();
       } finally {
         if (!wasTransitioning) {
+          console.log("=== RESETTING TRANSITION STATE ===");
           this.isTransitioning = false;
+        } else {
+          console.log(
+            "=== KEEPING TRANSITION STATE (was already transitioning) ===",
+          );
         }
       }
     },
   };
 
   return window.__MONACO_PLAYGROUND__;
-}
-
-// Helper function to wait for Monaco initialization
-async function waitForMonacoReady(maxRetries = 20, delay = 100): Promise<any> {
-  for (let i = 0; i < maxRetries; i++) {
-    const monacoPlayground = window.__MONACO_PLAYGROUND__;
-    if (monacoPlayground?.workspace && monacoPlayground.isInitialized) {
-      try {
-        const monaco = await monacoPlayground.workspace._monaco.promise;
-        if (
-          monaco?.editor?.getEditors
-          && monaco.editor.getEditors().length > 0
-        ) {
-          return monaco;
-        }
-      } catch {
-        // Continue trying
-      }
-    }
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-  return null;
 }
 
 // Expose API globally for the formatter component
@@ -430,8 +560,8 @@ export function exposeMonacoAPI(): void {
       perf.start("get-current-content");
 
       if (
-        !window.__MONACO_PLAYGROUND__?.workspace
-        || !window.__MONACO_PLAYGROUND__.isInitialized
+        !window.__MONACO_PLAYGROUND__?.workspace ||
+        !window.__MONACO_PLAYGROUND__.isInitialized
       ) {
         console.warn("[Monaco] Attempted to get content before initialization");
         perf.end("get-current-content");
@@ -476,8 +606,8 @@ export function exposeMonacoAPI(): void {
       perf.start("update-content");
 
       if (
-        !window.__MONACO_PLAYGROUND__?.workspace
-        || !window.__MONACO_PLAYGROUND__.isInitialized
+        !window.__MONACO_PLAYGROUND__?.workspace ||
+        !window.__MONACO_PLAYGROUND__.isInitialized
       ) {
         console.warn(
           "[Monaco] Attempted to update content before initialization",
@@ -556,9 +686,9 @@ export function setupEventListeners() {
   document.addEventListener("visibilitychange", async () => {
     const monacoPlayground = window.__MONACO_PLAYGROUND__;
     if (
-      !document.hidden
-      && monacoPlayground?.workspace
-      && monacoPlayground.isInitialized
+      !document.hidden &&
+      monacoPlayground?.workspace &&
+      monacoPlayground.isInitialized
     ) {
       try {
         const monaco = await (monacoPlayground.workspace as any)._monaco
@@ -589,30 +719,53 @@ export function setupEventListeners() {
   });
 
   document.addEventListener("astro:after-swap", async () => {
+    console.log("=== astro:after-swap triggered ===");
+
     const monacoPlayground = window.__MONACO_PLAYGROUND__;
     if (!monacoPlayground) {
+      console.error("Monaco playground singleton not found");
       return;
     }
 
+    // Wait a bit for DOM to be fully ready after swap
     await new Promise((resolve) => setTimeout(resolve, 50));
 
+    // Ensure monaco-editor element exists and is ready
     const monacoEditorElement = document.getElementById("monaco-editor");
     if (!monacoEditorElement) {
+      console.error("Monaco editor element not found after swap");
       return;
     }
 
+    // Always derive language from URL to be more reliable
     const path = window.location.pathname;
     const pathMatch = path.match(/\/([^.]+)(?:\.astro)?$/);
     const newLanguage = pathMatch ? pathMatch[1] : null;
 
+    console.log("URL:", path);
+    console.log("Derived language:", newLanguage);
+
     if (!newLanguage || !monacoPlayground.isInitialized) {
+      console.log(
+        "Skipping language switch - language:",
+        newLanguage,
+        "initialized:",
+        monacoPlayground.isInitialized,
+      );
       return;
     }
 
     try {
+      console.log("Switching to language:", newLanguage);
+
+      // Force the editor to be visible and properly attached before switching
       hideEditor();
+
+      // Give the DOM time to render the skeleton
       await new Promise((resolve) => setTimeout(resolve, 50));
-      await monacoPlayground.switchToLanguage(newLanguage);
+
+      // Allow language switching during navigation/reload
+      await monacoPlayground.switchToLanguage(newLanguage, true);
     } catch (error) {
       console.error("[Monaco] After swap language switch failed:", error);
       showEditor();
