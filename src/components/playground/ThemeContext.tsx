@@ -20,7 +20,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [currentTheme, setCurrentTheme] = useState("one-dark-pro");
+  const [currentTheme, setCurrentTheme] = useState("vitesse-dark");
 
   useEffect(() => {
     // Initialize from localStorage
