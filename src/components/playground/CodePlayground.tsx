@@ -3,6 +3,8 @@ import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 import { material } from "@uiw/codemirror-theme-material";
 import { nord } from "@uiw/codemirror-theme-nord";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
+import { oneDark } from "@codemirror/theme-one-dark";
+import { vitesseDark } from "codemirror-theme-vitesse";
 import CodeMirror from "@uiw/react-codemirror";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "./ThemeContext";
@@ -31,7 +33,27 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       case "material-theme-palenight":
         return material;
       case "one-dark-pro":
-        return okaidia; // Using okaidia as a substitute for one-dark-pro
+        return oneDark;
+      case "monokai":
+        return okaidia; // Using okaidia as monokai-like theme
+      case "atom-one-dark":
+        return oneDark;
+      case "atom-one-light":
+        return githubLight; // Using GitHub Light for atom-one-light
+      case "vscode-dark":
+        return oneDark;
+      case "solarized-dark":
+        return dracula; // Using dracula for solarized-like feel
+      case "solarized-light":
+        return githubLight;
+      case "vitesse-dark":
+        return vitesseDark;
+      case "vitesse-light":
+        return githubLight;
+      case "catppuccin-mocha":
+        return dracula; // Using dracula for dark catppuccin-like feel
+      case "catppuccin-latte":
+        return githubLight;
       default:
         return okaidia;
     }
