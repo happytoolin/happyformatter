@@ -2,7 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter.astro";
+import Formatter from "@/components/playground/Formatter";
 ---
 
 <Layout
@@ -11,7 +11,7 @@ import Formatter from "@/components/playground/Formatter.astro";
   language="javascript"
   minify={true}
 >
-  <Formatter minifier={true} language="javascript" />
+  <Formatter client:load minifier={true} language="javascript" />
   <Info language="javascript" />
   <FAQ language="javascript" client:idle />
 </Layout>
