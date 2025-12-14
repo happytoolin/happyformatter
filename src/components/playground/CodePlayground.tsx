@@ -1,11 +1,11 @@
+import { oneDark } from "@codemirror/theme-one-dark";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 import { material } from "@uiw/codemirror-theme-material";
 import { nord } from "@uiw/codemirror-theme-nord";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
-import { oneDark } from "@codemirror/theme-one-dark";
-import { vitesseDark } from "codemirror-theme-vitesse";
 import CodeMirror from "@uiw/react-codemirror";
+import { vitesseDark } from "codemirror-theme-vitesse";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "./ThemeContext";
 

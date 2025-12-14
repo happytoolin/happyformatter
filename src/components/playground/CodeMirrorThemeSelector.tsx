@@ -24,7 +24,7 @@ export default function CodeMirrorThemeSelector({ className = "" }: CodeMirrorTh
         id="codemirror-theme-select"
         value={currentTheme}
         onChange={handleThemeChange}
-        className="text-xs font-mono bg-secondary border border-foreground px-2 py-1 focus:outline-none focus:ring-1 focus:ring-orange-500 hover:bg-accent focus:border-orange-500 transition-colors"
+        className="text-xs font-mono bg-secondary border border-foreground px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary hover:border-primary focus:border-primary transition-colors"
       >
         {codeMirrorThemes.map((theme) => (
           <option key={theme.value} value={theme.value}>

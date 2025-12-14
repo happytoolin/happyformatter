@@ -58,7 +58,7 @@ document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
     case "css":
       return `/* Welcome to HappyFormatter! */
 body {
-  font-family: Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 20px;
@@ -88,7 +88,7 @@ body {
     case "scss":
       return `/* Welcome to HappyFormatter! */
 body {
-  font-family: Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 20px;
@@ -113,7 +113,7 @@ body {
   <title>HappyFormatter</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #f0f0f0;
       margin: 0;
       padding: 20px;
