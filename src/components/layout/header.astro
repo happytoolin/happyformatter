@@ -9,18 +9,30 @@ import ModeToggle from "./ModeToggle.astro";
     <!-- Branding -->
     <div class="mr-8 flex items-center gap-2">
       <a data-astro-prefetch href="/" class="flex items-center gap-2 group">
-        <div class="bg-primary text-black p-1">
+        <div class="bg-[#F2F2F0] p-1">
           <Logo class="h-6 w-6" fill="currentColor" />
         </div>
-        <span
-          class="font-display text-xl font-black tracking-tighter group-hover:text-primary transition-colors"
-        >
-          HAPPY<span class="text-primary">fmt</span>
-        </span>
+        <div class="flex flex-col">
+          <span
+            class="font-display text-xl font-black tracking-tighter transition-colors"
+          >
+            <span class="group-hover:text-[#10B981]">HAPPY</span><span
+              class="text-primary"
+            >FMT</span>
+          </span>
+          <span class="text-xs text-muted-foreground lowercase leading-none">
+            by happytoolin
+          </span>
+        </div>
       </a>
       <span
         class="hidden md:inline-block text-[10px] font-bold bg-foreground text-background px-1 py-0.5 ml-2"
       >V3.0-RC</span>
+      <span
+        class="hidden md:inline-block text-xs text-muted-foreground lowercase ml-2"
+      >
+        by happytoolin
+      </span>
     </div>
 
     <!-- Navigation (Desktop) -->
@@ -73,14 +85,21 @@ import ModeToggle from "./ModeToggle.astro";
     <div class="flex flex-col h-full">
       <div class="flex items-center justify-between p-4 border-b-2 border-foreground">
         <a data-astro-prefetch href="/" class="flex items-center gap-2 group">
-          <div class="bg-primary text-black p-1">
+          <div class="bg-[#F2F2F0] p-1">
             <Logo class="h-6 w-6" fill="currentColor" />
           </div>
-          <span
-            class="font-display text-xl font-black tracking-tighter group-hover:text-primary transition-colors"
-          >
-            HAPPY<span class="text-primary">fmt</span>
-          </span>
+          <div class="flex flex-col">
+            <span
+              class="font-display text-xl font-black tracking-tighter transition-colors"
+            >
+              <span class="group-hover:text-[#10B981]">HAPPY</span><span
+                class="text-primary"
+              >FMT</span>
+            </span>
+            <span class="text-xs text-muted-foreground lowercase leading-none">
+              by happytoolin
+            </span>
+          </div>
         </a>
         <button
           type="button"

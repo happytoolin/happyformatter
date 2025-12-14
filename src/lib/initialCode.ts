@@ -2,13 +2,13 @@ export function getInitialCode(language: string): string {
   switch (language) {
     case "json":
       return `{
-  "greeting": "Welcome to HappyFormatter!",
+  "greeting": "Welcome to HAPPYFMT!",
   "instructions": [
     "Type or paste JSON here",
-    "HappyFormatter will format your code"
+    "HAPPYFMT will format your code"
   ],
   "example": {
-    "name": "HappyFormatter",
+    "name": "HAPPYFMT",
     "version": "1.0.0",
     "features": ["formatting", "syntax highlighting", "auto-completion"]
   },
@@ -18,15 +18,15 @@ export function getInitialCode(language: string): string {
   }
 }`;
     case "javascript":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 function greet() {
-  console.log("Welcome to HappyFormatter!");
+  console.log("Welcome to HAPPYFMT!");
 }
 
 function showInstructions() {
   const instructions = [
     "Type or paste JavaScript here",
-    "HappyFormatter will format your code"
+    "HAPPYFMT will format your code"
   ];
   instructions.forEach(instruction => console.log(instruction));
 }
@@ -35,17 +35,17 @@ greet();
 showInstructions();
 
 // DOM Manipulation Example
-document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
+document.body.innerHTML = "<h1>Welcome to HAPPYFMT!</h1>";`;
     case "typescript":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 function greet(): void {
-  console.log("Welcome to HappyFormatter!");
+  console.log("Welcome to HAPPYFMT!");
 }
 
 function showInstructions(): void {
   const instructions: string[] = [
     "Type or paste TypeScript here",
-    "HappyFormatter will format your code"
+    "HAPPYFMT will format your code"
   ];
   instructions.forEach(instruction => console.log(instruction));
 }
@@ -54,9 +54,9 @@ greet();
 showInstructions();
 
 // DOM Manipulation Example
-document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
+document.body.innerHTML = "<h1>Welcome to HAPPYFMT!</h1>";`;
     case "css":
-      return `/* Welcome to HappyFormatter! */
+      return `/* Welcome to HAPPYFMT! */
 body {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
@@ -86,7 +86,7 @@ body {
   }
 }`;
     case "scss":
-      return `/* Welcome to HappyFormatter! */
+      return `/* Welcome to HAPPYFMT! */
 body {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
@@ -104,13 +104,13 @@ body {
   color: green;
 }`;
     case "html":
-      return `<!-- Welcome to HappyFormatter! -->
+      return `<!-- Welcome to HAPPYFMT! -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HappyFormatter</title>
+  <title>HAPPYFMT</title>
   <style>
     body {
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -121,20 +121,20 @@ body {
   </style>
 </head>
 <body>
-  <h1>Welcome to HappyFormatter!</h1>
-  <p>Type or paste HTML here, and HappyFormatter will format your code.</p>
+  <h1>Welcome to HAPPYFMT!</h1>
+  <p>Type or paste HTML here, and HAPPYFMT will format your code.</p>
   <footer>
-    <p>&copy; 2024 HappyFormatter</p>
+    <p>&copy; 2024 HAPPYFMT</p>
   </footer>
 </body>
 </html>`;
     case "xml":
-      return `<!-- Welcome to HappyFormatter! -->
+      return `<!-- Welcome to HAPPYFMT! -->
 <greeting>
-  <message>Welcome to HappyFormatter!</message>
+  <message>Welcome to HAPPYFMT!</message>
   <instructions>
     <step>Type or paste XML here</step>
-    <step>HappyFormatter will format your code</step>
+    <step>HAPPYFMT will format your code</step>
   </instructions>
   <metadata>
     <author>Happy Dev</author>
@@ -142,7 +142,7 @@ body {
   </metadata>
 </greeting>`;
     case "go":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 package main
 
 import ("fmt"
@@ -150,13 +150,13 @@ import ("fmt"
 )
 
 func greet() {
-  fmt.Println("Welcome to HappyFormatter!")
+  fmt.Println("Welcome to HAPPYFMT!")
 }
 
 func showInstructions() {
   instructions := []string{
     "Type or paste Go code here",
-    "HappyFormatter will format your code",
+    "HAPPYFMT will format your code",
   }
   for _, instruction := range instructions {
     fmt.Println(instruction)
@@ -176,14 +176,14 @@ func main() {
   time.Sleep(3 * time.Second)
 }`;
     case "java":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HappyFormatter {
+public class HAPPYFMT {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("HappyFormatter");
+        JFrame frame = new JFrame("HAPPYFMT");
         frame.add(label);
 
         JButton button = new JButton("Click Me");
@@ -198,19 +198,19 @@ public class HappyFormatter {
     }
 }`;
     case "cs":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 using System;
 
 class Program {
   static void Main() {
-    Console.WriteLine("Welcome to HappyFormatter!");
+    Console.WriteLine("Welcome to HAPPYFMT!");
     ShowInstructions();
   }
 
   static void ShowInstructions() {
     string[] instructions = {
       "Type or paste C# code here",
-      "HappyFormatter will format your code"
+      "HAPPYFMT will format your code"
     };
     foreach (string instruction in instructions) {
       Console.WriteLine(instruction);
@@ -218,7 +218,7 @@ class Program {
   }
 }`;
     case "proto":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 syntax = "proto3";
 
 message Greeting {
@@ -237,13 +237,13 @@ message Example {
   repeated string features = 3;
 }`;
     case "markdown":
-      return `<!-- Welcome to HappyFormatter! -->
+      return `<!-- Welcome to HAPPYFMT! -->
 
-# HappyFormatter
+# HAPPYFMT
 
 - Type or paste Markdown here
 
-- HappyFormatter will format your code
+- HAPPYFMT will format your code
 
 ## Features
 
@@ -252,82 +252,82 @@ message Example {
 
       `;
     case "dart":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 import 'dart:io';
 
 void main() {
-  print('Welcome to HappyFormatter!');
+  print('Welcome to HAPPYFMT!');
 }`;
     case "lua":
-      return `-- Welcome to HappyFormatter!
-print("Welcome to HappyFormatter!")`;
+      return `-- Welcome to HAPPYFMT!
+print("Welcome to HAPPYFMT!")`;
     case "python":
-      return `# Welcome to HappyFormatter!
+      return `# Welcome to HAPPYFMT!
 
-print("Welcome to HappyFormatter!")`;
+print("Welcome to HAPPYFMT!")`;
     case "sql":
-      return `-- Welcome to HappyFormatter!
+      return `-- Welcome to HAPPYFMT!
 SELECT * FROM users;`;
     case "rust":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 fn main() {
-  println!("Welcome to HappyFormatter!");
+  println!("Welcome to HAPPYFMT!");
 }`;
     case "csharp":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 using System;
 
 class Program {
   static void Main() {
-    Console.WriteLine("Welcome to HappyFormatter!");
+    Console.WriteLine("Welcome to HAPPYFMT!");
   }
 }`;
     case "c":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 #include <stdio.h>
 
 int main() {
-  printf("Welcome to HappyFormatter!");
+  printf("Welcome to HAPPYFMT!");
          return 0;
 }
 `;
     case "cpp":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 #include <iostream>
 
 int main() {
-  std::cout << "Welcome to HappyFormatter!" << std::endl;
+  std::cout << "Welcome to HAPPYFMT!" << std::endl;
   return 0;
 }
 `;
     case "php":
       return `<?php
-// Welcome to HappyFormatter!
-echo "Welcome to HappyFormatter!";
+// Welcome to HAPPYFMT!
+echo "Welcome to HAPPYFMT!";
 ?>`;
     case "zig":
-      return `// Welcome to HappyFormatter!
+      return `// Welcome to HAPPYFMT!
 pub fn main() void {
-  println!("Welcome to HappyFormatter!");
+  println!("Welcome to HAPPYFMT!");
 }
 `;
     case "yaml":
-      return `# Welcome to HappyFormatter!
+      return `# Welcome to HAPPYFMT!
 
-greeting: Welcome to HappyFormatter!
+greeting: Welcome to HAPPYFMT!
 instructions:
   - Type or paste YAML here
-  - HappyFormatter will format your code
+  - HAPPYFMT will format your code
 
 example:
       `;
     case "toml":
-      return `# Welcome to HappyFormatter!
+      return `# Welcome to HAPPYFMT!
 
-greeting = "Welcome to HappyFormatter!"
+greeting = "Welcome to HAPPYFMT!"
 instructions = [
   "Type or paste TOML code here",
-  "HappyFormatter will format your code"
+  "HAPPYFMT will format your code"
 ]
 
       `;
