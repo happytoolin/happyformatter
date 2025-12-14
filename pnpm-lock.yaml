@@ -191,6 +191,9 @@ importers:
       codemirror-shiki:
         specifier: ^0.3.0
         version: 0.3.0(@codemirror/state@6.5.2)(@codemirror/view@6.39.4)(shiki@3.20.0)
+      codemirror-theme-vitesse:
+        specifier: ^0.3.0
+        version: 0.3.0(@codemirror/language@6.11.3)(@codemirror/view@6.39.4)(codemirror@6.0.2)
       dprint-node:
         specifier: ^1.0.8
         version: 1.0.8
@@ -2653,6 +2656,11 @@ packages:
       '@codemirror/state': ^6
       '@codemirror/view': ^6
       shiki: '>=2.0.0'
+
+  codemirror-theme-vitesse@0.3.0:
+    resolution: {integrity: sha512-CzumZ4MoWYPo2UzU7ypoeiVAcjA+tnJNanzZMmSJc+luGripO6Zv1OtJjPL9U3oyhPQ/kOyOSwHfQu7F3pt+/Q==}
+    peerDependencies:
+      codemirror: ^6.0.0
 
   codemirror@6.0.2:
     resolution: {integrity: sha512-VhydHotNW5w1UGK0Qj96BwSk/Zqbp9WbnyK2W/eVMv4QyF41INRGpjUhFJY7/uDNuudSc33a/PKr4iDqRduvHw==}
@@ -7011,6 +7019,16 @@ snapshots:
       '@codemirror/state': 6.5.2
       '@codemirror/view': 6.39.4
       shiki: 3.20.0
+
+  codemirror-theme-vitesse@0.3.0(@codemirror/language@6.11.3)(@codemirror/view@6.39.4)(codemirror@6.0.2):
+    dependencies:
+      '@codemirror/state': 6.5.2
+      '@lezer/highlight': 1.2.3
+      '@uiw/codemirror-themes': 4.25.4(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.39.4)
+      codemirror: 6.0.2
+    transitivePeerDependencies:
+      - '@codemirror/language'
+      - '@codemirror/view'
 
   codemirror@6.0.2:
     dependencies:

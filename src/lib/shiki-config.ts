@@ -59,9 +59,19 @@ export function getThemeForSystem(isDark: boolean = false): string {
 // Export available themes for UI selection
 export const availableThemes = [
   { name: "GitHub Light", id: "github-light", type: "light" },
-  { name: "One Dark Pro", id: "one-dark-pro", type: "dark" },
   { name: "GitHub Dark", id: "github-dark", type: "dark" },
+  { name: "One Dark Pro", id: "one-dark-pro", type: "dark" },
   { name: "Nord", id: "nord", type: "both" },
   { name: "Material Theme Palenight", id: "material-theme-palenight", type: "dark" },
   { name: "Dracula", id: "dracula", type: "dark" },
+  { name: "Solarized Dark", id: "solarized-dark", type: "dark" },
+  { name: "Solarized Light", id: "solarized-light", type: "light" },
+  { name: "Monokai", id: "monokai", type: "dark" },
+  { name: "Atom One Dark", id: "atom-one-dark", type: "dark" },
+  { name: "Atom One Light", id: "atom-one-light", type: "light" },
+  { name: "VS Code Dark", id: "vscode-dark", type: "dark" },
+  { name: "Vitesse Dark", id: "vitesse-dark", type: "dark" },
+  { name: "Vitesse Light", id: "vitesse-light", type: "light" },
+  { name: "Catppuccin Latte", id: "catppuccin-latte", type: "light" },
+  { name: "Catppuccin Mocha", id: "catppuccin-mocha", type: "dark" },
 ] as const;
