@@ -123,12 +123,12 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
 
   return (
     <div
-      className="w-full h-full bg-transparent"
+      className="w-full h-full bg-transparent overflow-hidden"
       data-language={language}
     >
       <CodeMirror
         value={inputCode}
-        height="100%"
+        height="600px"
         theme={getTheme()}
         extensions={extensions}
         basicSetup={{

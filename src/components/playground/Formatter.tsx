@@ -99,7 +99,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
             </div>
 
             {/* The Single Editor Pane */}
-            <div className="relative h-[600px] w-full group">
+            <div className="relative h-[600px] w-full overflow-hidden group">
               <CodePlayground
                 inputCode={code}
                 language={language}

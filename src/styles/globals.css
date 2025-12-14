@@ -215,3 +215,46 @@
 pre {
   border-radius: 0px;
 }
+
+/* CodeMirror specific styles */
+.cm-editor {
+  height: 600px !important;
+  max-height: 600px !important;
+  overflow: auto !important;
+  width: 100% !important;
+}
+
+.cm-editor .cm-scroller {
+  overflow: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--background);
+  max-height: 600px !important;
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-track {
+  background: var(--background);
+  border: 1px solid var(--border);
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border: 2px solid var(--background);
+}
+
+.cm-editor .cm-scroller::-webkit-scrollbar-corner {
+  background: var(--border);
+}
+
+.cm-focused {
+  outline: none !important;
+}
+
+/* Ensure the editor fills its container */
+.cm-editor .cm-content {
+  min-height: 100% !important;
+}
