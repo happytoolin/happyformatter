@@ -32,6 +32,7 @@ pnpm deploy
 ## Architecture Overview
 
 ### Core Components Structure
+
 ```
 src/
 ├── components/
@@ -114,6 +115,7 @@ src/
 ## Testing Notes
 
 Currently no test framework is configured. When adding tests:
+
 - Consider Vitest for unit testing
 - Test formatter implementations with various code samples
 - Test error handling for invalid code inputs
