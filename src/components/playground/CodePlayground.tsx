@@ -1,8 +1,10 @@
+import { dracula } from "@uiw/codemirror-theme-dracula";
+import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
+import { material } from "@uiw/codemirror-theme-material";
+import { nord } from "@uiw/codemirror-theme-nord";
+import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import CodeMirror from "@uiw/react-codemirror";
-import shiki from "codemirror-shiki";
-import React, { useCallback, useEffect, useState } from "react";
-import { getShikiHighlighter } from "../../lib/shiki-config";
-import { availableThemes } from "../../lib/shiki-config";
+import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "./ThemeContext";
 
 interface CodePlaygroundProps {
@@ -12,25 +14,28 @@ interface CodePlaygroundProps {
 }
 
 export default function CodePlayground({ inputCode, language, onCodeChange }: CodePlaygroundProps) {
-  const [isReady, setIsReady] = useState(false);
-  const [highlighter, setHighlighter] = useState<any>(null);
   const [extensions, setExtensions] = useState<any[]>([]);
   const { currentTheme } = useTheme();
 
-  // Initialize the Shiki highlighter
-  useEffect(() => {
-    const initHighlighter = async () => {
-      try {
-        const h = await getShikiHighlighter();
-        setHighlighter(h);
-        setIsReady(true);
-      } catch (error) {
-        console.error("Failed to initialize Shiki highlighter:", error);
-      }
-    };
-
-    initHighlighter();
-  }, []);
+  // Theme mapping - using proper theme imports
+  const getTheme = useCallback(() => {
+    switch (currentTheme) {
+      case "github-light":
+        return githubLight;
+      case "github-dark":
+        return githubDark;
+      case "dracula":
+        return dracula;
+      case "nord":
+        return nord;
+      case "material-theme-palenight":
+        return material;
+      case "one-dark-pro":
+        return okaidia; // Using okaidia as a substitute for one-dark-pro
+      default:
+        return okaidia;
+    }
+  }, [currentTheme]);
 
   // Get language extension
   const getLanguageExtension = useCallback(async (lang: string) => {
@@ -92,33 +97,15 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
     }
   }, []);
 
-  // Update extensions when highlighter, language, or theme changes
+  // Update extensions when language changes
   useEffect(() => {
     const updateExtensions = async () => {
-      if (!highlighter) return;
-
       try {
         const langExtension = await getLanguageExtension(language);
         const exts = [];
 
         if (langExtension) {
           exts.push(langExtension);
-        }
-
-        // Add shiki syntax highlighting
-        if (highlighter) {
-          console.log("CodePlayground: Creating shiki extension with:", {
-            language,
-            theme: currentTheme,
-          });
-
-          exts.push(
-            shiki({
-              highlighter,
-              language,
-              theme: currentTheme,
-            }),
-          );
         }
 
         // Add line wrapping
@@ -132,15 +119,7 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
     };
 
     updateExtensions();
-  }, [highlighter, language, currentTheme, getLanguageExtension]);
-
-  if (!isReady || !highlighter) {
-    return (
-      <div className="w-full h-full bg-gray-100 dark:bg-gray-800 animate-pulse flex items-center justify-center">
-        <div className="text-gray-500 dark:text-gray-400">Loading editor...</div>
-      </div>
-    );
-  }
+  }, [language, getLanguageExtension]);
 
   return (
     <div
@@ -150,7 +129,7 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       <CodeMirror
         value={inputCode}
         height="100%"
-        theme="dark"
+        theme={getTheme()}
         extensions={extensions}
         basicSetup={{
           lineNumbers: true,
