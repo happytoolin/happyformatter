@@ -84,8 +84,8 @@ export default function Formatter({ minifier, language }: FormatterProps) {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b-2 border-foreground bg-secondary p-4 gap-4">
               <div className="flex items-center gap-4">
                 <div className="flex gap-1">
-                  <div className="w-3 h-3 rounded-full border border-foreground bg-background"></div>
-                  <div className="w-3 h-3 rounded-full border border-foreground bg-background"></div>
+                  <div className="w-3 h-3 rounded-full border border-foreground bg-primary"></div>
+                  <div className="w-3 h-3 rounded-full border border-foreground bg-[#10B981]"></div>
                 </div>
                 <div className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Editor // {language.toUpperCase()}
