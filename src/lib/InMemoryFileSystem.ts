@@ -17,7 +17,7 @@ export type FileSystemWatchHandle = (
   kind: "create" | "modify" | "remove",
   pathname: string,
   type?: number,
-  context?: FileSystemWatchContext
+  context?: FileSystemWatchContext,
 ) => void;
 
 export interface FileSystemWatchContext {
@@ -109,7 +109,7 @@ export class InMemoryFileSystem implements FileSystem {
       if (parentPath === "") parentPath = "/"; // Handle root parent
 
       const parentUrl = filenameToURL(parentPath).href;
-      
+
       if (!this._storage.has(parentUrl)) {
         this._storage.set(parentUrl, {
           url: parentUrl,
@@ -117,8 +117,8 @@ export class InMemoryFileSystem implements FileSystem {
         });
         newDirs.push(parentPath);
       }
-      
-      if(parentPath === "/") break; 
+
+      if (parentPath === "/") break;
     }
 
     // Create the actual directory
@@ -170,7 +170,7 @@ export class InMemoryFileSystem implements FileSystem {
     if (entry.stat.type !== 1) {
       throw new Error(`read ${name}: is a directory`);
     }
-    
+
     return entry.content || new Uint8Array();
   }
 
@@ -181,16 +181,16 @@ export class InMemoryFileSystem implements FileSystem {
 
   async writeFile(name: string, content: string | Uint8Array, context?: FileSystemWatchContext): Promise<void> {
     const { pathname, href: url } = filenameToURL(name);
-    
+
     // Check parent directory
     const parentPath = pathname.substring(0, pathname.lastIndexOf("/")) || "/";
     const parentUrl = filenameToURL(parentPath).href;
     const parentEntry = this._storage.get(parentUrl);
 
     if (!parentEntry) {
-        // In strict FS, we might throw, but many editors auto-create parents or expect them to exist.
-        // Following the example logic: check if parent exists and is a dir
-        throw new Error(`write ${pathname}: no such file or directory`);
+      // In strict FS, we might throw, but many editors auto-create parents or expect them to exist.
+      // Following the example logic: check if parent exists and is a dir
+      throw new Error(`write ${pathname}: no such file or directory`);
     }
     if (parentEntry.stat.type !== 2) {
       throw new Error(`write ${pathname}: not a directory`);
@@ -253,9 +253,9 @@ export class InMemoryFileSystem implements FileSystem {
       for (const childUrl of children) {
         const childEntry = this._storage.get(childUrl);
         if (childEntry) {
-            this._storage.delete(childUrl);
-            const childPath = new URL(childUrl).pathname;
-            this._notify("remove", childPath, childEntry.stat.type);
+          this._storage.delete(childUrl);
+          const childPath = new URL(childUrl).pathname;
+          this._notify("remove", childPath, childEntry.stat.type);
         }
       }
 
@@ -275,11 +275,11 @@ export class InMemoryFileSystem implements FileSystem {
     const newEntryExists = this._storage.has(newUrl);
 
     if (newEntryExists) {
-        if (!options?.overwrite) {
-            throw new Error(`rename ${oldUrl} to ${newUrl}: file exists`);
-        }
-        // Delete destination first
-        await this.delete(newName, { recursive: true });
+      if (!options?.overwrite) {
+        throw new Error(`rename ${oldUrl} to ${newUrl}: file exists`);
+      }
+      // Delete destination first
+      await this.delete(newName, { recursive: true });
     }
 
     // Check new parent directory
@@ -294,48 +294,48 @@ export class InMemoryFileSystem implements FileSystem {
     const moved: [string, string, number][] = []; // [oldPath, newPath, type]
 
     if (oldEntry.stat.type === 1) {
-        // Move single file
-        this._storage.delete(oldUrl);
-        this._storage.set(newUrl, { ...oldEntry, url: newUrl });
-        moved.push([oldPath, newPath, 1]);
+      // Move single file
+      this._storage.delete(oldUrl);
+      this._storage.set(newUrl, { ...oldEntry, url: newUrl });
+      moved.push([oldPath, newPath, 1]);
     } else {
-        // Move directory (and all children)
-        const dirPrefix = oldUrl + (oldUrl.endsWith("/") ? "" : "/");
-        
-        // Find all children keys
-        const keysToMove: string[] = [];
-        for (const key of Array.from(this._storage.keys())) {
-            if (key === oldUrl || key.startsWith(dirPrefix)) {
-                keysToMove.push(key);
-            }
+      // Move directory (and all children)
+      const dirPrefix = oldUrl + (oldUrl.endsWith("/") ? "" : "/");
+
+      // Find all children keys
+      const keysToMove: string[] = [];
+      for (const key of Array.from(this._storage.keys())) {
+        if (key === oldUrl || key.startsWith(dirPrefix)) {
+          keysToMove.push(key);
         }
+      }
 
-        for (const key of keysToMove) {
-            const item = this._storage.get(key)!;
-            // Calculate new URL
-            // If key is "file:///a/b" and we rename "file:///a" to "file:///x"
-            // tail is "/b" -> new is "file:///x/b"
-            const tail = key.slice(oldUrl.length); 
-            const itemNewUrl = newUrl + tail;
+      for (const key of keysToMove) {
+        const item = this._storage.get(key)!;
+        // Calculate new URL
+        // If key is "file:///a/b" and we rename "file:///a" to "file:///x"
+        // tail is "/b" -> new is "file:///x/b"
+        const tail = key.slice(oldUrl.length);
+        const itemNewUrl = newUrl + tail;
 
-            this._storage.delete(key);
-            this._storage.set(itemNewUrl, { ...item, url: itemNewUrl });
+        this._storage.delete(key);
+        this._storage.set(itemNewUrl, { ...item, url: itemNewUrl });
 
-            moved.push([new URL(key).pathname, new URL(itemNewUrl).pathname, item.stat.type]);
-        }
+        moved.push([new URL(key).pathname, new URL(itemNewUrl).pathname, item.stat.type]);
+      }
     }
 
     // Notifications
     for (const [oPath, nPath, type] of moved) {
-        this._notify("remove", oPath, type);
-        this._notify("create", nPath, type);
+      this._notify("remove", oPath, type);
+      this._notify("create", nPath, type);
     }
   }
 
   async copy(source: string, target: string, options?: { overwrite: boolean }): Promise<void> {
-     // Usually optional in basics, but good to implement if possible. 
-     // For minimal implementation, we can leave this throwing or implement simple file copy.
-     throw new Error("Method not implemented.");
+    // Usually optional in basics, but good to implement if possible.
+    // For minimal implementation, we can leave this throwing or implement simple file copy.
+    throw new Error("Method not implemented.");
   }
 
   watch(filename: string, handle: FileSystemWatchHandle): () => void;
@@ -343,7 +343,7 @@ export class InMemoryFileSystem implements FileSystem {
   watch(
     filename: string,
     handleOrOptions: FileSystemWatchHandle | { recursive: boolean },
-    handle?: FileSystemWatchHandle
+    handle?: FileSystemWatchHandle,
   ): () => void {
     const options = typeof handleOrOptions === "function" ? undefined : handleOrOptions;
     const actualHandle = typeof handleOrOptions === "function" ? handleOrOptions : handle!;
@@ -364,15 +364,19 @@ export class InMemoryFileSystem implements FileSystem {
     };
   }
 
-  private _notify(kind: "create" | "modify" | "remove", pathname: string, type?: number, context?: FileSystemWatchContext) {
+  private _notify(
+    kind: "create" | "modify" | "remove",
+    pathname: string,
+    type?: number,
+    context?: FileSystemWatchContext,
+  ) {
     for (const watcher of Array.from(this._watchers)) {
       if (
-        watcher.pathname === pathname ||
-        (watcher.recursive && (watcher.pathname === "/" || pathname.startsWith(watcher.pathname + "/")))
+        watcher.pathname === pathname
+        || (watcher.recursive && (watcher.pathname === "/" || pathname.startsWith(watcher.pathname + "/")))
       ) {
         watcher.handle(kind, pathname, type, context);
       }
     }
   }
 }
-
