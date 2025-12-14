@@ -6,7 +6,7 @@ import Minify from "@/icons/minify.astro";
 import { getInitialCode } from "@/lib/initialCode";
 import { scope } from "simple:scope";
 import Button from "../ui/button.astro";
-import CodePlayground from "./CodePlayground.astro";
+import CodePlayground from "./CodePlayground";
 import CodeValid from "./CodeValid.astro";
 import { formattedStore, inputStore } from "./store";
 
@@ -57,15 +57,16 @@ if (!input) {
         <!-- The Single Editor Pane -->
         <div class="relative h-[600px] w-full bg-background group">
           <!-- Flash Overlay for Effect -->
-          <div
+          <!-- <div
             id="flash-overlay"
             class="absolute inset-0 bg-primary opacity-0 pointer-events-none z-50 transition-opacity duration-300"
           >
-          </div>
+          </div> -->
 
           <CodePlayground
             inputCode={inputStore.get() || getInitialCode(language)}
             language={language}
+            client:load
           />
         </div>
 
@@ -121,7 +122,7 @@ if (!input) {
 <script>
 import { getFormatter, getMinifier } from "@/handlers";
 import { getInitialCode } from "@/lib/initialCode";
-import { formattedStore, inputStore } from "./store";
+import { inputStore } from "./store";
 
 RootElement.ready(async ($) => {
   const divElement = $("root");
