@@ -2,7 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter.astro";
+import Formatter from "@/components/playground/Formatter";
 ---
 
 <Layout
@@ -10,7 +10,7 @@ import Formatter from "@/components/playground/Formatter.astro";
   description="Java Formatter that formats Java data, locally in your browser"
   language="java"
 >
-  <Formatter minifier={false} language="java" />
+  <Formatter client:load minifier={false} language="java" />
   <Info language="java" />
   <FAQ language="java" client:idle />
 </Layout>
