@@ -4,160 +4,159 @@ import Logo from "../../icons/Logo.astro";
 import ModeToggle from "./ModeToggle.astro";
 ---
 
-<header class="z-20 relative bg-background border-b">
-  <nav
-    class="mx-auto flex items-center justify-between p-4 lg:px-8"
-    aria-label="Global"
-  >
-    <div class="flex lg:flex-1 w-max mr-4">
-      <a data-astro-prefetch href="/" class="flex gap-2 items-center">
-        <Logo fill="currentColor" />
-        <span class="font-bold text-lg w-max">Happy Formatter</span>
-      </a>
-    </div>
-
-    <div class="hidden lg:flex lg:gap-x-8">
-      <a data-astro-prefetch href="/html" class="text-sm font-medium w-max"
-      >HTML Formatter</a>
-      <a data-astro-prefetch href="/css" class="text-sm font-medium"
-      >CSS Minifier</a>
-      <a data-astro-prefetch href="/javascript" class="text-sm font-medium"
-      >JavaScript Formatter</a>
-      <a data-astro-prefetch href="/typescript" class="text-sm font-medium"
-      >Typescript Formatter</a>
-      <a data-astro-prefetch href="/" class="text-sm font-medium"
-      >JSON Formatter</a>
-      <a data-astro-prefetch href="/go" class="text-sm font-medium"
-      >Go Formatter</a>
-      <a data-astro-prefetch href="/dart" class="text-sm font-medium"
-      >Dart Formatter</a>
-      <a data-astro-prefetch href="/lua" class="text-sm font-medium"
-      >Lua Formatter</a>
-      <a data-astro-prefetch href="/sql" class="text-sm font-medium"
-      >SQL Formatter</a>
-      <a data-astro-prefetch href="/yaml" class="text-sm font-medium"
-      >YAML Formatter</a>
-      <a data-astro-prefetch href="/xml" class="text-sm font-medium"
-      >XML Formatter</a>
-      <a data-astro-prefetch href="#more-tools" class="text-sm font-medium"
-      >More Tools</a>
-    </div>
-
-    <div class="flex items-center gap-4 ml-4">
-      <button
-        type="button"
-        class="lg:hidden inline-flex items-center justify-center rounded-md p-2.5"
-        id="menu-button"
-      >
-        <span class="sr-only">Open main menu</span>
-        <Icons icon="menu" />
-      </button>
-    </div>
-  </nav>
-  <div
-    class="lg:hidden hidden"
-    role="dialog"
-    aria-modal="true"
-    id="mobile-menu"
-  >
-    <div class="fixed inset-0 z-10 bg-background/80 backdrop-blur-xs"></div>
-    <div class="fixed inset-y-0 right-0 z-20 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-foreground/10">
-      <div class="flex items-center justify-between mb-6">
-        <a data-astro-prefetch href="/" class="flex gap-2 items-center">
-          <Logo class="h-8 w-auto" fill="currentColor" />
-          <span class="font-bold text-lg">Happy Formatter</span>
-        </a>
-        <button type="button" class="rounded-md p-2.5" id="close-menu-button">
-          <span class="sr-only">Close menu</span>
-          <Icons icon="cross" />
-        </button>
-      </div>
-      <div class="flex justify-between items-center mb-6">
-        <ModeToggle />
-      </div>
-      <div class="mt-6 flow-root">
-        <div class="-my-6 divide-y divide-foreground/10">
-          <div class="space-y-2 py-6">
-            <a
-              data-astro-prefetch
-              href="/html"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >HTML Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/css"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >CSS Minifier</a>
-            <a
-              data-astro-prefetch
-              href="/javascript"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >JavaScript Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/typescript"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >Typescript Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >JSON Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/go"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >Go Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/dart"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >Dart Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/lua"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >Lua Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/sql"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >SQL Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/yaml"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >YAML Formatter</a>
-            <a
-              data-astro-prefetch
-              href="/xml"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >XML Formatter</a>
-            <a
-              data-astro-prefetch
-              href="#more-tools"
-              class="block rounded-lg px-3 py-2 text-base font-medium hover:bg-muted"
-            >More Tools</a>
-          </div>
+<header class="sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <div class="flex h-16 items-center px-6">
+    <!-- Branding -->
+    <div class="mr-8 flex items-center gap-2">
+      <a data-astro-prefetch href="/" class="flex items-center gap-2 group">
+        <div class="bg-primary text-black p-1">
+          <Logo class="h-6 w-6" fill="currentColor" />
         </div>
+        <span
+          class="font-display text-xl font-black tracking-tighter group-hover:text-primary transition-colors"
+        >
+          HAPPY<span class="text-primary">fmt</span>
+        </span>
+      </a>
+      <span
+        class="hidden md:inline-block text-[10px] font-bold bg-foreground text-background px-1 py-0.5 ml-2"
+      >V3.0-RC</span>
+    </div>
+
+    <!-- Navigation (Desktop) -->
+    <nav class="hidden md:flex items-center gap-6 text-xs font-bold tracking-widest uppercase">
+      <a
+        href="/javascript"
+        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
+      >JS/TS</a>
+      <a
+        href="/css"
+        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
+      >CSS</a>
+      <a
+        href="/"
+        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
+      >JSON</a>
+      <a
+        href="/sql"
+        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
+      >SQL</a>
+      <a
+        href="/python"
+        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
+      >Python</a>
+      <a
+        href="#more-tools"
+        class="opacity-50 hover:opacity-100 hover:text-primary"
+      >+ More</a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="ml-auto flex items-center gap-4">
+      <div class="hidden md:flex items-center gap-2 text-[10px] text-muted-foreground font-mono border border-border px-2 py-1">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        SYSTEM: ONLINE
       </div>
+      <ModeToggle />
     </div>
   </div>
 </header>
+
+<!-- Mobile Menu -->
+<div
+  class="md:hidden fixed inset-0 z-50 bg-background/95 backdrop-blur hidden"
+  role="dialog"
+  aria-modal="true"
+  id="mobile-menu"
+>
+  <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background border-l-2 border-foreground">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between p-4 border-b-2 border-foreground">
+        <a data-astro-prefetch href="/" class="flex items-center gap-2 group">
+          <div class="bg-primary text-black p-1">
+            <Logo class="h-6 w-6" fill="currentColor" />
+          </div>
+          <span
+            class="font-display text-xl font-black tracking-tighter group-hover:text-primary transition-colors"
+          >
+            HAPPY<span class="text-primary">fmt</span>
+          </span>
+        </a>
+        <button
+          type="button"
+          class="p-2 border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+          id="close-menu-button"
+        >
+          <Icons icon="cross" />
+        </button>
+      </div>
+
+      <div class="flex-1 p-4">
+        <div class="space-y-2">
+          <a
+            href="/javascript"
+            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+          >JS/TS</a>
+          <a
+            href="/css"
+            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+          >CSS</a>
+          <a
+            href="/"
+            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+          >JSON</a>
+          <a
+            href="/sql"
+            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+          >SQL</a>
+          <a
+            href="/python"
+            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+          >Python</a>
+          <a
+            href="#more-tools"
+            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground opacity-50 hover:opacity-100 transition-colors"
+          >+ More</a>
+        </div>
+      </div>
+
+      <div class="p-4 border-t-2 border-foreground">
+        <ModeToggle />
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 const menuButton = document.getElementById("menu-button");
 const mobileMenu = document.getElementById("mobile-menu");
 const closeMenuButton = document.getElementById("close-menu-button");
 
-if (!menuButton || !mobileMenu || !closeMenuButton) {
-  throw new Error("Could not find all elements");
+// Add menu button for mobile if it doesn't exist
+if (!menuButton) {
+  const header = document.querySelector("header .flex");
+  const mobileMenuBtn = document.createElement("button");
+  mobileMenuBtn.id = "menu-button";
+  mobileMenuBtn.className =
+    "md:hidden flex items-center gap-2 text-[10px] font-mono border border-border px-2 py-1 hover:bg-primary hover:text-black transition-colors";
+  mobileMenuBtn.innerHTML = `
+    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+    MENU
+  `;
+  header.querySelector(".ml-auto").insertBefore(
+    mobileMenuBtn,
+    header.querySelector(".ml-auto").firstChild,
+  );
+
+  mobileMenuBtn.addEventListener("click", function() {
+    mobileMenu.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  });
 }
 
-menuButton.addEventListener("click", function() {
-  mobileMenu.classList.remove("hidden");
-  document.body.style.overflow = "hidden";
-});
+if (!mobileMenu || !closeMenuButton) {
+  throw new Error("Could not find all elements");
+}
 
 closeMenuButton.addEventListener("click", function() {
   mobileMenu.classList.add("hidden");

@@ -3,24 +3,24 @@ import { cn } from "@/lib/utils";
 
 // Define the button variants and sizes
 const buttonVariants = {
-  default: "bg-primary text-primary-foreground hover:bg-primary/90",
+  default:
+    "bg-primary text-primary-foreground hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
   destructive:
-    "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
   outline:
-    "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+    "border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-none",
   secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
   ghost: "hover:bg-accent hover:text-accent-foreground",
   link: "text-primary underline-offset-4 hover:underline",
 };
 
 const buttonSizes = {
-  default: "h-10 px-4 py-2",
-  sm: "h-9 rounded-md px-3",
-  lg: "h-11 rounded-md px-8",
-  icon: "h-10 w-10",
+  default: "h-12 px-6 py-2",
+  sm: "h-9 rounded-none px-3",
+  lg: "h-14 rounded-none px-10 text-base",
+  icon: "h-12 w-12",
 };
 
-// Define the props for the button
 interface Props {
   variant?: keyof typeof buttonVariants;
   size?: keyof typeof buttonSizes;
@@ -30,14 +30,13 @@ interface Props {
   [key: string]: any;
 }
 
-// Create a function to get the button classes
 function getButtonClasses({
   variant = "default",
   size = "default",
   className = "",
 }: Props) {
   return cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-bold uppercase tracking-wide transition-all focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 active:translate-y-[4px] active:shadow-none border-2 border-black",
     buttonVariants[variant],
     buttonSizes[size],
     className,

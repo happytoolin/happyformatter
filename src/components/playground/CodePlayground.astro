@@ -12,170 +12,130 @@ interface Props {
 
 const { inputCode, language } = Astro.props;
 
-const input = getInitialCode(language);
-
+// Initialize formatting for initial render
 const InitialCodeHTMLString = async () => {
-  const highlighter = await initializeHighlighter(language);
-  return highlightCode(input, highlighter, language);
+  try {
+    const highlighter = await initializeHighlighter(language);
+    return highlightCode(inputCode, highlighter, language);
+  } catch (e) {
+    return `<pre><code>${inputCode}</code></pre>`;
+  }
 };
 
 const highlightedHTML = await InitialCodeHTMLString();
 
-resetStores();
+// Note: We do NOT reset stores here to allow persistence across navigations if desired,
+// or we can strictly reset. For now, we trust the parent props.
 ---
 
 <RootElement>
   <div
-    class="transition-none"
-    style="color-scheme: inherit"
+    class="relative w-full h-full overflow-hidden bg-white dark:bg-zinc-900"
     data-target="root"
     data-language={language}
   >
-    <div class="relative mt-10 min-h-[800px] max-h-[800px] overflow-auto">
-      <Textarea
-        aria-label="CodePlayground"
-        label="CodePlayground"
-        id="codeTextarea"
-        class="playground-text whitespace-pre overflow-auto w-full h-full font-mono text-transparent bg-transparent absolute inset-0 py-5 px-6 caret-gray-600 tab-4 resize-none z-20 max-h-[800px] min-h-[800px]"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        data-initial={inputCode}
-        value={inputCode}
-        target={scope("textarea")}
-      />
-      <div
-        class="block max-h-[800px] overflow-auto min-h-[800px] z-10"
-        data-target="highlight"
-        id="highlight_code"
-        set:html={highlightedHTML}
-      />
+    <!-- Grid Background for the Editor -->
+    <div
+      class="absolute inset-0 pointer-events-none opacity-[0.03] z-0"
+      style="background-image:
+  linear-gradient(#000 1px, transparent 1px),
+  linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px"
+    >
+    </div>
+
+    <!-- Scroll Container -->
+    <div class="relative w-full h-full overflow-auto scrollbar-industrial">
+      <!-- The Editor Stack: Textarea on top of Highlighter -->
+      <div class="relative min-h-full">
+        <!-- The Syntax Highlight Layer (Bottom) -->
+        <div
+          class="pointer-events-none absolute inset-0 p-6 z-10 font-mono text-sm leading-relaxed"
+          data-target="highlight"
+          id="highlight_code"
+          set:html={highlightedHTML}
+        />
+
+        <!-- The Input Layer (Top, Transparent) -->
+        <Textarea
+          aria-label="Code Editor"
+          id="codeTextarea"
+          class="absolute inset-0 w-full h-full p-6 z-20 font-mono text-sm leading-relaxed bg-transparent text-transparent caret-primary resize-none outline-none focus:ring-0 border-0"
+          spellcheck="false"
+          data-initial={inputCode}
+          value={inputCode}
+          target={scope("textarea")}
+        />
+      </div>
     </div>
   </div>
 </RootElement>
 
 <script>
 import { highlightCode, initializeHighlighter } from "@/lib/highlighter";
-import { getInitialCode } from "@/lib/initialCode";
 import { throttle } from "@/lib/throttle";
-import type { Highlighter } from "shiki";
 import { inputStore } from "./store";
-
-function syncScroll(
-  preElement: HTMLElement | HTMLPreElement,
-  textArea: HTMLTextAreaElement,
-): void {
-  preElement.scrollTop = textArea.scrollTop;
-  preElement.scrollLeft = textArea.scrollLeft;
-}
-
-function handleInputEvent(
-  e: Event,
-  throttledHighlight: (code: string) => void,
-): void {
-  const element = e.target as HTMLTextAreaElement;
-  const code = element.value;
-
-  if (code) {
-    inputStore.set(code);
-    element.classList.remove("text-transparent");
-    element.classList.add("text-visible");
-    // add background color to the textarea
-    // get current background color of the .shiki class
-    const shiki = document.querySelector(".shiki") as HTMLElement;
-    const backgroundColor = window.getComputedStyle(shiki).backgroundColor;
-    const textColor = window.getComputedStyle(shiki).color;
-    const textStyle = window.getComputedStyle(shiki).fontFamily;
-    const fontSize = window.getComputedStyle(shiki).fontSize;
-    element.style.backgroundColor = backgroundColor;
-    element.style.color = textColor;
-    element.style.fontFamily = textStyle;
-    element.style.fontSize = fontSize;
-    throttledHighlight(code);
-  }
-}
-
-function setupEventListeners(
-  textArea: HTMLTextAreaElement,
-  highlightDiv: HTMLDivElement,
-  highlighter: Highlighter,
-  language: string,
-): void {
-  const throttledHighlight = throttle((code: string) => {
-    const highlightedCode = highlightCode(code, highlighter, language);
-    highlightDiv.innerHTML = highlightedCode;
-
-    const preElement = highlightDiv.querySelector("pre");
-
-    if (!preElement) {
-      console.error("No pre element found");
-      return;
-    }
-
-    textArea.classList.remove("text-visible");
-    textArea.classList.add("text-transparent");
-    textArea.style.backgroundColor = "";
-    textArea.style.color = "";
-
-    textArea.addEventListener("scroll", () => syncScroll(preElement, textArea));
-  }, 0);
-
-  textArea.addEventListener(
-    "input",
-    (e) => handleInputEvent(e, throttledHighlight),
-  );
-
-  textArea.addEventListener("paste", (e) => {
-    handleInputEvent(e, throttledHighlight);
-  });
-
-  textArea.addEventListener("scroll", () => syncScroll(highlightDiv, textArea));
-}
-
-const textarea = document.getElementById(
-  "codeTextarea",
-) as HTMLTextAreaElement;
-const highlightDiv = document.getElementById(
-  "highlight_code",
-) as HTMLDivElement;
-
-const preElement = highlightDiv.querySelector("pre")!;
-
-textarea.addEventListener("scroll", () => syncScroll(preElement, textarea));
 
 RootElement.ready(async ($) => {
   const highlightDiv = $("highlight") as HTMLDivElement;
   const textArea = $("textarea") as HTMLTextAreaElement;
   const divLanguage = $("root") as HTMLDivElement;
-
   const language = divLanguage.dataset.language as string;
 
-  let initialCode = textArea.dataset.initial;
+  // Sync Input Store to Textarea
+  inputStore.subscribe(newCode => {
+    if (newCode !== textArea.value) {
+      textArea.value = newCode;
+      // Trigger highlight update
+      updateHighlight(newCode);
+    }
+  });
 
-  if (!initialCode) {
-    initialCode = getInitialCode(language);
-    inputStore.set(initialCode);
-  }
+  // Highlighter Instance
+  const highlighter = await initializeHighlighter(language);
 
-  textArea.value = initialCode;
+  const updateHighlight = (code: string) => {
+    const highlighted = highlightCode(code, highlighter, language);
+    highlightDiv.innerHTML = highlighted;
 
-  try {
-    const highlighter = await initializeHighlighter(language);
+    // Ensure colors match theme (using helper classes or computed styles)
+    // The global CSS handles .shiki text colors, we just need to ensure the transparent textarea aligns
+  };
 
-    setupEventListeners(textArea, highlightDiv, highlighter, language);
-  } catch (error) {
-    console.error("Initialization failed:", error);
-  }
+  const throttledUpdate = throttle(updateHighlight, 50);
+
+  textArea.addEventListener("input", () => {
+    const code = textArea.value;
+    inputStore.set(code);
+    throttledUpdate(code);
+  });
+
+  // Handle Tab Key for Indentation
+  textArea.addEventListener("keydown", function(e) {
+    if (e.key == "Tab") {
+      e.preventDefault();
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      // set textarea value to: text before caret + tab + text after caret
+      this.value = this.value.substring(0, start)
+        + "    " + this.value.substring(end);
+      // put caret at right position again
+      this.selectionStart = this.selectionEnd = start + 4;
+      // Update highlight
+      inputStore.set(this.value);
+      throttledUpdate(this.value);
+    }
+  });
 });
 </script>
 
 <style>
-.text-transparent {
+/* Ensure textarea text is invisible but caret remains */
+#codeTextarea {
   color: transparent;
+  background: transparent;
 }
-
-.text-visible {
-  color: inherit;
+#codeTextarea::selection {
+  background: rgba(255, 102, 0, 0.3); /* Brand Orange Selection */
+  color: transparent;
 }
 </style>

@@ -2,62 +2,103 @@
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 
 const tools = [
-  { name: "HTML Formatter", url: "/html" },
-  { name: "HTML Minifier", url: "/html" },
-  { name: "CSS Formatter", url: "/css" },
-  { name: "CSS Minifier", url: "/css" },
-  { name: "JavaScript Formatter", url: "/javascript" },
-  { name: "JavaScript Minifier", url: "/javascript" },
-  { name: "JSON Formatter", url: "/json" },
-  { name: "JSON Minifier", url: "/json" },
-  { name: "XML Formatter", url: "/xml" },
-  { name: "XML Minifier", url: "/xml" },
-  { name: "YAML Formatter", url: "/yaml" },
-  // { name: "TOML Formatter", url: "/toml" },
-  { name: "SQL Formatter", url: "/sql" },
-  { name: "Go Formatter", url: "/go" },
-  { name: "Dart Formatter", url: "/dart" },
-  { name: "SCSS Formatter", url: "/scss" },
-  { name: "SCSS Minifier", url: "/scss" },
-  { name: "Java Formatter", url: "/java" },
-  { name: "Lua Formatter", url: "/lua" },
-  { name: "Python Formatter", url: "/python" },
-  { name: "TypeScript Formatter", url: "/typescript" },
-  { name: "TypeScript Validator", url: "/typescript" },
-  { name: "Markdown Formatter", url: "/markdown" },
-  { name: "C# Formatter", url: "/csharp" },
-  { name: "C Formatter", url: "/c" },
-  { name: "C++ Formatter", url: "/cpp" },
-  { name: "PHP Formatter", url: "/php" },
-  { name: "Protobuf Formatter", url: "/proto" },
-  { name: "Zig Formatter", url: "/zig" },
+  { name: "HTML Formatter", url: "/html", type: "FMT" },
+  { name: "HTML Minifier", url: "/html", type: "MIN" },
+  { name: "CSS Formatter", url: "/css", type: "FMT" },
+  { name: "CSS Minifier", url: "/css", type: "MIN" },
+  { name: "JS Formatter", url: "/javascript", type: "FMT" },
+  { name: "JS Minifier", url: "/javascript", type: "MIN" },
+  { name: "JSON Formatter", url: "/json", type: "FMT" },
+  { name: "JSON Minifier", url: "/json", type: "MIN" },
+  { name: "XML Formatter", url: "/xml", type: "FMT" },
+  { name: "XML Minifier", url: "/xml", type: "MIN" },
+  { name: "YAML Formatter", url: "/yaml", type: "FMT" },
+  { name: "SQL Formatter", url: "/sql", type: "FMT" },
+  { name: "Go Formatter", url: "/go", type: "FMT" },
+  { name: "Dart Formatter", url: "/dart", type: "FMT" },
+  { name: "SCSS Formatter", url: "/scss", type: "FMT" },
+  { name: "SCSS Minifier", url: "/scss", type: "MIN" },
+  { name: "Java Formatter", url: "/java", type: "FMT" },
+  { name: "Lua Formatter", url: "/lua", type: "FMT" },
+  { name: "Python Formatter", url: "/python", type: "FMT" },
+  { name: "TS Formatter", url: "/typescript", type: "FMT" },
+  { name: "TS Validator", url: "/typescript", type: "VAL" },
+  { name: "Markdown", url: "/markdown", type: "FMT" },
+  { name: "C# Formatter", url: "/csharp", type: "FMT" },
+  { name: "C Formatter", url: "/c", type: "FMT" },
+  { name: "C++ Formatter", url: "/cpp", type: "FMT" },
+  { name: "PHP Formatter", url: "/php", type: "FMT" },
+  { name: "Proto Formatter", url: "/proto", type: "FMT" },
+  { name: "Zig Formatter", url: "/zig", type: "FMT" },
 ];
 ---
 
 <div
-  class="py-16 bg-linear-to-b from-primary/5 to-secondary/5"
+  class="border-t-2 border-foreground bg-foreground text-background py-16"
   id="more-tools"
 >
   <div class="container mx-auto px-4">
-    <h2 class="text-4xl font-extrabold text-center mb-12 text-primary">
-      Explore Our Tools
-    </h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-display font-black uppercase tracking-tight text-background dark:text-background">
+        System Modules <span class="text-primary">({tools.length})</span>
+      </h2>
+      <div class="hidden md:flex gap-2">
+        <span class="w-3 h-3 bg-white rounded-full"></span>
+        <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+      </div>
+    </div>
+
+    <!-- The Module Grid -->
+    <!-- We use a background color of 'foreground' (black) and a gap of 1px to create the grid lines -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 bg-zinc-800 dark:bg-zinc-900 border-2 border-white/20 dark:border-white/10 gap-px">
       {tools.map((tool) => {
+        const cleanName = tool.name.replace("Formatter", "").replace("Minifier", "")
+          .trim();
         return (
           <a
             href={tool.url}
-            class="tool group bg-white dark:bg-primary/5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+            class="tool group relative bg-black dark:bg-zinc-950 p-6 hover:bg-white hover:dark:bg-zinc-100 transition-colors duration-200 flex flex-col justify-between h-32 overflow-hidden"
           >
-            <div class="p-6 flex flex-col items-center">
-              <LanguageIcon icon={tool.url.replace("/", "")} />
+            <!-- Background Icon Faded -->
+            <div class="absolute -right-4 -bottom-4 opacity-20 grayscale group-hover:opacity-10 transition-opacity">
+              <LanguageIcon
+                icon={tool.url.replace("/", "")}
+                class="w-20 h-20"
+              />
+            </div>
+
+            <!-- Header -->
+            <div class="flex justify-between items-start">
               <span
-                class="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-primary transition-colors duration-300"
-              >{tool.name}</span>
+                class="text-[10px] font-mono font-bold text-primary border border-primary px-1"
+              >
+                {tool.type}
+              </span>
+              <span
+                class="text-white dark:text-zinc-200 group-hover:text-black group-hover:dark:text-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity"
+              >↗</span>
+            </div>
+
+            <!-- Label -->
+            <div class="relative z-10">
+              <span
+                class="block text-lg font-bold font-display uppercase tracking-wider text-white dark:text-zinc-100 group-hover:text-black group-hover:dark:text-zinc-900"
+              >
+                {cleanName}
+              </span>
+              <span
+                class="text-[10px] font-mono text-zinc-500 dark:text-zinc-600 group-hover:text-zinc-800 group-hover:dark:text-zinc-700"
+              >
+                {tool.name.includes("Minifier") ? "Compression" : "Standardization"}
+              </span>
             </div>
           </a>
         );
       })}
+    </div>
+
+    <div class="mt-4 text-right font-mono text-[10px] text-zinc-500 dark:text-zinc-600">
+      SYSTEM STATUS: ALL SYSTEMS OPERATIONAL
     </div>
   </div>
 </div>
@@ -68,36 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
   tools.forEach((tool) => {
     const toolName = tool.getAttribute("href")?.replace("/", "") || "";
 
-    tool.addEventListener("mouseover", () => {
-      gtag("event", `Mouse Over ${toolName}`, {
-        "event_category": "Tool Interaction",
-        "event_label": "Mouse Over",
-        "value": toolName,
-      });
-    });
-
-    tool.addEventListener("mouseleave", () => {
-      gtag("event", `Mouse Leave ${toolName}`, {
-        "event_category": "Tool Interaction",
-        "event_label": "Mouse Leave",
-        "value": toolName,
-      });
-    });
-
-    tool.addEventListener("focus", () => {
-      gtag("event", `Focus ${toolName}`, {
-        "event_category": "Tool Interaction",
-        "event_label": "Focus",
-        "value": toolName,
-      });
-    });
-
     tool.addEventListener("click", () => {
-      gtag("event", `Click ${toolName}`, {
-        "event_category": "Tool Interaction",
-        "event_label": "Click",
-        "value": toolName,
-      });
+      if (typeof window.gtag === "function") {
+        window.gtag("event", `Click ${toolName}`, {
+          "event_category": "Tool Interaction",
+          "value": toolName,
+        });
+      }
     });
   });
 });
