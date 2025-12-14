@@ -8,7 +8,6 @@ import { scope } from "simple:scope";
 import Button from "../ui/button.astro";
 import CodePlayground from "./CodePlayground.astro";
 import CodeValid from "./CodeValid.astro";
-import OutputPlayground from "./OutputPlayground.astro";
 import { formattedStore, inputStore } from "./store";
 
 interface Props {
@@ -18,63 +17,107 @@ interface Props {
 
 const { language, minifier } = Astro.props;
 
+// Initialize Store Server-Side to prevent flash
 const input = inputStore.get();
-
 if (!input) {
   const initialCode = getInitialCode(language);
-  const formatter = await getFormatter(language);
-  const formatted = await formatter.formatCode(initialCode);
-
   inputStore.set(initialCode);
-  formattedStore.set(formatted);
 }
-
-const formatted = formattedStore.get();
 ---
 
 <RootElement>
   <div
-    class="flex flex-col items-center justify-center mt-20 bg-background p-4 sm:p-6"
+    class="w-full bg-background py-12"
     data-language={language}
     data-target="root"
     id="formatter"
   >
-    <div class="w-2/3 bg-card p-4 sm:p-6 rounded-lg shadow-lg">
-      <div class="grid grid-cols-1 gap-6 sm:gap-14 md:grid-cols-2">
-        <div class="relative">
-          <CodePlayground inputCode={input} language={language} />
-          <CodeValid language={language} />
+    <div class="container mx-auto max-w-6xl">
+      <!-- The Machine Housing -->
+      <div class="relative border-2 border-foreground bg-card shadow-[8px_8px_0px_0px_var(--color-foreground)]">
+        <!-- Machine Header / Toolbar -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between border-b-2 border-foreground bg-secondary p-4 gap-4">
+          <div class="flex items-center gap-4">
+            <div class="flex gap-1">
+              <div class="w-3 h-3 rounded-full border border-foreground bg-background">
+              </div>
+              <div class="w-3 h-3 rounded-full border border-foreground bg-background">
+              </div>
+            </div>
+            <div class="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Editor // {language.toUpperCase()}
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <CodeValid language={language} />
+          </div>
         </div>
-        <div class="relative">
-          <OutputPlayground formattedCode={formatted} language={language} />
+
+        <!-- The Single Editor Pane -->
+        <div class="relative h-[600px] w-full bg-background group">
+          <!-- Flash Overlay for Effect -->
+          <div
+            id="flash-overlay"
+            class="absolute inset-0 bg-primary opacity-0 pointer-events-none z-50 transition-opacity duration-300"
+          >
+          </div>
+
+          <CodePlayground
+            inputCode={inputStore.get() || getInitialCode(language)}
+            language={language}
+          />
+        </div>
+
+        <!-- Control Deck -->
+        <div class="border-t-2 border-foreground p-4 bg-background grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          <div class="text-[10px] font-mono text-muted-foreground hidden md:block">
+            READY TO PROCESS. <br /> PRESS ACTION TO EXECUTE.
+          </div>
+
+          <div class="flex flex-col md:flex-row gap-3 justify-end">
+            {minifier && (
+              <Button
+                variant="outline"
+                size="lg"
+                target={scope("minify")}
+                class="w-full md:w-auto"
+              >
+                <Minify class="w-4 h-4 mr-2" /> MINIFY
+              </Button>
+            )}
+
+            <Button
+              variant="default"
+              size="lg"
+              target={scope("format")}
+              class="w-full md:w-auto bg-primary hover:bg-primary/90 text-black border-2 border-black"
+            >
+              <Format class="w-4 h-4 mr-2" /> FORMAT CODE
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              target={scope("copy")}
+              class="border-2 border-transparent hover:border-foreground"
+              title="Copy to Clipboard"
+            >
+              <Copy class="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </div>
-      <div class="flex flex-col sm:flex-row justify-center mt-6 gap-4">
-        <Button
-          size="lg"
-          target={scope("format")}
-          class="flex items-center gap-2"
-        >
-          <Format class="w-4 h-4 mr-2" /> Format</Button>
-        {minifier && (
-          <Button
-            size="lg"
-            target={scope("minify")}
-            class="flex items-center gap-2"
-          >
-            {" "} <Minify class="w-4 h-4 mr-2" /> Minify
-          </Button>
-        )}
-        <Button
-          size="lg"
-          target={scope("copy")}
-          class="flex items-center gap-2"
-        >
-          <Copy class="w-4 h-4 mr-2" /> Copy</Button>
+
+      <!-- Decorative Footer for the Machine -->
+      <div class="mt-2 flex justify-between font-mono text-[10px] text-muted-foreground uppercase">
+        <span>REF: {language.toUpperCase()}-FMT-001</span>
+        <span>LATENCY: 0ms (LOCAL)</span>
       </div>
     </div>
   </div>
 </RootElement>
+
 <script>
 import { getFormatter, getMinifier } from "@/handlers";
 import { getInitialCode } from "@/lib/initialCode";
@@ -83,36 +126,34 @@ import { formattedStore, inputStore } from "./store";
 RootElement.ready(async ($) => {
   const divElement = $("root");
   const language = divElement.dataset.language!;
+  const flashOverlay = document.getElementById("flash-overlay");
 
   const formatter = await getFormatter(language);
   const minifier = await getMinifier(language);
 
-  const trackEvent = (eventName: string, eventLabel: string) => {
-    try {
-      gtag("event", eventName, {
-        event_category: "Button",
-        event_label: eventLabel,
-        value: language,
-      });
-    } catch (err) {
-      console.error(
-        `Error sending ${eventName} event to Google Analytics:`,
-        err,
-      );
+  // Helper to trigger flash
+  const triggerFlash = () => {
+    if (flashOverlay) {
+      flashOverlay.style.opacity = "0.3";
+      setTimeout(() => flashOverlay.style.opacity = "0", 150);
     }
   };
 
-  const showTickAnimation = (button: HTMLButtonElement, text: string) => {
-    const originalIcon = button.innerHTML;
-    button.innerHTML =
-      "<svg class=\"w-4 h-4 mr-2\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M5 13l4 4L19 7\" /></svg> "
-      + text;
+  // Helper for button text feedback
+  const showFeedback = (
+    btn: HTMLButtonElement,
+    originalHtml: string,
+    tempText: string,
+  ) => {
+    btn.innerHTML = `<span class="font-bold">${tempText}</span>`;
     setTimeout(() => {
-      button.innerHTML = originalIcon;
-    }, 2000);
+      btn.innerHTML = originalHtml;
+    }, 1500);
   };
 
   const formatButton = $("format") as HTMLButtonElement;
+  const formatOriginal = formatButton.innerHTML;
+
   formatButton.addEventListener("click", async () => {
     let inputCode = inputStore.get();
     if (!inputCode) {
@@ -121,45 +162,52 @@ RootElement.ready(async ($) => {
     }
 
     try {
-      const formatted = await formatter.formatCode(inputCode);
-      formattedStore.set(formatted);
-      showTickAnimation(formatButton, "Formatted");
-    } catch (error) {
-      console.error("Invalid code:", error);
-    }
+      formatButton.disabled = true;
+      formatButton.innerText = "PROCESSING...";
 
-    trackEvent(`Format ${language} Click`, "click");
+      const result = await formatter.formatCode(inputCode);
+
+      // Update the input store directly to replace text
+      triggerFlash();
+      inputStore.set(result);
+
+      showFeedback(formatButton, formatOriginal, "DONE");
+    } catch (error) {
+      console.error("Format Error:", error);
+      showFeedback(formatButton, formatOriginal, "ERROR");
+    } finally {
+      formatButton.disabled = false;
+    }
   });
 
   if (minifier) {
     const minifyButton = $("minify") as HTMLButtonElement;
+    const minifyOriginal = minifyButton.innerHTML;
+
     minifyButton.addEventListener("click", async () => {
       let inputCode = inputStore.get();
-
       if (!inputCode) {
         inputCode = getInitialCode(language);
         inputStore.set(inputCode);
       }
 
       try {
-        const minified = await minifier.minifyCode(inputCode);
-        formattedStore.set(minified);
-        showTickAnimation(minifyButton, "Minified");
+        const result = await minifier.minifyCode(inputCode);
+        triggerFlash();
+        inputStore.set(result);
+        showFeedback(minifyButton, minifyOriginal, "MINIFIED");
       } catch (error) {
-        console.error("Invalid code:", error);
+        console.error("Minify Error:", error);
       }
-
-      trackEvent(`Minify ${language} Click`, "click");
     });
   }
 
   const copyButton = $("copy") as HTMLButtonElement;
   copyButton.addEventListener("click", () => {
-    navigator.clipboard.writeText(
-      formattedStore.get() || getInitialCode(language),
-    );
-    showTickAnimation(copyButton, "Copied");
-    trackEvent(`Copy ${language} Click`, "click");
+    navigator.clipboard.writeText(inputStore.get());
+    // Visual feedback for copy icon could go here
+    copyButton.classList.add("bg-accent");
+    setTimeout(() => copyButton.classList.remove("bg-accent"), 500);
   });
 });
 </script>

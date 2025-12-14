@@ -1,6 +1,5 @@
 ---
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
-import ModeToggle from "./ModeToggle.astro";
 
 interface Props {
   language: string;
@@ -8,51 +7,36 @@ interface Props {
 }
 
 const { language, minify } = Astro.props;
-
-const languageMap: Record<string, string> = {
-  csharp: "C#",
-  cpp: "C++",
-  c: "C",
-  java: "Java",
-  javascript: "JavaScript",
-  typescript: "TypeScript",
-  python: "Python",
-  go: "Go",
-  rust: "Rust",
-  lua: "Lua",
-  sql: "SQL",
-  html: "HTML",
-  css: "CSS",
-  json: "JSON",
-  xml: "XML",
-  yaml: "YAML",
-  markdown: "Markdown",
-  php: "PHP",
-  ruby: "Ruby",
-  proto: "Protobuf",
-};
-
-const title = languageMap[language] || language;
 ---
 
-<div class="flex flex-col items-center justify-center space-y-4 py-8 px-4 md:px-8 bg-linear-to-r rounded-lg shadow-lg">
-  <div class="flex space-x-4 justify-end items-end w-full -mt-4 gap-4">
-    <ModeToggle />
+<div class="relative w-full border-b border-border bg-background py-16 overflow-hidden">
+  <!-- Background Decor -->
+  <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+    <LanguageIcon icon={language.toLowerCase()} class="w-64 h-64" />
   </div>
-  <div class="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-    <LanguageIcon icon={language.toLowerCase()} />
-    <h1 class="text-2xl md:text-4xl font-bold text-center md:text-left">
-      Format or {minify ? "minify" : "beautify"} {title}
+
+  <div class="container relative z-10 flex flex-col items-start gap-4">
+    <div class="flex items-center gap-3">
+      <span
+        class="bg-primary text-black text-xs font-bold px-2 py-1 uppercase"
+      >Tooling // {language}</span>
+      {minify && (
+        <span
+          class="border border-foreground text-foreground text-xs font-bold px-2 py-1 uppercase"
+        >Minifier Supported</span>
+      )}
+    </div>
+
+    <h1 class="text-5xl md:text-7xl font-display font-black text-foreground uppercase leading-[0.9]">
+      {language} <span
+        class="text-transparent stroke-text"
+        style="-webkit-text-stroke: 2px var(--color-foreground)"
+      >Formatter</span>
     </h1>
+
+    <p class="max-w-xl text-muted-foreground font-mono text-sm md:text-base border-l-4 border-primary pl-4 py-2">
+      High-performance formatting engine. WebAssembly powered. <br />
+      Privacy focused: No data leaves your machine.
+    </p>
   </div>
-  <p class="text-base md:text-lg text-center md:text-left">
-    Format or {minify ? "minify" : "beautify"} your code in {title} locally in
-    your browser using WebAssembly.
-  </p>
-  <a
-    href="#formatter"
-    class="mt-4 px-4 md:px-6 py-2 cursor-pointer bg-white text-blue-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300"
-  >
-    Format your code now!
-  </a>
 </div>

@@ -4,7 +4,7 @@ import { atom } from "nanostores";
 const initialCodeMap: { [key: string]: string } = {};
 
 export const inputStore = atom("");
-export const formattedStore = atom("");
+export const formattedStore = atom(""); // Keep for compatibility but may not be needed
 export const jsonValidStore = atom(true);
 
 export function initializeStores(language: string) {
