@@ -4,7 +4,7 @@ import Logo from "../../icons/Logo.astro";
 import ModeToggle from "./ModeToggle.astro";
 ---
 
-<header class="sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+<header class="sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
   <div class="flex h-16 items-center px-6">
     <!-- Branding -->
     <div class="mr-8 flex items-center gap-2">
@@ -27,7 +27,7 @@ import ModeToggle from "./ModeToggle.astro";
       </a>
       <span
         class="hidden md:inline-block text-[10px] font-bold bg-foreground text-background px-1 py-0.5 ml-2"
-      >V3.0-RC</span>
+      >V2.0</span>
       <span
         class="hidden md:inline-block text-xs text-muted-foreground lowercase ml-2"
       >
@@ -162,13 +162,13 @@ if (!menuButton) {
     <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
     MENU
   `;
-  header.querySelector(".ml-auto").insertBefore(
+  header?.querySelector(".ml-auto")?.insertBefore(
     mobileMenuBtn,
-    header.querySelector(".ml-auto").firstChild,
+    header?.querySelector(".ml-auto")?.firstChild as Node | null,
   );
 
   mobileMenuBtn.addEventListener("click", function() {
-    mobileMenu.classList.remove("hidden");
+    mobileMenu?.classList.remove("hidden");
     document.body.style.overflow = "hidden";
   });
 }

@@ -1,5 +1,5 @@
 import { getFormatter } from "@/handlers";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormatterStore } from "./formatterStore";
 
 interface CodeValidProps {
@@ -9,7 +9,7 @@ interface CodeValidProps {
 export default function CodeValid({ language }: CodeValidProps) {
   const code = useFormatterStore((state) => state.code);
   const [status, setStatus] = useState<"IDLE" | "CHECKING" | "VALID SYNTAX" | "SYNTAX ERROR" | "READY">("CHECKING");
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const checkCodeValidity = async () => {
@@ -28,6 +28,7 @@ export default function CodeValid({ language }: CodeValidProps) {
           setStatus("READY");
         }
       } catch (error) {
+        console.error("Error checking code validity:", error);
         setStatus("READY");
       }
     };
