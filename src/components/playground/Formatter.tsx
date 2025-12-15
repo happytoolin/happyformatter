@@ -94,7 +94,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
 
               <div className="flex items-center gap-4 w-full md:w-auto">
                 <CodeMirrorThemeSelector />
-                <CodeValid language={language} code={code} />
+                <CodeValid language={language} />
               </div>
             </div>
 
