@@ -19,7 +19,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
   const minifyButtonRef = useRef<HTMLButtonElement>(null);
   const copyButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Initialize the store with the language and initial code
   useEffect(() => {
     setLanguage(language);
     initializeCode(language);
@@ -40,7 +39,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
       setCode(result);
       showFeedback("format", "DONE");
     } catch (error) {
-      console.error("Format Error:", error);
       showFeedback("format", "ERROR");
     } finally {
       setIsProcessing(false);
@@ -57,7 +55,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
         showFeedback("minify", "MINIFIED");
       }
     } catch (error) {
-      console.error("Minify Error:", error);
       showFeedback("minify", "ERROR");
     } finally {
       setIsProcessing(false);

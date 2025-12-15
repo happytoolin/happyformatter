@@ -17,7 +17,6 @@ class LanguageLoaderManager {
   private supportedLanguages: Set<string>;
 
   constructor() {
-    // List of supported languages based on available CodeMirror packages
     this.supportedLanguages = new Set([
       "javascript",
       "typescript",
@@ -37,27 +36,18 @@ class LanguageLoaderManager {
     ]);
   }
 
-  /**
-   * Check if a language is supported
-   */
   isLanguageSupported(language: string): boolean {
     return this.supportedLanguages.has(language);
   }
 
-  /**
-   * Get language extension with caching
-   */
   async getLanguageExtension(language: string): Promise<Extension | null> {
-    // Check cache first
     if (this.cache[language]) {
       const cached = this.cache[language];
 
-      // If loading is in progress, return the promise
       if (cached.loading) {
         return cached.loading;
       }
 
-      // Return cached result or re-throw error
       if (cached.error) {
         throw cached.error;
       }
@@ -65,17 +55,13 @@ class LanguageLoaderManager {
       return cached.extension;
     }
 
-    // Initialize cache entry
     this.cache[language] = {
       extension: null,
       loading: null,
       error: null,
     };
 
-    // Create loading promise
     const loadingPromise = this.loadLanguageExtension(language);
-
-    // Store loading promise
     this.cache[language].loading = loadingPromise;
 
     try {
@@ -166,18 +152,13 @@ class LanguageLoaderManager {
         }
 
         default:
-          console.warn(`Language "${language}" is not supported`);
           return null;
       }
     } catch (error) {
-      console.error(`Failed to load language module for ${language}:`, error);
       return null;
     }
   }
 
-  /**
-   * Preload language extensions for better performance
-   */
   async preloadLanguages(languages: string[]): Promise<void> {
     const promises = languages
       .filter(lang => this.isLanguageSupported(lang))
@@ -186,16 +167,10 @@ class LanguageLoaderManager {
     await Promise.all(promises);
   }
 
-  /**
-   * Clear cache (useful for testing or development)
-   */
   clearCache(): void {
     this.cache = {};
   }
 
-  /**
-   * Get cache status
-   */
   getCacheStatus(): { [key: string]: boolean | "loading" | "error" } {
     const status: { [key: string]: boolean | "loading" | "error" } = {};
 
@@ -213,8 +188,6 @@ class LanguageLoaderManager {
   }
 }
 
-// Create singleton instance
 export const languageLoader = new LanguageLoaderManager();
 
-// Export types
 export type { LanguageCache, LanguageLoader };

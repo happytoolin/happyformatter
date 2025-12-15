@@ -1,3 +1,4 @@
+import type { Extension } from "@codemirror/state";
 import { languageLoader } from "@/lib/languageLoader";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { dracula } from "@uiw/codemirror-theme-dracula";
@@ -17,12 +18,11 @@ interface CodePlaygroundProps {
 }
 
 export default function CodePlayground({ inputCode, language, onCodeChange }: CodePlaygroundProps) {
-  const [extensions, setExtensions] = useState<any[]>([]);
+  const [extensions, setExtensions] = useState<Extension[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { currentTheme } = useTheme();
 
-  // Theme mapping - using proper theme imports
   const getTheme = useCallback(() => {
     switch (currentTheme) {
       case "github-light":
@@ -38,15 +38,15 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       case "one-dark-pro":
         return oneDark;
       case "monokai":
-        return okaidia; // Using okaidia as monokai-like theme
+        return okaidia;
       case "atom-one-dark":
         return oneDark;
       case "atom-one-light":
-        return githubLight; // Using GitHub Light for atom-one-light
+        return githubLight;
       case "vscode-dark":
         return oneDark;
       case "solarized-dark":
-        return dracula; // Using dracula for solarized-like feel
+        return dracula;
       case "solarized-light":
         return githubLight;
       case "vitesse-dark":
@@ -54,7 +54,7 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       case "vitesse-light":
         return githubLight;
       case "catppuccin-mocha":
-        return dracula; // Using dracula for dark catppuccin-like feel
+        return dracula;
       case "catppuccin-latte":
         return githubLight;
       default:
@@ -62,17 +62,14 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
     }
   }, [currentTheme]);
 
-  // Get language extension using optimized loader
   const getLanguageExtension = useCallback(async (lang: string) => {
     try {
       return await languageLoader.getLanguageExtension(lang);
     } catch (error) {
-      console.error(`Failed to load language extension for ${lang}:`, error);
       return null;
     }
   }, []);
 
-  // Update extensions when language changes
   useEffect(() => {
     const updateExtensions = async () => {
       setIsLoading(true);
@@ -80,25 +77,20 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
 
       try {
         const langExtension = await getLanguageExtension(language);
-        const exts = [];
+        const exts: Extension[] = [];
 
         if (langExtension) {
           exts.push(langExtension);
         }
 
-        // Add line wrapping
         const { EditorView } = await import("@codemirror/view");
         exts.push(EditorView.lineWrapping);
 
-        // Add accessibility extensions
         const { keymap } = await import("@codemirror/view");
         const { insertTab } = await import("@codemirror/commands");
 
-        // Enhanced keymap for better accessibility
         exts.push(keymap.of([
-          // Better tab handling
           { key: "Tab", run: insertTab },
-          // Escape to exit focus
           {
             key: "Escape",
             run: () => {
@@ -110,7 +102,6 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
 
         setExtensions(exts);
       } catch (error) {
-        console.error("Error updating extensions:", error);
         setError(`Failed to load language support for ${language}`);
       } finally {
         setIsLoading(false);
@@ -146,7 +137,6 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
         </div>
       )}
 
-      {/* Error state */}
       {error && !isLoading && (
         <div
           className="absolute inset-0 flex items-center justify-center bg-background/80 z-10"
@@ -195,20 +185,18 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
             closeBrackets: true,
             autocompletion: true,
             highlightSelectionMatches: true,
-            searchKeymap: true, // Enable search functionality
+            searchKeymap: true,
           }}
           editable={!isLoading && !error}
           onChange={(value) => {
             onCodeChange?.(value);
           }}
           onCreateEditor={(view) => {
-            // Add accessibility attributes to the editor
             const editorElement = view.dom;
             editorElement.setAttribute("role", "textbox");
             editorElement.setAttribute("aria-multiline", "true");
             editorElement.setAttribute("aria-label", `Code editor for ${language}`);
 
-            // Announce language changes for screen readers
             const announcer = document.createElement("div");
             announcer.setAttribute("aria-live", "polite");
             announcer.setAttribute("aria-atomic", "true");
@@ -217,7 +205,6 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
 
             announcer.textContent = `Language changed to ${language}`;
 
-            // Clean up announcer after a delay
             setTimeout(() => {
               document.body.removeChild(announcer);
             }, 1000);
@@ -225,8 +212,7 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
         />
       </div>
 
-      {/* Screen reader only information */}
-      <div className="sr-only" aria-live="polite" aria-atomic="true">
+            <div className="sr-only" aria-live="polite" aria-atomic="true">
         Editor currently loaded with {language} language support.
         {isLoading && " Loading language features..."}
         {error && ` Error: ${error}`}
