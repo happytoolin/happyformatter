@@ -9,9 +9,12 @@ import wasm from "vite-plugin-wasm";
 
 import partytown from "@astrojs/partytown";
 
+import cloudflare from "@astrojs/cloudflare";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
+
   integrations: [
     sitemap(),
     react(),
@@ -23,13 +26,11 @@ export default defineConfig({
       },
     }),
   ],
-  output: "static",
+
   prefetch: true,
+
   vite: {
     plugins: [wasm(), topLevelAwait(), tailwind()],
-    ssr: {
-      // noExternal: ["@taplo/lib"]
-    },
     optimizeDeps: {
       exclude: [
         "dprint-node",
@@ -48,4 +49,11 @@ export default defineConfig({
       ],
     },
   },
+
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+    imageService: "cloudflare",
+  }),
 });
