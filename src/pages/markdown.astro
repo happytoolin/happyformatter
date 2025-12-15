@@ -2,7 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter.astro";
+import Formatter from "@/components/playground/Formatter";
 ---
 
 <Layout
@@ -10,7 +10,7 @@ import Formatter from "@/components/playground/Formatter.astro";
   description="Markdown Formatter that formats Markdown data, locally in your browser"
   language="markdown"
 >
-  <Formatter minifier={false} language="markdown" />
+  <Formatter client:load minifier={false} language="markdown" />
   <Info language="markdown" />
   <FAQ language="markdown" client:idle />
 </Layout>

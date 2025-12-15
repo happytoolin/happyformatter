@@ -1,0 +1,52 @@
+/* Accessibility styles for screen readers */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles for better keyboard navigation */
+.cm-editor.cm-focused {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .cm-editor {
+    border: 2px solid ButtonText;
+  }
+
+  .cm-editor.cm-focused {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin {
+    animation: none;
+  }
+
+  .cm-editor * {
+    transition: none !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.cm-editor:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Better contrast for loading states */
+.bg-background\/80 {
+  background-color: hsl(var(--background) / 0.9);
+}
