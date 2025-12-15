@@ -1,5 +1,5 @@
-import type { Extension } from "@codemirror/state";
 import { languageLoader } from "@/lib/languageLoader";
+import type { Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
@@ -212,7 +212,7 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
         />
       </div>
 
-            <div className="sr-only" aria-live="polite" aria-atomic="true">
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
         Editor currently loaded with {language} language support.
         {isLoading && " Loading language features..."}
         {error && ` Error: ${error}`}
