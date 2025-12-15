@@ -2,7 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter.astro";
+import Formatter from "@/components/playground/Formatter";
 ---
 
 <Layout
@@ -11,7 +11,7 @@ import Formatter from "@/components/playground/Formatter.astro";
   language="yaml"
   minify={true}
 >
-  <Formatter minifier={false} language="yaml" />
+  <Formatter client:load minifier={false} language="yaml" />
   <Info language="yaml" />
   <FAQ language="yaml" client:idle />
 </Layout>

@@ -5,29 +5,29 @@ interface AccordionItem {
 export const accordionData: Record<string, AccordionItem[]> = {
   javascript: [
     {
-      title: "How does HappyFormatter ensure my JavaScript code remains private?",
+      title: "Security Architecture: Is my JavaScript code private?",
       content:
-        "HappyFormatter processes all code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+        "Affirmative. Client-side WebAssembly processing ensures zero data transmission. All operations execute locally within your browser sandbox.",
     },
     {
-      title: "Why use a JavaScript formatter?",
+      title: "Code Standardization: Why format JavaScript?",
       content:
-        "Using a JavaScript formatter helps to ensure that your code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.",
+        "Unformatted JavaScript introduces technical debt. Standardized indentation improves code maintainability, enables team collaboration, and reduces cognitive load during debugging cycles.",
     },
     {
-      title: "How do I format JavaScript code?",
+      title: "Execution Protocol: How to process code?",
       content:
-        "To format JavaScript code, you can use an online JavaScript formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
+        "Input source code into the terminal interface. Select formatting parameters (indentation, quote style). Execute via 'FORMAT CODE' command. Instant output generation.",
     },
     {
-      title: "Can I use HappyFormatter for minifying JavaScript?",
+      title: "Payload Optimization: Minification support?",
       content:
-        "Yes, HappyFormatter can also be used to minify JavaScript code, reducing its size and improving load times for web applications.",
+        "Confirmed. Toggle 'MINIFY' to enable compression algorithms. Removes non-essential characters, preserves functionality, optimizes network transfer.",
     },
     {
-      title: "Is login required to use the JavaScript formatter?",
+      title: "Access Control: Authentication required?",
       content:
-        "No, login is not required to use the JavaScript formatter. You can format your JavaScript code directly from the tool without needing to create an account or log in.",
+        "Negative. Open-source utility with no authentication barriers. Full feature access without account registration or API keys.",
     },
   ],
   typescript: [
@@ -213,28 +213,28 @@ export const accordionData: Record<string, AccordionItem[]> = {
   ],
   html: [
     {
-      title: "How does HappyFormatter ensure my HTML code remains private?",
+      title: "Data Privacy Protocol: Is my code secure?",
       content:
-        "HappyFormatter processes all HTML code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+        "Yes. HappyFormatter operates on a 'Local-First' architecture. All processing executes within your browser's V8 engine using WebAssembly (WASM). Your code is never transmitted to our servers.",
     },
     {
-      title: "Why use an HTML formatter?",
+      title: "Why is HTML formatting required?",
       content:
-        "Using an HTML formatter helps to ensure that your HTML code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.",
+        "Raw HTML is often unstructured and difficult to debug. Formatting enforces a standardized indentation hierarchy, making the DOM tree readable, maintainable, and reducing the likelihood of unclosed tag errors.",
     },
     {
-      title: "How do I format HTML code?",
+      title: "How to execute the formatter?",
       content:
-        "To format HTML code, you can use an online HTML formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
+        "Paste raw code into the Input Interface. Select your indentation preference. Click 'FORMAT CODE' to execute the algorithm. The standardized output will render instantly.",
     },
     {
-      title: "Can I use HappyFormatter for validating HTML?",
-      content: "Yes, HappyFormatter can also be used to validate HTML code, ensuring it adheres to web standards.",
+      title: "Does this tool support HTML Minification?",
+      content:
+        "Yes. Activate the 'MINIFY' module to strip whitespace, comments, and newlines. This reduces file size for production deployment.",
     },
     {
-      title: "Is login required to use the HTML formatter?",
-      content:
-        "No, login is not required to use the HTML formatter. You can format your HTML code directly from the tool without needing to create an account or log in.",
+      title: "Is user authentication required?",
+      content: "No. This utility is open-access. No login, API keys, or accounts are required for full functionality.",
     },
   ],
   lua: [
