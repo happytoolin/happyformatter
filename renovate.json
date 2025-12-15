@@ -1,10 +1,33 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
-  "rangeStrategy": "bump",
-  "bumpVersion": "patch",
+
+  "extends": [
+    "config:base"
+  ],
+
+  "schedule": [
+    "before 3am on the first day of the month"
+  ],
+
+  "prConcurrentLimit": 1,
+  "prHourlyLimit": 1,
+
   "automerge": true,
-  "lockFileMaintenance": {
-    "enabled": true
-  }
+  "automergeType": "branch",
+  "automergeStrategy": "squash",
+
+  "platformAutomerge": true,
+
+  "dependencyDashboard": false,
+
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ]
 }
