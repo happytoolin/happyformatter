@@ -1,7 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "schedule": "every year"
+  "extends": ["config:base"],
+  "rangeStrategy": "bump",
+  "bumpVersion": "patch",
+  "automerge": true,
+  "lockFileMaintenance": {
+    "enabled": true
+  }
 }
