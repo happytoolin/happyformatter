@@ -17,7 +17,7 @@ import ThemeIcon from "../ThemeIcon.astro";
         <span
           class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
         >
-          v3.0 // EndrikSys
+          v2.0 // BY HAPPYTOOLIN
         </span>
       </div>
     </a>
@@ -86,7 +86,7 @@ import ThemeIcon from "../ThemeIcon.astro";
             <span
               class="font-mono text-[8px] uppercase tracking-widest text-muted-foreground"
             >
-              v3.0 // EndrikSys
+              v2.0 // BY HAPPYTOOLIN
             </span>
           </div>
         </a>
@@ -136,13 +136,13 @@ const menuButton = document.getElementById("menu-button");
 const mobileMenu = document.getElementById("mobile-menu");
 const closeMenuButton = document.getElementById("close-menu-button");
 
-menuButton.addEventListener("click", function() {
+menuButton?.addEventListener("click", function() {
   mobileMenu?.classList.remove("hidden");
   document.body.style.overflow = "hidden";
 });
 
-closeMenuButton.addEventListener("click", function() {
-  mobileMenu.classList.add("hidden");
+closeMenuButton?.addEventListener("click", function() {
+  mobileMenu?.classList.add("hidden");
   document.body.style.overflow = "";
 });
 </script>
