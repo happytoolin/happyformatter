@@ -125,6 +125,32 @@ export async function getFormatter(language: string) {
       const yamlFormatter = new YamlFormatter();
       await yamlFormatter.init();
       return yamlFormatter;
+    case "prisma":
+      const { PrismaFormatter } = await import("@/handlers/formatters/prisma");
+      const prismaFormatter = new PrismaFormatter();
+      await prismaFormatter.init();
+      return prismaFormatter;
+    // Alternative formatters
+    case "python-ruff":
+      const { PythonRuffFormatter } = await import("@/handlers/formatters/python-ruff");
+      const pythonRuffFormatter = new PythonRuffFormatter();
+      await pythonRuffFormatter.init();
+      return pythonRuffFormatter;
+    case "javascript-biome":
+      const { JavaScriptBiomeFormatter } = await import("@/handlers/formatters/javascript-biome");
+      const jsBiomeFormatter = new JavaScriptBiomeFormatter();
+      await jsBiomeFormatter.init();
+      return jsBiomeFormatter;
+    case "typescript-biome":
+      const { TypeScriptBiomeFormatter } = await import("@/handlers/formatters/typescript-biome");
+      const tsBiomeFormatter = new TypeScriptBiomeFormatter();
+      await tsBiomeFormatter.init();
+      return tsBiomeFormatter;
+    case "php-mago":
+      const { PHPMagoFormatter } = await import("@/handlers/formatters/php-mago");
+      const phpMagoFormatter = new PHPMagoFormatter();
+      await phpMagoFormatter.init();
+      return phpMagoFormatter;
     // case "toml":
     //   const { TomlFormatter } = await import("@/handlers/formatters/toml");
     //   const tomlFormatter = new TomlFormatter();
@@ -138,6 +164,8 @@ export async function getFormatter(language: string) {
 export async function getMinifier(language: string) {
   switch (language) {
     case "js":
+    case "javascript":
+    case "javascript-biome":
       const { JavascriptMinifier } = await import(
         "@/handlers/minifiers/javascript"
       );
@@ -145,6 +173,8 @@ export async function getMinifier(language: string) {
       await jsMinifier.init();
       return jsMinifier;
     case "ts":
+    case "typescript":
+    case "typescript-biome":
       const { TypescriptMinifier } = await import(
         "@/handlers/minifiers/javascript"
       );

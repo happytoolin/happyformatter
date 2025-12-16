@@ -185,6 +185,47 @@ export const LANGUAGES: Record<string, LanguageConfig> = {
     minify: false,
     extensions: ["zig"],
   },
+  prisma: {
+    id: "prisma",
+    name: "Prisma",
+    title: "Prisma Schema Formatter",
+    description: "Prisma schema formatter that formats Prisma schema files, locally in your browser",
+    minify: false,
+    extensions: ["prisma"],
+  },
+  // Alternative formatters
+  "python-ruff": {
+    id: "python-ruff",
+    name: "Python (Ruff)",
+    title: "Python Ruff Formatter",
+    description: "Python code formatter using Ruff, locally in your browser",
+    minify: false,
+    extensions: ["py", "pyw"],
+  },
+  "javascript-biome": {
+    id: "javascript-biome",
+    name: "JavaScript (Biome)",
+    title: "JavaScript Biome Formatter",
+    description: "JavaScript formatter using Biome, locally in your browser",
+    minify: true,
+    extensions: ["js", "jsx", "mjs"],
+  },
+  "typescript-biome": {
+    id: "typescript-biome",
+    name: "TypeScript (Biome)",
+    title: "TypeScript Biome Formatter",
+    description: "TypeScript formatter using Biome, locally in your browser",
+    minify: true,
+    extensions: ["ts", "tsx"],
+  },
+  "php-mago": {
+    id: "php-mago",
+    name: "PHP (Mago)",
+    title: "PHP Mago Formatter",
+    description: "PHP code formatter using Mago, locally in your browser",
+    minify: false,
+    extensions: ["php"],
+  },
 };
 
 // Helper function to get language config by id
