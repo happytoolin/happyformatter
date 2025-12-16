@@ -1,6 +1,4 @@
 ---
-import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
-
 interface Props {
   language: string;
   minify: boolean;
@@ -30,13 +28,10 @@ const { language, minify } = Astro.props;
         </div>
 
         <h1 class="font-display text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.8]">
-          {language}
-          <span
-            class="block text-transparent stroke-text text-4xl md:text-6xl text-primary"
-            style="-webkit-text-stroke: 2px currentColor; -webkit-text-fill-color: transparent"
-          >
-            Formatter
-          </span>
+          {language} <span
+            class="text-transparent stroke-text text-4xl md:text-6xl"
+            style="-webkit-text-stroke: 2px var(--color-foreground)"
+          >Formatter</span>
         </h1>
       </div>
 

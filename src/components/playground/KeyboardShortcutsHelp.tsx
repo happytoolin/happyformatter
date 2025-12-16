@@ -16,10 +16,6 @@ export default function KeyboardShortcutsHelp({ className = "" }: KeyboardShortc
           → Minify code
         </li>
         <li>
-          <kbd className="px-1 py-0.5 bg-muted border border-foreground rounded text-xs">Ctrl+C</kbd>{" "}
-          → Copy formatted code
-        </li>
-        <li>
           <kbd className="px-1 py-0.5 bg-muted border border-foreground rounded text-xs">Esc</kbd> → Close mobile menu
         </li>
       </ul>

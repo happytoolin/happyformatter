@@ -1,11 +1,10 @@
 import { getFormatter, getMinifier } from "@/handlers";
 import { FileText, Minimize2 } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CodeMirrorThemeSelector from "./CodeMirrorThemeSelector";
 import CodePlayground from "./CodePlayground";
 import CodeValid from "./CodeValid";
 import { useFormatterStore } from "./formatterStore";
-import KeyboardShortcutsHelp from "./KeyboardShortcutsHelp";
 import { ThemeProvider, useTheme } from "./ThemeContext";
 
 interface FormatterProps {
@@ -85,8 +84,8 @@ function FormatButtons({
       <button
         onClick={onCopy}
         className="h-12 w-12 flex items-center justify-center border-2 border-accent bg-transparent text-accent hover:bg-accent hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none"
-        aria-label="Copy formatted code (Ctrl+C)"
-        title="Copy formatted code (Ctrl+C)"
+        aria-label="Copy formatted code"
+        title="Copy formatted code"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -133,9 +132,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
       } else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "m") {
         event.preventDefault();
         handleAction("minify");
-      } else if ((event.ctrlKey || event.metaKey) && event.key === "c") {
-        event.preventDefault();
-        copyToClipboard();
       }
     };
 
@@ -160,6 +156,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
         }
       }
     } catch (e) {
+      console.error(e);
       setLastAction("ERR_EXECUTION_FAILED");
     } finally {
       setIsProcessing(false);
@@ -230,11 +227,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Keyboard Shortcuts Help */}
-      <div className="container mx-auto px-4 mt-6">
-        <KeyboardShortcutsHelp className="text-right opacity-60 hover:opacity-100 transition-opacity" />
       </div>
     </ThemeProvider>
   );

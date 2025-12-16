@@ -8,7 +8,7 @@ export function FAQ({ language }: { language: string }): JSX.Element {
   return (
     <div className="w-full bg-foreground text-background py-24">
       <div className="container mx-auto max-w-4xl px-4">
-        <div className="flex items-end justify-between border-b border-background/20 pb-8 mb-12">
+        <div className="flex items-end justify-between border-background/20 pb-8 mb-12">
           <h2
             className="font-display text-5xl md:text-7xl uppercase tracking-tighter text-transparent stroke-text"
             style={{ WebkitTextStroke: "1px var(--background)" }}
