@@ -10,7 +10,7 @@ import Header from "./header.astro";
 type Props = {
   title: string;
   description: string;
-  language: string;
+  language?: string;
   image?: string;
   minify?: boolean;
 };
@@ -31,7 +31,9 @@ const { title, description, image, language, minify } = Astro.props;
   <body>
     <Header />
     <main>
-      <FormatHeading language={language} minify={minify ?? false} />
+      {language && (
+        <FormatHeading language={language} minify={minify ?? false} />
+      )}
       <slot />
     </main>
     <MoreTools />
