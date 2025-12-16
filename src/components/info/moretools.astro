@@ -48,8 +48,6 @@ const tools = [
       </div>
     </div>
 
-    <!-- The Module Grid -->
-    <!-- We use a background color of 'foreground' (black) and a gap of 1px to create the grid lines -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 bg-zinc-800 dark:bg-zinc-900 border-2 border-white/20 dark:border-white/10 gap-px">
       {tools.map((tool) => {
         const cleanName = tool.name.replace("Formatter", "").replace("Minifier", "")
@@ -59,7 +57,6 @@ const tools = [
             href={tool.url}
             class="tool group relative bg-black dark:bg-zinc-950 p-6 hover:bg-white hover:dark:bg-zinc-100 transition-colors duration-200 flex flex-col justify-between h-32 overflow-hidden"
           >
-            <!-- Background Icon Faded -->
             <div class="absolute bottom-2 right-2 opacity-15 grayscale transition-opacity">
               <LanguageIcon
                 icon={tool.url.replace("/", "")}
@@ -67,7 +64,6 @@ const tools = [
               />
             </div>
 
-            <!-- Header -->
             <div class="flex justify-between items-start">
               <span
                 class="text-[10px] font-mono font-bold text-primary border border-primary px-1"
@@ -80,7 +76,6 @@ const tools = [
               >↗</span>
             </div>
 
-            <!-- Label -->
             <div class="relative z-10">
               <span
                 class="block text-lg font-bold font-display uppercase tracking-wider text-white dark:text-zinc-100 group-hover:text-black group-hover:dark:text-zinc-900"

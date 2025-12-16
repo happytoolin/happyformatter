@@ -12,7 +12,6 @@ interface FormatterProps {
   language: string;
 }
 
-// Button component with theme awareness
 function FormatButtons({
   onFormat,
   onMinify,
@@ -138,16 +137,13 @@ export default function Formatter({ minifier, language }: FormatterProps) {
     setTimeout(() => setLastAction(null), 2000);
   }, [code]);
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Only handle shortcuts when not typing in inputs
       const target = event.target as HTMLElement;
       if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.contentEditable === "true") {
         return;
       }
 
-      // Handle keyboard shortcuts
       if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "f") {
         event.preventDefault();
         handleAction("format");
@@ -210,12 +206,9 @@ export default function Formatter({ minifier, language }: FormatterProps) {
             WebkitMaskComposite: "source-in",
           }}
         />
-        {/* Your Content/Components */}
         <div className="w-full py-12 border-b-2 border-foreground relative z-10" id="workspace">
           <div className="container mx-auto px-4">
-            {/* THE MACHINE HOUSING */}
             <div className="border-4 border-foreground bg-card relative shadow-[10px_10px_0px_0px_rgba(13,13,13,1)] dark:shadow-[10px_10px_0px_0px_#ffffff]">
-              {/* Control Bar */}
               <div className="flex flex-col md:flex-row justify-between items-center border-b-2 border-foreground bg-muted/20 p-2 gap-2">
                 <div className="flex items-center gap-4 px-2">
                   <div className="flex gap-1">
@@ -232,7 +225,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
                 </div>
               </div>
 
-              {/* Editor Surface */}
               <div className="relative h-[400px] md:h-[600px] w-full bg-card">
                 <CodePlayground
                   inputCode={code}
@@ -240,7 +232,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
                   onCodeChange={setCode}
                 />
 
-                {/* Overlay Feedback */}
                 {lastAction && (
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
                     <div className="bg-primary text-black font-display text-4xl uppercase px-4 py-2 border-2 border-black -rotate-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
@@ -250,7 +241,6 @@ export default function Formatter({ minifier, language }: FormatterProps) {
                 )}
               </div>
 
-              {/* Action Deck */}
               <div className="border-t-2 border-foreground p-4 bg-background flex flex-col md:flex-row gap-4 justify-between items-center">
                 <div className="font-mono text-[10px] text-muted-foreground hidden md:block">
                   CPU: LOCAL / WASM <br /> MEMORY: OPTIMIZED
