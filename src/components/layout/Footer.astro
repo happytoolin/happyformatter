@@ -1,32 +1,36 @@
 ---
-import ModeToggle from "./ModeToggle.astro";
+
 ---
 
-<footer class="animate p-4">
-  <div class="container mx-auto flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-    <div class="text-center md:text-left text-lg font-semibold text-foreground">
-      &copy; {new Date().getFullYear()} • HAPPYFMT
-      <span
-        class="text-sm font-normal lowercase block md:inline md:ml-2 text-muted-foreground"
-      >
-        by happytoolin
-      </span>
-    </div>
+<footer class="py-8 border-t-2 border-foreground bg-background">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+      <div class="text-center md:text-left">
+        <div class="font-display text-lg font-black uppercase tracking-tighter text-foreground">
+          HAPPYFMT // {new Date().getFullYear()}
+        </div>
+        <div class="font-mono text-xs uppercase tracking-widest text-muted-foreground mt-1">
+          Endrik Systems Industrial Tools
+        </div>
+      </div>
 
-    <div class="flex space-x-4 text-sm">
-      <a
-        href="/privacy-policy"
-        class="text-foreground hover:text-primary transition-colors duration-200"
-      >Privacy Policy</a>
-      <span class="hidden md:inline text-foreground">|</span>
-      <a
-        href="/terms-of-service"
-        class="text-foreground hover:text-primary transition-colors duration-200"
-      >Terms of Service</a>
-    </div>
+      <div class="flex flex-col md:flex-row items-center gap-6">
+        <div class="flex space-x-6 font-mono text-xs">
+          <a
+            href="/privacy-policy"
+            class="text-foreground hover:text-primary transition-colors duration-200 uppercase tracking-wider"
+          >Privacy</a>
+          <span class="text-foreground">|</span>
+          <a
+            href="/terms-of-service"
+            class="text-foreground hover:text-primary transition-colors duration-200 uppercase tracking-wider"
+          >Terms</a>
+        </div>
 
-    <div class="flex space-x-4">
-      <ModeToggle />
+        <div class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          v3.0 // EndrikSys
+        </div>
+      </div>
     </div>
   </div>
 </footer>
