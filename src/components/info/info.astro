@@ -9,82 +9,63 @@ const defaultLanguage = "default";
 const info = languageInfoData[language] || languageInfoData[defaultLanguage];
 ---
 
-<section class="w-full border-t-2 border-foreground bg-background py-16">
-  <div class="container mx-auto max-w-5xl px-4">
-    <!-- Section Header -->
-    <div class="mb-12 flex flex-col items-start gap-2">
-      <div class="inline-flex items-center gap-2 border border-foreground bg-muted px-2 py-1 font-mono text-xs font-bold uppercase">
-        <span class="h-2 w-2 bg-primary"></span>
-        Technical Specifications
-      </div>
-      <h2 class="font-display text-4xl font-black uppercase md:text-5xl">
-        {info.title} <span class="text-primary">//</span> DOCS
-      </h2>
-    </div>
+<section class="py-24 bg-background relative overflow-hidden">
+  <!-- Decorative Grid Lines -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]">
+  </div>
 
-    <!-- The Spec Sheet Grid -->
-    <div class="border-2 border-foreground bg-card shadow-[8px_8px_0px_0px_var(--color-foreground)]">
-      <!-- Description Panel -->
-      <div class="border-b-2 border-foreground p-6 md:p-8">
-        <h3 class="font-mono text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4">
-          01 // OVERVIEW
-        </h3>
-        <p class="font-sans text-lg leading-relaxed text-foreground">
+  <div class="container mx-auto px-4 relative z-10 max-w-6xl">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-foreground">
+      <!-- Title Block -->
+      <div class="col-span-12 lg:col-span-4 p-8 border-b-2 lg:border-b-0 lg:border-r-2 border-foreground bg-primary text-primary-foreground">
+        <span
+          class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
+        >Spec Sheet // 001</span>
+        <h2 class="font-display text-5xl uppercase leading-[0.9] mb-6">
+          {info.title}
+        </h2>
+        <p class="font-serif text-xl leading-relaxed opacity-90">
           {info.description}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2">
-        <!-- Features Column -->
-        <div class="border-b-2 md:border-b-0 md:border-r-2 border-foreground p-6 md:p-8 bg-muted/20">
-          <h3 class="font-mono text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">
-            02 // CAPABILITIES
-          </h3>
-          <ul class="space-y-4">
-            {info.features.map((feature) => (
-              <li class="flex items-start gap-3 text-sm font-mono">
-                <span class="mt-1 text-primary">▶</span>
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <!-- Additional Info Column -->
-        <div class="p-6 md:p-8">
-          <h3 class="font-mono text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">
-            03 // REFERENCE DATA
-          </h3>
-          <ul class="space-y-4">
-            {info.additional_info.map((item) => (
-              <li class="flex items-start gap-3 text-sm font-mono text-muted-foreground">
-                <span class="mt-1 h-1.5 w-1.5 shrink-0 bg-foreground"></span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <!-- Validator Section (High Contrast) -->
-      <div class="border-t-2 border-foreground bg-foreground text-background p-6 md:p-8">
-        <div class="flex flex-col md:flex-row gap-8">
-          <div class="md:w-1/3">
-            <h3 class="font-display text-2xl font-bold uppercase text-primary mb-2">
+      <!-- Features Grid -->
+      <div class="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2">
+        {/* Validator Module */}
+        <div class="p-8 border-b-2 md:border-b-0 md:border-r-2 border-foreground bg-card">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="w-2 h-2 border-2 border-accent"></span>
+            <h3 class="font-display text-xl uppercase">
               {info.validator.title}
             </h3>
-            <p class="font-mono text-xs opacity-70">INTEGRITY CHECKER MODULE</p>
           </div>
-          <div class="md:w-2/3">
-            <p class="mb-4 font-bold">{info.validator.description}</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {info.validator.features.map((feature) => (
-                <div class="flex items-center gap-2 text-sm font-mono opacity-80 border border-white/20 p-2">
-                  <span class="text-primary">✓</span> {feature}
-                </div>
-              ))}
-            </div>
+          <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
+            {info.validator.description}
+          </p>
+          <ul class="space-y-3">
+            {info.validator.features.slice(0, 3).map(f => (
+              <li class="flex items-start gap-3 text-sm font-medium">
+                <span class="text-primary mt-1">→</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Technical Data */}
+        <div class="p-8 bg-secondary/20">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="w-2 h-2 bg-foreground"></span>
+            <h3 class="font-display text-xl uppercase">Capabilities</h3>
           </div>
+          <ul class="space-y-4 font-mono text-xs">
+            {info.features.slice(0, 5).map((feature, i) => (
+              <li class="border-b border-foreground/10 pb-2">
+                <span class="text-muted-foreground mr-2">0{i + 1}</span>
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

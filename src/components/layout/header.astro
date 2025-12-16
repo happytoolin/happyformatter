@@ -1,76 +1,67 @@
 ---
-import Icons from "@/icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
-import ModeToggle from "./ModeToggle.astro";
+import ThemeIcon from "../ThemeIcon.astro";
 ---
 
-<header class="sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-  <div class="flex h-16 items-center px-6">
+<header class="sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/80 backdrop-blur-md">
+  <div class="container mx-auto px-4 h-16 flex items-center justify-between">
     <!-- Branding -->
-    <div class="mr-8 flex items-center gap-2">
-      <a data-astro-prefetch href="/" class="flex items-center gap-2 group">
-        <div class="bg-[#F2F2F0] p-1">
-          <Logo class="h-6 w-6" fill="currentColor" />
-        </div>
-        <div class="flex flex-col">
-          <span
-            class="font-display text-xl font-black tracking-tighter transition-colors"
-          >
-            <span class="group-hover:text-[#10B981]">HAPPY</span><span
-              class="text-primary"
-            >FMT</span>
-          </span>
-          <span class="text-xs text-muted-foreground lowercase leading-none">
-            by happytoolin
-          </span>
-        </div>
-      </a>
-      <span
-        class="hidden md:inline-block text-[10px] font-bold bg-foreground text-background px-1 py-0.5 ml-2"
-      >V2.0</span>
-      <span
-        class="hidden md:inline-block text-xs text-muted-foreground lowercase ml-2"
-      >
-        by happytoolin
-      </span>
-    </div>
+    <a href="/" class="flex items-center gap-3 group">
+      <div class="bg-primary text-black p-1 transition-transform group-hover:rotate-180 duration-500">
+        <Logo class="h-8 w-8" fill="currentColor" />
+      </div>
+      <div class="flex flex-col leading-none">
+        <span class="font-display text-2xl font-black tracking-tighter">
+          HAPPY<span class="text-accent">FMT</span>
+        </span>
+        <span
+          class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+        >
+          v3.0 // EndrikSys
+        </span>
+      </div>
+    </a>
 
-    <!-- Navigation (Desktop) -->
-    <nav class="hidden md:flex items-center gap-6 text-xs font-bold tracking-widest uppercase">
-      <a
-        href="/javascript"
-        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
-      >JS/TS</a>
-      <a
-        href="/css"
-        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
-      >CSS</a>
-      <a
-        href="/json"
-        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
-      >JSON</a>
-      <a
-        href="/sql"
-        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
-      >SQL</a>
-      <a
-        href="/python"
-        class="hover:text-primary hover:underline decoration-2 underline-offset-4"
-      >Python</a>
-      <a
-        href="#more-tools"
-        class="opacity-50 hover:opacity-100 hover:text-primary"
-      >+ More</a>
+    <!-- Desktop Nav: Brutalist Links -->
+    <nav class="hidden md:flex items-center gap-8">
+      {["javascript", "css", "json", "sql", "python"].map((lang) => (
+        <a
+          href={`/${lang}`}
+          class="font-mono text-sm font-bold uppercase hover:text-primary transition-colors relative group"
+        >
+          <span
+            class="opacity-0 group-hover:opacity-100 absolute -left-3 text-accent"
+          >/</span>
+          {lang}
+        </a>
+      ))}
     </nav>
 
     <!-- Actions -->
-    <div class="ml-auto flex items-center gap-4">
-      <div class="hidden md:flex items-center gap-2 text-[10px] text-muted-foreground font-mono border border-border px-2 py-1">
-        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-        SYSTEM: ONLINE
-      </div>
-      <ModeToggle />
+    <div class="flex items-center gap-4">
+      <a
+        href="#more-tools"
+        class="hidden md:block font-display text-sm uppercase border-b-2 border-transparent hover:border-primary"
+      >
+        All Modules
+      </a>
+      <div class="h-8 w-[2px] bg-foreground/20 hidden md:block"></div>
+      <ThemeIcon />
+      <!-- Mobile Menu Button -->
+      <button
+        id="menu-button"
+        class="md:hidden flex items-center gap-2 text-[10px] font-mono border-2 border-foreground px-2 py-1 hover:bg-primary hover:text-black transition-colors"
+      >
+        <span
+          class="w-2 h-2 rounded-full border border-accent animate-pulse"
+        ></span>
+        MENU
+      </button>
     </div>
+  </div>
+
+  <!-- Running Tape / Decoration -->
+  <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent via-primary to-accent opacity-0 hover:opacity-100 transition-opacity duration-300">
   </div>
 </header>
 
@@ -84,20 +75,18 @@ import ModeToggle from "./ModeToggle.astro";
   <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background border-l-2 border-foreground">
     <div class="flex flex-col h-full">
       <div class="flex items-center justify-between p-4 border-b-2 border-foreground">
-        <a data-astro-prefetch href="/" class="flex items-center gap-2 group">
-          <div class="bg-[#F2F2F0] p-1">
+        <a href="/" class="flex items-center gap-3 group">
+          <div class="bg-primary text-black p-1">
             <Logo class="h-6 w-6" fill="currentColor" />
           </div>
-          <div class="flex flex-col">
-            <span
-              class="font-display text-xl font-black tracking-tighter transition-colors"
-            >
-              <span class="group-hover:text-[#10B981]">HAPPY</span><span
-                class="text-primary"
-              >FMT</span>
+          <div class="flex flex-col leading-none">
+            <span class="font-display text-xl font-black tracking-tighter">
+              HAPPY<span class="text-accent">FMT</span>
             </span>
-            <span class="text-xs text-muted-foreground lowercase leading-none">
-              by happytoolin
+            <span
+              class="font-mono text-[8px] uppercase tracking-widest text-muted-foreground"
+            >
+              v3.0 // EndrikSys
             </span>
           </div>
         </a>
@@ -106,41 +95,37 @@ import ModeToggle from "./ModeToggle.astro";
           class="p-2 border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
           id="close-menu-button"
         >
-          <Icons icon="cross" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
         </button>
       </div>
 
       <div class="flex-1 p-4">
         <div class="space-y-2">
-          <a
-            href="/javascript"
-            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-          >JS/TS</a>
-          <a
-            href="/css"
-            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-          >CSS</a>
-          <a
-            href="/json"
-            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-          >JSON</a>
-          <a
-            href="/sql"
-            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-          >SQL</a>
-          <a
-            href="/python"
-            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-          >Python</a>
+          {["javascript", "css", "json", "sql", "python"].map((lang) => (
+            <a
+              href={`/${lang}`}
+              class="block px-4 py-3 font-mono text-sm font-bold uppercase border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
+            >{lang}</a>
+          ))}
           <a
             href="#more-tools"
-            class="block px-4 py-3 font-bold text-xs uppercase tracking-widest border-2 border-foreground opacity-50 hover:opacity-100 transition-colors"
-          >+ More</a>
+            class="block px-4 py-3 font-display text-sm uppercase border-2 border-foreground opacity-50 hover:opacity-100 transition-colors"
+          >All Modules</a>
         </div>
       </div>
 
       <div class="p-4 border-t-2 border-foreground">
-        <ModeToggle />
+        <ThemeIcon />
       </div>
     </div>
   </div>
@@ -151,67 +136,13 @@ const menuButton = document.getElementById("menu-button");
 const mobileMenu = document.getElementById("mobile-menu");
 const closeMenuButton = document.getElementById("close-menu-button");
 
-// Add menu button for mobile if it doesn't exist
-if (!menuButton) {
-  const header = document.querySelector("header .flex");
-  const mobileMenuBtn = document.createElement("button");
-  mobileMenuBtn.id = "menu-button";
-  mobileMenuBtn.className =
-    "md:hidden flex items-center gap-2 text-[10px] font-mono border border-border px-2 py-1 hover:bg-primary hover:text-black transition-colors";
-  mobileMenuBtn.innerHTML = `
-    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-    MENU
-  `;
-  header?.querySelector(".ml-auto")?.insertBefore(
-    mobileMenuBtn,
-    header?.querySelector(".ml-auto")?.firstChild as Node | null,
-  );
-
-  mobileMenuBtn.addEventListener("click", function() {
-    mobileMenu?.classList.remove("hidden");
-    document.body.style.overflow = "hidden";
-  });
-}
-
-if (!mobileMenu || !closeMenuButton) {
-  throw new Error("Could not find all elements");
-}
+menuButton.addEventListener("click", function() {
+  mobileMenu?.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+});
 
 closeMenuButton.addEventListener("click", function() {
   mobileMenu.classList.add("hidden");
   document.body.style.overflow = "";
 });
-</script>
-
-<script is:inline>
-const getModePreference = () => {
-  if (typeof localStorage !== "undefined" && localStorage.getItem("mode")) {
-    return localStorage.getItem("mode");
-  }
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-};
-const isDark = getModePreference() === "dark";
-document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-
-if (typeof localStorage !== "undefined") {
-  const observer = new MutationObserver(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    localStorage.setItem("mode", isDark ? "dark" : "light");
-  });
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-}
-
-const getInitialTheme = () => {
-  if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-    return localStorage.getItem("theme");
-  }
-  return "rose-pine";
-};
-const theme = getInitialTheme();
-document.documentElement.setAttribute("data-theme", theme);
 </script>
