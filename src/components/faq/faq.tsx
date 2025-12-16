@@ -6,38 +6,42 @@ export function FAQ({ language }: { language: string }): JSX.Element {
   const data = accordionData[language] || [];
 
   return (
-    <div className="w-full bg-muted/30 py-16 border-t border-foreground">
+    <div className="w-full bg-foreground text-background py-24">
       <div className="container mx-auto max-w-4xl px-4">
-        <div className="mb-10 flex items-end justify-between border-b-2 border-primary pb-4">
-          <h2 className="font-display text-4xl font-black uppercase text-foreground">
-            Troubleshooting{" "}
-            <span className="block text-lg font-mono font-normal tracking-tight text-muted-foreground mt-2">
-              COMMON INQUIRIES & LOGS
-            </span>
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-background/20 pb-8 mb-12">
+          <h2
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl uppercase tracking-tighter text-transparent stroke-text break-words"
+            style={{ WebkitTextStroke: "1px var(--background)" }}
+          >
+            Troubleshoot
           </h2>
-          <span className="hidden md:block font-mono text-xs font-bold bg-primary text-black px-2 py-1">
-            FAQ-SYS-v3
+          <span className="font-mono text-xs text-accent uppercase tracking-widest hidden md:block">
+            Database // {language}
           </span>
         </div>
 
-        <Accordion type="single" collapsible className="w-full space-y-4">
+        <Accordion type="single" collapsible className="w-full space-y-0 border-t border-background/20">
           {data.map((item, index) => {
             const num = (index + 1).toString().padStart(2, "0");
             return (
               <AccordionItem
                 key={item.title}
                 value={item.title}
-                className="border-2 border-foreground bg-background transition-all data-[state=open]:shadow-[6px_6px_0px_0px_var(--color-primary)]"
+                className="border-b border-background/20 transition-all hover:bg-background/5"
               >
-                <AccordionTrigger className="px-6 py-4 hover:bg-muted/50 hover:no-underline font-mono text-left">
-                  <div className="flex items-start gap-4">
-                    <span className="font-bold text-primary text-lg">#{num}</span>
-                    <span className="font-bold text-foreground uppercase tracking-tight">{item.title}</span>
+                <AccordionTrigger className="px-0 py-6 hover:no-underline hover:text-primary transition-colors">
+                  <div className="flex items-start gap-6 text-left">
+                    <span className="font-mono text-sm opacity-50 pt-1">/{num}</span>
+                    <span className="font-display text-lg md:text-xl lg:text-2xl uppercase leading-tight break-words">
+                      {item.title}
+                    </span>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="px-6 pb-6 pt-2">
-                  <div className="pl-10 text-base text-muted-foreground font-sans border-l-2 border-muted ml-2">
-                    {item.content}
+                <AccordionContent className="pb-8 pt-2">
+                  <div className="pl-12 md:pl-16 pr-4">
+                    <p className="font-serif text-lg leading-relaxed text-background/80 max-w-2xl">
+                      {item.content}
+                    </p>
                   </div>
                 </AccordionContent>
               </AccordionItem>
