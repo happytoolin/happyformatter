@@ -25,6 +25,7 @@ export default function CodeMirrorThemeSelector({ className = "" }: CodeMirrorTh
         value={currentTheme}
         onChange={handleThemeChange}
         className="text-xs font-mono bg-secondary border border-foreground px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary hover:border-primary focus:border-primary transition-colors"
+        aria-describedby="theme-description"
       >
         {codeMirrorThemes.map((theme) => (
           <option key={theme.value} value={theme.value}>
@@ -32,6 +33,9 @@ export default function CodeMirrorThemeSelector({ className = "" }: CodeMirrorTh
           </option>
         ))}
       </select>
+      <span id="theme-description" className="sr-only">
+        Select a theme for the code editor
+      </span>
     </div>
   );
 }

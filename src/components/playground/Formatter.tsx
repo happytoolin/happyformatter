@@ -1,172 +1,301 @@
 import { getFormatter, getMinifier } from "@/handlers";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { FileText, Minimize2 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import CodeMirrorThemeSelector from "./CodeMirrorThemeSelector";
 import CodePlayground from "./CodePlayground";
 import CodeValid from "./CodeValid";
 import { useFormatterStore } from "./formatterStore";
-import { ThemeProvider } from "./ThemeContext";
+import { ThemeProvider, useTheme } from "./ThemeContext";
 
 interface FormatterProps {
   minifier: boolean;
   language: string;
 }
 
+function FormatButtons({
+  onFormat,
+  onMinify,
+  onCopy,
+  isProcessing,
+  minifier,
+}: {
+  onFormat: () => void;
+  onMinify: () => void;
+  onCopy: () => void;
+  isProcessing: boolean;
+  minifier: boolean;
+}) {
+  const { currentTheme } = useTheme();
+
+  const isDarkTheme = currentTheme.includes("dark");
+  const iconColor = isDarkTheme ? "#ffffff" : "#000000";
+
+  return (
+    <div className="flex w-full md:w-auto gap-3">
+      {minifier && (
+        <button
+          onClick={onMinify}
+          disabled={isProcessing}
+          className="flex-1 md:flex-none h-12 min-w-[120px] px-6 font-display uppercase tracking-wider text-sm border-2 border-foreground bg-transparent hover:bg-secondary transition-all duration-300 ease-in-out active:translate-y-1 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          aria-label="Minify code (Ctrl+Shift+M)"
+          title="Minify code (Ctrl+Shift+M)"
+        >
+          <Minimize2
+            size={16}
+            strokeWidth={2}
+            className="text-current transition-transform duration-300"
+          />
+          <span>MINIFY</span>
+        </button>
+      )}
+
+      <button
+        onClick={onFormat}
+        disabled={isProcessing}
+        className="flex-1 md:flex-none h-12 min-w-[120px] px-6 font-display uppercase tracking-wider text-sm border-2 border-foreground bg-primary text-white hover:bg-primary/90 transition-all duration-300 ease-in-out shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:shadow-none disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] flex items-center justify-center gap-2"
+        aria-label="Format code (Ctrl+Shift+F)"
+        title="Format code (Ctrl+Shift+F)"
+      >
+        <FileText
+          size={16}
+          strokeWidth={2}
+          style={{ color: iconColor }}
+          className="transition-transform duration-300"
+        />
+        <span>FORMAT</span>
+      </button>
+
+      <button
+        onClick={onCopy}
+        className="h-12 w-12 flex items-center justify-center border-2 border-accent bg-transparent text-accent hover:bg-accent hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none"
+        aria-label="Copy formatted code"
+        title="Copy formatted code"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+        >
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 export default function Formatter({ minifier, language }: FormatterProps) {
   const { code, setCode, initializeCode, setLanguage } = useFormatterStore();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [buttonFeedback, setButtonFeedback] = useState<{ format?: string; minify?: string }>({});
-  const formatButtonRef = useRef<HTMLButtonElement>(null);
-  const minifyButtonRef = useRef<HTMLButtonElement>(null);
-  const copyButtonRef = useRef<HTMLButtonElement>(null);
+  const [lastAction, setLastAction] = useState<string | null>(null);
 
   useEffect(() => {
     setLanguage(language);
     initializeCode(language);
   }, [language, setLanguage, initializeCode]);
 
-  const showFeedback = useCallback((buttonType: "format" | "minify", text: string) => {
-    setButtonFeedback(prev => ({ ...prev, [buttonType]: text }));
-    setTimeout(() => {
-      setButtonFeedback(prev => ({ ...prev, [buttonType]: undefined }));
-    }, 1500);
-  }, []);
-
-  const handleFormat = useCallback(async () => {
+  const handleAction = useCallback(async (type: "format" | "minify") => {
+    setIsProcessing(true);
     try {
-      setIsProcessing(true);
-      const formatter = await getFormatter(language);
-      const result = await formatter.formatCode(code);
-      setCode(result);
-      showFeedback("format", "DONE");
-    } catch (error) {
-      showFeedback("format", "ERROR");
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [code, language, showFeedback]);
-
-  const handleMinify = useCallback(async () => {
-    try {
-      setIsProcessing(true);
-      const minifier = await getMinifier(language);
-      if (minifier) {
-        const result = await minifier.minifyCode(code);
+      if (type === "format") {
+        const formatter = await getFormatter(language);
+        const result = await formatter.formatCode(code);
         setCode(result);
-        showFeedback("minify", "MINIFIED");
+        setLastAction("FORMAT_SUCCESS");
+      } else {
+        const minifierTool = await getMinifier(language);
+        if (minifierTool) {
+          const result = await minifierTool.minifyCode(code);
+          setCode(result);
+          setLastAction("MINIFY_SUCCESS");
+        } else {
+          setLastAction("MINIFIER_NOT_AVAILABLE");
+        }
       }
-    } catch (error) {
-      showFeedback("minify", "ERROR");
+    } catch (e) {
+      console.error(e);
+      setLastAction("ERR_EXECUTION_FAILED");
     } finally {
       setIsProcessing(false);
+      setTimeout(() => setLastAction(null), 2000);
     }
-  }, [code, language, showFeedback]);
+  }, [language, code, setCode]);
 
-  const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(code);
-    if (copyButtonRef.current) {
-      copyButtonRef.current.classList.add("bg-accent");
-      setTimeout(() => {
-        copyButtonRef.current?.classList.remove("bg-accent");
-      }, 500);
+  const copyToClipboard = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setLastAction("COPIED_TO_CLIPBOARD");
+    } catch {
+      setLastAction("COPY_FAILED");
     }
+    setTimeout(() => setLastAction(null), 2000);
   }, [code]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.contentEditable === "true") {
+        return;
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "f") {
+        event.preventDefault();
+        handleAction("format");
+      } else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === "m") {
+        event.preventDefault();
+        handleAction("minify");
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleAction]);
 
   return (
     <ThemeProvider>
-      <div className="w-full bg-background py-12" data-language={language} id="formatter">
-        <div className="container mx-auto max-w-6xl">
-          {/* The Machine Housing */}
-          <div className="relative border-2 border-foreground bg-card shadow-[8px_8px_0px_0px_var(--color-foreground)]">
-            {/* Machine Header / Toolbar */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between border-b-2 border-foreground bg-secondary p-4 gap-4">
-              <div className="flex items-center gap-4">
+      <FormatterContent
+        code={code}
+        language={language}
+        isProcessing={isProcessing}
+        lastAction={lastAction}
+        onFormat={() => handleAction("format")}
+        onMinify={() => handleAction("minify")}
+        onCopy={copyToClipboard}
+        minifier={minifier}
+      />
+    </ThemeProvider>
+  );
+}
+
+function FormatterContent({
+  code,
+  language,
+  isProcessing,
+  lastAction,
+  onFormat,
+  onMinify,
+  onCopy,
+  minifier,
+}: {
+  code: string;
+  language: string;
+  isProcessing: boolean;
+  lastAction: string | null;
+  onFormat: () => void;
+  onMinify: () => void;
+  onCopy: () => void;
+  minifier: boolean;
+}) {
+  const { currentTheme } = useTheme();
+  const isDarkTheme = currentTheme.includes("dark");
+  const { setCode } = useFormatterStore();
+
+  return (
+    <div className="min-h-screen w-full relative">
+      {/* Dashed Grid */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, ${isDarkTheme ? "#3a3a3a" : "#e7e5e4"} 1px, transparent 1px),
+            linear-gradient(to bottom, ${isDarkTheme ? "#3a3a3a" : "#e7e5e4"} 1px, transparent 1px)
+          `,
+          backgroundSize: "20px 20px",
+          backgroundPosition: "0 0, 0 0",
+          opacity: 0.4,
+          maskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            )
+          `,
+          WebkitMaskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            )
+          `,
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
+      <div className="w-full py-12 border-b-2 border-foreground relative z-10" id="workspace">
+        <div className="container mx-auto px-4">
+          <div className="border-4 border-foreground bg-card relative shadow-[10px_10px_0px_0px_rgba(13,13,13,1)] dark:shadow-[10px_10px_0px_0px_#ffffff]">
+            <div className="flex flex-col md:flex-row justify-between items-center border-b-2 border-foreground bg-muted/20 p-2 gap-2">
+              <div className="flex items-center gap-4 px-2">
                 <div className="flex gap-1">
-                  <div className="w-3 h-3 rounded-full border border-foreground bg-primary"></div>
-                  <div className="w-3 h-3 rounded-full border border-foreground bg-[#10B981]"></div>
+                  <div className="w-3 h-3 rounded-full bg-primary border border-black"></div>
+                  <div className="w-3 h-3 rounded-full bg-transparent border-2 border-accent"></div>
+                  <div className="w-3 h-3 rounded-full bg-transparent border border-black"></div>
                 </div>
-                <div className="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Editor // {language.toUpperCase()}
-                </div>
+                <span className="font-mono text-xs font-bold uppercase">{language.toUpperCase()}__SOURCE</span>
               </div>
 
-              <div className="flex items-center gap-4 w-full md:w-auto">
-                <CodeMirrorThemeSelector />
+              <div className="flex items-center gap-4">
                 <CodeValid language={language} />
+                <CodeMirrorThemeSelector className="hidden md:flex" />
               </div>
             </div>
 
-            {/* The Single Editor Pane */}
-            <div className="relative h-[400px] md:h-[600px] w-full overflow-hidden group">
+            <div className="relative h-[400px] md:h-[600px] w-full bg-card">
               <CodePlayground
                 inputCode={code}
                 language={language}
                 onCodeChange={setCode}
               />
+
+              {lastAction && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
+                  <div className="bg-primary text-black font-display text-4xl uppercase px-4 py-2 border-2 border-black -rotate-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    {lastAction}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Control Deck */}
-            <div className="border-t-2 border-foreground p-4 bg-background grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-              <div className="text-[10px] font-mono text-muted-foreground hidden md:block">
-                READY TO PROCESS. <br /> PRESS ACTION TO EXECUTE.
+            <div className="border-t-2 border-foreground p-4 bg-background flex flex-col md:flex-row gap-4 justify-between items-center">
+              <div className="font-mono text-[10px] text-muted-foreground hidden md:block">
+                CPU: LOCAL / WASM <br /> MEMORY: OPTIMIZED
               </div>
 
-              <div className="flex flex-col md:flex-row gap-3 justify-end">
-                {minifier && (
-                  <button
-                    ref={minifyButtonRef}
-                    onClick={handleMinify}
-                    disabled={isProcessing}
-                    className="w-full md:w-auto px-4 py-2 bg-background border-2 border-foreground hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm font-bold uppercase tracking-widest"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                      </svg>
-                      {buttonFeedback.minify || "MINIFY"}
-                    </span>
-                  </button>
-                )}
-
-                <button
-                  ref={formatButtonRef}
-                  onClick={handleFormat}
-                  disabled={isProcessing}
-                  className="w-full md:w-auto px-4 py-2 bg-primary hover:bg-primary/90 text-black border-2 border-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-mono text-sm font-bold uppercase tracking-widest"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
-                    </svg>
-                    {buttonFeedback.format || "FORMAT CODE"}
-                  </span>
-                </button>
-
-                <button
-                  ref={copyButtonRef}
-                  onClick={handleCopy}
-                  className="w-10 h-10 p-0 bg-background border-2 border-transparent hover:border-foreground transition-colors"
-                  title="Copy to Clipboard"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-              </div>
+              <FormatButtons
+                onFormat={onFormat}
+                onMinify={onMinify}
+                onCopy={onCopy}
+                isProcessing={isProcessing}
+                minifier={minifier}
+              />
             </div>
-          </div>
-
-          {/* Decorative Footer for the Machine */}
-          <div className="mt-2 flex justify-between font-mono text-[10px] text-muted-foreground uppercase">
-            <span>REF: {language.toUpperCase()}-FMT-001</span>
-            <span>LATENCY: 0ms (LOCAL)</span>
           </div>
         </div>
       </div>
-    </ThemeProvider>
+    </div>
   );
 }

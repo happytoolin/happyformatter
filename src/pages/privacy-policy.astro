@@ -1,2 +1,166 @@
-We do not collect any personal information from our users. All the code is
-processed locally on your device.
+---
+import FormatHeading from "@/components/layout/FormatHeading.astro";
+import Layout from "@/components/layout/layout.astro";
+---
+
+<Layout
+  title="Privacy Policy"
+  description="HappyFormatter's privacy policy - We don't collect your data. All formatting happens locally in your browser."
+  image="/og-image-privacy.png"
+>
+  <FormatHeading language="privacy" minify={false} />
+
+  <section class="py-24 bg-background relative overflow-hidden">
+    <!-- Decorative Grid Lines -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]">
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10 max-w-6xl">
+      <!-- Main Content Block -->
+      <div class="border-2 border-foreground bg-card">
+        <!-- Header -->
+        <div class="p-8 border-b-2 border-foreground bg-primary text-primary-foreground">
+          <span
+            class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
+          >
+            Policy Document // PRIV-001
+          </span>
+          <h1 class="font-display text-5xl uppercase leading-[0.9] mb-6">
+            Privacy Policy
+          </h1>
+          <p class="font-serif text-xl leading-relaxed opacity-90">
+            Your privacy is not a feature. It's our foundation.
+          </p>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 md:p-12">
+          <!-- Main Policy Statement -->
+          <div class="mb-16">
+            <div class="flex items-center gap-2 mb-6">
+              <span class="w-2 h-2 border-2 border-accent"></span>
+              <h2 class="font-display text-2xl uppercase">Our Promise</h2>
+            </div>
+            <p class="font-serif text-lg leading-relaxed mb-8 text-card-foreground">
+              Your code stays on your device. All formatting and minification
+              happens <strong class="text-primary"
+              >exclusively in your browser</strong> using WebAssembly modules.
+              We don't store or transmit your code.
+            </p>
+          </div>
+
+          <!-- Grid of Privacy Features -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-foreground">
+            <!-- Local Processing -->
+            <div class="p-8 border-b-2 md:border-b-0 md:border-r-2 border-foreground bg-secondary/20">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="w-2 h-2 bg-foreground"></span>
+                <h3 class="font-display text-xl uppercase">Local Processing</h3>
+              </div>
+              <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
+                Your code never leaves your browser. All processing happens
+                client-side.
+              </p>
+              <ul class="space-y-3 font-mono text-xs">
+                <li class="border-b border-foreground/10 pb-2">
+                  <span class="text-muted-foreground mr-2">01</span>
+                  No server uploads
+                </li>
+                <li class="border-b border-foreground/10 pb-2">
+                  <span class="text-muted-foreground mr-2">02</span>
+                  No data collection
+                </li>
+                <li class="border-b border-foreground/10 pb-2">
+                  <span class="text-muted-foreground mr-2">03</span>
+                  Zero telemetry
+                </li>
+              </ul>
+            </div>
+
+            <!-- Minimal Tracking -->
+            <div class="p-8 bg-card">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="w-2 h-2 bg-foreground"></span>
+                <h3 class="font-display text-xl uppercase">Minimal Tracking</h3>
+              </div>
+              <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
+                We use basic analytics to understand usage patterns and improve
+                the service.
+              </p>
+              <ul class="space-y-3 font-mono text-xs">
+                <li class="border-b border-foreground/10 pb-2">
+                  <span class="text-muted-foreground mr-2">01</span>
+                  No personal data collection
+                </li>
+                <li class="border-b border-foreground/10 pb-2">
+                  <span class="text-muted-foreground mr-2">02</span>
+                  Anonymous usage statistics
+                </li>
+                <li class="border-b border-foreground/10 pb-2">
+                  <span class="text-muted-foreground mr-2">03</span>
+                  No advertising tracking
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Technical Details -->
+          <div class="mt-16">
+            <div class="flex items-center gap-2 mb-6">
+              <span class="w-2 h-2 border-2 border-accent"></span>
+              <h2 class="font-display text-2xl uppercase">Technical Details</h2>
+            </div>
+            <div class="bg-card border-2 border-foreground p-8">
+              <div class="space-y-6">
+                <div>
+                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
+                    Processing Architecture
+                  </h3>
+                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
+                    HappyFormatter uses WebAssembly (WASM) modules loaded
+                    directly in your browser. These modules perform all
+                    formatting and minification operations locally without
+                    transmitting your code to any servers.
+                  </p>
+                </div>
+                <div>
+                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
+                    Browser Security
+                  </h3>
+                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
+                    The same-origin policy and browser sandboxing ensure that
+                    code processed cannot access other websites or your local
+                    file system.
+                  </p>
+                </div>
+                <div>
+                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
+                    Analytics Implementation
+                  </h3>
+                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
+                    Standard web analytics may be used to collect anonymous
+                    usage metrics such as page views and general geographic
+                    region. This data is aggregated and used solely for
+                    improving the service.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="mt-16 text-center">
+            <p class="font-mono text-xs text-muted-foreground mb-4">
+              Last updated: <span class="text-foreground font-bold"
+              >December 2025</span>
+            </p>
+            <p class="font-serif text-sm text-muted-foreground">
+              Questions about privacy? We don't have a contact form because that
+              would require collecting data. Find us on GitHub instead.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

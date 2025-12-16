@@ -1,23 +1,18 @@
 ---
 import { cn } from "@/lib/utils";
 
-// Define the button variants and sizes
 const buttonVariants = {
   default:
-    "bg-primary text-primary-foreground hover:translate-y-[2px] hover:shadow-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
-  destructive:
-    "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]",
+    "bg-primary text-black border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_#FFF]",
   outline:
-    "border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-none",
-  secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-  ghost: "hover:bg-accent hover:text-accent-foreground",
-  link: "text-primary underline-offset-4 hover:underline",
+    "bg-transparent text-foreground border-2 border-foreground hover:bg-secondary",
+  ghost: "hover:bg-accent hover:text-white",
 };
 
 const buttonSizes = {
   default: "h-12 px-6 py-2",
-  sm: "h-9 rounded-none px-3",
-  lg: "h-14 rounded-none px-10 text-base",
+  sm: "h-9 px-3 text-xs",
+  lg: "h-14 px-10 text-lg",
   icon: "h-12 w-12",
 };
 
@@ -25,32 +20,22 @@ interface Props {
   variant?: keyof typeof buttonVariants;
   size?: keyof typeof buttonSizes;
   className?: string;
-  children?: any;
   target?: string;
   [key: string]: any;
 }
 
-function getButtonClasses({
-  variant = "default",
-  size = "default",
-  className = "",
-}: Props) {
-  return cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-none text-sm font-bold uppercase tracking-wide transition-all focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 active:translate-y-[4px] active:shadow-none border-2 border-black",
-    buttonVariants[variant],
-    buttonSizes[size],
-    className,
-  );
-}
-
-const props = Astro.props as Props;
-const { variant, size, className, target, ...restProps } = props;
+const { variant = "default", size = "default", className, ...props } =
+  Astro.props;
 ---
 
 <button
-  class={getButtonClasses({ variant, size, className })}
-  {...restProps}
-  data-target={target}
+  class={cn(
+    "inline-flex items-center justify-center font-display font-bold uppercase tracking-wide transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:translate-y-0 active:shadow-none",
+    buttonVariants[variant],
+    buttonSizes[size],
+    className,
+  )}
+  {...props}
 >
   <slot />
 </button>
