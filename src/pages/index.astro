@@ -1,3 +1,25 @@
 ---
-return Astro.redirect("/json");
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter";
+import { LANGUAGES } from "@/lib/languages";
+
+const language = "json";
+const languageConfig = LANGUAGES[language];
 ---
+
+<Layout
+  title={languageConfig.title}
+  description={languageConfig.description}
+  language={language}
+  minify={languageConfig.minify}
+>
+  <Formatter
+    client:load
+    minifier={languageConfig.minify}
+    language={language}
+  />
+  <Info language={language} />
+  <FAQ language={language} client:idle />
+</Layout>
