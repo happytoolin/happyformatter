@@ -81,11 +81,6 @@ a[href="#main-content"]:focus {
   z-index: 9999;
 }
 
-/* Mobile menu focus management */
-#mobile-menu:focus-within {
-  /* Ensure menu stays open when keyboard navigation is active */
-}
-
 /* Enhanced keyboard navigation for form controls */
 select:focus,
 input:focus,

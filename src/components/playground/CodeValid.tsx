@@ -75,12 +75,7 @@ export default function CodeValid({ language }: CodeValidProps) {
 
   return (
     <div className="flex items-center">
-      <span
-        className="font-mono text-[10px] font-bold uppercase flex items-center gap-2 px-2 py-1 bg-muted border border-border"
-        role="status"
-        aria-live="polite"
-        aria-label={`Code validation status: ${status}`}
-      >
+      <span className="font-mono text-[10px] font-bold uppercase flex items-center gap-2 px-2 py-1 bg-muted border border-border">
         STATUS: <span className={getStatusColor()}>{status}</span>
         <span
           className={getStatusDotClass()}
@@ -88,14 +83,14 @@ export default function CodeValid({ language }: CodeValidProps) {
         >
         </span>
       </span>
-      {/* Additional screen reader-only status announcement */}
+      {/* Screen reader-only status announcement */}
       <div
         className="sr-only"
         role="status"
         aria-live="polite"
         aria-atomic="true"
       >
-        Code validation status is {status}
+        Code validation status: {status}
       </div>
     </div>
   );
