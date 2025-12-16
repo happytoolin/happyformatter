@@ -5,7 +5,6 @@ import ThemeIcon from "../ThemeIcon.astro";
 
 <header class="group sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/80 backdrop-blur-md">
   <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-    <!-- Branding -->
     <a href="/" class="flex items-center gap-3 group">
       <div class="bg-primary text-black p-1 transition-transform group-hover:rotate-180 duration-500">
         <Logo class="h-8 w-8" fill="currentColor" />
@@ -22,7 +21,6 @@ import ThemeIcon from "../ThemeIcon.astro";
       </div>
     </a>
 
-    <!-- Desktop Nav: Brutalist Links -->
     <nav
       class="hidden md:flex items-center gap-8"
       aria-label="Language navigation"
@@ -42,7 +40,6 @@ import ThemeIcon from "../ThemeIcon.astro";
       ))}
     </nav>
 
-    <!-- Actions -->
     <div class="flex items-center gap-4">
       <a
         href="#more-tools"
@@ -52,7 +49,6 @@ import ThemeIcon from "../ThemeIcon.astro";
       </a>
       <div class="h-8 w-[2px] bg-foreground/20 hidden md:block"></div>
       <ThemeIcon />
-      <!-- Mobile Menu Button -->
       <button
         id="menu-button"
         class="md:hidden flex items-center gap-2 text-[10px] font-mono border-2 border-foreground px-2 py-1 hover:bg-primary hover:text-black transition-colors relative z-[55]"
@@ -69,12 +65,10 @@ import ThemeIcon from "../ThemeIcon.astro";
     </div>
   </div>
 
-  <!-- Running Tape / Decoration -->
   <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent via-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
   </div>
 </header>
 
-<!-- Mobile Menu -->
 <div
   class="md:hidden fixed inset-0 z-[60] bg-background/95 backdrop-blur hidden"
   role="dialog"
@@ -163,9 +157,7 @@ document.addEventListener("DOMContentLoaded", function() {
     e.stopPropagation();
     mobileMenu?.classList.remove("hidden");
     document.body.style.overflow = "hidden";
-    // Update ARIA attributes
     menuButton.setAttribute("aria-expanded", "true");
-    // Focus management: move focus to close button
     closeMenuButton?.focus();
   });
 
@@ -174,21 +166,17 @@ document.addEventListener("DOMContentLoaded", function() {
     e.stopPropagation();
     mobileMenu?.classList.add("hidden");
     document.body.style.overflow = "";
-    // Update ARIA attributes
     menuButton?.setAttribute("aria-expanded", "false");
     menuButton?.setAttribute("aria-label", "Open navigation menu");
-    // Return focus to menu button
     menuButton?.focus();
   });
 
-  // Close menu on Escape key
   document.addEventListener("keydown", function(event) {
     if (event.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
       closeMenuButton?.click();
     }
   });
 
-  // Close menu when clicking outside
   mobileMenu?.addEventListener("click", function(event) {
     if (event.target === mobileMenu) {
       closeMenuButton?.click();
