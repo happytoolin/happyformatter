@@ -17,6 +17,7 @@ const languageImports = [
   import("@shikijs/langs/rust"),
   import("@shikijs/langs/cpp"),
   import("@shikijs/langs/java"),
+  import("@shikijs/langs/dart"),
 ];
 
 // Import themes - using a mix of popular themes
@@ -27,6 +28,12 @@ const themeImports = [
   import("@shikijs/themes/nord"),
   import("@shikijs/themes/material-theme-palenight"),
   import("@shikijs/themes/dracula"),
+  import("@shikijs/themes/solarized-dark"),
+  import("@shikijs/themes/solarized-light"),
+  import("@shikijs/themes/monokai"),
+  import("@shikijs/themes/vitesse-dark"),
+  import("@shikijs/themes/vitesse-light"),
+  import("@shikijs/themes/catppuccin-latte"),
 ];
 
 let highlighter: any = null;
@@ -49,7 +56,13 @@ export async function getShikiHighlighter(): Promise<any> {
 // Helper function to get appropriate theme based on system preference
 export function getThemeForSystem(isDark: boolean = false): string {
   const themes = {
-    dark: ["one-dark-pro", "github-dark", "material-theme-palenight", "dracula", "nord"],
+    dark: [
+      "one-dark-pro",
+      "github-dark",
+      "material-theme-palenight",
+      "dracula",
+      "nord",
+    ],
     light: ["github-light", "nord"],
   };
 
@@ -62,7 +75,11 @@ export const availableThemes = [
   { name: "GitHub Dark", id: "github-dark", type: "dark" },
   { name: "One Dark Pro", id: "one-dark-pro", type: "dark" },
   { name: "Nord", id: "nord", type: "both" },
-  { name: "Material Theme Palenight", id: "material-theme-palenight", type: "dark" },
+  {
+    name: "Material Theme Palenight",
+    id: "material-theme-palenight",
+    type: "dark",
+  },
   { name: "Dracula", id: "dracula", type: "dark" },
   { name: "Solarized Dark", id: "solarized-dark", type: "dark" },
   { name: "Solarized Light", id: "solarized-light", type: "light" },
