@@ -5,6 +5,7 @@ import CodeMirrorThemeSelector from "./CodeMirrorThemeSelector";
 import CodePlayground from "./CodePlayground";
 import CodeValid from "./CodeValid";
 import { useFormatterStore } from "./formatterStore";
+import KeyboardShortcutsHelp from "./KeyboardShortcutsHelp";
 import { ThemeProvider, useTheme } from "./ThemeContext";
 
 interface FormatterProps {
@@ -38,6 +39,8 @@ function FormatButtons({
           onClick={onMinify}
           disabled={isProcessing}
           className="flex-1 md:flex-none h-12 px-6 font-display uppercase tracking-wider text-sm border-2 border-foreground bg-transparent hover:bg-secondary transition-all active:translate-y-1 disabled:opacity-50 flex items-center justify-center gap-2"
+          aria-label="Minify code (Ctrl+Shift+M)"
+          title="Minify code (Ctrl+Shift+M)"
         >
           {isProcessing
             ? (
@@ -60,6 +63,8 @@ function FormatButtons({
         onClick={onFormat}
         disabled={isProcessing}
         className="flex-1 md:flex-none h-12 px-6 font-display uppercase tracking-wider text-sm border-2 border-foreground bg-primary text-white hover:bg-primary/90 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:shadow-none disabled:opacity-50 flex items-center justify-center gap-2"
+        aria-label="Format code (Ctrl+Shift+F)"
+        title="Format code (Ctrl+Shift+F)"
       >
         {isProcessing
           ? (
@@ -80,7 +85,8 @@ function FormatButtons({
       <button
         onClick={onCopy}
         className="h-12 w-12 flex items-center justify-center border-2 border-accent bg-transparent text-accent hover:bg-accent hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none"
-        title="Copy"
+        aria-label="Copy formatted code (Ctrl+C)"
+        title="Copy formatted code (Ctrl+C)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -110,6 +116,32 @@ export default function Formatter({ minifier, language }: FormatterProps) {
     setLanguage(language);
     initializeCode(language);
   }, [language, setLanguage, initializeCode]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle shortcuts when not typing in inputs
+      const target = event.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.contentEditable === "true") {
+        return;
+      }
+
+      // Handle keyboard shortcuts
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "f") {
+        event.preventDefault();
+        handleAction("format");
+      } else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "m") {
+        event.preventDefault();
+        handleAction("minify");
+      } else if ((event.ctrlKey || event.metaKey) && event.key === "c") {
+        event.preventDefault();
+        copyToClipboard();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [code, language]);
 
   const handleAction = async (type: "format" | "minify") => {
     setIsProcessing(true);
@@ -198,6 +230,11 @@ export default function Formatter({ minifier, language }: FormatterProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Keyboard Shortcuts Help */}
+      <div className="container mx-auto px-4 mt-6">
+        <KeyboardShortcutsHelp className="text-right opacity-60 hover:opacity-100 transition-opacity" />
       </div>
     </ThemeProvider>
   );
