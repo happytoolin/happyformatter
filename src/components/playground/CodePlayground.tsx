@@ -165,10 +165,10 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       )}
 
       {/* Code editor */}
-      <div className={isLoading || error ? "opacity-50 pointer-events-none" : ""}>
+      <div className={(isLoading || error ? "opacity-50 pointer-events-none" : "") + " h-full"}>
         <CodeMirror
           value={inputCode}
-          height="600px"
+          height="100%"
           theme={getTheme()}
           extensions={extensions}
           basicSetup={{
