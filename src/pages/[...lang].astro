@@ -1,0 +1,42 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter";
+import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = (async () => {
+  const paths = Object.entries(LANGUAGES).map(([langId, langConfig]) => ({
+    params: { lang: langId },
+    props: {
+      languageConfig: langConfig,
+      language: langId,
+    },
+  }));
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+interface Props {
+  languageConfig: LanguageConfig;
+  language: string;
+}
+
+const { language, languageConfig } = Astro.props;
+---
+
+<Layout
+  title={languageConfig.title}
+  description={languageConfig.description}
+  language={language}
+  minify={languageConfig.minify}
+>
+  <Formatter
+    client:load
+    minifier={languageConfig.minify}
+    language={language}
+  />
+  <Info language={language} />
+  <FAQ language={language} client:idle />
+</Layout>

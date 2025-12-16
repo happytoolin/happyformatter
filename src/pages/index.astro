@@ -1,17 +1,3 @@
 ---
-import { FAQ } from "@/components/faq/faq";
-import Info from "@/components/info/info.astro";
-import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter";
+return Astro.redirect('/json');
 ---
-
-<Layout
-  title="JSON Formatter and Minifier"
-  description="JSON Formatter that formats JSON data and minifies it, locally in your browser"
-  language="json"
-  minify={true}
->
-  <Formatter client:load minifier={true} language="json" />
-  <Info language="json" />
-  <FAQ language="json" client:idle />
-</Layout>
