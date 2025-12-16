@@ -159,105 +159,143 @@ export default function Formatter({ minifier, language }: FormatterProps) {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen w-full relative">
-        {/* Dashed Grid */}
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, #e7e5e4 1px, transparent 1px),
-              linear-gradient(to bottom, #e7e5e4 1px, transparent 1px)
-            `,
-            backgroundSize: "20px 20px",
-            backgroundPosition: "0 0, 0 0",
-            maskImage: `
-              repeating-linear-gradient(
-                to right,
-                black 0px,
-                black 3px,
-                transparent 3px,
-                transparent 8px
-              ),
-              repeating-linear-gradient(
-                to bottom,
-                black 0px,
-                black 3px,
-                transparent 3px,
-                transparent 8px
-              )
-            `,
-            WebkitMaskImage: `
-              repeating-linear-gradient(
-                to right,
-                black 0px,
-                black 3px,
-                transparent 3px,
-                transparent 8px
-              ),
-              repeating-linear-gradient(
-                to bottom,
-                black 0px,
-                black 3px,
-                transparent 3px,
-                transparent 8px
-              )
-            `,
-            maskComposite: "intersect",
-            WebkitMaskComposite: "source-in",
-          }}
-        />
-        <div className="w-full py-12 border-b-2 border-foreground relative z-10" id="workspace">
-          <div className="container mx-auto px-4">
-            <div className="border-4 border-foreground bg-card relative shadow-[10px_10px_0px_0px_rgba(13,13,13,1)] dark:shadow-[10px_10px_0px_0px_#ffffff]">
-              <div className="flex flex-col md:flex-row justify-between items-center border-b-2 border-foreground bg-muted/20 p-2 gap-2">
-                <div className="flex items-center gap-4 px-2">
-                  <div className="flex gap-1">
-                    <div className="w-3 h-3 rounded-full bg-primary border border-black"></div>
-                    <div className="w-3 h-3 rounded-full bg-transparent border-2 border-accent"></div>
-                    <div className="w-3 h-3 rounded-full bg-transparent border border-black"></div>
+      <FormatterContent
+        code={code}
+        language={language}
+        isProcessing={isProcessing}
+        lastAction={lastAction}
+        onFormat={() => handleAction("format")}
+        onMinify={() => handleAction("minify")}
+        onCopy={copyToClipboard}
+        minifier={minifier}
+      />
+    </ThemeProvider>
+  );
+}
+
+function FormatterContent({
+  code,
+  language,
+  isProcessing,
+  lastAction,
+  onFormat,
+  onMinify,
+  onCopy,
+  minifier,
+}: {
+  code: string;
+  language: string;
+  isProcessing: boolean;
+  lastAction: string | null;
+  onFormat: () => void;
+  onMinify: () => void;
+  onCopy: () => void;
+  minifier: boolean;
+}) {
+  const { currentTheme } = useTheme();
+  const isDarkTheme = currentTheme.includes("dark");
+  const { setCode } = useFormatterStore();
+
+  return (
+    <div className="min-h-screen w-full relative">
+      {/* Dashed Grid */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, ${isDarkTheme ? "#3a3a3a" : "#e7e5e4"} 1px, transparent 1px),
+            linear-gradient(to bottom, ${isDarkTheme ? "#3a3a3a" : "#e7e5e4"} 1px, transparent 1px)
+          `,
+          backgroundSize: "20px 20px",
+          backgroundPosition: "0 0, 0 0",
+          opacity: 0.4,
+          maskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            )
+          `,
+          WebkitMaskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            )
+          `,
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
+        }}
+      />
+      <div className="w-full py-12 border-b-2 border-foreground relative z-10" id="workspace">
+        <div className="container mx-auto px-4">
+          <div className="border-4 border-foreground bg-card relative shadow-[10px_10px_0px_0px_rgba(13,13,13,1)] dark:shadow-[10px_10px_0px_0px_#ffffff]">
+            <div className="flex flex-col md:flex-row justify-between items-center border-b-2 border-foreground bg-muted/20 p-2 gap-2">
+              <div className="flex items-center gap-4 px-2">
+                <div className="flex gap-1">
+                  <div className="w-3 h-3 rounded-full bg-primary border border-black"></div>
+                  <div className="w-3 h-3 rounded-full bg-transparent border-2 border-accent"></div>
+                  <div className="w-3 h-3 rounded-full bg-transparent border border-black"></div>
+                </div>
+                <span className="font-mono text-xs font-bold uppercase">{language.toUpperCase()}__SOURCE</span>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <CodeValid language={language} />
+                <CodeMirrorThemeSelector className="hidden md:flex" />
+              </div>
+            </div>
+
+            <div className="relative h-[400px] md:h-[600px] w-full bg-card">
+              <CodePlayground
+                inputCode={code}
+                language={language}
+                onCodeChange={setCode}
+              />
+
+              {lastAction && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
+                  <div className="bg-primary text-black font-display text-4xl uppercase px-4 py-2 border-2 border-black -rotate-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    {lastAction}
                   </div>
-                  <span className="font-mono text-xs font-bold uppercase">{language.toUpperCase()}__SOURCE</span>
                 </div>
+              )}
+            </div>
 
-                <div className="flex items-center gap-4">
-                  <CodeValid language={language} />
-                  <CodeMirrorThemeSelector className="hidden md:flex" />
-                </div>
+            <div className="border-t-2 border-foreground p-4 bg-background flex flex-col md:flex-row gap-4 justify-between items-center">
+              <div className="font-mono text-[10px] text-muted-foreground hidden md:block">
+                CPU: LOCAL / WASM <br /> MEMORY: OPTIMIZED
               </div>
 
-              <div className="relative h-[400px] md:h-[600px] w-full bg-card">
-                <CodePlayground
-                  inputCode={code}
-                  language={language}
-                  onCodeChange={setCode}
-                />
-
-                {lastAction && (
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
-                    <div className="bg-primary text-black font-display text-4xl uppercase px-4 py-2 border-2 border-black -rotate-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                      {lastAction}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="border-t-2 border-foreground p-4 bg-background flex flex-col md:flex-row gap-4 justify-between items-center">
-                <div className="font-mono text-[10px] text-muted-foreground hidden md:block">
-                  CPU: LOCAL / WASM <br /> MEMORY: OPTIMIZED
-                </div>
-
-                <FormatButtons
-                  onFormat={() => handleAction("format")}
-                  onMinify={() => handleAction("minify")}
-                  onCopy={copyToClipboard}
-                  isProcessing={isProcessing}
-                  minifier={minifier}
-                />
-              </div>
+              <FormatButtons
+                onFormat={onFormat}
+                onMinify={onMinify}
+                onCopy={onCopy}
+                isProcessing={isProcessing}
+                minifier={minifier}
+              />
             </div>
           </div>
         </div>
       </div>
-    </ThemeProvider>
+    </div>
   );
 }
