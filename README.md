@@ -1,46 +1,97 @@
 # HappyFormatter
 
-A web-based code formatter and minifier supporting 22+ programming languages. Built with Astro, React, and TypeScript, featuring client-side processing via WebAssembly modules for privacy and performance.
+![HappyFormatter Preview](./public/images/og.png)
+
+**HappyFormatter** is a modern, privacy-focused web application for formatting and minifying code across 22 programming languages. All processing happens entirely in your browser using WebAssembly modules, ensuring your code never leaves your device.
 
 ## Features
 
-- **22+ Supported Languages**: Format and minify code for popular programming languages
-- **Client-Side Processing**: All formatting happens in your browser using WebAssembly
-- **Privacy-Focused**: No server required - your code never leaves your device
-- **Modern UI**: Clean, responsive interface with syntax highlighting
-- **Multiple Themes**: Dark and light mode support
-- **Fast Performance**: Optimized WebAssembly modules for quick formatting
+- **22 Programming Languages**: Comprehensive support for popular languages and formats
+- **Code Minification**: Minify JavaScript, TypeScript, CSS, SCSS, JSON, HTML, and XML
+- **Zero Data Transmission**: All formatting and minification happens client-side via WebAssembly
+- **Advanced Code Editor**: Powered by CodeMirror 6 with syntax highlighting, autocomplete, and bracket matching
+- **Multiple Editor Themes**: 16+ editor themes including Dracula, Nord, Material, One Dark, and more
+- **Keyboard Shortcuts**: Quick formatting with `Ctrl+Shift+F` and minification with `Ctrl+Shift+M`
+- **Responsive Design**: Fully responsive interface optimized for desktop and mobile devices
+- **Accessibility**: Built with ARIA labels, keyboard navigation, and screen reader support
+- **Fast Performance**: Optimized WebAssembly modules for near-instant formatting
 
 ## Supported Languages
 
-- Web Technologies: JavaScript, TypeScript, HTML, CSS, JSON, XML, YAML
-- Programming Languages: Python, Go, Rust, C++, C#, Java, Dart
-- Markup & Data: Markdown, SQL, TOML, GraphQL
-- Configuration: Dockerfile, Shell Script
-- And more...
+### Formatting Support (22 languages)
+
+**Web Technologies**
+
+- JavaScript (with minification)
+- TypeScript (with minification)
+- HTML
+- CSS (with minification)
+- SCSS (with minification)
+- JSON (with minification)
+- XML (with minification)
+- YAML
+
+**Programming Languages**
+
+- Python
+- Go
+- Rust
+- C
+- C++
+- C#
+- Java
+- Dart
+- Lua
+- Zig
+- PHP
+
+**Markup & Data Formats**
+
+- Markdown
+- SQL
+- Protocol Buffers (.proto)
+
+### Minification Support
+
+The following languages support code minification:
+
+- JavaScript
+- TypeScript
+- CSS
+- SCSS
+- JSON
+- HTML
+- XML
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18 or higher
-- pnpm (recommended) or npm
+- **Node.js**: Version 18 or higher
+- **Package Manager**: pnpm (recommended) or npm
 
 ### Installation
 
+1. Clone the repository:
+
 ```bash
-# Clone the repository
 git clone https://github.com/yourusername/happyformatter.git
 cd happyformatter
+```
 
-# Install dependencies
+2. Install dependencies:
+
+```bash
 pnpm install
+```
 
-# Start development server
+3. Start the development server:
+
+```bash
 pnpm dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321) to view the application.
+4. Open [http://localhost:4321](http://localhost:4321) in your browser.
 
 ### Building for Production
 
@@ -48,85 +99,114 @@ Open [http://localhost:4321](http://localhost:4321) to view the application.
 # Build the application
 pnpm build
 
-# Preview the production build
+# Preview the production build locally
 pnpm preview
 
 # Deploy to Cloudflare Pages
 pnpm deploy
 ```
 
-## Project Structure
+## Development
+
+### Available Commands
+
+```bash
+# Development
+pnpm dev              # Start development server
+pnpm build            # Build for production
+pnpm preview          # Preview production build
+
+# Code Quality
+pnpm typecheck        # TypeScript type checking
+pnpm check            # Astro configuration checking
+pnpm format           # Format code with dprint
+
+# Deployment
+pnpm deploy           # Deploy to Cloudflare Pages
+```
+
+### Project Structure
 
 ```
 src/
 ├── components/
-│   ├── playground/      # Main formatting interface
-│   ├── ui/              # Reusable UI components
-│   ├── layout/          # Layout components
+│   ├── playground/      # Main formatting interface components
+│   ├── ui/              # Reusable UI components (buttons, dropdowns, etc.)
+│   ├── layout/          # Layout components (header, footer, head)
 │   ├── info/            # Feature description sections
 │   └── faq/             # FAQ components
-├── handlers/            # Business logic for formatting/minifying
+├── handlers/
 │   ├── formatters/      # Language-specific formatter implementations
 │   ├── minifiers/       # Language-specific minifier implementations
-│   └── interface.ts     # Abstract base classes
-├── lib/                 # Utilities and configurations
-│   ├── utils.ts         # Helper functions
-│   ├── shiki-config.ts  # Syntax highlighting setup
-│   ├── highlighter.ts   # Code highlighting utilities
-│   └── initialCode.ts   # Default code examples per language
+│   ├── utils/           # Utility functions for handlers
+│   └── interface.ts     # Abstract base classes for formatters/minifiers
+├── lib/
+│   ├── languages.ts     # Language configuration and metadata
+│   ├── languageLoader.ts # Dynamic language extension loading
+│   ├── initialCode.ts   # Default code examples per language
+│   ├── shiki-config.ts  # Syntax highlighting configuration
+│   └── utils.ts         # General utility functions
 ├── icons/               # SVG icon components
-└── pages/               # Astro routes
+├── pages/               # Astro route pages
+└── styles/              # Global CSS styles
+
+public/
+└── images/
+    └── og.png           # Open Graph image (1200x630 PNG)
 ```
 
 ## Technology Stack
 
-- **Framework**: Astro 5.16.5 (Static Site Generation)
+- **Framework**: [Astro](https://astro.build) 5.16.5 (Static Site Generation)
 - **Frontend**: React 19.0.3 with TypeScript 5.9.3
 - **Styling**: Tailwind CSS v4.1.18
 - **Code Editor**: CodeMirror 6 with Shiki syntax highlighting
-- **Formatters**: @wasm-fmt packages, Prettier, dprint, xml-formatter
-- **Deployment**: Cloudflare Pages
+- **State Management**: Zustand
+- **Formatters**:
+  - `@wasm-fmt/*` packages for C/C++, Dart, Go, Lua, Python, SQL, Web, YAML, Zig
+  - Prettier for JavaScript, TypeScript, JSON, PHP
+  - dprint for Markdown
+  - xml-formatter for XML
+- **Minifiers**:
+  - `@swc/wasm-web` for JavaScript/TypeScript
+  - `lightningcss-wasm` for CSS/SCSS
+  - `@minify-html/wasm` for HTML
+- **Deployment**: Cloudflare Pages with edge optimization
 
 ## Contributing
 
+Contributions are welcome! Please follow these steps:
+
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-feature`
-3. Make your changes and test them
-4. Commit your changes: `git commit -m 'Add some feature'`
-5. Push to the branch: `git push origin feature/new-feature`
-6. Open a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and test thoroughly
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
-## Adding New Language Support
+### Adding New Language Support
 
-1. Create formatter class in `src/handlers/formatters/[language].ts`
-2. Create minifier class in `src/handlers/minifiers/[language].ts` if needed
-3. Add CodeMirror language support via `@codemirror/lang-*` packages
-4. Update language mappings in relevant components
-5. Add default code sample in `src/lib/initialCode.ts`
+To add support for a new programming language:
 
-## Development Commands
-
-```bash
-# Start development server
-pnpm dev
-
-# Type checking
-pnpm typecheck          # TypeScript checking
-pnpm check              # Astro checking
-
-# Code formatting
-pnpm format             # Format code with dprint
-
-# Preview production build
-pnpm preview
-```
+1. Create a formatter class in `src/handlers/formatters/[language].ts` extending the `Formatter` base class
+2. Create a minifier class in `src/handlers/minifiers/[language].ts` (if minification is supported) extending the `Minifier` base class
+3. Add the language configuration to `src/lib/languages.ts`
+4. Add CodeMirror language support via `@codemirror/lang-*` packages
+5. Add a default code sample in `src/lib/initialCode.ts`
+6. Update the formatter/minifier index in `src/handlers/index.ts`
+7. Create a language-specific page route if needed
 
 ## License
 
-This project is licensed under the GPL-3.0 License - see the LICENSE file for details.
+This project is licensed under the **GPL-3.0 License** - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Built with [Astro](https://astro.build)
-- Uses [CodeMirror](https://codemirror.net) for the code editor
-- Formatting powered by various WebAssembly modules and open-source formatters
+- Built with [Astro](https://astro.build) - The web framework for content-driven websites
+- [CodeMirror](https://codemirror.net) - The code editor component
+- WebAssembly formatters and minifiers from the open-source community
+- All contributors and users of HappyFormatter
+
+---
+
+**HappyFormatter** - Format your code, keep it private.
