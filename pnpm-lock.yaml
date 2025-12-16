@@ -37,6 +37,9 @@ importers:
       "@codemirror/lang-css":
         specifier: ^6.3.1
         version: 6.3.1
+      "@codemirror/lang-go":
+        specifier: ^6.0.1
+        version: 6.0.1
       "@codemirror/lang-html":
         specifier: ^6.4.11
         version: 6.4.11
@@ -74,6 +77,9 @@ importers:
         specifier: ^6.11.3
         version: 6.11.3
       "@codemirror/language-data":
+        specifier: ^6.5.2
+        version: 6.5.2
+      "@codemirror/legacy-modes":
         specifier: ^6.5.2
         version: 6.5.2
       "@codemirror/lint":
@@ -187,9 +193,6 @@ importers:
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
-      codemirror-shiki:
-        specifier: ^0.3.0
-        version: 0.3.0(@codemirror/state@6.5.2)(@codemirror/view@6.39.4)(shiki@3.20.0)
       codemirror-theme-vitesse:
         specifier: ^0.3.0
         version: 0.3.0(@codemirror/language@6.11.3)(@codemirror/view@6.39.4)(codemirror@6.0.2)
@@ -3881,15 +3884,6 @@ packages:
       integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==,
     }
     engines: { node: ">=6" }
-
-  codemirror-shiki@0.3.0:
-    resolution: {
-      integrity: sha512-KSrfcm8RNSgTl3+Vgq+HuGA/bQGbxBMGosoFXL77yWc6r8JjLygIBndqL9evCv2ED9EOoeZozROcXNanN7Mabg==,
-    }
-    peerDependencies:
-      "@codemirror/state": ^6
-      "@codemirror/view": ^6
-      shiki: ">=2.0.0"
 
   codemirror-theme-vitesse@0.3.0:
     resolution: {
@@ -9234,12 +9228,6 @@ snapshots:
   clone@2.1.2: {}
 
   clsx@2.1.1: {}
-
-  codemirror-shiki@0.3.0(@codemirror/state@6.5.2)(@codemirror/view@6.39.4)(shiki@3.20.0):
-    dependencies:
-      "@codemirror/state": 6.5.2
-      "@codemirror/view": 6.39.4
-      shiki: 3.20.0
 
   codemirror-theme-vitesse@0.3.0(@codemirror/language@6.11.3)(@codemirror/view@6.39.4)(codemirror@6.0.2):
     dependencies:

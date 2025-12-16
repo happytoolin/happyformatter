@@ -33,6 +33,11 @@ class LanguageLoaderManager {
       "xml",
       "yaml",
       "markdown",
+      "go",
+      "lua",
+      "protobuf",
+      "scss",
+      "csharp",
     ]);
   }
 
@@ -70,7 +75,9 @@ class LanguageLoaderManager {
       this.cache[language].loading = null;
       return extension;
     } catch (error) {
-      const err = error instanceof Error ? error : new Error(`Failed to load ${language}`);
+      const err = error instanceof Error
+        ? error
+        : new Error(`Failed to load ${language}`);
       this.cache[language].error = err;
       this.cache[language].loading = null;
       throw err;
@@ -80,7 +87,9 @@ class LanguageLoaderManager {
   /**
    * Load language extension dynamically
    */
-  private async loadLanguageExtension(language: string): Promise<Extension | null> {
+  private async loadLanguageExtension(
+    language: string,
+  ): Promise<Extension | null> {
     try {
       switch (language) {
         case "javascript":
@@ -151,6 +160,35 @@ class LanguageLoaderManager {
           return markdown({ codeLanguages: languages });
         }
 
+        case "go": {
+          const { go } = await import("@codemirror/lang-go");
+          return go();
+        }
+
+        case "lua": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { lua } = await import("@codemirror/legacy-modes/mode/lua");
+          return StreamLanguage.define(lua);
+        }
+
+        case "protobuf": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { protobuf } = await import("@codemirror/legacy-modes/mode/protobuf");
+          return StreamLanguage.define(protobuf);
+        }
+
+        case "scss": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { sass } = await import("@codemirror/legacy-modes/mode/sass");
+          return StreamLanguage.define(sass);
+        }
+
+        case "csharp": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { csharp } = await import("@codemirror/legacy-modes/mode/clike");
+          return StreamLanguage.define(csharp);
+        }
+
         default:
           return null;
       }
@@ -161,8 +199,8 @@ class LanguageLoaderManager {
 
   async preloadLanguages(languages: string[]): Promise<void> {
     const promises = languages
-      .filter(lang => this.isLanguageSupported(lang))
-      .map(lang => this.getLanguageExtension(lang).catch(() => null));
+      .filter((lang) => this.isLanguageSupported(lang))
+      .map((lang) => this.getLanguageExtension(lang).catch(() => null));
 
     await Promise.all(promises);
   }
