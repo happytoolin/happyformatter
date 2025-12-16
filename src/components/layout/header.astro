@@ -3,7 +3,7 @@ import Logo from "../../icons/Logo.astro";
 import ThemeIcon from "../ThemeIcon.astro";
 ---
 
-<header class="sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/80 backdrop-blur-md">
+<header class="group sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/80 backdrop-blur-md">
   <div class="container mx-auto px-4 h-16 flex items-center justify-between">
     <!-- Branding -->
     <a href="/" class="flex items-center gap-3 group">
@@ -55,7 +55,7 @@ import ThemeIcon from "../ThemeIcon.astro";
       <!-- Mobile Menu Button -->
       <button
         id="menu-button"
-        class="md:hidden flex items-center gap-2 text-[10px] font-mono border-2 border-foreground px-2 py-1 hover:bg-primary hover:text-black transition-colors"
+        class="md:hidden flex items-center gap-2 text-[10px] font-mono border-2 border-foreground px-2 py-1 hover:bg-primary hover:text-black transition-colors relative z-[55]"
         aria-controls="mobile-menu"
         aria-expanded="false"
         aria-label="Open navigation menu"
@@ -70,13 +70,13 @@ import ThemeIcon from "../ThemeIcon.astro";
   </div>
 
   <!-- Running Tape / Decoration -->
-  <div class="absolute bottom-0 left-0 w-full h-[2px] bg-linear-to-r from-accent via-primary to-accent opacity-0 hover:opacity-100 transition-opacity duration-300">
+  <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent via-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
   </div>
 </header>
 
 <!-- Mobile Menu -->
 <div
-  class="md:hidden fixed inset-0 z-50 bg-background/95 backdrop-blur hidden"
+  class="md:hidden fixed inset-0 z-[60] bg-background/95 backdrop-blur hidden"
   role="dialog"
   aria-modal="true"
   aria-labelledby="mobile-menu-title"
@@ -153,41 +153,46 @@ import ThemeIcon from "../ThemeIcon.astro";
 </div>
 
 <script>
-const menuButton = document.getElementById("menu-button");
-const mobileMenu = document.getElementById("mobile-menu");
-const closeMenuButton = document.getElementById("close-menu-button");
+document.addEventListener("DOMContentLoaded", function() {
+  const menuButton = document.getElementById("menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const closeMenuButton = document.getElementById("close-menu-button");
 
-menuButton?.addEventListener("click", function() {
-  mobileMenu?.classList.remove("hidden");
-  document.body.style.overflow = "hidden";
-  // Update ARIA attributes
-  menuButton.setAttribute("aria-expanded", "true");
-  menuButton.setAttribute("aria-label", "Close navigation menu");
-  // Focus management: move focus to close button
-  closeMenuButton?.focus();
-});
+  menuButton?.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    mobileMenu?.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    // Update ARIA attributes
+    menuButton.setAttribute("aria-expanded", "true");
+    // Focus management: move focus to close button
+    closeMenuButton?.focus();
+  });
 
-closeMenuButton?.addEventListener("click", function() {
-  mobileMenu?.classList.add("hidden");
-  document.body.style.overflow = "";
-  // Update ARIA attributes
-  menuButton?.setAttribute("aria-expanded", "false");
-  menuButton?.setAttribute("aria-label", "Open navigation menu");
-  // Return focus to menu button
-  menuButton?.focus();
-});
+  closeMenuButton?.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    mobileMenu?.classList.add("hidden");
+    document.body.style.overflow = "";
+    // Update ARIA attributes
+    menuButton?.setAttribute("aria-expanded", "false");
+    menuButton?.setAttribute("aria-label", "Open navigation menu");
+    // Return focus to menu button
+    menuButton?.focus();
+  });
 
-// Close menu on Escape key
-document.addEventListener("keydown", function(event) {
-  if (event.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
-    closeMenuButton?.click();
-  }
-});
+  // Close menu on Escape key
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
+      closeMenuButton?.click();
+    }
+  });
 
-// Close menu when clicking outside
-mobileMenu?.addEventListener("click", function(event) {
-  if (event.target === mobileMenu) {
-    closeMenuButton?.click();
-  }
+  // Close menu when clicking outside
+  mobileMenu?.addEventListener("click", function(event) {
+    if (event.target === mobileMenu) {
+      closeMenuButton?.click();
+    }
+  });
 });
 </script>

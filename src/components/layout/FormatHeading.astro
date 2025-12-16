@@ -10,8 +10,14 @@ const { language, minify } = Astro.props;
 <section class="relative w-full border-b-2 border-foreground bg-secondary/30 overflow-hidden py-20">
   <!-- Dynamic Background Text -->
   <div class="absolute top-1/2 left-0 -translate-y-1/2 w-full select-none pointer-events-none opacity-5 overflow-hidden whitespace-nowrap">
-    <span class="font-display text-[20vw] leading-none text-foreground">
-      {language} {language} {language}
+    <span
+      class="font-display text-[15vw] md:text-[20vw] leading-none text-foreground"
+    >
+      {language === "privacy"
+        ? "PRIVACY PRIVACY PRIVACY"
+        : language === "terms"
+        ? "TERMS TERMS TERMS"
+        : `${language} ${language} ${language}`}
     </span>
   </div>
 
@@ -27,11 +33,12 @@ const { language, minify } = Astro.props;
           </span>
         </div>
 
-        <h1 class="font-display text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.8]">
-          {language} <span
-            class="text-transparent stroke-text text-4xl md:text-6xl"
-            style="-webkit-text-stroke: 2px var(--color-foreground)"
-          >Formatter</span>
+        <h1 class="font-display text-4xl md:text-6xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.8]">
+          {language === "privacy"
+            ? "Privacy Policy"
+            : language === "terms"
+            ? "Terms of Service"
+            : `${language} ${minify ? "& Minifier" : "Formatter"}`}
         </h1>
       </div>
 

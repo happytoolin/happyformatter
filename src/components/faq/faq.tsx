@@ -8,9 +8,9 @@ export function FAQ({ language }: { language: string }): JSX.Element {
   return (
     <div className="w-full bg-foreground text-background py-24">
       <div className="container mx-auto max-w-4xl px-4">
-        <div className="flex items-end justify-between border-background/20 pb-8 mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-background/20 pb-8 mb-12">
           <h2
-            className="font-display text-5xl md:text-7xl uppercase tracking-tighter text-transparent stroke-text"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl uppercase tracking-tighter text-transparent stroke-text break-words"
             style={{ WebkitTextStroke: "1px var(--background)" }}
           >
             Troubleshoot
@@ -32,7 +32,9 @@ export function FAQ({ language }: { language: string }): JSX.Element {
                 <AccordionTrigger className="px-0 py-6 hover:no-underline hover:text-primary transition-colors">
                   <div className="flex items-start gap-6 text-left">
                     <span className="font-mono text-sm opacity-50 pt-1">/{num}</span>
-                    <span className="font-display text-xl md:text-2xl uppercase leading-tight">{item.title}</span>
+                    <span className="font-display text-lg md:text-xl lg:text-2xl uppercase leading-tight break-words">
+                      {item.title}
+                    </span>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="pb-8 pt-2">
