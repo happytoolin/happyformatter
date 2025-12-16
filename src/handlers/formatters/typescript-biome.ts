@@ -1,4 +1,4 @@
-import { format, default as init } from "@wasm-fmt/biome_fmt";
+import { default as init, format } from "@wasm-fmt/biome_fmt";
 import { Formatter } from "../interface";
 
 export class TypeScriptBiomeFormatter extends Formatter {
