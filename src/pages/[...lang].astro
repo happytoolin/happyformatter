@@ -2,6 +2,7 @@
 import { FAQ } from "@/components/faq/faq-enhanced";
 import Info from "@/components/info/info-enhanced.astro";
 import Layout from "@/components/layout/layout.astro";
+import LeapOCR from "@/components/leapocr/LeapOCR.astro";
 import Formatter from "@/components/playground/Formatter";
 import {
   generatePageBreadcrumbs,
@@ -31,13 +32,26 @@ export const getStaticPaths: GetStaticPaths = (async () => {
     });
   });
 
-  // Add variant pages (two segments)
+  // Add variant pages (both hyphenated and path-based)
   const { getLanguageVariants } = await import("@/lib/seo-variants");
 
   for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
     const variants = getLanguageVariants(langId);
 
     variants.forEach(variant => {
+      // Add hyphenated variant paths (e.g., "javascript-biome")
+      paths.push({
+        params: { lang: `${langId}-${variant.slug}` },
+        props: {
+          languageConfig: langConfig,
+          language: langId,
+          variant: variant.slug,
+          variantData: variant,
+          lang: `${langId}-${variant.slug}`,
+        },
+      });
+
+      // Also keep path-based variants for backwards compatibility
       paths.push({
         params: { lang: `${langId}/${variant.slug}` },
         props: {
@@ -64,10 +78,36 @@ interface Props {
 
 const { language, languageConfig, variant, variantData, lang } = Astro.props;
 
-// Parse the lang parameter to detect variant
+// Parse the lang parameter to detect variant or hyphenated language
 const langParam = lang;
 const pathSegments = langParam ? langParam.split("/") : [];
 const detectedVariant = pathSegments.length > 1 ? pathSegments[1] : null;
+
+// Check if the first segment is a hyphenated variant (e.g., "javascript-biome")
+const firstSegment = pathSegments[0];
+const hyphenatedParts = firstSegment ? firstSegment.split("-") : [];
+let baseLanguage = firstSegment;
+let hyphenatedVariant = null;
+
+if (hyphenatedParts.length >= 2) {
+  // This might be a hyphenated variant like "javascript-biome"
+  const potentialBaseLanguage = hyphenatedParts[0];
+  const potentialVariant = hyphenatedParts[1];
+
+  // Check if the base language exists and the variant is valid for it
+  if (LANGUAGES[potentialBaseLanguage]) {
+    const { getLanguageVariant } = await import("@/lib/seo-variants");
+    const variantData = getLanguageVariant(
+      potentialBaseLanguage,
+      potentialVariant,
+    );
+
+    if (variantData) {
+      baseLanguage = potentialBaseLanguage;
+      hyphenatedVariant = potentialVariant;
+    }
+  }
+}
 
 // Safety checks
 if (!language || !languageConfig) {
@@ -78,36 +118,51 @@ if (!language || !languageConfig) {
   );
 }
 
-// Use detected variant or provided variant
-const currentVariant = variant || detectedVariant;
-const isVariant = currentVariant && variantData;
+// Use detected variant (hyphenated or path-based) or provided variant
+const currentVariant = variant || detectedVariant || hyphenatedVariant;
+const actualLanguage = baseLanguage;
+
+// Get variant data if we have a variant
+let actualVariantData = variantData;
+if (currentVariant && !actualVariantData) {
+  const { getLanguageVariant } = await import("@/lib/seo-variants");
+  actualVariantData = getLanguageVariant(actualLanguage, currentVariant);
+}
+
+const isVariant = currentVariant && actualVariantData;
 const canonicalPath = isVariant
-  ? `/${language}/${currentVariant}`
-  : `/${language}`;
+  ? `/${actualLanguage}-${currentVariant}`
+  : `/${actualLanguage}`;
+
+// Get the actual language config (in case we detected a hyphenated variant)
+const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
 
 // Try to get generated SEO data first
 const generatedSEO = getLayoutSEOData(
-  language,
+  actualLanguage,
   currentVariant,
-  languageConfig.minify,
+  actualLanguageConfig.minify,
   generatedSEOData || undefined,
 );
 
 // Fall back to existing SEO logic if no generated data
 const fallbackSEO = {
-  title: getLanguageSEOData(language, languageConfig.minify).title,
-  description: getLanguageSEOData(language, languageConfig.minify).description,
-  keywords: getLanguageSEOData(language, languageConfig.minify).keywords,
-  category: getLanguageSEOData(language, languageConfig.minify).category,
+  title: getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).title,
+  description:
+    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).description,
+  keywords:
+    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).keywords,
+  category:
+    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).category,
 };
 
 const seoData = generatedSEO || fallbackSEO;
 
 // Try to get generated breadcrumbs
 const generatedBreadcrumbs = generatePageBreadcrumbs(
-  language,
+  actualLanguage,
   currentVariant,
-  languageConfig.minify,
+  actualLanguageConfig.minify,
   generatedSEOData || undefined,
 );
 
@@ -117,15 +172,16 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
   : [
     { name: "Home", url: "/" },
     {
-      name: `${language.charAt(0).toUpperCase() + language.slice(1)} ${
-        languageConfig.minify ? "Minifier" : "Formatter"
-      }`,
-      url: `/${language}`,
+      name: `${
+        actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)
+      } ${actualLanguageConfig.minify ? "Minifier" : "Formatter"}`,
+      url: `/${actualLanguage}`,
     },
     ...(currentVariant
       ? [{
-        name: currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1),
-        url: `/${language}/${currentVariant}`,
+        name: actualVariantData?.h1
+          || currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1),
+        url: `/${actualLanguage}-${currentVariant}`,
       }]
       : []),
   ];
@@ -134,8 +190,8 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
 <Layout
   title={seoData.title}
   description={seoData.description}
-  language={language}
-  minify={languageConfig.minify}
+  language={actualLanguage}
+  minify={actualLanguageConfig.minify}
   keywords={seoData.keywords}
   category={seoData.category}
   currentVariant={currentVariant}
@@ -147,23 +203,28 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
       <div class="bg-linear-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-6 mb-6">
         <div class="flex items-center gap-3 mb-2">
           <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
-            {variantData.h1}
+            {actualVariantData?.h1
+              || `${actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)} ${
+                currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1)
+              }`}
           </h1>
           <span
             class="px-3 py-1 bg-primary text-primary-foreground text-sm font-mono rounded-full"
           >
-            {language.charAt(0).toUpperCase() + language.slice(1)}
+            {actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)}
           </span>
         </div>
         <p class="text-muted-foreground leading-relaxed">
-          {variantData.description}
+          {actualVariantData?.description
+            || `Format ${actualLanguage} code with ${currentVariant}`}
         </p>
         <div class="mt-4 flex items-center gap-2">
           <a
-            href={`/${language}`}
+            href={`/${actualLanguage}`}
             class="text-primary hover:text-primary/80 underline text-sm"
           >
-            ← Back to {language.charAt(0).toUpperCase() + language.slice(1)}
+            ← Back to
+            {actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)}
             Formatter
           </a>
         </div>
@@ -173,21 +234,23 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
 
   <Formatter
     client:load
-    minifier={languageConfig.minify}
-    language={language}
+    minifier={actualLanguageConfig.minify}
+    language={actualLanguage}
   />
 
+  <LeapOCR />
+
   <Info
-    language={language}
+    language={actualLanguage}
     variant={currentVariant}
-    variantData={variantData}
+    variantData={actualVariantData}
     seoData={generatedSEOData}
   />
 
   <FAQ
-    language={language}
+    language={actualLanguage}
     variant={currentVariant}
-    variantData={variantData}
+    variantData={actualVariantData}
     seoData={generatedSEOData}
     client:idle
   />

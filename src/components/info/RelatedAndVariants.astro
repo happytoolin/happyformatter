@@ -94,15 +94,15 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   python: {
-    related: ["python/ruff", "json", "yaml"],
+    related: ["python-ruff", "json", "yaml"],
     features: ["formatter", "minifier"],
     contextualReasons: {
-      "python/ruff": "Fast Python formatting",
+      "python-ruff": "Fast Python formatting",
       json: "Python data file handling",
       yaml: "Python configuration files",
     },
   },
-  "python/ruff": {
+  "python-ruff": {
     related: ["python", "json"],
     features: ["formatter", "minifier"],
     contextualReasons: {
@@ -155,16 +155,16 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   php: {
-    related: ["php/mago", "json", "html", "xml"],
+    related: ["php-mago", "json", "html", "xml"],
     features: ["formatter", "minifier"],
     contextualReasons: {
-      "php/mago": "Alternative formatting option",
+      "php-mago": "Alternative formatting option",
       json: "Also has validator and minifier",
       html: "Validate and enhance your markup",
       xml: "Validate and enhance your markup",
     },
   },
-  "php/mago": {
+  "php-mago": {
     related: ["php", "json"],
     features: ["formatter", "minifier"],
     contextualReasons: {
@@ -236,9 +236,9 @@ const allTools: BaseTool[] = [
   { name: "HTML", url: "/html", type: "FMT" },
   { name: "CSS", url: "/css", type: "FMT" },
   { name: "JavaScript", url: "/javascript", type: "FMT" },
-  { name: "JavaScript Biome", url: "/javascript/biome", type: "FMT" },
+  { name: "JavaScript Biome", url: "/javascript-biome", type: "FMT" },
   { name: "TypeScript", url: "/typescript", type: "FMT" },
-  { name: "TypeScript Biome", url: "/typescript/biome", type: "FMT" },
+  { name: "TypeScript Biome", url: "/typescript-biome", type: "FMT" },
   { name: "JSON", url: "/json", type: "FMT" },
   { name: "XML", url: "/xml", type: "FMT" },
   { name: "YAML", url: "/yaml", type: "FMT" },
@@ -249,13 +249,13 @@ const allTools: BaseTool[] = [
   { name: "Java", url: "/java", type: "FMT" },
   { name: "Lua", url: "/lua", type: "FMT" },
   { name: "Python", url: "/python", type: "FMT" },
-  { name: "Python Ruff", url: "/python/ruff", type: "FMT" },
+  { name: "Python Ruff", url: "/python-ruff", type: "FMT" },
   { name: "Markdown", url: "/markdown", type: "FMT" },
   { name: "C#", url: "/csharp", type: "FMT" },
   { name: "C", url: "/c", type: "FMT" },
   { name: "C++", url: "/cpp", type: "FMT" },
   { name: "PHP", url: "/php", type: "FMT" },
-  { name: "PHP Mago", url: "/php/mago", type: "FMT" },
+  { name: "PHP Mago", url: "/php-mago", type: "FMT" },
   { name: "Proto", url: "/proto", type: "FMT" },
   { name: "Zig", url: "/zig", type: "FMT" },
 ];
@@ -287,7 +287,12 @@ const getRelatedTools = () => {
       const tool = allTools.find(t => t.url === `/${lang}`);
       if (tool) {
         const contextualReason = relationship.contextualReasons
-          ?.[lang.replace("python/", "python/ruff")];
+          ?.[
+            lang.replace("python/ruff", "python-ruff").replace(
+              "php/mago",
+              "php-mago",
+            )
+          ];
         return {
           name: tool.name,
           url: tool.url,
@@ -324,7 +329,7 @@ const getMixedRecommendations = () => {
   variants.slice(0, 3).forEach(variant => {
     allRecommendations.push({
       name: variant.h1,
-      url: `/${currentLanguage}/${variant.slug}`,
+      url: `/${currentLanguage}-${variant.slug}`,
       type: "VAR",
       reason: "Specialized tool",
       description: variant.description.split(".")[0] + ".",
@@ -357,7 +362,7 @@ const getMixedRecommendations = () => {
       if (allRecommendations.length < 6 && i < remainingVariants.length) {
         allRecommendations.push({
           name: remainingVariants[i].h1,
-          url: `/${currentLanguage}/${remainingVariants[i].slug}`,
+          url: `/${currentLanguage}-${remainingVariants[i].slug}`,
           type: "VAR",
           reason: "Specialized tool",
           description: remainingVariants[i].description.split(".")[0] + ".",
@@ -415,7 +420,7 @@ const showSection = currentLanguage && recommendations.length > 0;
 
 const currentLanguageName = currentLanguage
   ? currentLanguage.charAt(0).toUpperCase()
-    + currentLanguage.slice(1).replace("/", " ")
+    + currentLanguage.slice(1).replace("-", " ")
   : "";
 ---
 
@@ -475,7 +480,7 @@ const currentLanguageName = currentLanguage
           const isCurrentLanguage = tool.url === `/${currentLanguage}`;
           const isVariant = tool.category === "variant";
           const actionUrl = isCurrentLanguage
-            ? (minify ? tool.url : `/minify${tool.url}`)
+            ? (minify ? `/minify${tool.url}` : tool.url)
             : (minify ? `/minify${tool.url}` : tool.url);
 
           return (
@@ -565,7 +570,7 @@ const currentLanguageName = currentLanguage
       <div class="mt-8 border-2 border-foreground bg-card p-6">
         <div class="flex items-center justify-between">
           <a
-            href="/#more-tools"
+            href="#more-tools"
             class="group inline-flex items-center gap-3 text-sm font-mono font-bold uppercase tracking-wider text-foreground hover:text-primary transition-colors"
           >
             <span

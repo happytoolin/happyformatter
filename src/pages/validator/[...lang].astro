@@ -2,6 +2,7 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
+import LeapOCR from "@/components/leapocr/LeapOCR.astro";
 import Formatter from "@/components/playground/Formatter";
 import { LANGUAGES } from "@/lib/languages";
 import type { GetStaticPaths } from "astro";
@@ -21,6 +22,24 @@ export const getStaticPaths: GetStaticPaths = (async () => {
     });
   });
 
+  // Add paths for hyphenated variants
+  const { getLanguageVariants } = await import("@/lib/seo-variants");
+
+  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
+    const variants = getLanguageVariants(langId);
+
+    variants.forEach(variant => {
+      paths.push({
+        params: { lang: `${langId}-${variant.slug}` },
+        props: {
+          language: langId,
+          languageConfig: langConfig,
+          lang: `${langId}-${variant.slug}`,
+        },
+      });
+    });
+  }
+
   return paths;
 }) satisfies GetStaticPaths;
 
@@ -32,25 +51,58 @@ interface Props {
 
 const { language, languageConfig, lang: _lang } = Astro.props;
 
+// Parse the lang parameter to detect hyphenated variants
+const langParam = _lang;
+const hyphenatedParts = langParam ? langParam.split("-") : [];
+let actualLanguage = language;
+let variant = null;
+
+if (hyphenatedParts.length >= 2) {
+  // This might be a hyphenated variant like "javascript-biome"
+  const potentialBaseLanguage = hyphenatedParts[0];
+  const potentialVariant = hyphenatedParts[1];
+
+  // Check if the base language exists and the variant is valid for it
+  if (LANGUAGES[potentialBaseLanguage]) {
+    const { getLanguageVariant } = await import("@/lib/seo-variants");
+    const variantData = getLanguageVariant(
+      potentialBaseLanguage,
+      potentialVariant,
+    );
+
+    if (variantData) {
+      actualLanguage = potentialBaseLanguage;
+      variant = potentialVariant;
+    }
+  }
+}
+
+const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+
 // Safety checks
-if (!language || !languageConfig) {
+if (!actualLanguage || !actualLanguageConfig) {
   throw new Error(
-    `Language or languageConfig is undefined. Language: ${language}`,
+    `Language or languageConfig is undefined. Language: ${actualLanguage}`,
   );
 }
 ---
 
 <Layout
-  title={`${languageConfig.name} Validator - Validate ${languageConfig.name} Syntax Online`}
-  description={`Validate ${languageConfig.name} syntax and structure. Instant validation with detailed error reporting and syntax checking.`}
-  language={language}
+  title={`${actualLanguageConfig.name} ${
+    variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""
+  }Validator - Validate ${actualLanguageConfig.name} Syntax Online`}
+  description={`Validate ${actualLanguageConfig.name} syntax and structure${
+    variant ? ` with ${variant}` : ""
+  }. Instant validation with detailed error reporting and syntax checking.`}
+  language={actualLanguage}
   minify={false}
 >
   <div class="container mx-auto px-4 py-6">
     <div class="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-6">
       <div class="flex items-center gap-3 mb-2">
         <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
-          {languageConfig.name} Validator
+          {actualLanguageConfig.name}
+          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Validator
         </h1>
         <span
           class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 text-sm font-mono rounded-full"
@@ -59,15 +111,17 @@ if (!language || !languageConfig) {
         </span>
       </div>
       <p class="text-muted-foreground leading-relaxed">
-        Validate your {languageConfig.name} code for syntax errors and
-        structural issues. Get detailed error reports and suggestions.
+        Validate your {actualLanguageConfig.name}
+        code{variant ? ` with ${variant}` : ""} for syntax errors and structural
+        issues. Get detailed error reports and suggestions.
       </p>
       <div class="mt-4 flex items-center gap-2">
         <a
-          href={`/${language}`}
+          href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
           class="text-primary hover:text-primary/80 underline text-sm"
         >
-          ← Back to {languageConfig.name} Tool
+          ← Back to {actualLanguageConfig.name}
+          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Tool
         </a>
       </div>
     </div>
@@ -76,8 +130,9 @@ if (!language || !languageConfig) {
   <Formatter
     client:load
     minifier={false}
-    language={language}
+    language={actualLanguage}
   />
-  <Info language={language} />
-  <FAQ language={language} client:idle />
+  <LeapOCR />
+  <Info language={actualLanguage} />
+  <FAQ language={actualLanguage} client:idle />
 </Layout>

@@ -108,6 +108,21 @@ export const languageVariants: Record<string, LanguageVariants> = {
       ],
       h1: "JavaScript Validator",
     },
+    "biome": {
+      slug: "biome",
+      title: "JavaScript Biome Formatter - Format JS with Biome Tool",
+      description:
+        "JavaScript Biome formatter to format code using Biome's fast formatter. Professional JavaScript formatting with Biome.",
+      keywords: [
+        "javascript biome",
+        "biome formatter",
+        "biome js formatter",
+        "javascript biome tool",
+        "format javascript biome",
+        "biome code formatter",
+      ],
+      h1: "JavaScript Biome Formatter",
+    },
   },
 
   typescript: {
@@ -182,6 +197,21 @@ export const languageVariants: Record<string, LanguageVariants> = {
       ],
       h1: "TypeScript Beautifier",
     },
+    "biome": {
+      slug: "biome",
+      title: "TypeScript Biome Formatter - Format TS with Biome Tool",
+      description:
+        "TypeScript Biome formatter to format code using Biome's fast formatter. Professional TypeScript formatting with Biome.",
+      keywords: [
+        "typescript biome",
+        "biome formatter",
+        "biome ts formatter",
+        "typescript biome tool",
+        "format typescript biome",
+        "biome code formatter",
+      ],
+      h1: "TypeScript Biome Formatter",
+    },
   },
 
   python: {
@@ -254,6 +284,21 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "pep8 code formatter",
       ],
       h1: "PEP 8 Python Formatter",
+    },
+    "ruff": {
+      slug: "ruff",
+      title: "Python Ruff Formatter - Format Python with Ruff Tool",
+      description:
+        "Python Ruff formatter to format code using Ruff's fast formatter. Professional Python formatting with Ruff.",
+      keywords: [
+        "python ruff",
+        "ruff formatter",
+        "ruff python formatter",
+        "python ruff tool",
+        "format python ruff",
+        "ruff code formatter",
+      ],
+      h1: "Python Ruff Formatter",
     },
   },
 
@@ -1195,6 +1240,20 @@ export const languageVariants: Record<string, LanguageVariants> = {
       ],
       h1: "PHP Beautifier",
     },
+    "mago": {
+      slug: "mago",
+      title: "PHP Mago Formatter - Format PHP with Mago Tool",
+      description: "PHP Mago formatter to format code using Mago's formatter. Professional PHP formatting with Mago.",
+      keywords: [
+        "php mago",
+        "mago formatter",
+        "mago php formatter",
+        "php mago tool",
+        "format php mago",
+        "mago code formatter",
+      ],
+      h1: "PHP Mago Formatter",
+    },
   },
 
   proto: {
@@ -1425,212 +1484,6 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "zig code formatter",
       ],
       h1: "Zig fmt Online",
-    },
-  },
-
-  // Special tool variants
-  "javascript-biome": {
-    "free": {
-      slug: "free",
-      title: "Free JavaScript Biome Formatter - Format JS with Biome Online Free",
-      description:
-        "Free JavaScript Biome formatter tool. Format JavaScript code using Biome online at no cost. No registration required.",
-      keywords: [
-        "free javascript biome formatter",
-        "free js biome formatter",
-        "javascript biome free",
-        "biome formatter free",
-        "no cost javascript biome",
-        "free online biome formatter",
-      ],
-      h1: "Free JavaScript Biome Formatter",
-    },
-    "online": {
-      slug: "online",
-      title: "Online JavaScript Biome Formatter - Format JS with Biome",
-      description:
-        "Online JavaScript Biome formatter that works directly in your browser. Format JavaScript code using Biome standards.",
-      keywords: [
-        "online javascript biome formatter",
-        "javascript biome online",
-        "browser js biome formatter",
-        "biome online tool",
-        "format javascript biome",
-        "js biome online",
-      ],
-      h1: "Online JavaScript Biome Formatter",
-    },
-    "biome": {
-      slug: "biome",
-      title: "JavaScript Biome Formatter - Format JS with Biome Tool",
-      description:
-        "JavaScript Biome formatter to format code using Biome's fast formatter. Professional JavaScript formatting with Biome.",
-      keywords: [
-        "javascript biome",
-        "biome formatter",
-        "biome js formatter",
-        "javascript biome tool",
-        "format javascript biome",
-        "biome code formatter",
-      ],
-      h1: "JavaScript Biome Formatter",
-    },
-  },
-
-  "typescript-biome": {
-    "free": {
-      slug: "free",
-      title: "Free TypeScript Biome Formatter - Format TS with Biome Online Free",
-      description:
-        "Free TypeScript Biome formatter tool. Format TypeScript code using Biome online at no cost. No registration required.",
-      keywords: [
-        "free typescript biome formatter",
-        "free ts biome formatter",
-        "typescript biome free",
-        "biome formatter free",
-        "no cost typescript biome",
-        "free online biome ts formatter",
-      ],
-      h1: "Free TypeScript Biome Formatter",
-    },
-    "online": {
-      slug: "online",
-      title: "Online TypeScript Biome Formatter - Format TS with Biome",
-      description:
-        "Online TypeScript Biome formatter that works directly in your browser. Format TypeScript code using Biome standards.",
-      keywords: [
-        "online typescript biome formatter",
-        "typescript biome online",
-        "browser ts biome formatter",
-        "biome ts online",
-        "format typescript biome",
-        "ts biome online",
-      ],
-      h1: "Online TypeScript Biome Formatter",
-    },
-    "biome": {
-      slug: "biome",
-      title: "TypeScript Biome Formatter - Format TS with Biome Tool",
-      description:
-        "TypeScript Biome formatter to format code using Biome's fast formatter. Professional TypeScript formatting with Biome.",
-      keywords: [
-        "typescript biome",
-        "biome formatter",
-        "biome ts formatter",
-        "typescript biome tool",
-        "format typescript biome",
-        "biome code formatter",
-      ],
-      h1: "TypeScript Biome Formatter",
-    },
-  },
-
-  "php-mago": {
-    "free": {
-      slug: "free",
-      title: "Free PHP Mago Formatter - Format PHP with Mago Online Free",
-      description:
-        "Free PHP Mago formatter tool. Format PHP code using Mago online at no cost. No registration required.",
-      keywords: [
-        "free php mago formatter",
-        "free mago formatter",
-        "php mago free",
-        "mago formatter free",
-        "no cost php mago",
-        "free online mago formatter",
-      ],
-      h1: "Free PHP Mago Formatter",
-    },
-    "online": {
-      slug: "online",
-      title: "Online PHP Mago Formatter - Format PHP with Mago",
-      description:
-        "Online PHP Mago formatter that works directly in your browser. Format PHP code using Mago standards.",
-      keywords: [
-        "online php mago formatter",
-        "php mago online",
-        "browser mago formatter",
-        "mago php online",
-        "format php mago",
-        "mago formatter online",
-      ],
-      h1: "Online PHP Mago Formatter",
-    },
-    "mago": {
-      slug: "mago",
-      title: "PHP Mago Formatter - Format PHP with Mago Tool",
-      description: "PHP Mago formatter to format code using Mago's formatter. Professional PHP formatting with Mago.",
-      keywords: [
-        "php mago",
-        "mago formatter",
-        "mago php formatter",
-        "php mago tool",
-        "format php mago",
-        "mago code formatter",
-      ],
-      h1: "PHP Mago Formatter",
-    },
-  },
-
-  "python-ruff": {
-    "free": {
-      slug: "free",
-      title: "Free Python Ruff Formatter - Format Python with Ruff Online Free",
-      description:
-        "Free Python Ruff formatter tool. Format Python code using Ruff online at no cost. No registration required.",
-      keywords: [
-        "free python ruff formatter",
-        "free ruff formatter",
-        "python ruff free",
-        "ruff formatter free",
-        "no cost python ruff",
-        "free online ruff formatter",
-      ],
-      h1: "Free Python Ruff Formatter",
-    },
-    "online": {
-      slug: "online",
-      title: "Online Python Ruff Formatter - Format Python with Ruff",
-      description:
-        "Online Python Ruff formatter that works directly in your browser. Format Python code using Ruff standards.",
-      keywords: [
-        "online python ruff formatter",
-        "python ruff online",
-        "browser ruff formatter",
-        "ruff python online",
-        "format python ruff",
-        "ruff formatter online",
-      ],
-      h1: "Online Python Ruff Formatter",
-    },
-    "ruff": {
-      slug: "ruff",
-      title: "Python Ruff Formatter - Format Python with Ruff Tool",
-      description:
-        "Python Ruff formatter to format code using Ruff's fast formatter. Professional Python formatting with Ruff.",
-      keywords: [
-        "python ruff",
-        "ruff formatter",
-        "ruff python formatter",
-        "python ruff tool",
-        "format python ruff",
-        "ruff code formatter",
-      ],
-      h1: "Python Ruff Formatter",
-    },
-    "linter": {
-      slug: "linter",
-      title: "Python Ruff Linter - Lint and Format Python Code",
-      description: "Python Ruff linter to lint and format Python code. Fast Python linting and formatting with Ruff.",
-      keywords: [
-        "python ruff linter",
-        "ruff linter",
-        "python linter",
-        "ruff lint tool",
-        "format lint python",
-        "ruff lint formatter",
-      ],
-      h1: "Python Ruff Linter",
     },
   },
 };

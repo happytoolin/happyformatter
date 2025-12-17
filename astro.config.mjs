@@ -16,7 +16,9 @@ export default defineConfig({
   site: "https://happyformatter.com",
 
   integrations: [
-    sitemap(),
+    sitemap({
+      xslURL: "/sitemap.xsl",
+    }),
     react(),
     playformCompress(),
     simpleStackQuery(),
