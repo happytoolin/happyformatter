@@ -4,16 +4,43 @@ import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import { getLanguageSEOData } from "@/lib/seo-utils";
+import { getLanguageVariant, isVariantPath } from "@/lib/seo-variants";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = (async () => {
-  const paths = Object.entries(LANGUAGES).map(([langId, langConfig]) => ({
-    params: { lang: langId },
-    props: {
-      languageConfig: langConfig,
-      language: langId,
-    },
-  }));
+  const paths = [];
+
+  // Add main language pages (single segment)
+  Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
+    paths.push({
+      params: { lang: langId },
+      props: {
+        languageConfig: langConfig,
+        language: langId,
+        variant: null,
+      },
+    });
+  });
+
+  // Add variant pages (two segments)
+  const { getLanguageVariants } = await import("@/lib/seo-variants");
+
+  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
+    const variants = getLanguageVariants(langId);
+
+    variants.forEach(variant => {
+      paths.push({
+        params: { lang: `${langId}/${variant.slug}` },
+        props: {
+          languageConfig: langConfig,
+          language: langId,
+          variant: variant.slug,
+          variantData: variant,
+        },
+      });
+    });
+  }
 
   return paths;
 }) satisfies GetStaticPaths;
@@ -21,22 +48,98 @@ export const getStaticPaths: GetStaticPaths = (async () => {
 interface Props {
   languageConfig: LanguageConfig;
   language: string;
+  variant?: string | null;
+  variantData?: any;
 }
 
-const { language, languageConfig } = Astro.props;
+const { language, languageConfig, variant, variantData } = Astro.props;
+
+// Parse the lang parameter to detect variant
+const langParam = Astro.props.lang;
+const pathSegments = langParam ? langParam.split("/") : [];
+const detectedVariant = pathSegments.length > 1 ? pathSegments[1] : null;
+
+// Safety checks
+if (!language || !languageConfig) {
+  throw new Error(
+    `Language or languageConfig is undefined. Language: ${language}, Path: ${
+      pathSegments.join("/")
+    }`,
+  );
+}
+
+// Use detected variant or provided variant
+const currentVariant = variant || detectedVariant;
+const isVariant = currentVariant && variantData;
+const canonicalPath = isVariant
+  ? `/${language}/${currentVariant}`
+  : `/${language}`;
+const canonicalURL = new URL(canonicalPath, Astro.site);
+
+// Generate SEO data
+let seoTitle, seoDescription, seoKeywords, seoCategory;
+
+if (isVariant && variantData) {
+  // Use variant-specific SEO data
+  seoTitle = variantData.title;
+  seoDescription = variantData.description;
+  seoKeywords = variantData.keywords.join(", ");
+  seoCategory = languageConfig.category || "Developer Tool, Technology";
+} else {
+  // Use standard language SEO data
+  const seoData = getLanguageSEOData(language, languageConfig.minify);
+  seoTitle = seoData.title;
+  seoDescription = seoData.description;
+  seoKeywords = seoData.keywords;
+  seoCategory = seoData.category;
+}
 ---
 
 <Layout
-  title={languageConfig.title}
-  description={languageConfig.description}
+  title={seoTitle}
+  description={seoDescription}
   language={language}
   minify={languageConfig.minify}
+  keywords={seoKeywords}
+  category={seoCategory}
+  currentVariant={currentVariant}
 >
+  {/* Custom heading for variant pages */}
+  {isVariant && (
+    <div class="container mx-auto px-4 py-6">
+      <div class="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-6 mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+            {variantData.h1}
+          </h1>
+          <span
+            class="px-3 py-1 bg-primary text-primary-foreground text-sm font-mono rounded-full"
+          >
+            {language.charAt(0).toUpperCase() + language.slice(1)}
+          </span>
+        </div>
+        <p class="text-muted-foreground leading-relaxed">
+          {variantData.description}
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <a
+            href={`/${language}`}
+            class="text-primary hover:text-primary/80 underline text-sm"
+          >
+            ← Back to {language.charAt(0).toUpperCase() + language.slice(1)}
+            Formatter
+          </a>
+        </div>
+      </div>
+    </div>
+  )}
+
   <Formatter
     client:load
     minifier={languageConfig.minify}
     language={language}
   />
+
   <Info language={language} />
   <FAQ language={language} client:idle />
 </Layout>

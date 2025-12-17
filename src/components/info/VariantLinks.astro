@@ -1,0 +1,86 @@
+---
+import { getLanguageVariants } from "@/lib/seo-variants";
+
+type Props = {
+  currentLanguage: string;
+  currentVariant?: string | null;
+};
+
+const { currentLanguage, currentVariant = null } = Astro.props;
+
+// Safety check
+if (!currentLanguage) {
+  // Don't render anything if currentLanguage is not provided
+}
+
+const variants = getLanguageVariants(currentLanguage);
+
+// Only show if we have variants and not currently on a variant
+if (variants.length === 0 || currentVariant) {
+  // Don't show anything on variant pages
+}
+
+const currentLanguageName = currentLanguage
+  ? currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)
+  : "";
+---
+
+{variants.length > 0 && !currentVariant && (
+  <section class="py-6 px-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-y border-blue-200 dark:border-blue-800">
+    <div class="container mx-auto max-w-4xl">
+      <div class="text-center mb-6">
+        <h2 class="text-xl font-display font-bold text-foreground mb-2">
+          {currentLanguageName} Formatter Variants
+        </h2>
+        <p class="text-muted-foreground">
+          Looking for specific formatting features? Try these specialized
+          {currentLanguageName} tools:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {variants.map((variant) => (
+          <a
+            href={`/${currentLanguage}/${variant.slug}`}
+            class="group bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:border-primary hover:shadow-md transition-all duration-200 flex items-center gap-3"
+          >
+            <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-primary"
+              >
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="font-semibold text-foreground group-hover:text-primary transition-colors text-sm">
+                  {variant.h1}
+                </h3>
+              </div>
+              <p class="text-xs text-muted-foreground line-clamp-2">
+                {variant.description.split(".")[0]}.
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-6 text-center">
+        <p class="text-xs text-muted-foreground">
+          Each variant is optimized for specific use cases like privacy, speed,
+          or formatting standards.
+        </p>
+      </div>
+    </div>
+  </section>
+)}
