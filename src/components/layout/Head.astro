@@ -1,10 +1,11 @@
 ---
-import { ViewTransitions } from "astro:transitions";
-
 type Props = {
   title: string;
   description: string;
   image?: string;
+  keywords?: string;
+  author?: string;
+  category?: string;
 };
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -13,6 +14,10 @@ const {
   title,
   description,
   image = "/images/og.png",
+  keywords =
+    "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, code validator, code linter, programming tools, developer tools",
+  author = "HappyFormatter",
+  category = "Developer Tool, Technology, Development Tools, Programming",
 } = Astro.props;
 
 const ogImageURL = new URL(image, Astro.site);
@@ -38,7 +43,13 @@ const ogImageURL = new URL(image, Astro.site);
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="author" content={author} />
+<meta name="category" content={category} />
+<meta name="classification" content="Developer Tool" />
 <meta name="theme-color" content="#FF4D00" />
+
+<link rel="alternate" hreflang="en" href={canonicalURL} />
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
@@ -49,7 +60,7 @@ const ogImageURL = new URL(image, Astro.site);
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={ogImageURL} />
-<ViewTransitions />
+<meta property="twitter:site" content="@happyformatter" />
 <script
   type="text/partytown"
   async

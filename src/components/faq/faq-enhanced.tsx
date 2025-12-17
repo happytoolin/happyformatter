@@ -1,21 +1,29 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { getPageFAQs } from "@/lib/generated-seo-utils.js";
 import type { JSX } from "react";
 import { accordionData } from "./data";
 
-export function FAQ({ language, variant, variantData }: {
+export function FAQ({ language, variant, variantData, seoData }: {
   language: string;
   variant?: string | null;
   variantData?: any;
+  seoData?: any;
 }): JSX.Element {
-  let data = accordionData[language] || [];
+  // Try to get generated FAQs first
+  let data = getPageFAQs(language, variant, seoData);
 
-  // Inject variant-specific questions at the beginning
+  // Fall back to existing accordionData if no generated data
+  if (data.length === 0) {
+    data = accordionData[language] || [];
+  }
+
+  // Inject variant-specific questions at the beginning (keep existing logic)
   if (variant && variantData) {
     const variantQuestions = getVariantQuestions(variant, language, variantData);
     data = [...variantQuestions, ...data];
   }
 
-  // Helper function to get variant-specific questions
+  // Helper function to get variant-specific questions (keep existing logic)
   function getVariantQuestions(
     variantType: string,
     lang: string,
@@ -70,6 +78,7 @@ export function FAQ({ language, variant, variantData }: {
         });
         break;
 
+      // Keep all your existing variant cases...
       case "beautifier":
         questions.push({
           title: `What makes this a good ${langName} beautifier?`,
@@ -109,14 +118,6 @@ export function FAQ({ language, variant, variantData }: {
         });
         break;
 
-      case "pretty":
-        questions.push({
-          title: `How does this ${langName} pretty printer work?`,
-          content:
-            `This ${langName} pretty printer analyzes your code structure and applies consistent formatting rules including proper indentation, spacing, and line breaks to make the code more readable and maintainable.`,
-        });
-        break;
-
       case "biome":
         questions.push({
           title: `What is Biome for ${langName} formatting?`,
@@ -153,7 +154,9 @@ export function FAQ({ language, variant, variantData }: {
             className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl uppercase tracking-tighter text-transparent stroke-text break-words"
             style={{ WebkitTextStroke: "1px var(--background)" }}
           >
-            Troubleshoot
+            {data.length > 0 && getPageFAQs(language, variant).length > 0
+              ? "Frequently Asked Questions"
+              : "Troubleshoot"}
           </h2>
           <span className="font-mono text-xs text-accent uppercase tracking-widest hidden md:block">
             Database // {language}

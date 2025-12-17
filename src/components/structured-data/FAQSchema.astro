@@ -1,0 +1,37 @@
+---
+import { accordionData } from "@/components/faq/data.ts";
+
+interface Props {
+  language: string;
+  url?: URL | string;
+}
+
+const { language, url = Astro.url } = Astro.props;
+
+const faqData = accordionData[language] || [];
+
+if (faqData.length === 0) return;
+const mainEntity = faqData.slice(0, 3).map(item => ({
+  "@type": "Question",
+  "name": item.title,
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": item.content,
+  },
+}));
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "name": `Frequently Asked Questions - ${
+    language.charAt(0).toUpperCase() + language.slice(1)
+  } Code Formatter`,
+  "description":
+    `Common questions and answers about ${language} code formatting, privacy, and features on HappyFormatter`,
+  "url": typeof url === "string" ? url : url.href,
+  "mainEntity": mainEntity,
+};
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(schema)}>
+</script>

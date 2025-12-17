@@ -46,7 +46,10 @@ class LanguageLoaderManager {
   }
 
   isLanguageSupported(language: string): boolean {
-    return this.supportedLanguages.has(language);
+    // Handle hyphenated variants by checking the base language
+    const hyphenatedParts = language.split("-");
+    const baseLanguage = hyphenatedParts[0];
+    return this.supportedLanguages.has(language) || this.supportedLanguages.has(baseLanguage);
   }
 
   async getLanguageExtension(language: string): Promise<Extension | null> {
@@ -95,11 +98,38 @@ class LanguageLoaderManager {
     language: string,
   ): Promise<Extension | null> {
     try {
-      switch (language) {
+      // Handle hyphenated variants by mapping to base language
+      const hyphenatedParts = language.split("-");
+      const baseLanguage = hyphenatedParts[0];
+      const variant = hyphenatedParts[1];
+
+      // Map hyphenated variants to their base languages with specific configs
+      if (variant) {
+        switch (baseLanguage + "-" + variant) {
+          case "javascript-biome": {
+            const { javascript } = await import("@codemirror/lang-javascript");
+            return javascript({ typescript: false });
+          }
+          case "typescript-biome": {
+            const { javascript } = await import("@codemirror/lang-javascript");
+            return javascript({ typescript: true });
+          }
+          case "python-ruff": {
+            const { python } = await import("@codemirror/lang-python");
+            return python();
+          }
+          case "php-mago": {
+            const { php } = await import("@codemirror/lang-php");
+            return php();
+          }
+        }
+      }
+
+      switch (baseLanguage || language) {
         case "javascript":
         case "typescript": {
           const { javascript } = await import("@codemirror/lang-javascript");
-          return javascript({ typescript: language === "typescript" });
+          return javascript({ typescript: (baseLanguage || language) === "typescript" });
         }
 
         case "json": {
@@ -191,26 +221,6 @@ class LanguageLoaderManager {
           const { StreamLanguage } = await import("@codemirror/language");
           const { csharp } = await import("@codemirror/legacy-modes/mode/clike");
           return StreamLanguage.define(csharp);
-        }
-
-        case "javascript-biome": {
-          const { javascript } = await import("@codemirror/lang-javascript");
-          return javascript({ typescript: false });
-        }
-
-        case "typescript-biome": {
-          const { javascript } = await import("@codemirror/lang-javascript");
-          return javascript({ typescript: true });
-        }
-
-        case "python-ruff": {
-          const { python } = await import("@codemirror/lang-python");
-          return python();
-        }
-
-        case "php-mago": {
-          const { php } = await import("@codemirror/lang-php");
-          return php();
         }
 
         default:

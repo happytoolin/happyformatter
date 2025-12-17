@@ -1,0 +1,40 @@
+---
+interface Props {
+  url?: URL | string;
+  name?: string;
+  description?: string;
+  language?: string;
+}
+
+const {
+  url = Astro.url,
+  name = "HappyFormatter",
+  description =
+    "Privacy-focused code formatter and minifier for 26+ programming languages",
+  language,
+} = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": language
+    ? `${language.charAt(0).toUpperCase() + language.slice(1)} Code Formatter`
+    : name,
+  "description": language
+    ? `Format and minify ${
+      language.charAt(0).toUpperCase() + language.slice(1)
+    } code online with privacy-focused processing. No server transmission.`
+    : description,
+  "url": typeof url === "string" ? url : url.href,
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any browser with WebAssembly support",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+  },
+};
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(schema)}>
+</script>

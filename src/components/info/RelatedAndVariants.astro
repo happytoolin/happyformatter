@@ -1,0 +1,588 @@
+---
+import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import { getLanguageVariants } from "@/lib/seo-variants";
+
+interface LanguageRelation {
+  related: string[];
+  features: string[];
+  contextualReasons: Record<string, string>;
+}
+
+interface BaseTool {
+  name: string;
+  url: string;
+  type: string;
+}
+
+interface Tool extends BaseTool {
+  reason?: string;
+  description?: string;
+  category?: string;
+}
+
+const languageRelationships: Record<string, LanguageRelation> = {
+  javascript: {
+    related: ["typescript", "json", "html", "css"],
+    features: ["formatter", "minifier", "biome-formatter"],
+    contextualReasons: {
+      typescript: "Try TypeScript with Biome formatter",
+      json: "Format and validate JSON data",
+      html: "Validate and beautify HTML markup",
+      css: "Minify and style CSS code",
+    },
+  },
+  typescript: {
+    related: ["javascript", "json", "html"],
+    features: ["formatter", "minifier", "biome-formatter"],
+    contextualReasons: {
+      javascript: "Format JavaScript with Biome",
+      json: "Compress and validate JSON files",
+      html: "Clean and format HTML structure",
+    },
+  },
+  html: {
+    related: ["css", "javascript", "markdown", "xml"],
+    features: ["formatter", "minifier", "validator", "beautifier"],
+    contextualReasons: {
+      css: "Style and compress CSS code",
+      javascript: "Enhanced JavaScript formatting",
+      markdown: "Format markdown documents",
+      xml: "Structure and validate XML data",
+    },
+  },
+  css: {
+    related: ["scss", "html", "javascript"],
+    features: ["formatter", "minifier", "beautifier"],
+    contextualReasons: {
+      scss: "Advanced CSS preprocessing",
+      html: "Comprehensive HTML formatting",
+      javascript: "Modern JavaScript tooling",
+    },
+  },
+  scss: {
+    related: ["css", "html"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      css: "Advanced minification and styling support",
+      html: "Full validation and markup enhancement",
+    },
+  },
+  json: {
+    related: ["yaml", "xml", "javascript", "typescript"],
+    features: ["formatter", "minifier", "validator", "pretty-print"],
+    contextualReasons: {
+      yaml: "Configuration data formatting",
+      xml: "Structured data formatting",
+      javascript: "JSON in JavaScript projects",
+      typescript: "TypeScript configuration",
+    },
+  },
+  yaml: {
+    related: ["json", "xml"],
+    features: ["formatter", "validator", "pretty-print"],
+    contextualReasons: {
+      json: "Data file formatting",
+      xml: "Configuration file formatting",
+    },
+  },
+  xml: {
+    related: ["json", "html"],
+    features: ["formatter", "validator", "beautifier"],
+    contextualReasons: {
+      json: "Markup and data formatting",
+      html: "Document structure formatting",
+    },
+  },
+  python: {
+    related: ["python-ruff", "json", "yaml"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      "python-ruff": "Fast Python formatting",
+      json: "Python data file handling",
+      yaml: "Python configuration files",
+    },
+  },
+  "python-ruff": {
+    related: ["python", "json"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      python: "Standard Python formatting",
+      json: "Data file processing",
+    },
+  },
+  go: {
+    related: ["c", "cpp", "json"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      c: "Format and optimize your code",
+      cpp: "Format and optimize your code",
+      json: "Also has validator and minifier",
+    },
+  },
+  c: {
+    related: ["cpp", "csharp", "go"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      cpp: "Format and optimize your code",
+      csharp: "Format and optimize your code",
+      go: "Format and optimize your code",
+    },
+  },
+  cpp: {
+    related: ["c", "csharp", "go"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      c: "Format and optimize your code",
+      csharp: "Format and optimize your code",
+      go: "Format and optimize your code",
+    },
+  },
+  csharp: {
+    related: ["c", "cpp", "json"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      c: "Format and optimize your code",
+      cpp: "Format and optimize your code",
+      json: "Also has validator and minifier",
+    },
+  },
+  java: {
+    related: ["json", "xml"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      json: "Also has validator and minifier",
+      xml: "Validate and enhance your markup",
+    },
+  },
+  php: {
+    related: ["php-mago", "json", "html", "xml"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      "php-mago": "Alternative formatting option",
+      json: "Also has validator and minifier",
+      html: "Validate and enhance your markup",
+      xml: "Validate and enhance your markup",
+    },
+  },
+  "php-mago": {
+    related: ["php", "json"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      php: "Standard formatter available",
+      json: "Also has validator and minifier",
+    },
+  },
+  rust: {
+    related: ["c", "cpp", "go"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      c: "Format and optimize your code",
+      cpp: "Format and optimize your code",
+      go: "Format and optimize your code",
+    },
+  },
+  sql: {
+    related: ["json", "yaml"],
+    features: ["formatter", "minifier", "beautifier"],
+    contextualReasons: {
+      json: "Also has validator and minifier",
+      yaml: "Also has validator and pretty print",
+    },
+  },
+  dart: {
+    related: ["json", "yaml"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      json: "Also has validator and minifier",
+      yaml: "Also has validator and pretty print",
+    },
+  },
+  lua: {
+    related: ["json", "yaml"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      json: "Also has validator and minifier",
+      yaml: "Also has validator and pretty print",
+    },
+  },
+  markdown: {
+    related: ["html", "xml"],
+    features: ["formatter", "beautifier"],
+    contextualReasons: {
+      html: "Validate and enhance your markup",
+      xml: "Validate and enhance your markup",
+    },
+  },
+  proto: {
+    related: ["json", "yaml"],
+    features: ["formatter", "beautifier"],
+    contextualReasons: {
+      json: "Also has validator and minifier",
+      yaml: "Also has validator and pretty print",
+    },
+  },
+  zig: {
+    related: ["c", "cpp", "go"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      c: "Format and optimize your code",
+      cpp: "Format and optimize your code",
+      go: "Format and optimize your code",
+    },
+  },
+};
+
+const allTools: BaseTool[] = [
+  { name: "HTML", url: "/html", type: "FMT" },
+  { name: "CSS", url: "/css", type: "FMT" },
+  { name: "JavaScript", url: "/javascript", type: "FMT" },
+  { name: "JavaScript Biome", url: "/javascript-biome", type: "FMT" },
+  { name: "TypeScript", url: "/typescript", type: "FMT" },
+  { name: "TypeScript Biome", url: "/typescript-biome", type: "FMT" },
+  { name: "JSON", url: "/json", type: "FMT" },
+  { name: "XML", url: "/xml", type: "FMT" },
+  { name: "YAML", url: "/yaml", type: "FMT" },
+  { name: "SQL", url: "/sql", type: "FMT" },
+  { name: "Go", url: "/go", type: "FMT" },
+  { name: "Dart", url: "/dart", type: "FMT" },
+  { name: "SCSS", url: "/scss", type: "FMT" },
+  { name: "Java", url: "/java", type: "FMT" },
+  { name: "Lua", url: "/lua", type: "FMT" },
+  { name: "Python", url: "/python", type: "FMT" },
+  { name: "Python Ruff", url: "/python-ruff", type: "FMT" },
+  { name: "Markdown", url: "/markdown", type: "FMT" },
+  { name: "C#", url: "/csharp", type: "FMT" },
+  { name: "C", url: "/c", type: "FMT" },
+  { name: "C++", url: "/cpp", type: "FMT" },
+  { name: "PHP", url: "/php", type: "FMT" },
+  { name: "PHP Mago", url: "/php-mago", type: "FMT" },
+  { name: "Proto", url: "/proto", type: "FMT" },
+  { name: "Zig", url: "/zig", type: "FMT" },
+];
+
+type Props = {
+  currentLanguage?: string;
+  currentVariant?: string | null;
+  minify?: boolean;
+};
+
+const {
+  currentLanguage,
+  currentVariant: _currentVariant = null,
+  minify = false,
+} = Astro.props;
+
+// Get language variants for the current language
+const variants = getLanguageVariants(currentLanguage || "");
+
+// Get related tools for the current language
+const getRelatedTools = () => {
+  if (!currentLanguage || !languageRelationships[currentLanguage]) {
+    return [];
+  }
+
+  const relationship = languageRelationships[currentLanguage];
+  const relatedTools = relationship.related
+    .map(lang => {
+      const tool = allTools.find(t => t.url === `/${lang}`);
+      if (tool) {
+        const contextualReason = relationship.contextualReasons
+          ?.[
+            lang.replace("python/ruff", "python-ruff").replace(
+              "php/mago",
+              "php-mago",
+            )
+          ];
+        return {
+          name: tool.name,
+          url: tool.url,
+          type: tool.type,
+          reason: contextualReason || "Related language",
+          description: contextualReason || "Related language",
+        } as Tool;
+      }
+      return null;
+    })
+    .filter((tool): tool is Tool => tool !== null);
+
+  return relatedTools;
+};
+
+// Mix variants and related tools, prioritizing variety
+const getMixedRecommendations = () => {
+  const related = getRelatedTools();
+  const allRecommendations: Tool[] = [];
+
+  // Add up to 3 related tools first
+  related.slice(0, 3).forEach(tool => {
+    allRecommendations.push({
+      name: tool.name,
+      url: tool.url,
+      type: tool.type,
+      reason: tool.reason,
+      description: tool.description,
+      category: "related",
+    });
+  });
+
+  // Add up to 3 variants
+  variants.slice(0, 3).forEach(variant => {
+    allRecommendations.push({
+      name: variant.h1,
+      url: `/${currentLanguage}-${variant.slug}`,
+      type: "VAR",
+      reason: "Specialized tool",
+      description: variant.description.split(".")[0] + ".",
+      category: "variant",
+    });
+  });
+
+  // If we don't have enough recommendations, add more related tools or variants
+  if (allRecommendations.length < 6) {
+    const remainingRelated = related.slice(3);
+    const remainingVariants = variants.slice(3);
+
+    // Alternate between adding more related tools and variants
+    let i = 0;
+    while (
+      allRecommendations.length < 6
+      && i < Math.max(remainingRelated.length, remainingVariants.length)
+    ) {
+      if (i < remainingRelated.length) {
+        const tool = remainingRelated[i];
+        allRecommendations.push({
+          name: tool.name,
+          url: tool.url,
+          type: tool.type,
+          reason: tool.reason,
+          description: tool.description,
+          category: "related",
+        });
+      }
+      if (allRecommendations.length < 6 && i < remainingVariants.length) {
+        allRecommendations.push({
+          name: remainingVariants[i].h1,
+          url: `/${currentLanguage}-${remainingVariants[i].slug}`,
+          type: "VAR",
+          reason: "Specialized tool",
+          description: remainingVariants[i].description.split(".")[0] + ".",
+          category: "variant",
+        });
+      }
+      i++;
+    }
+  }
+
+  // If still not enough, add popular tools
+  if (allRecommendations.length < 6) {
+    const popularTools = [
+      {
+        name: "JSON",
+        url: "/json",
+        type: "FMT",
+        reason: "Popular Choice",
+        description: "Handle data exchange with JSON",
+        category: "fallback",
+      },
+      {
+        name: "JavaScript",
+        url: "/javascript",
+        type: "FMT",
+        reason: "Web Development",
+        description: "Essential for web development",
+        category: "fallback",
+      },
+      {
+        name: "Python",
+        url: "/python",
+        type: "FMT",
+        reason: "Popular Language",
+        description: "Versatile programming language",
+        category: "fallback",
+      },
+    ];
+
+    popularTools.forEach(tool => {
+      if (
+        allRecommendations.length < 6
+        && !allRecommendations.find(r => r.url === tool.url)
+      ) {
+        allRecommendations.push(tool);
+      }
+    });
+  }
+
+  return allRecommendations.slice(0, 6);
+};
+
+const recommendations = getMixedRecommendations();
+const showSection = currentLanguage && recommendations.length > 0;
+
+const currentLanguageName = currentLanguage
+  ? currentLanguage.charAt(0).toUpperCase()
+    + currentLanguage.slice(1).replace("-", " ")
+  : "";
+---
+
+{showSection && (
+  <section
+    class="py-24 bg-background overflow-hidden"
+    aria-labelledby="tools-heading"
+  >
+    <!-- Decorative Grid Lines -->
+    <div class="relative bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] -m-8 p-8">
+    </div>
+
+    <div class="container mx-auto px-4 max-w-6xl">
+      <!-- Header Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-foreground mb-8">
+        <!-- Title Block -->
+        <div class="col-span-12 lg:col-span-4 p-8 border-b-2 lg:border-b-0 lg:border-r-2 border-foreground bg-primary text-primary-foreground">
+          <span
+            class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
+          >
+            Tool Matrix // 002
+          </span>
+          <h2
+            id="tools-heading"
+            class="font-display text-3xl md:text-4xl uppercase leading-[0.9] mb-4"
+          >
+            Tool Variants
+          </h2>
+          <p class="font-serif text-lg leading-relaxed opacity-90">
+            Specialized {currentLanguageName} tools and related formatters
+          </p>
+        </div>
+
+        <!-- Status Block -->
+        <div class="col-span-12 lg:col-span-8 p-8 bg-card border-b-2 lg:border-b-0 border-foreground">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span
+                class="w-3 h-3 bg-green-500 animate-pulse border-2 border-foreground"
+              ></span>
+              <span
+                class="font-mono text-sm font-bold uppercase tracking-wider text-muted-foreground"
+              >
+                Smart Recommendations Active
+              </span>
+            </div>
+            <div class="font-mono text-xs text-muted-foreground">
+              {recommendations.length} Tools Available
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-foreground">
+        {recommendations.map((tool, _index) => {
+          const isCurrentLanguage = tool.url === `/${currentLanguage}`;
+          const isVariant = tool.category === "variant";
+          const actionUrl = isCurrentLanguage
+            ? (minify ? `/minify${tool.url}` : tool.url)
+            : (minify ? `/minify${tool.url}` : tool.url);
+
+          return (
+            <a
+              href={actionUrl}
+              class="group bg-secondary/20 border-r border-b border-foreground p-6 hover:bg-primary/10 transition-colors duration-200 flex items-start gap-4"
+            >
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 border-2 border-foreground bg-background flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200">
+                  {isVariant ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M9 11l3 3L22 4" />
+                      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
+                  ) : (
+                     <LanguageIcon
+                       icon={tool.url.replace(/\//g, "-")}
+                       class="w-6 h-6"
+                     />
+                   )}
+                </div>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-3 border-b border-foreground/20 pb-2">
+                  <h3 class="font-display text-lg font-bold text-foreground group-hover:text-primary transition-colors uppercase">
+                    {tool.name}
+                  </h3>
+                  <span
+                    class={`text-xs font-mono px-2 py-1 border border-foreground ${
+                      isVariant
+                        ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
+                        : "bg-primary/20 text-primary"
+                    }`}
+                  >
+                    {tool.type}
+                  </span>
+                  {isCurrentLanguage && (
+                    <span
+                      class="text-xs font-mono border-2 border-foreground bg-green-500/20 text-green-800 dark:text-green-400 px-2 py-1"
+                    >
+                      {minify ? "Format" : "Minify"}
+                    </span>
+                  )}
+                </div>
+
+                <p class="font-mono text-sm text-muted-foreground mb-2 leading-relaxed">
+                  {tool.reason}
+                </p>
+                {tool.description && tool.description !== tool.reason && (
+                  <p class="text-xs text-muted-foreground mb-4 leading-relaxed font-serif italic">
+                    {tool.description}
+                  </p>
+                )}
+
+                <div class="flex items-center gap-2 text-xs font-mono text-foreground">
+                  <span
+                    class="opacity-60 group-hover:opacity-100 transition-opacity"
+                  >
+                    {isCurrentLanguage
+                      ? (minify ? "Switch to formatter" : "Switch to minifier")
+                      : isVariant
+                      ? "Try variant"
+                      : "Open tool"}
+                  </span>
+                  <span
+                    class="group-hover:translate-x-1 transition-transform inline-block"
+                  >→</span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+      <!-- Footer Navigation -->
+      <div class="mt-8 border-2 border-foreground bg-card p-6">
+        <div class="flex items-center justify-between">
+          <a
+            href="#more-tools"
+            class="group inline-flex items-center gap-3 text-sm font-mono font-bold uppercase tracking-wider text-foreground hover:text-primary transition-colors"
+          >
+            <span
+              class="group-hover:-translate-x-1 transition-transform inline-block"
+            >←</span>
+            <span>View All Tools</span>
+          </a>
+          <div class="font-mono text-xs text-muted-foreground">
+            {allTools.length} Total Formatters Available
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}

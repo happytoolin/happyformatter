@@ -1,19 +1,69 @@
 ---
-import { FAQ } from "@/components/faq/faq";
-import Info from "@/components/info/info.astro";
+import { FAQ } from "@/components/faq/faq-enhanced";
+import Info from "@/components/info/info-enhanced.astro";
 import Layout from "@/components/layout/layout.astro";
+import LeapOCR from "@/components/leapocr/LeapOCR.astro";
 import Formatter from "@/components/playground/Formatter";
+import {
+  generatePageBreadcrumbs,
+  getLayoutSEOData,
+  loadGeneratedSEODataAsync,
+} from "@/lib/generated-seo-utils.js";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import { getLanguageSEOData } from "@/lib/seo-utils";
 import type { GetStaticPaths } from "astro";
 
+// Load SEO data at build time
+const generatedSEOData = await loadGeneratedSEODataAsync();
+
 export const getStaticPaths: GetStaticPaths = (async () => {
-  const paths = Object.entries(LANGUAGES).map(([langId, langConfig]) => ({
-    params: { lang: langId },
-    props: {
-      languageConfig: langConfig,
-      language: langId,
-    },
-  }));
+  const paths: any[] = [];
+
+  // Add main language pages (single segment)
+  Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
+    paths.push({
+      params: { lang: langId },
+      props: {
+        languageConfig: langConfig,
+        language: langId,
+        variant: null,
+        lang: langId,
+      },
+    });
+  });
+
+  // Add variant pages (both hyphenated and path-based)
+  const { getLanguageVariants } = await import("@/lib/seo-variants");
+
+  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
+    const variants = getLanguageVariants(langId);
+
+    variants.forEach(variant => {
+      // Add hyphenated variant paths (e.g., "javascript-biome")
+      paths.push({
+        params: { lang: `${langId}-${variant.slug}` },
+        props: {
+          languageConfig: langConfig,
+          language: langId,
+          variant: variant.slug,
+          variantData: variant,
+          lang: `${langId}-${variant.slug}`,
+        },
+      });
+
+      // Also keep path-based variants for backwards compatibility
+      paths.push({
+        params: { lang: `${langId}/${variant.slug}` },
+        props: {
+          languageConfig: langConfig,
+          language: langId,
+          variant: variant.slug,
+          variantData: variant,
+          lang: `${langId}/${variant.slug}`,
+        },
+      });
+    });
+  }
 
   return paths;
 }) satisfies GetStaticPaths;
@@ -21,22 +71,187 @@ export const getStaticPaths: GetStaticPaths = (async () => {
 interface Props {
   languageConfig: LanguageConfig;
   language: string;
+  variant?: string | null;
+  variantData?: any;
+  lang: string;
 }
 
-const { language, languageConfig } = Astro.props;
+const { language, languageConfig, variant, variantData, lang } = Astro.props;
+
+// Parse the lang parameter to detect variant or hyphenated language
+const langParam = lang;
+const pathSegments = langParam ? langParam.split("/") : [];
+const detectedVariant = pathSegments.length > 1 ? pathSegments[1] : null;
+
+// Check if the first segment is a hyphenated variant (e.g., "javascript-biome")
+const firstSegment = pathSegments[0];
+const hyphenatedParts = firstSegment ? firstSegment.split("-") : [];
+let baseLanguage = firstSegment;
+let hyphenatedVariant = null;
+
+if (hyphenatedParts.length >= 2) {
+  // This might be a hyphenated variant like "javascript-biome"
+  const potentialBaseLanguage = hyphenatedParts[0];
+  const potentialVariant = hyphenatedParts[1];
+
+  // Check if the base language exists and the variant is valid for it
+  if (LANGUAGES[potentialBaseLanguage]) {
+    const { getLanguageVariant } = await import("@/lib/seo-variants");
+    const variantData = getLanguageVariant(
+      potentialBaseLanguage,
+      potentialVariant,
+    );
+
+    if (variantData) {
+      baseLanguage = potentialBaseLanguage;
+      hyphenatedVariant = potentialVariant;
+    }
+  }
+}
+
+// Safety checks
+if (!language || !languageConfig) {
+  throw new Error(
+    `Language or languageConfig is undefined. Language: ${language}, Path: ${
+      pathSegments.join("/")
+    }`,
+  );
+}
+
+// Use detected variant (hyphenated or path-based) or provided variant
+const currentVariant = variant || detectedVariant || hyphenatedVariant;
+const actualLanguage = baseLanguage;
+
+// Get variant data if we have a variant
+let actualVariantData = variantData;
+if (currentVariant && !actualVariantData) {
+  const { getLanguageVariant } = await import("@/lib/seo-variants");
+  actualVariantData = getLanguageVariant(actualLanguage, currentVariant);
+}
+
+const isVariant = currentVariant && actualVariantData;
+const canonicalPath = isVariant
+  ? `/${actualLanguage}-${currentVariant}`
+  : `/${actualLanguage}`;
+
+// Get the actual language config (in case we detected a hyphenated variant)
+const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+
+// Try to get generated SEO data first
+const generatedSEO = getLayoutSEOData(
+  actualLanguage,
+  currentVariant,
+  actualLanguageConfig.minify,
+  generatedSEOData || undefined,
+);
+
+// Fall back to existing SEO logic if no generated data
+const fallbackSEO = {
+  title: getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).title,
+  description:
+    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).description,
+  keywords:
+    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).keywords,
+  category:
+    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).category,
+};
+
+const seoData = generatedSEO || fallbackSEO;
+
+// Try to get generated breadcrumbs
+const generatedBreadcrumbs = generatePageBreadcrumbs(
+  actualLanguage,
+  currentVariant,
+  actualLanguageConfig.minify,
+  generatedSEOData || undefined,
+);
+
+// Generate breadcrumbs with fallback
+const finalBreadcrumbs = generatedBreadcrumbs.length > 0
+  ? generatedBreadcrumbs
+  : [
+    { name: "Home", url: "/" },
+    {
+      name: `${
+        actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)
+      } ${actualLanguageConfig.minify ? "Minifier" : "Formatter"}`,
+      url: `/${actualLanguage}`,
+    },
+    ...(currentVariant
+      ? [{
+        name: actualVariantData?.h1
+          || currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1),
+        url: `/${actualLanguage}-${currentVariant}`,
+      }]
+      : []),
+  ];
 ---
 
 <Layout
-  title={languageConfig.title}
-  description={languageConfig.description}
-  language={language}
-  minify={languageConfig.minify}
+  title={seoData.title}
+  description={seoData.description}
+  language={actualLanguage}
+  minify={actualLanguageConfig.minify}
+  keywords={seoData.keywords}
+  category={seoData.category}
+  currentVariant={currentVariant}
+  breadcrumbs={finalBreadcrumbs}
 >
+  {/* Custom heading for variant pages */}
+  {isVariant && (
+    <div class="container mx-auto px-4 py-6">
+      <div class="bg-linear-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-6 mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+            {actualVariantData?.h1
+              || `${actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)} ${
+                currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1)
+              }`}
+          </h1>
+          <span
+            class="px-3 py-1 bg-primary text-primary-foreground text-sm font-mono rounded-full"
+          >
+            {actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)}
+          </span>
+        </div>
+        <p class="text-muted-foreground leading-relaxed">
+          {actualVariantData?.description
+            || `Format ${actualLanguage} code with ${currentVariant}`}
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <a
+            href={`/${actualLanguage}`}
+            class="text-primary hover:text-primary/80 underline text-sm"
+          >
+            ← Back to
+            {actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)}
+            Formatter
+          </a>
+        </div>
+      </div>
+    </div>
+  )}
+
   <Formatter
     client:load
-    minifier={languageConfig.minify}
-    language={language}
+    minifier={actualLanguageConfig.minify}
+    language={actualLanguage}
   />
-  <Info language={language} />
-  <FAQ language={language} client:idle />
+
+  <LeapOCR />
+
+  <Info
+    language={actualLanguage}
+    variant={currentVariant}
+    variantData={actualVariantData}
+    seoData={generatedSEOData}
+  />
+
+  <FAQ
+    language={actualLanguage}
+    variant={currentVariant}
+    variantData={actualVariantData}
+    seoData={generatedSEOData}
+    client:idle
+  />
 </Layout>

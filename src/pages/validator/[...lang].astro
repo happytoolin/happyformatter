@@ -1,0 +1,138 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import LeapOCR from "@/components/leapocr/LeapOCR.astro";
+import Formatter from "@/components/playground/Formatter";
+import { LANGUAGES } from "@/lib/languages";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = (async () => {
+  const paths: any[] = [];
+
+  // Generate paths for all languages since formatting includes validation
+  Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
+    paths.push({
+      params: { lang: langId },
+      props: {
+        language: langId,
+        languageConfig: langConfig,
+        lang: langId,
+      },
+    });
+  });
+
+  // Add paths for hyphenated variants
+  const { getLanguageVariants } = await import("@/lib/seo-variants");
+
+  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
+    const variants = getLanguageVariants(langId);
+
+    variants.forEach(variant => {
+      paths.push({
+        params: { lang: `${langId}-${variant.slug}` },
+        props: {
+          language: langId,
+          languageConfig: langConfig,
+          lang: `${langId}-${variant.slug}`,
+        },
+      });
+    });
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+interface Props {
+  language: string;
+  languageConfig: any;
+  lang: string;
+}
+
+const { language, languageConfig, lang: _lang } = Astro.props;
+
+// Parse the lang parameter to detect hyphenated variants
+const langParam = _lang;
+const hyphenatedParts = langParam ? langParam.split("-") : [];
+let actualLanguage = language;
+let variant = null;
+
+if (hyphenatedParts.length >= 2) {
+  // This might be a hyphenated variant like "javascript-biome"
+  const potentialBaseLanguage = hyphenatedParts[0];
+  const potentialVariant = hyphenatedParts[1];
+
+  // Check if the base language exists and the variant is valid for it
+  if (LANGUAGES[potentialBaseLanguage]) {
+    const { getLanguageVariant } = await import("@/lib/seo-variants");
+    const variantData = getLanguageVariant(
+      potentialBaseLanguage,
+      potentialVariant,
+    );
+
+    if (variantData) {
+      actualLanguage = potentialBaseLanguage;
+      variant = potentialVariant;
+    }
+  }
+}
+
+const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+
+// Safety checks
+if (!actualLanguage || !actualLanguageConfig) {
+  throw new Error(
+    `Language or languageConfig is undefined. Language: ${actualLanguage}`,
+  );
+}
+---
+
+<Layout
+  title={`${actualLanguageConfig.name} ${
+    variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""
+  }Validator - Validate ${actualLanguageConfig.name} Syntax Online`}
+  description={`Validate ${actualLanguageConfig.name} syntax and structure${
+    variant ? ` with ${variant}` : ""
+  }. Instant validation with detailed error reporting and syntax checking.`}
+  language={actualLanguage}
+  minify={false}
+>
+  <div class="container mx-auto px-4 py-6">
+    <div class="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+          {actualLanguageConfig.name}
+          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Validator
+        </h1>
+        <span
+          class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 text-sm font-mono rounded-full"
+        >
+          Validate
+        </span>
+      </div>
+      <p class="text-muted-foreground leading-relaxed">
+        Validate your {actualLanguageConfig.name}
+        code{variant ? ` with ${variant}` : ""} for syntax errors and structural
+        issues. Get detailed error reports and suggestions.
+      </p>
+      <div class="mt-4 flex items-center gap-2">
+        <a
+          href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
+          class="text-primary hover:text-primary/80 underline text-sm"
+        >
+          ← Back to {actualLanguageConfig.name}
+          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Tool
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <Formatter
+    client:load
+    minifier={false}
+    language={actualLanguage}
+  />
+  <LeapOCR />
+  <Info language={actualLanguage} />
+  <FAQ language={actualLanguage} client:idle />
+</Layout>

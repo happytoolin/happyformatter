@@ -1,0 +1,145 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import LeapOCR from "@/components/leapocr/LeapOCR.astro";
+import Formatter from "@/components/playground/Formatter";
+import { LANGUAGES } from "@/lib/languages";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = (async () => {
+  const paths: any[] = [];
+
+  // Generate paths only for languages that support minification
+  Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
+    if (langConfig.minify) {
+      paths.push({
+        params: { lang: langId },
+        props: {
+          language: langId,
+          languageConfig: langConfig,
+          lang: langId,
+        },
+      });
+    }
+  });
+
+  // Add paths for hyphenated variants that support minification
+  const { getLanguageVariants } = await import("@/lib/seo-variants");
+
+  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
+    if (langConfig.minify) {
+      const variants = getLanguageVariants(langId);
+
+      variants.forEach(variant => {
+        paths.push({
+          params: { lang: `${langId}-${variant.slug}` },
+          props: {
+            language: langId,
+            languageConfig: langConfig,
+            lang: `${langId}-${variant.slug}`,
+          },
+        });
+      });
+    }
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+interface Props {
+  language: string;
+  languageConfig: any;
+  lang: string;
+}
+
+const { language, languageConfig, lang: _lang } = Astro.props;
+
+// Parse the lang parameter to detect hyphenated variants
+const langParam = _lang;
+const hyphenatedParts = langParam ? langParam.split("-") : [];
+let actualLanguage = language;
+let variant = null;
+
+if (hyphenatedParts.length >= 2) {
+  // This might be a hyphenated variant like "javascript-biome"
+  const potentialBaseLanguage = hyphenatedParts[0];
+  const potentialVariant = hyphenatedParts[1];
+
+  // Check if the base language exists and the variant is valid for it
+  if (LANGUAGES[potentialBaseLanguage]) {
+    const { getLanguageVariant } = await import("@/lib/seo-variants");
+    const variantData = getLanguageVariant(
+      potentialBaseLanguage,
+      potentialVariant,
+    );
+
+    if (variantData) {
+      actualLanguage = potentialBaseLanguage;
+      variant = potentialVariant;
+    }
+  }
+}
+
+const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+
+// Safety checks
+if (!actualLanguage || !actualLanguageConfig) {
+  throw new Error(
+    `Language or languageConfig is undefined. Language: ${actualLanguage}`,
+  );
+}
+
+// Check if this language actually supports minification
+if (!actualLanguageConfig.minify) {
+  throw new Error(`${actualLanguageConfig.name} does not support minification`);
+}
+---
+
+<Layout
+  title={`${actualLanguageConfig.name} ${
+    variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""
+  }Minifier - Minify ${actualLanguageConfig.name} Code Online`}
+  description={`Minify ${actualLanguageConfig.name} code to reduce file size and improve performance. Fast, secure minification in your browser.`}
+  language={actualLanguage}
+  minify={true}
+>
+  <div class="container mx-auto px-4 py-6">
+    <div class="bg-linear-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6 mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+          {actualLanguageConfig.name}
+          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Minifier
+        </h1>
+        <span
+          class="px-3 py-1 bg-orange-100 text-secondary dark:bg-orange-900/30 dark:text-orange-400 text-sm font-mono rounded-full"
+        >
+          Minify
+        </span>
+      </div>
+      <p class="text-muted-foreground leading-relaxed">
+        Minify your {actualLanguageConfig.name}
+        code{variant ? ` with ${variant}` : ""} to reduce file size and improve
+        loading performance. Optimized for production use.
+      </p>
+      <div class="mt-4 flex items-center gap-2">
+        <a
+          href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
+          class="text-primary hover:text-primary/80 underline text-sm"
+        >
+          ← Back to {actualLanguageConfig.name}
+          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Tool
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <Formatter
+    client:load
+    minifier={true}
+    language={actualLanguage}
+  />
+  <LeapOCR />
+  <Info language={actualLanguage} />
+  <FAQ language={actualLanguage} client:idle />
+</Layout>

@@ -9,7 +9,7 @@ interface FormatterState {
   initializeCode: (language: string) => void;
 }
 
-export const useFormatterStore = create<FormatterState>((set, get) => ({
+export const useFormatterStore = create<FormatterState>((set, _get) => ({
   code: "",
   language: "",
 
