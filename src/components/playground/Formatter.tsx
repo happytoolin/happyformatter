@@ -208,7 +208,7 @@ function FormatterContent({
           `,
           backgroundSize: "20px 20px",
           backgroundPosition: "0 0, 0 0",
-          opacity: 0.4,
+          opacity: 0.15,
           maskImage: `
             repeating-linear-gradient(
               to right,
