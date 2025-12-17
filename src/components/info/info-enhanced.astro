@@ -1,0 +1,144 @@
+---
+import { getLanguageInfoData } from "../../lib/generated-seo-utils.js";
+import { languageInfoData } from "./data.js";
+interface Props {
+  language: string;
+  variant?: string | null;
+  variantData?: any;
+  seoData?: any;
+}
+
+const { language, variant, variantData, seoData } = Astro.props;
+
+// Try to get generated SEO data first
+const generatedInfo = getLanguageInfoData(language, variant, seoData);
+
+// Use generated data if available, otherwise fall back to existing data
+let info = generatedInfo || languageInfoData[language]
+  || languageInfoData["default"];
+
+// Enhance content based on variant (keep existing variant logic)
+if (variant && variantData && !generatedInfo) {
+  // Create a deep copy to avoid mutating the original
+  info = JSON.parse(JSON.stringify(info));
+
+  // Keep all your existing variant enhancement logic here
+  switch (variant) {
+    case "free":
+      info.description =
+        `${info.description} Completely free to use with no limitations or registration required.`;
+      info.features.unshift(
+        "100% Free Forever",
+        "No Registration Required",
+        "No Usage Limits",
+      );
+      if (info.validator && info.validator.features) {
+        info.validator.features.unshift("Free validation without limits");
+      }
+      break;
+
+    case "online":
+      info.description =
+        `${info.description} Works entirely online in your browser with no downloads required.`;
+      info.features.unshift(
+        "Browser-based Processing",
+        "No Installation",
+        "Instant Access",
+      );
+      if (info.validator && info.validator.features) {
+        info.validator.features.unshift(
+          "Online validation with instant results",
+        );
+      }
+      break;
+
+    case "secure":
+    case "private":
+      info.description =
+        `${info.description} Your ${language} code never leaves your browser. Complete privacy and security for sensitive code.`;
+      info.features.unshift(
+        "Client-side Processing",
+        "Complete Privacy",
+        "No Data Transmission",
+      );
+      if (info.validator && info.validator.features) {
+        info.validator.features.unshift(
+          "Secure validation without server requests",
+        );
+      }
+      break;
+
+    // Keep all your existing variant cases...
+    default:
+      // For tool-specific variants (biome, ruff, etc.)
+      if (variantData.h1) {
+        info.title = variantData.h1;
+        info.description = variantData.description;
+      }
+      break;
+  }
+}
+---
+
+<section class="py-24 bg-background relative overflow-hidden">
+  <!-- Decorative Grid Lines -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]">
+  </div>
+
+  <div class="container mx-auto px-4 relative z-10 max-w-6xl">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-foreground">
+      <!-- Title Block -->
+      <div class="col-span-12 lg:col-span-4 p-8 border-b-2 lg:border-b-0 lg:border-r-2 border-foreground bg-primary text-primary-foreground">
+        <span
+          class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
+        >Spec Sheet // 001</span>
+        <h2 class="font-display text-3xl md:text-5xl uppercase leading-[0.9] mb-6">
+          {info.title}
+        </h2>
+        <p class="font-serif text-xl leading-relaxed opacity-90">
+          {info.description}
+        </p>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2">
+        {/* Validator Module */}
+        <div class="p-8 border-b-2 md:border-b-0 md:border-r-2 border-foreground bg-card">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="w-2 h-2 border-2 border-accent"></span>
+            <h3 class="font-display text-xl uppercase">
+              {info.validator.title}
+            </h3>
+          </div>
+          <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
+            {info.validator.description}
+          </p>
+          <ul class="space-y-3">
+            {info.validator.features.slice(0, 3).map(f => (
+              <li class="flex items-start gap-3 text-sm font-medium">
+                <span class="text-primary mt-1">→</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Technical Data */}
+        <div class="p-8 bg-secondary/20">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="w-2 h-2 bg-foreground"></span>
+            <h3 class="font-display text-xl uppercase">Capabilities</h3>
+          </div>
+          <ul class="space-y-4 font-mono text-xs">
+            {info.features.slice(0, 5).map((feature, i) => (
+              <li class="border-b border-foreground/10 pb-2">
+                <span class="text-muted-foreground mr-2">0{i + 1}</span>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

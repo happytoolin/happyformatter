@@ -1,19 +1,12 @@
 ---
-import { FAQ } from "@/components/faq/faq-enhanced";
-import Info from "@/components/info/info-enhanced.astro";
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter";
-import {
-  generatePageBreadcrumbs,
-  getLayoutSEOData,
-  loadGeneratedSEODataAsync,
-} from "@/lib/generated-seo-utils.js";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import { generatePageTitle } from "@/lib/seo-titles";
 import { getLanguageSEOData } from "@/lib/seo-utils";
 import type { GetStaticPaths } from "astro";
-
-// Load SEO data at build time
-const generatedSEOData = await loadGeneratedSEODataAsync();
 
 export const getStaticPaths: GetStaticPaths = (async () => {
   const paths: any[] = [];
@@ -86,61 +79,36 @@ const canonicalPath = isVariant
   : `/${language}`;
 const canonicalURL = new URL(canonicalPath, Astro.site);
 
-// Try to get generated SEO data first
-const generatedSEO = getLayoutSEOData(
+// Generate SEO data
+const seoTitle = generatePageTitle(
   language,
   currentVariant,
   languageConfig.minify,
-  generatedSEOData,
 );
+let seoDescription, seoKeywords, seoCategory;
 
-// Fall back to existing SEO logic if no generated data
-const fallbackSEO = {
-  title: getLanguageSEOData(language, languageConfig.minify).title,
-  description: getLanguageSEOData(language, languageConfig.minify).description,
-  keywords: getLanguageSEOData(language, languageConfig.minify).keywords,
-  category: getLanguageSEOData(language, languageConfig.minify).category,
-};
-
-const seoData = generatedSEO || fallbackSEO;
-
-// Try to get generated breadcrumbs
-const generatedBreadcrumbs = generatePageBreadcrumbs(
-  language,
-  currentVariant,
-  languageConfig.minify,
-  generatedSEOData,
-);
-
-// Generate breadcrumbs with fallback
-const finalBreadcrumbs = generatedBreadcrumbs.length > 0
-  ? generatedBreadcrumbs
-  : [
-    { name: "Home", url: "/" },
-    {
-      name: `${language.charAt(0).toUpperCase() + language.slice(1)} ${
-        languageConfig.minify ? "Minifier" : "Formatter"
-      }`,
-      url: `/${language}`,
-    },
-    ...(currentVariant
-      ? [{
-        name: currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1),
-        url: `/${language}/${currentVariant}`,
-      }]
-      : []),
-  ];
+if (isVariant && variantData) {
+  // Use variant-specific SEO data
+  seoDescription = variantData.description;
+  seoKeywords = variantData.keywords.join(", ");
+  seoCategory = "Developer Tool, Technology";
+} else {
+  // Use standard language SEO data
+  const seoData = getLanguageSEOData(language, languageConfig.minify);
+  seoDescription = seoData.description;
+  seoKeywords = seoData.keywords;
+  seoCategory = seoData.category;
+}
 ---
 
 <Layout
-  title={seoData.title}
-  description={seoData.description}
+  title={seoTitle}
+  description={seoDescription}
   language={language}
   minify={languageConfig.minify}
-  keywords={seoData.keywords}
-  category={seoData.category}
+  keywords={seoKeywords}
+  category={seoCategory}
   currentVariant={currentVariant}
-  breadcrumbs={finalBreadcrumbs}
 >
   {/* Custom heading for variant pages */}
   {isVariant && (
@@ -182,14 +150,11 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
     language={language}
     variant={currentVariant}
     variantData={variantData}
-    seoData={generatedSEOData}
   />
-
   <FAQ
     language={language}
     variant={currentVariant}
     variantData={variantData}
-    seoData={generatedSEOData}
     client:idle
   />
 </Layout>
