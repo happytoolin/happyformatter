@@ -9,9 +9,3 @@ Disallow: /*.pdf$
 
 Sitemap: https://happyformatter.com/sitemap-index.xml
 Sitemap: https://happyformatter.com/sitemap-0.xml
-
-# Crawl-delay for non-Google bots
-Crawl-delay: 10
-
-# Host directive for Yandex
-Host: https://happyformatter.com

@@ -1,10 +1,14 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { generatePageTitle } from "../../lib/seo-titles";
 import { generateBreadcrumbs, getLanguageSEOData } from "../../lib/seo-utils";
 import "../../styles/globals.css";
 import MoreTools from "../info/moretools.astro";
 import RelatedTools from "../info/RelatedTools.astro";
 import VariantLinks from "../info/VariantLinks.astro";
+import Breadcrumbs from "../structured-data/Breadcrumbs.astro";
+import FAQSchema from "../structured-data/FAQSchema.astro";
+import WebApplicationSchema from "../structured-data/WebApplicationSchema.astro";
 import Footer from "./Footer.astro";
 import FormatHeading from "./FormatHeading.astro";
 import Head from "./Head.astro";
@@ -37,22 +41,17 @@ const {
 // Get language-specific SEO data
 const seoData = getLanguageSEOData(language, minify);
 
-// Use provided breadcrumbs or generate them
+const pageTitle = generatePageTitle(language, currentVariant, minify);
 const finalBreadcrumbs = breadcrumbs.length > 0
   ? breadcrumbs
   : generateBreadcrumbs(language, minify);
-const currentPageTitle = language
-  ? `${language.charAt(0).toUpperCase() + language.slice(1)} ${
-    minify ? "Minifier" : "Formatter"
-  }`
-  : title;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <Head
-      title={`${seoData.title} | HAPPYFMT, the best online formatter`}
+      title={pageTitle}
       description={seoData.description}
       image={image}
       keywords={keywords || seoData.keywords}
@@ -61,103 +60,13 @@ const currentPageTitle = language
     <ViewTransitions />
 
     <!-- Structured Data -->
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": language
-          ? `${language.charAt(0).toUpperCase() + language.slice(1)} Code Formatter`
-          : "HappyFormatter",
-        "description": language
-          ? `Format and minify ${
-            language.charAt(0).toUpperCase() + language.slice(1)
-          } code online with privacy-focused processing. No server transmission.`
-          : "Privacy-focused code formatter and minifier for 26+ programming languages",
-        "url": Astro.url.href,
-        "applicationCategory": "DeveloperApplication",
-        "operatingSystem": "Any browser with WebAssembly support",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD",
-        },
-      })}
-    >
-    </script>
+    <WebApplicationSchema language={language} />
 
     <!-- Breadcrumbs Schema -->
-    {language && (
-      <script
-        type="application/ld+json"
-        set:html={JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": Astro.site?.href || "https://happyformatter.com",
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": `${
-                language.charAt(0).toUpperCase() + language.slice(1)
-              } Code Formatter`,
-              "item": Astro.url.href,
-            },
-          ],
-        })}
-      >
-      </script>
-    )}
+    {language && <Breadcrumbs items={finalBreadcrumbs} />}
 
     <!-- FAQ Schema for language pages -->
-    {language && (
-      <script
-        type="application/ld+json"
-        set:html={JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "name": `Frequently Asked Questions - ${
-            language.charAt(0).toUpperCase() + language.slice(1)
-          } Code Formatter`,
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name":
-                `How does HappyFormatter ensure my ${language} code remains private?`,
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text":
-                  "HappyFormatter processes all code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
-              },
-            },
-            {
-              "@type": "Question",
-              "name": `Why use a ${language} formatter?`,
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text":
-                  `Using a ${language} formatter helps to ensure that your ${language} code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.`,
-              },
-            },
-            {
-              "@type": "Question",
-              "name": "Is login required to use the formatter?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text":
-                  "No, login is not required to use the formatter. You can format your code directly from the tool without needing to create an account or log in.",
-              },
-            },
-          ],
-        })}
-      >
-      </script>
-    )}
+    {language && <FAQSchema language={language} />}
   </head>
   <body>
     <!-- Skip to main content link for keyboard navigation -->
@@ -184,7 +93,7 @@ const currentPageTitle = language
           </li>
           <li class="text-foreground/40">/</li>
           <li class="text-foreground font-medium">
-            {currentPageTitle}
+            {pageTitle}
           </li>
         </ol>
       </nav>

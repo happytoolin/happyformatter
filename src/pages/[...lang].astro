@@ -4,6 +4,7 @@ import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import { generatePageTitle } from "@/lib/seo-titles";
 import { getLanguageSEOData } from "@/lib/seo-utils";
 import type { GetStaticPaths } from "astro";
 
@@ -79,18 +80,21 @@ const canonicalPath = isVariant
 const canonicalURL = new URL(canonicalPath, Astro.site);
 
 // Generate SEO data
-let seoTitle, seoDescription, seoKeywords, seoCategory;
+const seoTitle = generatePageTitle(
+  language,
+  currentVariant,
+  languageConfig.minify,
+);
+let seoDescription, seoKeywords, seoCategory;
 
 if (isVariant && variantData) {
   // Use variant-specific SEO data
-  seoTitle = variantData.title;
   seoDescription = variantData.description;
   seoKeywords = variantData.keywords.join(", ");
   seoCategory = "Developer Tool, Technology";
 } else {
   // Use standard language SEO data
   const seoData = getLanguageSEOData(language, languageConfig.minify);
-  seoTitle = seoData.title;
   seoDescription = seoData.description;
   seoKeywords = seoData.keywords;
   seoCategory = seoData.category;
