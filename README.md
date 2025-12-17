@@ -2,12 +2,12 @@
 
 ![HappyFormatter Preview](./public/images/og.png)
 
-**HappyFormatter** is a modern, privacy-focused web application for formatting and minifying code across 22 programming languages. All processing happens entirely in your browser using WebAssembly modules, ensuring your code never leaves your device.
+**HappyFormatter** is a modern, privacy-focused web application for formatting and minifying code across 26+ programming languages and formatting engines. All processing happens entirely in your browser using WebAssembly modules, ensuring your code never leaves your device.
 
 ## Features
 
-- **22 Programming Languages**: Comprehensive support for popular languages and formats
-- **Code Minification**: Minify JavaScript, TypeScript, CSS, SCSS, JSON, HTML, and XML
+- **26+ Programming Languages**: Comprehensive support for popular languages and formats
+- **Multiple Formatter Engines**: Choose between different formatters like Prettier, Biome, Ruff, and Mago for optimal results
 - **Zero Data Transmission**: All formatting and minification happens client-side via WebAssembly
 - **Advanced Code Editor**: Powered by CodeMirror 6 with syntax highlighting, autocomplete, and bracket matching
 - **Multiple Editor Themes**: 16+ editor themes including Dracula, Nord, Material, One Dark, and more
@@ -18,12 +18,12 @@
 
 ## Supported Languages
 
-### Formatting Support (22 languages)
+### Formatting Support (22 languages + 4 alternative formatters)
 
 **Web Technologies**
 
-- JavaScript (with minification)
-- TypeScript (with minification)
+- JavaScript (with minification) - _Alternative: Biome formatter_
+- TypeScript (with minification) - _Alternative: Biome formatter_
 - HTML
 - CSS (with minification)
 - SCSS (with minification)
@@ -33,7 +33,7 @@
 
 **Programming Languages**
 
-- Python
+- Python - _Alternative: Ruff formatter_
 - Go
 - Rust
 - C
@@ -43,13 +43,22 @@
 - Dart
 - Lua
 - Zig
-- PHP
+- PHP - _Alternative: Mago formatter_
 
 **Markup & Data Formats**
 
 - Markdown
 - SQL
 - Protocol Buffers (.proto)
+
+### Alternative Formatter Engines
+
+HappyFormatter now supports multiple formatter engines for optimal code formatting:
+
+- **Biome**: Fast JavaScript/TypeScript formatter with excellent performance
+- **Ruff**: Extremely fast Python formatter/linter written in Rust
+- **Mago**: Modern PHP formatter with advanced code style capabilities
+- **Prettier**: Default formatter for JavaScript, TypeScript, JSON, and PHP
 
 ### Minification Support
 
@@ -164,6 +173,9 @@ public/
 - **State Management**: Zustand
 - **Formatters**:
   - `@wasm-fmt/*` packages for C/C++, Dart, Go, Lua, Python, SQL, Web, YAML, Zig
+  - Biome (`@wasm-fmt/biome_fmt`) for JavaScript/TypeScript
+  - Ruff (`@wasm-fmt/ruff_fmt`) for Python
+  - Mago (`@wasm-fmt/mago_fmt`) for PHP
   - Prettier for JavaScript, TypeScript, JSON, PHP
   - dprint for Markdown
   - xml-formatter for XML
