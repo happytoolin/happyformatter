@@ -4,6 +4,7 @@ import { generateBreadcrumbs, getLanguageSEOData } from "../../lib/seo-utils";
 import "../../styles/globals.css";
 import MoreTools from "../info/moretools.astro";
 import RelatedTools from "../info/RelatedTools.astro";
+import VariantLinks from "../info/VariantLinks.astro";
 import Footer from "./Footer.astro";
 import FormatHeading from "./FormatHeading.astro";
 import Head from "./Head.astro";
@@ -16,10 +17,18 @@ type Props = {
   image?: string;
   minify?: boolean;
   breadcrumbs?: Array<{ name: string; url: string }>;
+  currentVariant?: string | null;
 };
 
-const { title, description, image, language, minify, breadcrumbs = [] } =
-  Astro.props;
+const {
+  title,
+  description,
+  image,
+  language,
+  minify,
+  breadcrumbs = [],
+  currentVariant = null,
+} = Astro.props;
 
 // Get language-specific SEO data
 const seoData = getLanguageSEOData(language, minify);
@@ -185,6 +194,12 @@ const currentPageTitle = language
     </main>
 
     <RelatedTools currentLanguage={language} minify={minify} />
+    {language && (
+      <VariantLinks
+        currentLanguage={language}
+        currentVariant={currentVariant}
+      />
+    )}
     <MoreTools />
     <Footer />
   </body>
