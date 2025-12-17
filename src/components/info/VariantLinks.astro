@@ -8,24 +8,14 @@ type Props = {
 
 const { currentLanguage, currentVariant = null } = Astro.props;
 
-// Safety check
-if (!currentLanguage) {
-  // Don't render anything if currentLanguage is not provided
-}
-
 const variants = getLanguageVariants(currentLanguage);
-
-// Only show if we have variants and not currently on a variant
-if (variants.length === 0 || currentVariant) {
-  // Don't show anything on variant pages
-}
 
 const currentLanguageName = currentLanguage
   ? currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)
   : "";
 ---
 
-{variants.length > 0 && !currentVariant && (
+{currentLanguage && variants.length > 0 && !currentVariant && (
   <section class="py-6 px-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-y border-blue-200 dark:border-blue-800">
     <div class="container mx-auto max-w-4xl">
       <div class="text-center mb-6">

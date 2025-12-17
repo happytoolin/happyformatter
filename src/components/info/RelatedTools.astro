@@ -1,7 +1,6 @@
 ---
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 
-// Define language relationships for better internal linking
 const languageRelationships = {
   javascript: {
     related: ["typescript", "json", "html", "css"],
@@ -160,10 +159,8 @@ type Props = {
 
 const { currentLanguage, minify = false } = Astro.props;
 
-// Get related tools based on current language
 const getRelatedTools = () => {
   if (!currentLanguage || !languageRelationships[currentLanguage]) {
-    // Return popular tools if no specific language
     return [
       { name: "JSON", url: "/json", type: "FMT", reason: "Most Popular" },
       {
@@ -241,7 +238,6 @@ const showSection = currentLanguage && relatedTools.length > 0;
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {relatedTools.map((tool) => {
-          // Handle special case for current language with minify/format toggle
           const isCurrentLanguage = tool.url === `/${currentLanguage}`;
           const actionUrl = minify && isCurrentLanguage
             ? tool.url
@@ -299,8 +295,7 @@ const showSection = currentLanguage && relatedTools.length > 0;
               </div>
             </a>
           );
-        })
-        }
+        })}
       </div>
 
       <div class="mt-6 text-center">

@@ -11,7 +11,6 @@ interface Props {
 
 const { items, current } = Astro.props;
 
-// Generate breadcrumb list schema
 const breadcrumbList = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -22,8 +21,6 @@ const breadcrumbList = {
     "item": item.url,
   })),
 };
-
-// Don't include current page in schema (it's implied)
 if (current) {
   breadcrumbList.itemListElement.push({
     "@type": "ListItem",
@@ -33,14 +30,12 @@ if (current) {
 }
 ---
 
-<!-- Structured Data -->
 <script
   type="application/ld+json"
   set:html={JSON.stringify(breadcrumbList, null, 2)}
 >
 </script>
 
-<!-- Visual Breadcrumbs -->
 <nav aria-label="Breadcrumb" class="py-4 px-4">
   <ol class="flex items-center space-x-2 text-sm text-muted-foreground max-w-6xl mx-auto">
     {items.map((item, index) => (
