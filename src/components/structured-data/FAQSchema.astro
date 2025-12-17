@@ -8,15 +8,9 @@ interface Props {
 
 const { language, url = Astro.url } = Astro.props;
 
-// Get FAQ data for the specific language
 const faqData = accordionData[language] || [];
 
-if (faqData.length === 0) {
-  // Don't render anything if no FAQ data
-  return;
-}
-
-// Transform FAQ data into schema format (limit to first 3 for testing)
+if (faqData.length === 0) return;
 const mainEntity = faqData.slice(0, 3).map(item => ({
   "@type": "Question",
   "name": item.title,
