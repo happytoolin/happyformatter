@@ -125,7 +125,6 @@ export async function getFormatter(language: string) {
       const yamlFormatter = new YamlFormatter();
       await yamlFormatter.init();
       return yamlFormatter;
-      // Alternative formatters
     case "python-ruff":
       const { PythonRuffFormatter } = await import("@/handlers/formatters/python-ruff");
       const pythonRuffFormatter = new PythonRuffFormatter();

@@ -185,7 +185,6 @@ export const LANGUAGES: Record<string, LanguageConfig> = {
     minify: false,
     extensions: ["zig"],
   },
-  // Alternative formatters
   "python-ruff": {
     id: "python-ruff",
     name: "Python (Ruff)",
