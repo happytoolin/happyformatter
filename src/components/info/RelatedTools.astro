@@ -1,0 +1,319 @@
+---
+import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+
+// Define language relationships for better internal linking
+const languageRelationships = {
+  javascript: {
+    related: ["typescript", "json", "html", "css"],
+    category: "web-development",
+    description: "Core web language",
+  },
+  typescript: {
+    related: ["javascript", "json", "html"],
+    category: "web-development",
+    description: "Typed JavaScript",
+  },
+  html: {
+    related: ["css", "javascript", "markdown", "xml"],
+    category: "web-markup",
+    description: "Web markup",
+  },
+  css: {
+    related: ["scss", "html", "javascript"],
+    category: "web-styling",
+    description: "Web styling",
+  },
+  scss: {
+    related: ["css", "html"],
+    category: "web-styling",
+    description: "CSS preprocessor",
+  },
+  json: {
+    related: ["yaml", "xml", "javascript", "typescript"],
+    category: "data-format",
+    description: "Data exchange format",
+  },
+  yaml: {
+    related: ["json", "xml"],
+    category: "data-format",
+    description: "Configuration format",
+  },
+  xml: {
+    related: ["json", "html"],
+    category: "data-format",
+    description: "Markup language",
+  },
+  python: {
+    related: ["python/ruff", "json", "yaml"],
+    category: "programming",
+    description: "General purpose",
+  },
+  "python/ruff": {
+    related: ["python", "json"],
+    category: "programming",
+    description: "Fast Python formatter",
+  },
+  go: {
+    related: ["c", "cpp", "json"],
+    category: "programming",
+    description: "Systems programming",
+  },
+  c: {
+    related: ["cpp", "csharp", "go"],
+    category: "programming",
+    description: "Systems programming",
+  },
+  cpp: {
+    related: ["c", "csharp", "go"],
+    category: "programming",
+    description: "Systems programming",
+  },
+  csharp: {
+    related: ["c", "cpp", "json"],
+    category: "programming",
+    description: "Microsoft language",
+  },
+  java: {
+    related: ["json", "xml"],
+    category: "programming",
+    description: "Enterprise development",
+  },
+  php: {
+    related: ["php/mago", "json", "html", "xml"],
+    category: "web-development",
+    description: "Web backend",
+  },
+  "php/mago": {
+    related: ["php", "json"],
+    category: "web-development",
+    description: "PHP formatter",
+  },
+  rust: {
+    related: ["c", "cpp", "go"],
+    category: "programming",
+    description: "Systems programming",
+  },
+  sql: {
+    related: ["json", "yaml"],
+    category: "data-format",
+    description: "Database queries",
+  },
+  dart: {
+    related: ["json", "yaml"],
+    category: "programming",
+    description: "Flutter language",
+  },
+  lua: {
+    related: ["json", "yaml"],
+    category: "programming",
+    description: "Scripting language",
+  },
+  markdown: {
+    related: ["html", "xml"],
+    category: "documentation",
+    description: "Documentation format",
+  },
+  proto: {
+    related: ["json", "yaml"],
+    category: "data-format",
+    description: "Protocol buffers",
+  },
+  zig: {
+    related: ["c", "cpp", "go"],
+    category: "programming",
+    description: "Systems programming",
+  },
+};
+
+const allTools = [
+  { name: "HTML", url: "/html", type: "FMT" },
+  { name: "CSS", url: "/css", type: "FMT" },
+  { name: "JavaScript", url: "/javascript", type: "FMT" },
+  { name: "JavaScript Biome", url: "/javascript/biome", type: "FMT" },
+  { name: "TypeScript", url: "/typescript", type: "FMT" },
+  { name: "TypeScript Biome", url: "/typescript/biome", type: "FMT" },
+  { name: "JSON", url: "/json", type: "FMT" },
+  { name: "XML", url: "/xml", type: "FMT" },
+  { name: "YAML", url: "/yaml", type: "FMT" },
+  { name: "SQL", url: "/sql", type: "FMT" },
+  { name: "Go", url: "/go", type: "FMT" },
+  { name: "Dart", url: "/dart", type: "FMT" },
+  { name: "SCSS", url: "/scss", type: "FMT" },
+  { name: "Java", url: "/java", type: "FMT" },
+  { name: "Lua", url: "/lua", type: "FMT" },
+  { name: "Python", url: "/python", type: "FMT" },
+  { name: "Python Ruff", url: "/python/ruff", type: "FMT" },
+  { name: "Markdown", url: "/markdown", type: "FMT" },
+  { name: "C#", url: "/csharp", type: "FMT" },
+  { name: "C", url: "/c", type: "FMT" },
+  { name: "C++", url: "/cpp", type: "FMT" },
+  { name: "PHP", url: "/php", type: "FMT" },
+  { name: "PHP Mago", url: "/php/mago", type: "FMT" },
+  { name: "Proto", url: "/proto", type: "FMT" },
+  { name: "Zig", url: "/zig", type: "FMT" },
+];
+
+type Props = {
+  currentLanguage?: string;
+  minify?: boolean;
+};
+
+const { currentLanguage, minify = false } = Astro.props;
+
+// Get related tools based on current language
+const getRelatedTools = () => {
+  if (!currentLanguage || !languageRelationships[currentLanguage]) {
+    // Return popular tools if no specific language
+    return [
+      { name: "JSON", url: "/json", type: "FMT", reason: "Most Popular" },
+      {
+        name: "JavaScript",
+        url: "/javascript",
+        type: "FMT",
+        reason: "Web Development",
+      },
+      { name: "Python", url: "/python", type: "FMT", reason: "Popular Choice" },
+      {
+        name: "TypeScript",
+        url: "/typescript",
+        type: "FMT",
+        reason: "Type Safe JS",
+      },
+    ];
+  }
+
+  const relationship = languageRelationships[currentLanguage];
+  const relatedTools = relationship.related
+    .map(lang => {
+      const tool = allTools.find(t => t.url === `/${lang}`);
+      if (tool) {
+        return {
+          ...tool,
+          reason: relationship.description,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean)
+    .slice(0, 6);
+
+  return relatedTools.length >= 3 ? relatedTools : [
+    { name: "JSON", url: "/json", type: "FMT", reason: "Data Format" },
+    {
+      name: "JavaScript",
+      url: "/javascript",
+      type: "FMT",
+      reason: "Web Development",
+    },
+    { name: "Python", url: "/python", type: "FMT", reason: "Popular Choice" },
+  ];
+};
+
+const relatedTools = getRelatedTools();
+const showSection = currentLanguage && relatedTools.length > 0;
+---
+
+{showSection && (
+  <section
+    class="py-8 px-4 bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800 border-y border-zinc-200 dark:border-zinc-700"
+    aria-labelledby="related-tools-heading"
+  >
+    <div class="container mx-auto max-w-4xl">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2
+            id="related-tools-heading"
+            class="text-2xl font-bold font-display text-foreground mb-2"
+          >
+            Related Tools
+          </h2>
+          <p class="text-muted-foreground">
+            Frequently used together with
+            {currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1)}
+            {minify ? "Minifier" : "Formatter"}
+          </p>
+        </div>
+        <div class="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
+          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span>Contextual suggestions</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {relatedTools.map((tool) => {
+          // Handle special case for current language with minify/format toggle
+          const isCurrentLanguage = tool.url === `/${currentLanguage}`;
+          const actionUrl = minify && isCurrentLanguage
+            ? tool.url
+            : `${tool.url}${minify ? "/minify" : ""}`;
+
+          return (
+            <a
+              href={actionUrl}
+              class="group bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:border-primary hover:shadow-lg transition-all duration-200 flex items-start gap-4"
+            >
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <LanguageIcon
+                    icon={tool.url.replace("/", "")}
+                    class="w-6 h-6"
+                  />
+                </div>
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {tool.name}
+                  </h3>
+                  <span
+                    class="text-xs font-mono bg-primary/10 text-primary px-2 py-0.5 rounded"
+                  >
+                    {tool.type}
+                  </span>
+                  {isCurrentLanguage && (
+                    <span
+                      class="text-xs font-mono bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded"
+                    >
+                      {minify ? "Format" : "Minify"}
+                    </span>
+                  )}
+                </div>
+
+                <p class="text-sm text-muted-foreground mb-2">
+                  {tool.reason}
+                </p>
+
+                <div class="flex items-center gap-2 text-xs text-zinc-500">
+                  <span
+                    class="opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    {isCurrentLanguage
+                      ? (minify ? "Switch to formatter" : "Switch to minifier")
+                      : "Open tool"}
+                  </span>
+                  <span
+                    class="group-hover:translate-x-1 transition-transform inline-block"
+                  >→</span>
+                </div>
+              </div>
+            </a>
+          );
+        })
+        }
+      </div>
+
+      <div class="mt-6 text-center">
+        <a
+          href="/#more-tools"
+          class="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+        >
+          <span>View all {allTools.length} available tools</span>
+          <span
+            class="group-hover:translate-x-1 transition-transform inline-block"
+          >→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+)}
