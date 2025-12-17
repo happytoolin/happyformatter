@@ -21,11 +21,13 @@ const breadcrumbList = {
     "item": item.url,
   })),
 };
+// Add current page as final breadcrumb (item URL is omitted for the active page per schema.org convention)
 if (current) {
   breadcrumbList.itemListElement.push({
     "@type": "ListItem",
     "position": items.length + 1,
     "name": current,
+    // Note: 'item' is intentionally omitted for the current/active page
   });
 }
 ---

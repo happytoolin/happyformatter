@@ -1,6 +1,6 @@
 ---
 interface Props {
-  url?: string;
+  url?: URL | string;
   name?: string;
   description?: string;
   language?: string;
@@ -25,7 +25,7 @@ const schema = {
       language.charAt(0).toUpperCase() + language.slice(1)
     } code online with privacy-focused processing. No server transmission.`
     : description,
-  "url": url.href,
+  "url": typeof url === "string" ? url : url.href,
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Any browser with WebAssembly support",
   "offers": {
