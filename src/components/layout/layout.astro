@@ -1,11 +1,9 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { generateBreadcrumbs, getLanguageSEOData } from "../../lib/seo-utils";
 import "../../styles/globals.css";
 import MoreTools from "../info/moretools.astro";
-import Breadcrumbs from "../structured-data/Breadcrumbs.astro";
-import FAQSchema from "../structured-data/FAQSchema.astro";
-import TestSchema from "../structured-data/TestSchema.astro";
-import WebApplicationSchema from "../structured-data/WebApplicationSchema.astro";
+import RelatedTools from "../info/RelatedTools.astro";
 import Footer from "./Footer.astro";
 import FormatHeading from "./FormatHeading.astro";
 import Head from "./Head.astro";
@@ -23,35 +21,13 @@ type Props = {
 const { title, description, image, language, minify, breadcrumbs = [] } =
   Astro.props;
 
-// Generate context-aware breadcrumbs
-const generateBreadcrumbs = () => {
-  if (breadcrumbs.length > 0) {
-    return breadcrumbs;
-  }
+// Get language-specific SEO data
+const seoData = getLanguageSEOData(language, minify);
 
-  if (language) {
-    const languageName = language.charAt(0).toUpperCase() + language.slice(1);
-    const basePath = `/${language}`;
-
-    if (minify) {
-      return [
-        { name: "Home", url: "/" },
-        { name: "Code Formatters", url: "/" },
-        { name: `${languageName} Formatter`, url: basePath },
-        { name: "Minify", url: `${basePath}/minify` },
-      ];
-    } else {
-      return [
-        { name: "Home", url: "/" },
-        { name: "Code Formatters", url: "/" },
-      ];
-    }
-  }
-
-  return [];
-};
-
-const finalBreadcrumbs = generateBreadcrumbs();
+// Use provided breadcrumbs or generate them
+const finalBreadcrumbs = breadcrumbs.length > 0
+  ? breadcrumbs
+  : generateBreadcrumbs(language, minify);
 const currentPageTitle = language
   ? `${language.charAt(0).toUpperCase() + language.slice(1)} ${
     minify ? "Minifier" : "Formatter"
@@ -63,9 +39,11 @@ const currentPageTitle = language
 <html lang="en">
   <head>
     <Head
-      title={`${title} | HAPPYFMT, the best online formatter`}
-      description={description}
+      title={`${seoData.title} | HAPPYFMT, the best online formatter`}
+      description={seoData.description}
       image={image}
+      keywords={seoData.keywords}
+      category={seoData.category}
     />
     <ViewTransitions />
 
@@ -206,6 +184,7 @@ const currentPageTitle = language
       <slot />
     </main>
 
+    <RelatedTools currentLanguage={language} minify={minify} />
     <MoreTools />
     <Footer />
   </body>
