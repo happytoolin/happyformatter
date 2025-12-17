@@ -331,7 +331,7 @@ instructions = [
 ]
 
       `;
-      case "python-ruff":
+    case "python-ruff":
       return getInitialCode("python");
     case "javascript-biome":
       return getInitialCode("javascript");
