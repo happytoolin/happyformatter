@@ -2,6 +2,10 @@
 import { ViewTransitions } from "astro:transitions";
 import "../../styles/globals.css";
 import MoreTools from "../info/moretools.astro";
+import Breadcrumbs from "../structured-data/Breadcrumbs.astro";
+import FAQSchema from "../structured-data/FAQSchema.astro";
+import TestSchema from "../structured-data/TestSchema.astro";
+import WebApplicationSchema from "../structured-data/WebApplicationSchema.astro";
 import Footer from "./Footer.astro";
 import FormatHeading from "./FormatHeading.astro";
 import Head from "./Head.astro";
@@ -13,9 +17,46 @@ type Props = {
   language?: string;
   image?: string;
   minify?: boolean;
+  breadcrumbs?: Array<{ name: string; url: string }>;
 };
 
-const { title, description, image, language, minify } = Astro.props;
+const { title, description, image, language, minify, breadcrumbs = [] } =
+  Astro.props;
+
+// Generate context-aware breadcrumbs
+const generateBreadcrumbs = () => {
+  if (breadcrumbs.length > 0) {
+    return breadcrumbs;
+  }
+
+  if (language) {
+    const languageName = language.charAt(0).toUpperCase() + language.slice(1);
+    const basePath = `/${language}`;
+
+    if (minify) {
+      return [
+        { name: "Home", url: "/" },
+        { name: "Code Formatters", url: "/" },
+        { name: `${languageName} Formatter`, url: basePath },
+        { name: "Minify", url: `${basePath}/minify` },
+      ];
+    } else {
+      return [
+        { name: "Home", url: "/" },
+        { name: "Code Formatters", url: "/" },
+      ];
+    }
+  }
+
+  return [];
+};
+
+const finalBreadcrumbs = generateBreadcrumbs();
+const currentPageTitle = language
+  ? `${language.charAt(0).toUpperCase() + language.slice(1)} ${
+    minify ? "Minifier" : "Formatter"
+  }`
+  : title;
 ---
 
 <!DOCTYPE html>
@@ -27,6 +68,105 @@ const { title, description, image, language, minify } = Astro.props;
       image={image}
     />
     <ViewTransitions />
+
+    <!-- Structured Data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": language
+          ? `${language.charAt(0).toUpperCase() + language.slice(1)} Code Formatter`
+          : "HappyFormatter",
+        "description": language
+          ? `Format and minify ${
+            language.charAt(0).toUpperCase() + language.slice(1)
+          } code online with privacy-focused processing. No server transmission.`
+          : "Privacy-focused code formatter and minifier for 26+ programming languages",
+        "url": Astro.url.href,
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any browser with WebAssembly support",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+        },
+      })}
+    >
+    </script>
+
+    <!-- Breadcrumbs Schema -->
+    {language && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://happyformatter.com",
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": `${
+                language.charAt(0).toUpperCase() + language.slice(1)
+              } Code Formatter`,
+              "item": Astro.url.href,
+            },
+          ],
+        })}
+      >
+      </script>
+    )}
+
+    <!-- FAQ Schema for language pages -->
+    {language && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "name": `Frequently Asked Questions - ${
+            language.charAt(0).toUpperCase() + language.slice(1)
+          } Code Formatter`,
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name":
+                `How does HappyFormatter ensure my ${language} code remains private?`,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text":
+                  "HappyFormatter processes all code locally using WebAssembly (WASM), ensuring that your code never leaves your device. This guarantees maximum privacy and security.",
+              },
+            },
+            {
+              "@type": "Question",
+              "name": `Why use a ${language} formatter?`,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text":
+                  `Using a ${language} formatter helps to ensure that your ${language} code is properly structured and easy to read. It also helps in maintaining a consistent coding style across your projects.`,
+              },
+            },
+            {
+              "@type": "Question",
+              "name": "Is login required to use the formatter?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text":
+                  "No, login is not required to use the formatter. You can format your code directly from the tool without needing to create an account or log in.",
+              },
+            },
+          ],
+        })}
+      >
+      </script>
+    )}
   </head>
   <body>
     <!-- Skip to main content link for keyboard navigation -->
@@ -36,13 +176,36 @@ const { title, description, image, language, minify } = Astro.props;
     >
       Skip to main content
     </a>
+
     <Header />
+
+    <!-- Visual Breadcrumbs -->
+    {language && (
+      <nav aria-label="Breadcrumb" class="py-4 px-4">
+        <ol class="flex items-center space-x-2 text-sm text-muted-foreground max-w-6xl mx-auto">
+          <li>
+            <a
+              href="/"
+              class="hover:text-foreground transition-colors duration-200 hover:underline"
+            >
+              Home
+            </a>
+          </li>
+          <li class="text-foreground/40">/</li>
+          <li class="text-foreground font-medium">
+            {currentPageTitle}
+          </li>
+        </ol>
+      </nav>
+    )}
+
     <main id="main-content" role="main">
       {language && (
         <FormatHeading language={language} minify={minify ?? false} />
       )}
       <slot />
     </main>
+
     <MoreTools />
     <Footer />
   </body>

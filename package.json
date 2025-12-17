@@ -21,7 +21,7 @@
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/tailwind": "^6.0.2",
     "@codemirror/autocomplete": "^6.20.0",
-    "@codemirror/commands": "^6.10.0",
+    "@codemirror/commands": "^6.10.1",
     "@codemirror/lang-cpp": "^6.0.3",
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-go": "^6.0.1",
@@ -74,7 +74,7 @@
     "@wasm-fmt/web_fmt": "^0.1.14",
     "@wasm-fmt/yamlfmt": "^0.1.2",
     "@wasm-fmt/zig_fmt": "^0.15.0",
-    "astro": "^5.16.5",
+    "astro": "^5.16.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "codemirror": "^6.0.2",
@@ -103,7 +103,7 @@
     "shiki": "^3.20.0",
     "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.54.0"
+    "wrangler": "^4.55.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
