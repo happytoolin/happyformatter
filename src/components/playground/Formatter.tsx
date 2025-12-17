@@ -197,52 +197,18 @@ function FormatterContent({
   const { setCode } = useFormatterStore();
 
   return (
-    <div className="min-h-screen w-full relative">
-      {/* Dashed Grid */}
+    <div className="w-full bg-[#f8fafc] relative">
+      {/* Top Fade Grid Background */}
       <div
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, ${isDarkTheme ? "#3a3a3a" : "#e7e5e4"} 1px, transparent 1px),
-            linear-gradient(to bottom, ${isDarkTheme ? "#3a3a3a" : "#e7e5e4"} 1px, transparent 1px)
+            linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+            linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)
           `,
-          backgroundSize: "20px 20px",
-          backgroundPosition: "0 0, 0 0",
-          opacity: 0.15,
-          maskImage: `
-            repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            )
-          `,
-          WebkitMaskImage: `
-            repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            )
-          `,
-          maskComposite: "intersect",
-          WebkitMaskComposite: "source-in",
+          backgroundSize: "20px 30px",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)",
         }}
       />
       <div className="w-full py-12 border-b-2 border-foreground relative z-10" id="workspace">
