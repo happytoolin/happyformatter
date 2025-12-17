@@ -32,4 +32,6 @@ export interface CompleteSEOData {
   generatedAt: string;
   version: string;
   pages: PageSEOData[];
+  inProgress?: boolean;
+  progress?: string;
 }

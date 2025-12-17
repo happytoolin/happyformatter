@@ -192,8 +192,6 @@ function FormatterContent({
   onCopy: () => void;
   minifier: boolean;
 }) {
-  const { currentTheme } = useTheme();
-  const isDarkTheme = currentTheme.includes("dark");
   const { setCode } = useFormatterStore();
 
   return (

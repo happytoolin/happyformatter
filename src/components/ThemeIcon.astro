@@ -42,6 +42,12 @@
 </style>
 
 <script>
+declare global {
+  interface Window {
+    themeToggleInitialized?: boolean;
+  }
+}
+
 if (!window.themeToggleInitialized) {
   window.themeToggleInitialized = true;
 
@@ -73,7 +79,7 @@ if (!window.themeToggleInitialized) {
   };
 
   document.addEventListener("click", (e) => {
-    const target = e.target.closest("#themeToggle");
+    const target = (e.target as Element).closest("#themeToggle");
     if (target) {
       handleToggleClick();
     }

@@ -3,7 +3,7 @@ interface Props {
   language?: string;
 }
 
-const { language = "default" } = Astro.props;
+const { language: _language = "default" } = Astro.props;
 ---
 
 <section class="py-20 bg-gradient-to-br from-primary/5 to-accent/5 relative overflow-hidden">

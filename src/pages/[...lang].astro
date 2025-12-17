@@ -84,14 +84,13 @@ const isVariant = currentVariant && variantData;
 const canonicalPath = isVariant
   ? `/${language}/${currentVariant}`
   : `/${language}`;
-const canonicalURL = new URL(canonicalPath, Astro.site);
 
 // Try to get generated SEO data first
 const generatedSEO = getLayoutSEOData(
   language,
   currentVariant,
   languageConfig.minify,
-  generatedSEOData,
+  generatedSEOData || undefined,
 );
 
 // Fall back to existing SEO logic if no generated data
@@ -109,7 +108,7 @@ const generatedBreadcrumbs = generatePageBreadcrumbs(
   language,
   currentVariant,
   languageConfig.minify,
-  generatedSEOData,
+  generatedSEOData || undefined,
 );
 
 // Generate breadcrumbs with fallback

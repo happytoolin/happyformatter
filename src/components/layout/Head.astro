@@ -1,6 +1,4 @@
 ---
-import { ViewTransitions } from "astro:transitions";
-
 type Props = {
   title: string;
   description: string;
@@ -63,7 +61,6 @@ const ogImageURL = new URL(image, Astro.site);
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={ogImageURL} />
 <meta property="twitter:site" content="@happyformatter" />
-<ViewTransitions />
 <script
   type="text/partytown"
   async

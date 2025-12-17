@@ -27,7 +27,7 @@ export function FAQ({ language, variant, variantData, seoData }: {
   function getVariantQuestions(
     variantType: string,
     lang: string,
-    data: any,
+    _data: any,
   ): Array<{ title: string; content: string }> {
     const questions = [];
     const langName = lang.charAt(0).toUpperCase() + lang.slice(1);

@@ -117,7 +117,7 @@ export function useGeneratedFAQs(
 export function useGeneratedBreadcrumbs(
   language: string,
   variant?: string | null,
-  minify?: boolean,
+  _minify?: boolean,
 ) {
   // Try to use generated breadcrumbs
   const generatedBreadcrumbs = generatePageBreadcrumbs(language, variant);

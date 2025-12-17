@@ -55,6 +55,8 @@ const CompleteSEODataSchema = z.object({
   generatedAt: z.string(),
   version: z.string(),
   pages: z.array(PageSEODataSchema),
+  inProgress: z.boolean().optional(),
+  progress: z.string().optional(),
 });
 
 // Types
@@ -455,7 +457,6 @@ async function askForOverwriteConfirmation(existingContent: CompleteSEOData | nu
         case "3":
           console.log("👋 Exiting without changes.");
           process.exit(0);
-          break;
         default:
           console.log("❌ Invalid choice. Exiting.");
           process.exit(1);
@@ -542,7 +543,7 @@ async function generateRemainingContent(existingPages: PageSEOData[]): Promise<P
   );
 
   // Progress callback for resuming
-  const onResumeProgress = (processed: number, total: number, pages: PageSEOData[]) => {
+  const onResumeProgress = (_processed: number, _total: number, pages: PageSEOData[]) => {
     saveProgress([...existingPages, ...pages], 30);
   };
 

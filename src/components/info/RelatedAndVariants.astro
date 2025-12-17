@@ -2,7 +2,25 @@
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 import { getLanguageVariants } from "@/lib/seo-variants";
 
-const languageRelationships = {
+interface LanguageRelation {
+  related: string[];
+  features: string[];
+  contextualReasons: Record<string, string>;
+}
+
+interface BaseTool {
+  name: string;
+  url: string;
+  type: string;
+}
+
+interface Tool extends BaseTool {
+  reason?: string;
+  description?: string;
+  category?: string;
+}
+
+const languageRelationships: Record<string, LanguageRelation> = {
   javascript: {
     related: ["typescript", "json", "html", "css"],
     features: ["formatter", "minifier", "biome-formatter"],
@@ -214,7 +232,7 @@ const languageRelationships = {
   },
 };
 
-const allTools = [
+const allTools: BaseTool[] = [
   { name: "HTML", url: "/html", type: "FMT" },
   { name: "CSS", url: "/css", type: "FMT" },
   { name: "JavaScript", url: "/javascript", type: "FMT" },
@@ -248,7 +266,11 @@ type Props = {
   minify?: boolean;
 };
 
-const { currentLanguage, currentVariant = null, minify = false } = Astro.props;
+const {
+  currentLanguage,
+  currentVariant: _currentVariant = null,
+  minify = false,
+} = Astro.props;
 
 // Get language variants for the current language
 const variants = getLanguageVariants(currentLanguage || "");
@@ -267,14 +289,16 @@ const getRelatedTools = () => {
         const contextualReason = relationship.contextualReasons
           ?.[lang.replace("python/", "python/ruff")];
         return {
-          ...tool,
+          name: tool.name,
+          url: tool.url,
+          type: tool.type,
           reason: contextualReason || "Related language",
           description: contextualReason || "Related language",
-        };
+        } as Tool;
       }
       return null;
     })
-    .filter(Boolean);
+    .filter((tool): tool is Tool => tool !== null);
 
   return relatedTools;
 };
@@ -282,12 +306,16 @@ const getRelatedTools = () => {
 // Mix variants and related tools, prioritizing variety
 const getMixedRecommendations = () => {
   const related = getRelatedTools();
-  const allRecommendations = [];
+  const allRecommendations: Tool[] = [];
 
   // Add up to 3 related tools first
   related.slice(0, 3).forEach(tool => {
     allRecommendations.push({
-      ...tool,
+      name: tool.name,
+      url: tool.url,
+      type: tool.type,
+      reason: tool.reason,
+      description: tool.description,
       category: "related",
     });
   });
@@ -316,8 +344,13 @@ const getMixedRecommendations = () => {
       && i < Math.max(remainingRelated.length, remainingVariants.length)
     ) {
       if (i < remainingRelated.length) {
+        const tool = remainingRelated[i];
         allRecommendations.push({
-          ...remainingRelated[i],
+          name: tool.name,
+          url: tool.url,
+          type: tool.type,
+          reason: tool.reason,
+          description: tool.description,
           category: "related",
         });
       }
@@ -438,7 +471,7 @@ const currentLanguageName = currentLanguage
 
       <!-- Tools Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-foreground">
-        {recommendations.map((tool, index) => {
+        {recommendations.map((tool, _index) => {
           const isCurrentLanguage = tool.url === `/${currentLanguage}`;
           const isVariant = tool.category === "variant";
           const actionUrl = isCurrentLanguage

@@ -32,7 +32,7 @@ interface Props {
   lang: string;
 }
 
-const { language, languageConfig, lang } = Astro.props;
+const { language, languageConfig, lang: _lang } = Astro.props;
 
 // Safety checks
 if (!language || !languageConfig) {

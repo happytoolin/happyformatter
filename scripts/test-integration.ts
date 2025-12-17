@@ -12,7 +12,6 @@ import {
   getPageFAQs,
   getPageSEOContent,
   getRelatedToolsData,
-  getVariantLinks,
   loadGeneratedSEODataAsync,
 } from "../src/lib/generated-seo-utils.js";
 
@@ -23,7 +22,6 @@ console.log("===================================================");
 await loadGeneratedSEODataAsync();
 
 const testLanguages = ["json", "javascript", "python", "css"];
-const testVariants = ["ruff", "biome", "mago"];
 
 // Test 1: Layout SEO Data Integration
 console.log("\n1. Testing Layout SEO Data Integration...");

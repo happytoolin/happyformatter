@@ -168,7 +168,7 @@ export function generateMockPageData(): PageSEOData[] {
  * Save mock data for testing
  */
 export function saveMockData(outputPath: string = "src/lib/mock-seo-data.json"): void {
-  const { Bun } = globalThis;
+  const { Bun } = globalThis as any;
 
   const mockData = {
     generatedAt: new Date().toISOString(),

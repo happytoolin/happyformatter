@@ -10,7 +10,6 @@ import {
   getLanguageInfoData,
   getLayoutSEOData,
   getPageFAQs,
-  getPageSEOContent,
   getRelatedToolsData,
   getVariantLinks,
 } from "./generated-seo-utils.js";
@@ -22,7 +21,11 @@ import { getLanguageSEOData } from "./seo-utils.js";
  *
  * This shows how to integrate SEO content with your existing Layout component
  */
-export function integrateWithLayout(language: string, variant?: string | null, minify?: boolean) {
+export function integrateWithLayout(
+  language: string,
+  variant?: string | null,
+  minify?: boolean,
+) {
   // Get generated SEO data
   const generatedSEO = getLayoutSEOData(language, variant, minify);
 
@@ -44,7 +47,10 @@ export function integrateWithLayout(language: string, variant?: string | null, m
  *
  * This shows how to enhance your Info.astro component with AI-generated content
  */
-export function integrateWithInfoComponent(language: string, variant?: string | null) {
+export function integrateWithInfoComponent(
+  language: string,
+  variant?: string | null,
+) {
   // Get generated language info data
   const generatedInfo = getLanguageInfoData(language, variant);
 
@@ -62,7 +68,10 @@ export function integrateWithInfoComponent(language: string, variant?: string | 
  *
  * This shows how to integrate generated FAQs with your FAQ component
  */
-export function integrateWithFAQComponent(language: string, variant?: string | null) {
+export function integrateWithFAQComponent(
+  language: string,
+  variant?: string | null,
+) {
   // Get generated FAQs
   const generatedFAQs = getPageFAQs(language, variant);
 
@@ -87,8 +96,16 @@ export function integrateWithFAQComponent(language: string, variant?: string | n
  *
  * This shows how to integrate generated breadcrumbs
  */
-export function integrateWithBreadcrumbs(language: string, variant?: string | null, minify?: boolean) {
-  const generatedBreadcrumbs = generatePageBreadcrumbs(language, variant, minify);
+export function integrateWithBreadcrumbs(
+  language: string,
+  variant?: string | null,
+  minify?: boolean,
+) {
+  const generatedBreadcrumbs = generatePageBreadcrumbs(
+    language,
+    variant,
+    minify,
+  );
 
   if (generatedBreadcrumbs.length > 0) {
     return generatedBreadcrumbs;
@@ -104,7 +121,10 @@ export function integrateWithBreadcrumbs(language: string, variant?: string | nu
  *
  * This shows how to generate related tools suggestions
  */
-export function integrateWithRelatedTools(language: string, variant?: string | null) {
+export function integrateWithRelatedTools(
+  language: string,
+  variant?: string | null,
+) {
   const generatedRelatedTools = getRelatedToolsData(language, variant);
 
   if (generatedRelatedTools && generatedRelatedTools.length > 0) {
@@ -140,9 +160,17 @@ export function integrateWithVariantLinks(language: string) {
  *
  * This shows how to update your main page to use all generated content
  */
-export function completePageIntegration(language: string, languageConfig: any, variant?: string | null) {
+export function completePageIntegration(
+  language: string,
+  languageConfig: any,
+  variant?: string | null,
+) {
   // 1. SEO Data for Layout
-  const layoutSEO = integrateWithLayout(language, variant, languageConfig.minify);
+  const layoutSEO = integrateWithLayout(
+    language,
+    variant,
+    languageConfig.minify,
+  );
 
   // 2. Info Component Data
   const infoData = integrateWithInfoComponent(language, variant);
@@ -151,7 +179,11 @@ export function completePageIntegration(language: string, languageConfig: any, v
   const faqData = integrateWithFAQComponent(language, variant);
 
   // 4. Breadcrumbs
-  const breadcrumbs = integrateWithBreadcrumbs(language, variant, languageConfig.minify);
+  const breadcrumbs = integrateWithBreadcrumbs(
+    language,
+    variant,
+    languageConfig.minify,
+  );
 
   // 5. Related Tools
   const relatedTools = integrateWithRelatedTools(language, variant);

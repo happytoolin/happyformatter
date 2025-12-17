@@ -178,7 +178,7 @@ export function getLanguageInfoData(language: string, variant?: string | null, p
 export function getLayoutSEOData(
   language: string,
   variant?: string | null,
-  minify?: boolean,
+  _minify?: boolean,
   preloadedData?: CompleteSEOData,
 ) {
   const pageData = getPageSEOContent(language, variant, preloadedData);
@@ -201,7 +201,7 @@ export function getLayoutSEOData(
 export function generatePageBreadcrumbs(
   language: string,
   variant?: string | null,
-  minify?: boolean,
+  _minify?: boolean,
   preloadedData?: CompleteSEOData,
 ): Array<{ name: string; url: string }> {
   const pageData = getPageSEOContent(language, variant, preloadedData);
@@ -253,7 +253,7 @@ export function getRelatedToolsData(language: string, variant?: string | null) {
   }
 
   // Convert use cases to related tools suggestions
-  const relatedTools = pageData.content.useCases.slice(0, 4).map((useCase: string, index: number) => ({
+  const relatedTools = pageData.content.useCases.slice(0, 4).map((useCase: string, _index: number) => ({
     title: useCase,
     description: `Optimized for ${useCase.toLowerCase()} workflows`,
     category: "Data Processing",

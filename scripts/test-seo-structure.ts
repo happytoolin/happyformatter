@@ -16,7 +16,7 @@ console.log(`   ✓ Loaded ${languageCount} languages`);
 
 // Test 2: Check for known variants
 console.log("\n2. Testing variant detection...");
-const knownVariants = {
+const knownVariants: Record<string, string[]> = {
   "python": ["ruff"],
   "javascript": ["biome"],
   "typescript": ["biome"],
@@ -35,7 +35,7 @@ for (const [lang, variants] of Object.entries(knownVariants)) {
 console.log("\n3. Testing language properties...");
 const requiredProps = ["id", "name", "title", "description", "minify", "extensions"];
 
-for (const [langId, config] of Object.entries(LANGUAGES)) {
+for (const [, config] of Object.entries(LANGUAGES)) {
   const missingProps = requiredProps.filter(prop => !(prop in config));
   if (missingProps.length === 0) {
     console.log(`   ✓ ${config.name} has all required properties`);
@@ -48,7 +48,7 @@ for (const [langId, config] of Object.entries(LANGUAGES)) {
 console.log("\n4. Testing page structure generation...");
 const samplePages: string[] = [];
 
-for (const [langId, config] of Object.entries(LANGUAGES)) {
+for (const [langId] of Object.entries(LANGUAGES)) {
   // Main page
   samplePages.push(langId);
 
