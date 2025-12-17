@@ -185,14 +185,6 @@ export const LANGUAGES: Record<string, LanguageConfig> = {
     minify: false,
     extensions: ["zig"],
   },
-  prisma: {
-    id: "prisma",
-    name: "Prisma",
-    title: "Prisma Schema Formatter",
-    description: "Prisma schema formatter that formats Prisma schema files, locally in your browser",
-    minify: false,
-    extensions: ["prisma"],
-  },
   // Alternative formatters
   "python-ruff": {
     id: "python-ruff",

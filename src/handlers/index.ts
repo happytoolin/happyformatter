@@ -125,12 +125,7 @@ export async function getFormatter(language: string) {
       const yamlFormatter = new YamlFormatter();
       await yamlFormatter.init();
       return yamlFormatter;
-    case "prisma":
-      const { PrismaFormatter } = await import("@/handlers/formatters/prisma");
-      const prismaFormatter = new PrismaFormatter();
-      await prismaFormatter.init();
-      return prismaFormatter;
-    // Alternative formatters
+      // Alternative formatters
     case "python-ruff":
       const { PythonRuffFormatter } = await import("@/handlers/formatters/python-ruff");
       const pythonRuffFormatter = new PythonRuffFormatter();
