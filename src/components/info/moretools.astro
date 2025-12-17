@@ -7,7 +7,9 @@ const tools = [
   { name: "CSS Formatter", url: "/css", type: "FMT" },
   { name: "CSS Minifier", url: "/css", type: "MIN" },
   { name: "JS Formatter", url: "/javascript", type: "FMT" },
-  { name: "JS Minifier", url: "/javascript", type: "MIN" },
+  { name: "JS Minifier", url: "/javascript/minify", type: "MIN" },
+  { name: "JS Biome Formatter", url: "/javascript/biome", type: "FMT" },
+  { name: "JS Biome Minifier", url: "/javascript/biome/minify", type: "MIN" },
   { name: "JSON Formatter", url: "/json", type: "FMT" },
   { name: "JSON Minifier", url: "/json", type: "MIN" },
   { name: "XML Formatter", url: "/xml", type: "FMT" },
@@ -21,13 +23,18 @@ const tools = [
   { name: "Java Formatter", url: "/java", type: "FMT" },
   { name: "Lua Formatter", url: "/lua", type: "FMT" },
   { name: "Python Formatter", url: "/python", type: "FMT" },
+  { name: "Python Ruff Formatter", url: "/python/ruff", type: "FMT" },
   { name: "TS Formatter", url: "/typescript", type: "FMT" },
+  { name: "TS Minifier", url: "/typescript/minify", type: "MIN" },
   { name: "TS Validator", url: "/typescript", type: "VAL" },
+  { name: "TS Biome Formatter", url: "/typescript/biome", type: "FMT" },
+  { name: "TS Biome Minifier", url: "/typescript/biome/minify", type: "MIN" },
   { name: "Markdown", url: "/markdown", type: "FMT" },
   { name: "C# Formatter", url: "/csharp", type: "FMT" },
   { name: "C Formatter", url: "/c", type: "FMT" },
   { name: "C++ Formatter", url: "/cpp", type: "FMT" },
   { name: "PHP Formatter", url: "/php", type: "FMT" },
+  { name: "PHP Mago Formatter", url: "/php/mago", type: "FMT" },
   { name: "Proto Formatter", url: "/proto", type: "FMT" },
   { name: "Zig Formatter", url: "/zig", type: "FMT" },
 ];
@@ -52,6 +59,15 @@ const tools = [
       {tools.map((tool) => {
         const cleanName = tool.name.replace("Formatter", "").replace("Minifier", "")
           .trim();
+
+        const urlParts = tool.url.split("/").filter(Boolean);
+        let iconName: string;
+        if (urlParts.length >= 2) {
+          iconName = urlParts.join("-");
+        } else {
+          iconName = urlParts[0];
+        }
+
         return (
           <a
             href={tool.url}
@@ -59,7 +75,7 @@ const tools = [
           >
             <div class="absolute bottom-2 right-2 opacity-15 grayscale transition-opacity">
               <LanguageIcon
-                icon={tool.url.replace("/", "")}
+                icon={iconName}
                 class="w-16 h-16"
               />
             </div>

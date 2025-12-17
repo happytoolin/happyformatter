@@ -38,6 +38,10 @@ class LanguageLoaderManager {
       "protobuf",
       "scss",
       "csharp",
+      "javascript-biome",
+      "typescript-biome",
+      "python-ruff",
+      "php-mago",
     ]);
   }
 
@@ -187,6 +191,26 @@ class LanguageLoaderManager {
           const { StreamLanguage } = await import("@codemirror/language");
           const { csharp } = await import("@codemirror/legacy-modes/mode/clike");
           return StreamLanguage.define(csharp);
+        }
+
+        case "javascript-biome": {
+          const { javascript } = await import("@codemirror/lang-javascript");
+          return javascript({ typescript: false });
+        }
+
+        case "typescript-biome": {
+          const { javascript } = await import("@codemirror/lang-javascript");
+          return javascript({ typescript: true });
+        }
+
+        case "python-ruff": {
+          const { python } = await import("@codemirror/lang-python");
+          return python();
+        }
+
+        case "php-mago": {
+          const { php } = await import("@codemirror/lang-php");
+          return php();
         }
 
         default:

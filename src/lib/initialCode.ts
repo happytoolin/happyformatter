@@ -331,6 +331,14 @@ instructions = [
 ]
 
       `;
+    case "python-ruff":
+      return getInitialCode("python");
+    case "javascript-biome":
+      return getInitialCode("javascript");
+    case "typescript-biome":
+      return getInitialCode("typescript");
+    case "php-mago":
+      return getInitialCode("php");
     default:
       return "";
   }
