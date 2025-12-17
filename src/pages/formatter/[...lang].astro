@@ -1,0 +1,81 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter";
+import { getLanguageConfig, LANGUAGES } from "@/lib/languages";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = (async () => {
+  const paths = [];
+
+  // Generate paths for all languages
+  Object.keys(LANGUAGES).forEach(langId => {
+    paths.push({
+      params: { lang: langId },
+      props: {
+        language: langId,
+        languageConfig: LANGUAGES[langId],
+      },
+    });
+  });
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+interface Props {
+  language: string;
+  languageConfig: any;
+}
+
+const { language, languageConfig } = Astro.props;
+
+// Safety checks
+if (!language || !languageConfig) {
+  throw new Error(
+    `Language or languageConfig is undefined. Language: ${language}`,
+  );
+}
+---
+
+<Layout
+  title={`${languageConfig.name} Formatter - Format ${languageConfig.name} Code Online`}
+  description={`Format ${languageConfig.name} code online with proper formatting. Clean, readable code in seconds.`}
+  language={language}
+  minify={false}
+>
+  <div class="container mx-auto px-4 py-6">
+    <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+          {languageConfig.name} Formatter
+        </h1>
+        <span
+          class="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-sm font-mono rounded-full"
+        >
+          Format
+        </span>
+      </div>
+      <p class="text-muted-foreground leading-relaxed">
+        Format your {languageConfig.name} code with proper indentation and
+        syntax highlighting. Make your code clean and readable.
+      </p>
+      <div class="mt-4 flex items-center gap-2">
+        <a
+          href={`/${language}`}
+          class="text-primary hover:text-primary/80 underline text-sm"
+        >
+          ← Back to {languageConfig.name} Tool
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <Formatter
+    client:load
+    minifier={false}
+    language={language}
+  />
+  <Info language={language} />
+  <FAQ language={language} client:idle />
+</Layout>

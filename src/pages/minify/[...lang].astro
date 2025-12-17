@@ -1,0 +1,88 @@
+---
+import { FAQ } from "@/components/faq/faq";
+import Info from "@/components/info/info.astro";
+import Layout from "@/components/layout/layout.astro";
+import Formatter from "@/components/playground/Formatter";
+import { getLanguageConfig, LANGUAGES } from "@/lib/languages";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = (async () => {
+  const paths = [];
+
+  // Generate paths only for languages that support minification
+  Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
+    if (langConfig.minify) {
+      paths.push({
+        params: { lang: langId },
+        props: {
+          language: langId,
+          languageConfig: langConfig,
+        },
+      });
+    }
+  });
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+interface Props {
+  language: string;
+  languageConfig: any;
+}
+
+const { language, languageConfig } = Astro.props;
+
+// Safety checks
+if (!language || !languageConfig) {
+  throw new Error(
+    `Language or languageConfig is undefined. Language: ${language}`,
+  );
+}
+
+// Check if this language actually supports minification
+if (!languageConfig.minify) {
+  throw new Error(`${languageConfig.name} does not support minification`);
+}
+---
+
+<Layout
+  title={`${languageConfig.name} Minifier - Minify ${languageConfig.name} Code Online`}
+  description={`Minify ${languageConfig.name} code to reduce file size and improve performance. Fast, secure minification in your browser.`}
+  language={language}
+  minify={true}
+>
+  <div class="container mx-auto px-4 py-6">
+    <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6 mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+          {languageConfig.name} Minifier
+        </h1>
+        <span
+          class="px-3 py-1 bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 text-sm font-mono rounded-full"
+        >
+          Minify
+        </span>
+      </div>
+      <p class="text-muted-foreground leading-relaxed">
+        Minify your {languageConfig.name} code to reduce file size and improve
+        loading performance. Optimized for production use.
+      </p>
+      <div class="mt-4 flex items-center gap-2">
+        <a
+          href={`/${language}`}
+          class="text-primary hover:text-primary/80 underline text-sm"
+        >
+          ← Back to {languageConfig.name} Tool
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <Formatter
+    client:load
+    minifier={true}
+    language={language}
+  />
+  <Info language={language} />
+  <FAQ language={language} client:idle />
+</Layout>
