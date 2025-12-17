@@ -112,9 +112,6 @@ importers:
       "@prettier/plugin-php":
         specifier: ^0.24.0
         version: 0.24.0(prettier@3.7.4)
-      "@prisma/prisma-fmt-wasm":
-        specifier: 4.17.0-16.27eb2449f178cd9fe1a4b892d732cc4795f75085
-        version: 4.17.0-16.27eb2449f178cd9fe1a4b892d732cc4795f75085
       "@radix-ui/react-accordion":
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2455,11 +2452,6 @@ packages:
     }
     peerDependencies:
       prettier: ^3.0.0
-
-  "@prisma/prisma-fmt-wasm@4.17.0-16.27eb2449f178cd9fe1a4b892d732cc4795f75085":
-    resolution: {
-      integrity: sha512-zYz3rFwPB82mVlHGknAPdnSY/a308dhPOblxQLcZgZTDRtDXOE1MgxoRAys+jekwR4/bm3+rZDPs1xsFMsPZig==,
-    }
 
   "@qwik.dev/partytown@0.11.0":
     resolution: {
@@ -8072,8 +8064,6 @@ snapshots:
       linguist-languages: 8.2.0
       php-parser: 3.2.5
       prettier: 3.7.4
-
-  "@prisma/prisma-fmt-wasm@4.17.0-16.27eb2449f178cd9fe1a4b892d732cc4795f75085": {}
 
   "@qwik.dev/partytown@0.11.0":
     dependencies:
