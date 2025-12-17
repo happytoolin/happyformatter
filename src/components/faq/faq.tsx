@@ -2,8 +2,148 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import type { JSX } from "react";
 import { accordionData } from "./data";
 
-export function FAQ({ language }: { language: string }): JSX.Element {
-  const data = accordionData[language] || [];
+export function FAQ({ language, variant, variantData }: {
+  language: string;
+  variant?: string | null;
+  variantData?: any;
+}): JSX.Element {
+  let data = accordionData[language] || [];
+
+  // Inject variant-specific questions at the beginning
+  if (variant && variantData) {
+    const variantQuestions = getVariantQuestions(variant, language, variantData);
+    data = [...variantQuestions, ...data];
+  }
+
+  // Helper function to get variant-specific questions
+  function getVariantQuestions(
+    variantType: string,
+    lang: string,
+    data: any,
+  ): Array<{ title: string; content: string }> {
+    const questions = [];
+    const langName = lang.charAt(0).toUpperCase() + lang.slice(1);
+
+    switch (variantType) {
+      case "free":
+        questions.push({
+          title: `Is this ${langName} formatter really free?`,
+          content:
+            `Yes, this ${langName} formatter is completely free to use. There are no hidden costs, premium features, or usage limits. You can format as much ${langName} code as you need without paying anything or creating an account.`,
+        });
+        questions.push({
+          title: `Do I need to register to use the free ${langName} formatter?`,
+          content:
+            `No registration required! You can start formatting your ${langName} code immediately. Just paste your code and format it instantly without any signup process or personal information.`,
+        });
+        break;
+
+      case "online":
+        questions.push({
+          title: `How does the online ${langName} formatter work?`,
+          content:
+            `This ${langName} formatter works entirely in your web browser. Your code is processed locally on your device using advanced JavaScript libraries, so you don't need to install any software or wait for server processing.`,
+        });
+        questions.push({
+          title: `Can I use this ${langName} formatter on mobile devices?`,
+          content:
+            `Yes! Since this is an online ${langName} formatter, it works on any device with a web browser - desktop, tablet, or mobile. The interface is responsive and adapts to your screen size.`,
+        });
+        break;
+
+      case "secure":
+      case "private":
+        questions.push({
+          title: `How is this ${langName} formatter more secure than others?`,
+          content:
+            `Unlike server-side formatters, this tool processes your ${langName} code entirely within your browser. Your code never leaves your device, is never sent to our servers, and is never stored anywhere. This makes it completely secure for sensitive or proprietary code.`,
+        });
+        questions.push({
+          title: `Is my ${langName} code safe from prying eyes?`,
+          content:
+            `Absolutely! Since all processing happens client-side in your browser, nobody else can access your ${langName} code - not us, not third parties, not anyone. Your privacy is completely protected.`,
+        });
+        questions.push({
+          title: `Can I use this formatter offline?`,
+          content:
+            `Once the page is loaded, you can continue using this ${langName} formatter offline. The formatting libraries are cached in your browser, allowing you to format code without an internet connection.`,
+        });
+        break;
+
+      case "beautifier":
+        questions.push({
+          title: `What makes this a good ${langName} beautifier?`,
+          content:
+            `This ${langName} beautifier uses intelligent algorithms to transform minified or poorly formatted code into readable, properly indented code. It preserves functionality while dramatically improving readability with consistent formatting rules.`,
+        });
+        questions.push({
+          title: `Can this beautifier handle minified ${langName} code?`,
+          content:
+            `Yes! This ${langName} beautifier excels at transforming minified code into beautifully formatted, readable code. It automatically detects structure and applies appropriate indentation, spacing, and line breaks.`,
+        });
+        break;
+
+      case "validator":
+        questions.push({
+          title: `What errors can this ${langName} validator detect?`,
+          content:
+            `This ${langName} validator can detect syntax errors, structural problems, missing semicolons, unmatched brackets, and many other code issues. It provides detailed error messages with line and column numbers to help you quickly fix problems.`,
+        });
+        questions.push({
+          title: `Does this ${langName} validator check for best practices?`,
+          content:
+            `While primarily focused on syntax validation, this tool also identifies common issues that might affect code quality. However, for comprehensive linting and best practices checking, consider using specialized linting tools.`,
+        });
+        break;
+
+      case "minify":
+        questions.push({
+          title: `How much can this ${langName} minifier reduce file size?`,
+          content:
+            `The size reduction depends on your code structure, but typically you can expect 20-60% reduction in file size. This ${langName} minifier removes unnecessary whitespace, comments, and optimizes the code without changing functionality.`,
+        });
+        questions.push({
+          title: `Will minifying my ${langName} code affect performance?`,
+          content:
+            `Minified ${langName} code actually improves performance by reducing download size and parse time. This minifier preserves all functionality while making your code more efficient for production use.`,
+        });
+        break;
+
+      case "pretty":
+        questions.push({
+          title: `How does this ${langName} pretty printer work?`,
+          content:
+            `This ${langName} pretty printer analyzes your code structure and applies consistent formatting rules including proper indentation, spacing, and line breaks to make the code more readable and maintainable.`,
+        });
+        break;
+
+      case "biome":
+        questions.push({
+          title: `What is Biome for ${langName} formatting?`,
+          content:
+            `Biome is a fast, modern toolchain for ${langName} development. It provides extremely fast formatting, linting, and bundling. This formatter uses Biome's standards to ensure your code follows best practices and consistent style.`,
+        });
+        break;
+
+      case "ruff":
+        questions.push({
+          title: `What is Ruff for ${langName} formatting?`,
+          content:
+            `Ruff is an extremely fast Python linter and formatter written in Rust. When used as a ${langName} formatter, it applies consistent formatting rules and can also catch linting issues, making it a comprehensive code quality tool.`,
+        });
+        break;
+
+      case "mago":
+        questions.push({
+          title: `What is Mago for ${langName} formatting?`,
+          content:
+            `Mago is a modern PHP formatter that focuses on code consistency and readability. This ${langName} formatter uses Mago's rules to ensure your PHP code follows modern formatting standards and best practices.`,
+        });
+        break;
+    }
+
+    return questions;
+  }
 
   return (
     <div className="w-full bg-foreground text-background py-24">

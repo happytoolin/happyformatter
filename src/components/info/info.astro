@@ -2,11 +2,132 @@
 import { languageInfoData } from "./data";
 interface Props {
   language: string;
+  variant?: string | null;
+  variantData?: any;
 }
 
-const { language } = Astro.props;
+const { language, variant, variantData } = Astro.props;
 const defaultLanguage = "default";
-const info = languageInfoData[language] || languageInfoData[defaultLanguage];
+let info = languageInfoData[language] || languageInfoData[defaultLanguage];
+
+// Enhance content based on variant
+if (variant && variantData) {
+  // Create a deep copy to avoid mutating the original
+  info = JSON.parse(JSON.stringify(info));
+
+  // Customize content based on variant type
+  switch (variant) {
+    case "free":
+      info.description =
+        `${info.description} Completely free to use with no limitations or registration required.`;
+      info.features.unshift(
+        "100% Free Forever",
+        "No Registration Required",
+        "No Usage Limits",
+      );
+      if (info.validator && info.validator.features) {
+        info.validator.features.unshift("Free validation without limits");
+      }
+      break;
+
+    case "online":
+      info.description =
+        `${info.description} Works entirely online in your browser with no downloads required.`;
+      info.features.unshift(
+        "Browser-based Processing",
+        "No Installation",
+        "Instant Access",
+      );
+      if (info.validator && info.validator.features) {
+        info.validator.features.unshift(
+          "Online validation with instant results",
+        );
+      }
+      break;
+
+    case "secure":
+    case "private":
+      info.description =
+        `${info.description} Your ${language} code never leaves your browser. Complete privacy and security for sensitive code.`;
+      info.features.unshift(
+        "Client-side Processing",
+        "Complete Privacy",
+        "No Data Transmission",
+      );
+      if (info.validator && info.validator.features) {
+        info.validator.features.unshift(
+          "Secure validation without server requests",
+        );
+      }
+      break;
+
+    case "beautifier":
+      info.description =
+        `${info.description} Transform minified ${language} code into readable, properly formatted, and indented code.`;
+      info.features.unshift(
+        "Reads Minified Code",
+        "Intelligent Formatting",
+        "Proper Indentation",
+      );
+      info.title = `${
+        language.charAt(0).toUpperCase() + language.slice(1)
+      } Beautifier`;
+      break;
+
+    case "validator":
+      info.description =
+        `${info.description} Check for syntax errors and validate your ${language} code with detailed error reporting.`;
+      info.features.unshift(
+        "Syntax Validation",
+        "Detailed Error Reporting",
+        "Real-time Checking",
+      );
+      info.title = `${
+        language.charAt(0).toUpperCase() + language.slice(1)
+      } Validator`;
+      if (info.validator) {
+        info.validator.title = `${
+          language.charAt(0).toUpperCase() + language.slice(1)
+        } Validation`;
+      }
+      break;
+
+    case "minify":
+      info.description =
+        `${info.description} Compress and optimize your ${language} code by removing unnecessary whitespace and characters.`;
+      info.features.unshift(
+        "File Size Reduction",
+        "Performance Optimization",
+        "Whitespace Removal",
+      );
+      info.title = `${
+        language.charAt(0).toUpperCase() + language.slice(1)
+      } Minifier`;
+      break;
+
+    case "pretty":
+    case "prettify":
+      info.description =
+        `${info.description} Format and beautify your ${language} data with proper indentation and structure for better readability.`;
+      info.features.unshift(
+        "Pretty Printing",
+        "Structured Output",
+        "Enhanced Readability",
+      );
+      info.title = `${
+        language.charAt(0).toUpperCase() + language.slice(1)
+      } Pretty Printer`;
+      break;
+
+    default:
+      // For tool-specific variants (biome, ruff, etc.)
+      if (variantData.h1) {
+        info.title = variantData.h1;
+        info.description = variantData.description;
+      }
+      break;
+  }
+}
 ---
 
 <section class="py-24 bg-background relative overflow-hidden">
