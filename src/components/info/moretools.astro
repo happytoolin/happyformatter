@@ -60,12 +60,7 @@ const tools = [
         const cleanName = tool.name.replace("Formatter", "").replace("Minifier", "")
           .trim();
 
-        // Extract the base language/icon name from the URL
-        // Handle nested routes like /javascript/biome -> javascript-biome
         const urlParts = tool.url.split("/").filter(Boolean);
-
-        // For alternative formatters, use the full path (e.g., "javascript-biome")
-        // For simple routes, use the language name (e.g., "javascript")
         let iconName: string;
         if (urlParts.length >= 2) {
           iconName = urlParts.join("-");
@@ -111,8 +106,7 @@ const tools = [
             </div>
           </a>
         );
-      })
-      }
+      })}
     </div>
 
     <div class="mt-4 text-right font-mono text-[10px] text-zinc-500 dark:text-zinc-600">

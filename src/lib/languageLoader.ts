@@ -38,7 +38,6 @@ class LanguageLoaderManager {
       "protobuf",
       "scss",
       "csharp",
-      // Alternative formatters
       "javascript-biome",
       "typescript-biome",
       "python-ruff",
@@ -194,7 +193,6 @@ class LanguageLoaderManager {
           return StreamLanguage.define(csharp);
         }
 
-        // Alternative formatters - map to base languages
         case "javascript-biome": {
           const { javascript } = await import("@codemirror/lang-javascript");
           return javascript({ typescript: false });
