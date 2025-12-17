@@ -18,6 +18,8 @@ type Props = {
   minify?: boolean;
   breadcrumbs?: Array<{ name: string; url: string }>;
   currentVariant?: string | null;
+  keywords?: string;
+  category?: string;
 };
 
 const {
@@ -28,6 +30,8 @@ const {
   minify,
   breadcrumbs = [],
   currentVariant = null,
+  keywords,
+  category,
 } = Astro.props;
 
 // Get language-specific SEO data
@@ -51,8 +55,8 @@ const currentPageTitle = language
       title={`${seoData.title} | HAPPYFMT, the best online formatter`}
       description={seoData.description}
       image={image}
-      keywords={seoData.keywords}
-      category={seoData.category}
+      keywords={keywords || seoData.keywords}
+      category={category || seoData.category}
     />
     <ViewTransitions />
 

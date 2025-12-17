@@ -3,11 +3,11 @@ import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter";
-import { getLanguageConfig, LANGUAGES } from "@/lib/languages";
+import { LANGUAGES } from "@/lib/languages";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = (async () => {
-  const paths = [];
+  const paths: any[] = [];
 
   // Generate paths for all languages
   Object.keys(LANGUAGES).forEach(langId => {
@@ -16,6 +16,7 @@ export const getStaticPaths: GetStaticPaths = (async () => {
       props: {
         language: langId,
         languageConfig: LANGUAGES[langId],
+        lang: langId,
       },
     });
   });
@@ -26,9 +27,10 @@ export const getStaticPaths: GetStaticPaths = (async () => {
 interface Props {
   language: string;
   languageConfig: any;
+  lang: string;
 }
 
-const { language, languageConfig } = Astro.props;
+const { language, languageConfig, lang } = Astro.props;
 
 // Safety checks
 if (!language || !languageConfig) {
@@ -45,7 +47,7 @@ if (!language || !languageConfig) {
   minify={false}
 >
   <div class="container mx-auto px-4 py-6">
-    <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
+    <div class="bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
       <div class="flex items-center gap-3 mb-2">
         <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
           {languageConfig.name} Formatter

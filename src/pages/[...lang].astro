@@ -5,11 +5,10 @@ import Layout from "@/components/layout/layout.astro";
 import Formatter from "@/components/playground/Formatter";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
 import { getLanguageSEOData } from "@/lib/seo-utils";
-import { getLanguageVariant, isVariantPath } from "@/lib/seo-variants";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = (async () => {
-  const paths = [];
+  const paths: any[] = [];
 
   // Add main language pages (single segment)
   Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
@@ -19,6 +18,7 @@ export const getStaticPaths: GetStaticPaths = (async () => {
         languageConfig: langConfig,
         language: langId,
         variant: null,
+        lang: langId,
       },
     });
   });
@@ -37,6 +37,7 @@ export const getStaticPaths: GetStaticPaths = (async () => {
           language: langId,
           variant: variant.slug,
           variantData: variant,
+          lang: `${langId}/${variant.slug}`,
         },
       });
     });
@@ -50,12 +51,13 @@ interface Props {
   language: string;
   variant?: string | null;
   variantData?: any;
+  lang: string;
 }
 
-const { language, languageConfig, variant, variantData } = Astro.props;
+const { language, languageConfig, variant, variantData, lang } = Astro.props;
 
 // Parse the lang parameter to detect variant
-const langParam = Astro.props.lang;
+const langParam = lang;
 const pathSegments = langParam ? langParam.split("/") : [];
 const detectedVariant = pathSegments.length > 1 ? pathSegments[1] : null;
 
@@ -84,7 +86,7 @@ if (isVariant && variantData) {
   seoTitle = variantData.title;
   seoDescription = variantData.description;
   seoKeywords = variantData.keywords.join(", ");
-  seoCategory = languageConfig.category || "Developer Tool, Technology";
+  seoCategory = "Developer Tool, Technology";
 } else {
   // Use standard language SEO data
   const seoData = getLanguageSEOData(language, languageConfig.minify);
@@ -107,7 +109,7 @@ if (isVariant && variantData) {
   {/* Custom heading for variant pages */}
   {isVariant && (
     <div class="container mx-auto px-4 py-6">
-      <div class="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-6 mb-6">
+      <div class="bg-linear-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-6 mb-6">
         <div class="flex items-center gap-3 mb-2">
           <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
             {variantData.h1}
