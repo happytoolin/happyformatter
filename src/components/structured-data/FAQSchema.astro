@@ -3,7 +3,7 @@ import { accordionData } from "@/components/faq/data.ts";
 
 interface Props {
   language: string;
-  url?: string;
+  url?: URL | string;
 }
 
 const { language, url = Astro.url } = Astro.props;
@@ -28,7 +28,7 @@ const schema = {
   } Code Formatter`,
   "description":
     `Common questions and answers about ${language} code formatting, privacy, and features on HappyFormatter`,
-  "url": url.href,
+  "url": typeof url === "string" ? url : url.href,
   "mainEntity": mainEntity,
 };
 ---

@@ -545,10 +545,7 @@ export function getLanguageSEOData(language?: string, minify = false): {
       ? `${languageName} Minifier - Minify ${languageName} Code Online`
       : seoData.title,
     description: minify
-      ? seoData.description.replace("formatter", "minifier").replace("beautifier", "minifier").replace(
-        "Format",
-        "Minify",
-      )
+      ? `Free online ${languageName} minifier and compressor. Minify your ${languageName} code to reduce file size and improve performance. Privacy-focused, client-side processing.`
       : seoData.description,
     category: seoData.category,
   };
@@ -565,14 +562,12 @@ export function generateBreadcrumbs(language?: string, minify = false): Array<{ 
   if (minify) {
     return [
       { name: "Home", url: "/" },
-      { name: "Code Formatters", url: "/" },
       { name: `${languageName} Formatter`, url: basePath },
       { name: "Minify", url: `${basePath}/minify` },
     ];
   } else {
     return [
       { name: "Home", url: "/" },
-      { name: "Code Formatters", url: "/" },
       { name: `${languageName} ${language.includes("/") ? "Tool" : "Formatter"}`, url: basePath },
     ];
   }
