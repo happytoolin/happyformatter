@@ -537,7 +537,12 @@ export function getLanguageSEOData(language?: string, minify = false): {
   }
 
   const seoData = languageSEOData[language];
-  const languageName = language.charAt(0).toUpperCase() + language.slice(1).replace("/", " ");
+
+  // Get proper language name from configuration
+  const languageConfig = LANGUAGES[language];
+  const languageName = languageConfig
+    ? languageConfig.name
+    : language.charAt(0).toUpperCase() + language.slice(1).replace("/", " ");
 
   return {
     keywords: seoData.keywords.join(", "),
@@ -556,7 +561,11 @@ export function generateBreadcrumbs(language?: string, minify = false): Array<{ 
     return [];
   }
 
-  const languageName = language.charAt(0).toUpperCase() + language.slice(1).replace("/", " ");
+  // Get proper language name from configuration
+  const languageConfig = LANGUAGES[language];
+  const languageName = languageConfig
+    ? languageConfig.name
+    : language.charAt(0).toUpperCase() + language.slice(1).replace("/", " ");
   const basePath = `/${language}`;
 
   if (minify) {

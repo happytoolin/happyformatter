@@ -172,9 +172,9 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
   : [
     { name: "Home", url: "/" },
     {
-      name: `${
-        actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)
-      } ${actualLanguageConfig.minify ? "Minifier" : "Formatter"}`,
+      name: `${actualLanguageConfig.name} ${
+        actualLanguageConfig.minify ? "Minifier" : "Formatter"
+      }`,
       url: `/${actualLanguage}`,
     },
     ...(currentVariant
@@ -204,14 +204,14 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
         <div class="flex items-center gap-3 mb-2">
           <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
             {actualVariantData?.h1
-              || `${actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)} ${
+              || `${actualLanguageConfig.name} ${
                 currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1)
               }`}
           </h1>
           <span
             class="px-3 py-1 bg-primary text-primary-foreground text-sm font-mono rounded-full"
           >
-            {actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)}
+            {actualLanguageConfig.name}
           </span>
         </div>
         <p class="text-muted-foreground leading-relaxed">
@@ -224,7 +224,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
             class="text-primary hover:text-primary/80 underline text-sm"
           >
             ← Back to
-            {actualLanguage.charAt(0).toUpperCase() + actualLanguage.slice(1)}
+            {actualLanguageConfig.name}
             Formatter
           </a>
         </div>
