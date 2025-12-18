@@ -105,31 +105,41 @@ if (!actualLanguageConfig.minify) {
   minify={true}
 >
   <div class="container mx-auto px-4 py-6">
-    <div class="bg-linear-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6 mb-6">
-      <div class="flex items-center gap-3 mb-2">
-        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
-          {actualLanguageConfig.name}
-          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Minifier
-        </h1>
-        <span
-          class="px-3 py-1 bg-orange-100 text-secondary dark:bg-orange-900/30 dark:text-orange-400 text-sm font-mono rounded-full"
-        >
-          Minify
-        </span>
+    <div class="bg-accent/10 border-2 border-accent p-6 mb-6">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl md:text-4xl font-display font-black text-foreground tracking-tight">
+            {actualLanguageConfig.name}
+            {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""} MINIFIER
+          </h1>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 bg-accent animate-pulse"></span>
+            <span class="px-3 py-1 bg-accent text-background text-sm font-mono font-bold uppercase border-2 border-accent">
+              Minify
+            </span>
+          </div>
+        </div>
       </div>
-      <p class="text-muted-foreground leading-relaxed">
-        Minify your {actualLanguageConfig.name}
-        code{variant ? ` with ${variant}` : ""} to reduce file size and improve
-        loading performance. Optimized for production use.
-      </p>
-      <div class="mt-4 flex items-center gap-2">
+      <div class="border-l-4 border-accent pl-4 mb-4">
+        <p class="text-foreground font-medium leading-relaxed">
+          Minify your {actualLanguageConfig.name}
+          code{variant ? ` with ${variant}` : ""} to reduce file size and improve
+          loading performance. Optimized for production use.
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
         <a
           href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
-          class="text-primary hover:text-primary/80 underline text-sm"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-background border-2 border-foreground text-foreground font-mono text-sm font-bold hover:bg-primary hover:text-background transition-colors"
         >
-          ← Back to {actualLanguageConfig.name}
-          {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Tool
+          <span class="text-lg">←</span>
+          Back to {actualLanguageConfig.name}
+          {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""} Tool
         </a>
+        <div class="hidden md:flex items-center gap-2 text-muted-foreground">
+          <span class="w-2 h-2 bg-foreground/50"></span>
+          <span class="font-mono text-xs uppercase">Production Ready</span>
+        </div>
       </div>
     </div>
   </div>

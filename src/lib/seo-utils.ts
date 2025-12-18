@@ -1,3 +1,5 @@
+import { LANGUAGES } from "./languages";
+
 export interface LanguageSEOData {
   keywords: string[];
   title: string;

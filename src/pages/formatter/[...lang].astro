@@ -48,28 +48,38 @@ if (!language || !languageConfig) {
   minify={false}
 >
   <div class="container mx-auto px-4 py-6">
-    <div class="bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-6">
-      <div class="flex items-center gap-3 mb-2">
-        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
-          {languageConfig.name} Formatter
-        </h1>
-        <span
-          class="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 text-sm font-mono rounded-full"
-        >
-          Format
-        </span>
+    <div class="bg-primary/10 border-2 border-primary p-6 mb-6">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl md:text-4xl font-display font-black text-foreground tracking-tight">
+            {languageConfig.name} FORMATTER
+          </h1>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 bg-primary animate-pulse"></span>
+            <span class="px-3 py-1 bg-primary text-background text-sm font-mono font-bold uppercase border-2 border-primary">
+              Format
+            </span>
+          </div>
+        </div>
       </div>
-      <p class="text-muted-foreground leading-relaxed">
-        Format your {languageConfig.name} code with proper indentation and
-        syntax highlighting. Make your code clean and readable.
-      </p>
-      <div class="mt-4 flex items-center gap-2">
+      <div class="border-l-4 border-primary pl-4 mb-4">
+        <p class="text-foreground font-medium leading-relaxed">
+          Format your {languageConfig.name} code with proper indentation and
+          syntax highlighting. Make your code clean and readable.
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
         <a
           href={`/${language}`}
-          class="text-primary hover:text-primary/80 underline text-sm"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-background border-2 border-foreground text-foreground font-mono text-sm font-bold hover:bg-primary hover:text-background transition-colors"
         >
-          ← Back to {languageConfig.name} Tool
+          <span class="text-lg">←</span>
+          Back to {languageConfig.name} Tool
         </a>
+        <div class="hidden md:flex items-center gap-2 text-muted-foreground">
+          <span class="w-2 h-2 bg-foreground/50"></span>
+          <span class="font-mono text-xs uppercase">Clean & Readable</span>
+        </div>
       </div>
     </div>
   </div>
