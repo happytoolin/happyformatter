@@ -39,9 +39,16 @@ class LanguageLoaderManager {
       "scss",
       "csharp",
       "javascript-biome",
+      "javascript-dprint",
       "typescript-biome",
+      "typescript-dprint",
+      "jsx",
+      "tsx",
       "python-ruff",
       "php-mago",
+      "dockerfile",
+      "graphql",
+      "jupyter",
     ]);
   }
 
@@ -49,7 +56,10 @@ class LanguageLoaderManager {
     // Handle hyphenated variants by checking the base language
     const hyphenatedParts = language.split("-");
     const baseLanguage = hyphenatedParts[0];
-    return this.supportedLanguages.has(language) || this.supportedLanguages.has(baseLanguage);
+    return (
+      this.supportedLanguages.has(language)
+      || this.supportedLanguages.has(baseLanguage)
+    );
   }
 
   async getLanguageExtension(language: string): Promise<Extension | null> {
@@ -114,6 +124,14 @@ class LanguageLoaderManager {
             const { javascript } = await import("@codemirror/lang-javascript");
             return javascript({ typescript: true });
           }
+          case "javascript-dprint": {
+            const { javascript } = await import("@codemirror/lang-javascript");
+            return javascript({ typescript: false, jsx: false });
+          }
+          case "typescript-dprint": {
+            const { javascript } = await import("@codemirror/lang-javascript");
+            return javascript({ typescript: true, jsx: false });
+          }
           case "python-ruff": {
             const { python } = await import("@codemirror/lang-python");
             return python();
@@ -126,10 +144,22 @@ class LanguageLoaderManager {
       }
 
       switch (baseLanguage || language) {
+        case "jsx": {
+          const { javascript } = await import("@codemirror/lang-javascript");
+          return javascript({ jsx: true, typescript: false });
+        }
+
+        case "tsx": {
+          const { javascript } = await import("@codemirror/lang-javascript");
+          return javascript({ jsx: true, typescript: true });
+        }
         case "javascript":
         case "typescript": {
           const { javascript } = await import("@codemirror/lang-javascript");
-          return javascript({ typescript: (baseLanguage || language) === "typescript" });
+          return javascript({
+            typescript: (baseLanguage || language) === "typescript",
+            jsx: false,
+          });
         }
 
         case "json": {
@@ -221,6 +251,22 @@ class LanguageLoaderManager {
           const { StreamLanguage } = await import("@codemirror/language");
           const { csharp } = await import("@codemirror/legacy-modes/mode/clike");
           return StreamLanguage.define(csharp);
+        }
+
+        case "dockerfile": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { dockerFile } = await import("@codemirror/legacy-modes/mode/dockerfile");
+          return StreamLanguage.define(dockerFile);
+        }
+
+        case "graphql": {
+          // GraphQL can use a simple text mode since we're just formatting
+          return null;
+        }
+
+        case "jupyter": {
+          const { json } = await import("@codemirror/lang-json");
+          return json();
         }
 
         default:

@@ -110,11 +110,14 @@ if (!actualLanguageConfig.minify) {
         <div class="flex items-center gap-3">
           <h1 class="text-2xl md:text-4xl font-display font-black text-foreground tracking-tight">
             {actualLanguageConfig.name}
-            {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""} MINIFIER
+            {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
+            MINIFIER
           </h1>
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 bg-accent animate-pulse"></span>
-            <span class="px-3 py-1 bg-accent text-background text-sm font-mono font-bold uppercase border-2 border-accent">
+            <span
+              class="px-3 py-1 bg-accent text-background text-sm font-mono font-bold uppercase border-2 border-accent"
+            >
               Minify
             </span>
           </div>
@@ -123,8 +126,8 @@ if (!actualLanguageConfig.minify) {
       <div class="border-l-4 border-accent pl-4 mb-4">
         <p class="text-foreground font-medium leading-relaxed">
           Minify your {actualLanguageConfig.name}
-          code{variant ? ` with ${variant}` : ""} to reduce file size and improve
-          loading performance. Optimized for production use.
+          code{variant ? ` with ${variant}` : ""} to reduce file size and
+          improve loading performance. Optimized for production use.
         </p>
       </div>
       <div class="flex items-center gap-4">
@@ -134,7 +137,8 @@ if (!actualLanguageConfig.minify) {
         >
           <span class="text-lg">←</span>
           Back to {actualLanguageConfig.name}
-          {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""} Tool
+          {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
+          Tool
         </a>
         <div class="hidden md:flex items-center gap-2 text-muted-foreground">
           <span class="w-2 h-2 bg-foreground/50"></span>

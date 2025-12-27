@@ -335,10 +335,168 @@ instructions = [
       return getInitialCode("python");
     case "javascript-biome":
       return getInitialCode("javascript");
+    case "javascript-dprint":
+      return getInitialCode("javascript");
     case "typescript-biome":
       return getInitialCode("typescript");
+    case "typescript-dprint":
+      return getInitialCode("typescript");
+    case "jsx":
+      return `// Welcome to HAPPYFMT!
+import React from 'react';
+
+function Greeting() {
+  return (
+    <div className="greeting">
+      <h1>Welcome to HAPPYFMT!</h1>
+      <p>Type or paste JSX here</p>
+      <p>HAPPYFMT will format your code</p>
+    </div>
+  );
+}
+
+function InstructionList() {
+  const instructions = [
+    "Write React components",
+    "Format your JSX code",
+    "Enjoy clean, readable code"
+  ];
+
+  return (
+    <ul>
+      {instructions.map((instruction, index) => (
+        <li key={index}>{instruction}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default Greeting;`;
+    case "tsx":
+      return `// Welcome to HAPPYFMT!
+import React from 'react';
+
+interface GreetingProps {
+  name?: string;
+}
+
+function Greeting({ name = "Developer" }: GreetingProps) {
+  return (
+    <div className="greeting">
+      <h1>Welcome to HAPPYFMT, {name}!</h1>
+      <p>Type or paste TSX here</p>
+      <p>HAPPYFMT will format your code</p>
+    </div>
+  );
+}
+
+interface Instruction {
+  id: number;
+  text: string;
+}
+
+function InstructionList() {
+  const instructions: Instruction[] = [
+    { id: 1, text: "Write React components with TypeScript" },
+    { id: 2, text: "Format your TSX code" },
+    { id: 3, text: "Enjoy type-safe, readable code" }
+  ];
+
+  return (
+    <ul>
+      {instructions.map((instruction) => (
+        <li key={instruction.id}>{instruction.text}</li>
+      ))}
+    </ul>
+  );
+}
+
+export default Greeting;`;
     case "php-mago":
       return getInitialCode("php");
+    case "dockerfile":
+      return `# Welcome to HAPPYFMT!
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy application files
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]`;
+    case "graphql":
+      return `# Welcome to HAPPYFMT!
+type Query {
+  greeting: String!
+  instructions: [String!]!
+  user(id: ID!): User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  posts: [Post!]!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+}
+
+type Mutation {
+  createUser(name: String!, email: String!): User!
+  createPost(title: String!, content: String!, authorId: ID!): Post!
+}`;
+    case "jupyter":
+      return `{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "# Welcome to HAPPYFMT!\\n",
+        "\\n",
+        "This is a Jupyter notebook formatter."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {},
+      "outputs": [],
+      "source": [
+        "# Python code example\\n",
+        "print(\\"Welcome to HAPPYFMT!\\")\\n",
+        "\\n",
+        "def greet(name):\\n",
+        "    return f\\"Hello, {name}!\\""
+      ]
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 4
+}`;
     default:
       return "";
   }

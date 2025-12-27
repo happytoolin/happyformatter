@@ -15,6 +15,12 @@
   },
   "yaml": {
   },
+  "dockerfile": {
+  },
+  "roslyn": {
+  },
+  "jupyter": {
+  },
   "excludes": [
     "**/node_modules",
     "**/*-lock.json"
@@ -27,6 +33,10 @@
     "https://plugins.dprint.dev/biome-0.11.7.wasm",
     "https://plugins.dprint.dev/g-plane/malva-v0.15.1.wasm",
     "https://plugins.dprint.dev/g-plane/markup_fmt-v0.25.3.wasm",
-    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.1.wasm"
+    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.1.wasm",
+    "https://plugins.dprint.dev/dockerfile-0.3.3.wasm",
+    "https://plugins.dprint.dev/roslyn-0.19.1.json@a5daf2404c57680374f255c78f1956916482aa4b4e90825f1a48eb5a7e343b35",
+    "https://plugins.dprint.dev/g-plane/pretty_graphql-v0.2.1.wasm",
+    "https://plugins.dprint.dev/jupyter-0.2.1.wasm"
   ]
 }

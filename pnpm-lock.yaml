@@ -111,7 +111,7 @@ importers:
         version: 0.18.1
       "@openrouter/ai-sdk-provider":
         specifier: ^1.5.4
-        version: 1.5.4(ai@5.0.114(zod@4.2.1))(zod@4.2.1)
+        version: 1.5.4(ai@5.0.116(zod@4.2.1))(zod@4.2.1)
       "@playform/compress":
         specifier: ^0.2.0
         version: 0.2.0(@types/node@25.0.3)(jiti@2.6.1)(rollup@4.53.5)(typescript@5.9.3)(yaml@2.8.2)
@@ -138,7 +138,7 @@ importers:
         version: 3.20.0
       "@swc/wasm-web":
         specifier: ^1.15.5
-        version: 1.15.5
+        version: 1.15.7
       "@uiw/codemirror-theme-dracula":
         specifier: ^4.25.4
         version: 4.25.4(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.39.4)
@@ -165,7 +165,7 @@ importers:
         version: 0.1.14
       "@wasm-fmt/clang-format":
         specifier: ^21.1.6
-        version: 21.1.6
+        version: 21.1.8
       "@wasm-fmt/dart_fmt":
         specifier: ^0.3.0
         version: 0.3.0
@@ -177,7 +177,7 @@ importers:
         version: 0.2.0
       "@wasm-fmt/mago_fmt":
         specifier: ^0.3.0
-        version: 0.3.0
+        version: 0.3.1
       "@wasm-fmt/ruff_fmt":
         specifier: ^0.14.8
         version: 0.14.8
@@ -195,7 +195,7 @@ importers:
         version: 0.15.0
       ai:
         specifier: ^5.0.114
-        version: 5.0.114(zod@4.2.1)
+        version: 5.0.116(zod@4.2.1)
       astro:
         specifier: ^5.16.6
         version: 5.16.6(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.5)(terser@5.42.0)(typescript@5.9.3)(yaml@2.8.2)
@@ -235,6 +235,9 @@ importers:
       signal-polyfill:
         specifier: ^0.2.2
         version: 0.2.2
+      simple-icons:
+        specifier: ^16.2.0
+        version: 16.2.0
       simple-stack-query:
         specifier: ^0.2.0
         version: 0.2.0(@types/node@25.0.3)(lightningcss@1.30.2)(signal-polyfill@0.2.2)(terser@5.42.0)
@@ -286,9 +289,9 @@ importers:
         version: 4.55.0(@cloudflare/workers-types@4.20251217.0)
 
 packages:
-  "@ai-sdk/gateway@2.0.21":
+  "@ai-sdk/gateway@2.0.23":
     resolution: {
-      integrity: sha512-BwV7DU/lAm3Xn6iyyvZdWgVxgLu3SNXzl5y57gMvkW4nGhAOV5269IrJzQwGt03bb107sa6H6uJwWxc77zXoGA==,
+      integrity: sha512-qmX7afPRszUqG5hryHF3UN8ITPIRSGmDW6VYCmByzjoUkgm3MekzSx2hMV1wr0P+llDeuXb378SjqUfpvWJulg==,
     }
     engines: { node: ">=18" }
     peerDependencies:
@@ -2301,6 +2304,11 @@ packages:
       integrity: sha512-DVeMRoGrgn/k45oQNu189BoW4SZwgZFzJ1+1TV5j2NJ/KFC83oa/enRqZSGshyeMk5cPWMhsKs9nx+8o0unwGg==,
     }
 
+  "@lezer/common@1.5.0":
+    resolution: {
+      integrity: sha512-PNGcolp9hr4PJdXR4ix7XtixDrClScvtSCYW3rQG106oVMOOI+jFb+0+J3mbeL/53g1Zd6s0kJzaw6Ri68GmAA==,
+    }
+
   "@lezer/cpp@1.1.4":
     resolution: {
       integrity: sha512-aYSdZyUueeTgnfXQntiGUqKNW5WujlAsIbbHzkfJDneSZoyjPg8ObmWG3bzDPVYMC/Kf4l43WJLCunPnYFfQ0g==,
@@ -3216,9 +3224,9 @@ packages:
       integrity: sha512-iAoY/qRhNH8a/hBvm3zKj9qQ4oc2+3w1unPJa2XvTK3XjeLXtzcCingVPw/9e5mn1+0yPqxcBGp9Jf0pkfMb1g==,
     }
 
-  "@swc/wasm-web@1.15.5":
+  "@swc/wasm-web@1.15.7":
     resolution: {
-      integrity: sha512-BcU4bfw5+l7FWPG1biAHrMRwauSFQjRM8x/3AUVtRrhwZvJhBAxLc/hn+kCCsmDOhurMoVLS/ZwanYe6XpM5uQ==,
+      integrity: sha512-EU4+2ERI/3hYW8/SVzkuk7sU4+zc3ioz2v3L0s2GlluT5YPuF73ZuKJmJi6wA6mbHXdEa2uafOVKxQpuXTF31Q==,
     }
 
   "@swc/wasm@1.15.5":
@@ -3595,9 +3603,9 @@ packages:
       integrity: sha512-9kAuoQYfwcgDAGYbhxnCxrMyaZAbEIZfZoA22ZFPBYjFu20zXqEDOTJ9BognABxN/hKvtcz23rpLdEebUlRKkQ==,
     }
 
-  "@wasm-fmt/clang-format@21.1.6":
+  "@wasm-fmt/clang-format@21.1.8":
     resolution: {
-      integrity: sha512-vyYxRkOFOsNJGrI1u2TbWBPc2hzUExYwkEx1N/x+lNUlweOmW8fb9VANQMlPjYBHa8oIsPxxyTZJDZj6f7lw8Q==,
+      integrity: sha512-RA+6pPO4LEQpn3nrIUGzbC+Wzw88nMmfBINWccSSmng2M7UZPdIbk7mfMJZqjxIDhMEXJZb3Z+OufDm746LtFw==,
     }
     engines: { node: ">=16.17.0" }
     hasBin: true
@@ -3618,9 +3626,9 @@ packages:
       integrity: sha512-vDlu9c/wHQu6mHUX5fcH6o4gmNY5npPFDOY5PqLtR2jpk5GKuNoKZZtpV6pLihhEhGTptR0ZwlZ11KgdERXrdQ==,
     }
 
-  "@wasm-fmt/mago_fmt@0.3.0":
+  "@wasm-fmt/mago_fmt@0.3.1":
     resolution: {
-      integrity: sha512-cn54bHRCsAW7c33r5g9d2Oo8xXN2ai/dLsjf4GTAJUufTmG0eptjs4KuAogEU0/DTPgGfQrsQvJGazkO9eWvRQ==,
+      integrity: sha512-qaCMW0tFtkr5PCSUwGbsPZe8/GO0ZG6sd7YuxhlV8RV5G1kyIC0+X6JuWPEg3mZPawc0cyhTxTeYvW58Jl9U7g==,
     }
 
   "@wasm-fmt/ruff_fmt@0.14.8":
@@ -3668,9 +3676,9 @@ packages:
     engines: { node: ">=0.4.0" }
     hasBin: true
 
-  ai@5.0.114:
+  ai@5.0.116:
     resolution: {
-      integrity: sha512-q/lxcJA6avYn/TXTaE41VX6p9lN245mDU9bIGuPpfk6WxDMvmMoUKUIS0/aXAPYN3UmkUn/r9rvq/8C98RoCWw==,
+      integrity: sha512-+2hYJ80/NcDWuv9K2/MLP3cTCFgwWHmHlS1tOpFUKKcmLbErAAlE/S2knsKboc3PNAu8pQkDr2N3K/Vle7ENgQ==,
     }
     engines: { node: ">=18" }
     peerDependencies:
@@ -5632,6 +5640,12 @@ packages:
       integrity: sha512-p63Y4Er5/eMQ9RHg0M0Y64NlsQKpiu6MDdhBXpyywRuWiPywhJTpKJ1iB5K2hJEbFZ0BnDS7ZkJ+0AfTuL37Rg==,
     }
 
+  simple-icons@16.2.0:
+    resolution: {
+      integrity: sha512-SCV4cAX8O2M2WQ3QJm+3k4QdcUIJiBiwKNViQiOwPjWbFWgypzelviW+Bp0A2ij6r/DIEZpTTDcLgD/BE4aexQ==,
+    }
+    engines: { node: ">=0.12.18" }
+
   simple-stack-query@0.2.0:
     resolution: {
       integrity: sha512-7y+b+DmeBDkwU/GVD/nz9zElqjo+FY1V9oAIE+W2UVB5SGWqGLrZwkd4c2wz4Z6hNZFroQk9SIz+oOhtaX20Ag==,
@@ -6358,6 +6372,7 @@ packages:
       integrity: sha512-50icmLX8UbNaq0FmFHbcvvOh7I6rDA/FyaMYRcNSl1iX0JwuKswezmmtYvYPxPTkbYz7FUYR8GPZLaT23uzFqw==,
     }
     engines: { node: ">=20.0.0" }
+    deprecated: This version can incorrectly automatically delegate 'wrangler deploy' to 'opennextjs-cloudflare'
     hasBin: true
     peerDependencies:
       "@cloudflare/workers-types": ^4.20251213.0
@@ -6535,7 +6550,7 @@ packages:
     }
 
 snapshots:
-  "@ai-sdk/gateway@2.0.21(zod@4.2.1)":
+  "@ai-sdk/gateway@2.0.23(zod@4.2.1)":
     dependencies:
       "@ai-sdk/provider": 2.0.0
       "@ai-sdk/provider-utils": 3.0.19(zod@4.2.1)
@@ -7112,7 +7127,7 @@ snapshots:
     dependencies:
       "@codemirror/state": 6.5.2
       "@codemirror/view": 6.39.4
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
       "@lezer/highlight": 1.2.3
       "@lezer/lr": 1.4.5
       style-mod: 4.1.3
@@ -7815,6 +7830,8 @@ snapshots:
 
   "@lezer/common@1.4.0": {}
 
+  "@lezer/common@1.5.0": {}
+
   "@lezer/cpp@1.1.4":
     dependencies:
       "@lezer/common": 1.4.0
@@ -7835,11 +7852,11 @@ snapshots:
 
   "@lezer/highlight@1.2.3":
     dependencies:
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
 
   "@lezer/html@1.3.12":
     dependencies:
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
       "@lezer/highlight": 1.2.3
       "@lezer/lr": 1.4.5
 
@@ -7851,7 +7868,7 @@ snapshots:
 
   "@lezer/javascript@1.5.4":
     dependencies:
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
       "@lezer/highlight": 1.2.3
       "@lezer/lr": 1.4.5
 
@@ -7867,7 +7884,7 @@ snapshots:
 
   "@lezer/markdown@1.6.1":
     dependencies:
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
       "@lezer/highlight": 1.2.3
 
   "@lezer/php@1.0.5":
@@ -7890,13 +7907,13 @@ snapshots:
 
   "@lezer/sass@1.1.0":
     dependencies:
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
       "@lezer/highlight": 1.2.3
       "@lezer/lr": 1.4.5
 
   "@lezer/xml@1.0.6":
     dependencies:
-      "@lezer/common": 1.4.0
+      "@lezer/common": 1.5.0
       "@lezer/highlight": 1.2.3
       "@lezer/lr": 1.4.5
 
@@ -7922,10 +7939,10 @@ snapshots:
       "@nodelib/fs.scandir": 2.1.5
       fastq: 1.19.1
 
-  "@openrouter/ai-sdk-provider@1.5.4(ai@5.0.114(zod@4.2.1))(zod@4.2.1)":
+  "@openrouter/ai-sdk-provider@1.5.4(ai@5.0.116(zod@4.2.1))(zod@4.2.1)":
     dependencies:
       "@openrouter/sdk": 0.1.27
-      ai: 5.0.114(zod@4.2.1)
+      ai: 5.0.116(zod@4.2.1)
       zod: 4.2.1
 
   "@openrouter/sdk@0.1.27":
@@ -8515,7 +8532,7 @@ snapshots:
     dependencies:
       "@swc/counter": 0.1.3
 
-  "@swc/wasm-web@1.15.5": {}
+  "@swc/wasm-web@1.15.7": {}
 
   "@swc/wasm@1.15.5": {}
 
@@ -8813,7 +8830,7 @@ snapshots:
 
   "@wasm-fmt/biome_fmt@0.1.14": {}
 
-  "@wasm-fmt/clang-format@21.1.6": {}
+  "@wasm-fmt/clang-format@21.1.8": {}
 
   "@wasm-fmt/dart_fmt@0.3.0": {}
 
@@ -8821,7 +8838,7 @@ snapshots:
 
   "@wasm-fmt/lua_fmt@0.2.0": {}
 
-  "@wasm-fmt/mago_fmt@0.3.0": {}
+  "@wasm-fmt/mago_fmt@0.3.1": {}
 
   "@wasm-fmt/ruff_fmt@0.14.8": {}
 
@@ -8839,9 +8856,9 @@ snapshots:
 
   acorn@8.15.0: {}
 
-  ai@5.0.114(zod@4.2.1):
+  ai@5.0.116(zod@4.2.1):
     dependencies:
-      "@ai-sdk/gateway": 2.0.21(zod@4.2.1)
+      "@ai-sdk/gateway": 2.0.23(zod@4.2.1)
       "@ai-sdk/provider": 2.0.0
       "@ai-sdk/provider-utils": 3.0.19(zod@4.2.1)
       "@opentelemetry/api": 1.9.0
@@ -10672,6 +10689,8 @@ snapshots:
       "@types/hast": 3.0.4
 
   signal-polyfill@0.2.2: {}
+
+  simple-icons@16.2.0: {}
 
   simple-stack-query@0.2.0(@types/node@25.0.3)(lightningcss@1.30.2)(signal-polyfill@0.2.2)(terser@5.42.0):
     dependencies:

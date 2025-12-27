@@ -1,65 +1,137 @@
 ---
-import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import { LanguageIcon } from "@/components/ui/LanguageIcon";
 
 const tools = [
+  // Web Fundamentals
   { name: "HTML Formatter", url: "/html", type: "FMT" },
   { name: "HTML Minifier", url: "/minify/html", type: "MIN" },
   { name: "CSS Formatter", url: "/css", type: "FMT" },
   { name: "CSS Minifier", url: "/minify/css", type: "MIN" },
+  { name: "SCSS Formatter", url: "/scss", type: "FMT" },
+  { name: "SCSS Minifier", url: "/minify/scss", type: "MIN" },
+
+  // JavaScript & TypeScript Family
   { name: "JS Formatter", url: "/javascript", type: "FMT" },
   { name: "JS Minifier", url: "/minify/javascript", type: "MIN" },
   { name: "JS Biome Formatter", url: "/javascript-biome", type: "FMT" },
   { name: "JS Biome Minifier", url: "/minify/javascript-biome", type: "MIN" },
+  { name: "JS dprint Formatter", url: "/javascript-dprint", type: "FMT" },
+  { name: "JSX Formatter", url: "/jsx", type: "FMT" },
+  { name: "TS Formatter", url: "/typescript", type: "FMT" },
+  { name: "TS Minifier", url: "/minify/typescript", type: "MIN" },
+  { name: "TS Biome Formatter", url: "/typescript-biome", type: "FMT" },
+  { name: "TS Biome Minifier", url: "/minify/typescript-biome", type: "MIN" },
+  { name: "TS dprint Formatter", url: "/typescript-dprint", type: "FMT" },
+  { name: "TS Validator", url: "/validator/typescript", type: "VAL" },
+  { name: "TSX Formatter", url: "/tsx", type: "FMT" },
+
+  // Data Formats
   { name: "JSON Formatter", url: "/json", type: "FMT" },
   { name: "JSON Minifier", url: "/minify/json", type: "MIN" },
   { name: "XML Formatter", url: "/xml", type: "FMT" },
   { name: "XML Minifier", url: "/minify/xml", type: "MIN" },
   { name: "YAML Formatter", url: "/yaml", type: "FMT" },
-  { name: "SQL Formatter", url: "/sql", type: "FMT" },
-  { name: "Go Formatter", url: "/go", type: "FMT" },
-  { name: "Dart Formatter", url: "/dart", type: "FMT" },
-  { name: "SCSS Formatter", url: "/scss", type: "FMT" },
-  { name: "SCSS Minifier", url: "/minify/scss", type: "MIN" },
-  { name: "Java Formatter", url: "/java", type: "FMT" },
-  { name: "Lua Formatter", url: "/lua", type: "FMT" },
-  { name: "Python Formatter", url: "/python", type: "FMT" },
-  { name: "Python Ruff Formatter", url: "/python-ruff", type: "FMT" },
-  { name: "TS Formatter", url: "/typescript", type: "FMT" },
-  { name: "TS Minifier", url: "/minify/typescript", type: "MIN" },
-  { name: "TS Validator", url: "/validator/typescript", type: "VAL" },
-  { name: "TS Biome Formatter", url: "/typescript-biome", type: "FMT" },
-  { name: "TS Biome Minifier", url: "/minify/typescript-biome", type: "MIN" },
-  { name: "Markdown", url: "/markdown", type: "FMT" },
-  { name: "C# Formatter", url: "/csharp", type: "FMT" },
+
+  // System Programming Languages
   { name: "C Formatter", url: "/c", type: "FMT" },
   { name: "C++ Formatter", url: "/cpp", type: "FMT" },
+  { name: "C# Formatter", url: "/csharp", type: "FMT" },
+  { name: "Go Formatter", url: "/go", type: "FMT" },
+  { name: "Rust Formatter", url: "/rust", type: "FMT" },
+  { name: "Zig Formatter", url: "/zig", type: "FMT" },
+
+  // High-Level Languages
+  { name: "Python Formatter", url: "/python", type: "FMT" },
+  { name: "Python Ruff Formatter", url: "/python-ruff", type: "FMT" },
   { name: "PHP Formatter", url: "/php", type: "FMT" },
   { name: "PHP Mago Formatter", url: "/php-mago", type: "FMT" },
+  { name: "Java Formatter", url: "/java", type: "FMT" },
+  { name: "Lua Formatter", url: "/lua", type: "FMT" },
+  { name: "Dart Formatter", url: "/dart", type: "FMT" },
+
+  // Database & Query
+  { name: "SQL Formatter", url: "/sql", type: "FMT" },
+  { name: "GraphQL Formatter", url: "/graphql", type: "FMT" },
+
+  // Markup & Config
+  { name: "Markdown", url: "/markdown", type: "FMT" },
+  { name: "Dockerfile Formatter", url: "/dockerfile", type: "FMT" },
   { name: "Proto Formatter", url: "/proto", type: "FMT" },
-  { name: "Zig Formatter", url: "/zig", type: "FMT" },
+  { name: "Jupyter Formatter", url: "/jupyter", type: "FMT" },
 ];
 ---
 
-<div
-  class="border-t-2 border-foreground bg-foreground text-background py-16"
-  id="more-tools"
->
+<style>
+.endrik-tools {
+  background: #0d0d0d;
+}
+
+.tool-card {
+  background: rgba(13, 13, 13, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(240, 240, 240, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tool-card:hover {
+  background: rgba(251, 146, 60, 0.05);
+}
+
+.tool-type-badge {
+  background: transparent;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  text-transform: uppercase;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tool-card:hover .tool-type-badge {
+  color: #f0f0f0;
+}
+
+.tool-name {
+  color: #f0f0f0;
+  font-weight: 800;
+  font-size: 1.125rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tool-icon-wrapper {
+  opacity: 0.2;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tool-card:hover .tool-icon-wrapper {
+  opacity: 0.6;
+  transform: scale(1.1);
+}
+
+.section-title {
+  color: #f0f0f0;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+</style>
+
+<div class="endrik-tools py-20" id="more-tools">
   <div class="container mx-auto px-4">
-    <div class="flex items-center justify-between mb-8">
-      <h2 class="text-3xl font-display font-black uppercase tracking-tight text-background dark:text-background">
-        System Modules <span class="text-primary">({tools.length})</span>
+    <!-- Header -->
+    <div class="mb-12">
+      <h2 class="section-title text-4xl md:text-5xl font-display">
+        All Tools <span class="text-primary">({tools.length})</span>
       </h2>
-      <div class="hidden md:flex gap-2">
-        <span class="w-3 h-3 bg-white rounded-full"></span>
-        <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
-      </div>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 bg-zinc-800 dark:bg-zinc-900 border-2 border-white/20 dark:border-white/10 gap-px">
+    <!-- Tools Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       {tools.map((tool) => {
         const cleanName = tool.name.replace("Formatter", "").replace("Minifier", "")
           .trim();
-
         const urlParts = tool.url.split("/").filter(Boolean);
         let iconName: string;
         if (urlParts.length >= 2) {
@@ -71,53 +143,46 @@ const tools = [
         return (
           <a
             href={tool.url}
-            class="tool group relative bg-black dark:bg-zinc-950 p-6 hover:bg-white hover:dark:bg-zinc-100 transition-colors duration-200 flex flex-col justify-between h-32 overflow-hidden"
+            class="tool-card group relative p-5 flex flex-col justify-between h-32 overflow-hidden"
           >
-            <div class="absolute bottom-2 right-2 opacity-15 grayscale transition-opacity">
+            <!-- Icon Background -->
+            <div class="tool-icon-wrapper absolute bottom-2 right-2">
               <LanguageIcon
                 icon={iconName}
-                class="w-16 h-16"
+                className="w-10 h-10"
+                size={40}
+                grayscale={true}
+                showColorOnHover={true}
               />
             </div>
 
-            <div class="flex justify-between items-start">
+            <!-- Badge -->
+            <div class="flex items-start">
               <span
-                class="text-[10px] font-mono font-bold text-primary border border-primary px-1"
+                class="tool-type-badge font-mono border border-primary text-primary group-hover:bg-primary"
               >
                 {tool.type}
               </span>
-              <span
-                class="border-accent group-hover:border-accent/80 dark:group-hover:border-accent/70 opacity-50 group-hover:opacity-100 transition-opacity"
-                style="color: inherit !important"
-              >↗</span>
             </div>
 
+            <!-- Tool Name -->
             <div class="relative z-10">
               <span
-                class="block text-lg font-bold font-display uppercase tracking-wider text-white dark:text-zinc-100 group-hover:text-black group-hover:dark:text-zinc-900"
+                class="tool-name block font-display group-hover:text-primary"
               >
                 {cleanName}
-              </span>
-              <span
-                class="text-[10px] font-mono text-zinc-500 dark:text-zinc-600 group-hover:text-zinc-800 group-hover:dark:text-zinc-700"
-              >
-                {tool.name.includes("Minifier") ? "Compression" : "Standardization"}
               </span>
             </div>
           </a>
         );
       })}
     </div>
-
-    <div class="mt-4 text-right font-mono text-[10px] text-zinc-500 dark:text-zinc-600">
-      SYSTEM STATUS: ALL SYSTEMS OPERATIONAL
-    </div>
   </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const tools = document.querySelectorAll(".tool");
+  const tools = document.querySelectorAll(".tool-card");
   tools.forEach((tool) => {
     const toolName = tool.getAttribute("href")?.replace("/", "") || "";
 

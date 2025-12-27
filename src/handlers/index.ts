@@ -60,8 +60,8 @@ export async function getFormatter(language: string) {
       await javaFormatter.init();
       return javaFormatter;
     case "csharp":
-      const { CSharpFormatter } = await import("@/handlers/formatters/clang");
-      const csFormatter = new CSharpFormatter();
+      const { RoslynCSharpFormatter } = await import("@/handlers/formatters/roslyn");
+      const csFormatter = new RoslynCSharpFormatter();
       await csFormatter.init();
       return csFormatter;
     case "cpp":
@@ -140,11 +140,46 @@ export async function getFormatter(language: string) {
       const tsBiomeFormatter = new TypeScriptBiomeFormatter();
       await tsBiomeFormatter.init();
       return tsBiomeFormatter;
+    case "javascript-dprint":
+      const { JavaScriptDprintFormatter } = await import("@/handlers/formatters/javascript-dprint");
+      const jsDprintFormatter = new JavaScriptDprintFormatter();
+      await jsDprintFormatter.init();
+      return jsDprintFormatter;
+    case "typescript-dprint":
+      const { TypeScriptDprintFormatter } = await import("@/handlers/formatters/typescript-dprint");
+      const tsDprintFormatter = new TypeScriptDprintFormatter();
+      await tsDprintFormatter.init();
+      return tsDprintFormatter;
+    case "jsx":
+      const { JavaScriptJSXFormatter } = await import("@/handlers/formatters/javascript-dprint");
+      const jsxFormatter = new JavaScriptJSXFormatter();
+      await jsxFormatter.init();
+      return jsxFormatter;
+    case "tsx":
+      const { TypeScriptTSXFormatter } = await import("@/handlers/formatters/typescript-dprint");
+      const tsxFormatter = new TypeScriptTSXFormatter();
+      await tsxFormatter.init();
+      return tsxFormatter;
     case "php-mago":
       const { PHPMagoFormatter } = await import("@/handlers/formatters/php-mago");
       const phpMagoFormatter = new PHPMagoFormatter();
       await phpMagoFormatter.init();
       return phpMagoFormatter;
+    case "dockerfile":
+      const { DockerfileFormatter } = await import("@/handlers/formatters/dockerfile");
+      const dockerfileFormatter = new DockerfileFormatter();
+      await dockerfileFormatter.init();
+      return dockerfileFormatter;
+    case "graphql":
+      const { GraphQLFormatter } = await import("@/handlers/formatters/graphql");
+      const graphqlFormatter = new GraphQLFormatter();
+      await graphqlFormatter.init();
+      return graphqlFormatter;
+    case "jupyter":
+      const { JupyterFormatter } = await import("@/handlers/formatters/jupyter");
+      const jupyterFormatter = new JupyterFormatter();
+      await jupyterFormatter.init();
+      return jupyterFormatter;
     // case "toml":
     //   const { TomlFormatter } = await import("@/handlers/formatters/toml");
     //   const tomlFormatter = new TomlFormatter();
