@@ -25,6 +25,22 @@ export const LANGUAGES: Record<string, LanguageConfig> = {
     minify: false,
     extensions: ["cpp", "cxx", "cc", "hpp", "hxx", "hh"],
   },
+  objectivec: {
+    id: "objectivec",
+    name: "Objective-C",
+    title: "Objective-C Formatter and Minifier",
+    description: "Objective-C formatter that formats Objective-C source code, locally in your browser",
+    minify: false,
+    extensions: ["m"],
+  },
+  objectivecpp: {
+    id: "objectivecpp",
+    name: "Objective-C++",
+    title: "Objective-C++ Formatter and Minifier",
+    description: "Objective-C++ formatter that formats Objective-C++ source code, locally in your browser",
+    minify: false,
+    extensions: ["mm"],
+  },
   csharp: {
     id: "csharp",
     name: "C#",
@@ -160,6 +176,14 @@ export const LANGUAGES: Record<string, LanguageConfig> = {
     description: "TypeScript formatter that formats TypeScript code, locally in your browser",
     minify: true,
     extensions: ["ts", "tsx"],
+  },
+  toml: {
+    id: "toml",
+    name: "TOML",
+    title: "TOML Formatter and Minifier",
+    description: "TOML formatter that formats TOML configuration files, locally in your browser",
+    minify: false,
+    extensions: ["toml"],
   },
   xml: {
     id: "xml",

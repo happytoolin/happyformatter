@@ -2,7 +2,6 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import LeapOCR from "@/components/leapocr/LeapOCR.astro";
 import Formatter from "@/components/playground/Formatter";
 import { LANGUAGES } from "@/lib/languages";
 import type { GetStaticPaths } from "astro";
@@ -153,7 +152,6 @@ if (!actualLanguageConfig.minify) {
     minifier={true}
     language={actualLanguage}
   />
-  <LeapOCR />
   <Info language={actualLanguage} />
   <FAQ language={actualLanguage} client:idle />
 </Layout>

@@ -300,6 +300,37 @@ int main() {
   return 0;
 }
 `;
+    case "objectivec":
+      return `// Welcome to HAPPYFMT!
+#import <Foundation/Foundation.h>
+
+int main(int argc, const char * argv[]) {
+  @autoreleasepool {
+    NSString *message = @"Welcome to HAPPYFMT!";
+    NSLog(@"%@", message);
+  }
+  return 0;
+}
+`;
+    case "objectivecpp":
+      return `// Welcome to HAPPYFMT!
+#import <Foundation/Foundation.h>
+#include <vector>
+
+int main(int argc, const char * argv[]) {
+  @autoreleasepool {
+    std::vector<NSString *> messages = {
+      @"Type or paste Objective-C++ here",
+      @"HAPPYFMT will format your code"
+    };
+
+    for (NSString *message : messages) {
+      NSLog(@"%@", message);
+    }
+  }
+  return 0;
+}
+`;
     case "php":
       return `<?php
 // Welcome to HAPPYFMT!

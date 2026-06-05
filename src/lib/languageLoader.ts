@@ -26,12 +26,15 @@ class LanguageLoaderManager {
       "css",
       "cpp",
       "c",
+      "objectivec",
+      "objectivecpp",
       "java",
       "php",
       "rust",
       "sql",
       "xml",
       "yaml",
+      "toml",
       "markdown",
       "go",
       "lua",
@@ -158,6 +161,18 @@ class LanguageLoaderManager {
           return cpp();
         }
 
+        case "objectivec": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { objectiveC } = await import("@codemirror/legacy-modes/mode/clike");
+          return StreamLanguage.define(objectiveC);
+        }
+
+        case "objectivecpp": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { objectiveCpp } = await import("@codemirror/legacy-modes/mode/clike");
+          return StreamLanguage.define(objectiveCpp);
+        }
+
         case "java": {
           const { java } = await import("@codemirror/lang-java");
           return java();
@@ -186,6 +201,12 @@ class LanguageLoaderManager {
         case "yaml": {
           const { yaml } = await import("@codemirror/lang-yaml");
           return yaml();
+        }
+
+        case "toml": {
+          const { StreamLanguage } = await import("@codemirror/language");
+          const { toml } = await import("@codemirror/legacy-modes/mode/toml");
+          return StreamLanguage.define(toml);
         }
 
         case "markdown": {

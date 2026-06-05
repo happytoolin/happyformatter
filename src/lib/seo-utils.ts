@@ -453,6 +453,42 @@ export const languageSEOData: Record<string, LanguageSEOData> = {
       "Free online C++ formatter and beautifier. Format, validate, and beautify your C++ code with syntax highlighting. Privacy-focused, client-side processing.",
     category: "Programming, C++, Systems Programming",
   },
+  objectivec: {
+    keywords: [
+      "objective-c formatter",
+      "objective c formatter",
+      "objective-c beautifier",
+      "objective-c code formatter",
+      "objective-c syntax checker",
+      "objective-c formatter online",
+      "free objective-c formatter",
+      "objective-c code formatter online",
+      "objective-c clang formatter",
+      "objective-c pretty print",
+    ],
+    title: "Objective-C Formatter - Format Objective-C Code Online",
+    description:
+      "Free online Objective-C formatter and beautifier. Format, validate, and beautify your Objective-C code with syntax highlighting. Privacy-focused, client-side processing.",
+    category: "Programming, Objective-C, Apple Development Tools",
+  },
+  objectivecpp: {
+    keywords: [
+      "objective-c++ formatter",
+      "objective cpp formatter",
+      "objective-c++ beautifier",
+      "objective-c++ code formatter",
+      "objective-c++ syntax checker",
+      "objective-c++ formatter online",
+      "free objective-c++ formatter",
+      "objective-c++ code formatter online",
+      "objective-c++ clang formatter",
+      "objective-c++ pretty print",
+    ],
+    title: "Objective-C++ Formatter - Format Objective-C++ Code Online",
+    description:
+      "Free online Objective-C++ formatter and beautifier. Format, validate, and beautify your Objective-C++ code with syntax highlighting. Privacy-focused, client-side processing.",
+    category: "Programming, Objective-C++, Apple Development Tools",
+  },
   csharp: {
     keywords: [
       "c# formatter",
@@ -496,6 +532,27 @@ export const languageSEOData: Record<string, LanguageSEOData> = {
     description:
       "Free online Protocol Buffers formatter and beautifier. Format, validate, and beautify your .proto files with syntax highlighting. Privacy-focused, client-side processing.",
     category: "Data Format, Protocol Buffers, Development Tools",
+  },
+  toml: {
+    keywords: [
+      "toml formatter",
+      "toml beautifier",
+      "toml prettifier",
+      "toml validator",
+      "toml code formatter",
+      "toml syntax checker",
+      "toml formatter online",
+      "free toml formatter",
+      "toml code formatter online",
+      "toml code beautifier",
+      "taplo formatter",
+      "toml pretty print",
+      "toml config formatter",
+    ],
+    title: "TOML Formatter - Format TOML Online",
+    description:
+      "Free online TOML formatter and beautifier. Format, validate, and beautify your TOML configuration files with syntax highlighting. Privacy-focused, client-side processing.",
+    category: "Data Format, TOML, Configuration Tools",
   },
   zig: {
     keywords: [

@@ -181,6 +181,9 @@ importers:
       "@wasm-fmt/sql_fmt":
         specifier: ^0.2.2
         version: 0.2.2
+      "@wasm-fmt/taplo_fmt":
+        specifier: ^0.2.5
+        version: 0.2.5
       "@wasm-fmt/web_fmt":
         specifier: ^0.2.9
         version: 0.2.9
@@ -220,9 +223,6 @@ importers:
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
-      prettier-plugin-toml:
-        specifier: ^2.0.6
-        version: 2.0.6(prettier@3.8.3)
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -2551,16 +2551,6 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  "@taplo/core@0.2.0":
-    resolution: {
-      integrity: sha512-r8bl54Zj1In3QLkiW/ex694bVzpPJ9EhwqT9xkcUVODnVUGirdB1JTsmiIv0o1uwqZiwhi8xNnTOQBRQCpizrQ==,
-    }
-
-  "@taplo/lib@0.5.0":
-    resolution: {
-      integrity: sha512-+xIqpQXJco3T+VGaTTwmhxLa51qpkQxCjRwezjFZgr+l21ExlywJFcDfTrNmL6lG6tqb0h8GyJKO3UPGPtSCWg==,
-    }
-
   "@types/babel__core@7.20.5":
     resolution: {
       integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==,
@@ -2820,6 +2810,11 @@ packages:
   "@wasm-fmt/sql_fmt@0.2.2":
     resolution: {
       integrity: sha512-XY8UPYqKFaZ3Jhg113p6gleL4mJN1NfNtIfIha+Uz53fYWP4O8XyzrU8HVlHpV8iIzgmKQqJosNYpqdvG2OFaw==,
+    }
+
+  "@wasm-fmt/taplo_fmt@0.2.5":
+    resolution: {
+      integrity: sha512-rq/sOB7aJ2a0b5OSeMJz3gjE5hAc85096bmRiFkp4LHRP3FW/rXziMF1yhEF0yeDK3YseGaL2peO3TTDeYt6HA==,
     }
 
   "@wasm-fmt/web_fmt@0.2.9":
@@ -4246,14 +4241,6 @@ packages:
       integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==,
     }
     engines: { node: ^10 || ^12 || >=14 }
-
-  prettier-plugin-toml@2.0.6:
-    resolution: {
-      integrity: sha512-12N/wBuHa9jd/KVy9pRP20NMKxQfQLMseQCt66lIbLaPLItvGUcSIryE1eZZMJ7loSws6Ig3M2Elc2EreNh76w==,
-    }
-    engines: { node: ">=16.0.0" }
-    peerDependencies:
-      prettier: ^3.0.3
 
   prettier@3.8.3:
     resolution: {
@@ -6942,12 +6929,6 @@ snapshots:
       tailwindcss: 4.3.0
       vite: 7.3.5(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0)
 
-  "@taplo/core@0.2.0": {}
-
-  "@taplo/lib@0.5.0":
-    dependencies:
-      "@taplo/core": 0.2.0
-
   "@types/babel__core@7.20.5":
     dependencies:
       "@babel/parser": 7.29.7
@@ -7173,6 +7154,8 @@ snapshots:
   "@wasm-fmt/ruff_fmt@0.15.15": {}
 
   "@wasm-fmt/sql_fmt@0.2.2": {}
+
+  "@wasm-fmt/taplo_fmt@0.2.5": {}
 
   "@wasm-fmt/web_fmt@0.2.9": {}
 
@@ -8374,11 +8357,6 @@ snapshots:
       nanoid: 3.3.12
       picocolors: 1.1.1
       source-map-js: 1.2.1
-
-  prettier-plugin-toml@2.0.6(prettier@3.8.3):
-    dependencies:
-      "@taplo/lib": 0.5.0
-      prettier: 3.8.3
 
   prettier@3.8.3: {}
 
