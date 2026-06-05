@@ -2,26 +2,25 @@
 import { codeMirrorThemes } from "./themes";
 ---
 
-<RootElement>
-  <div class="theme-selector relative w-[180px]">
-    <select
-      aria-label="Theme selector"
-      id="theme-select"
-      data-target="theme-select"
-      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      <option value="" disabled selected>Select theme</option>
-      {codeMirrorThemes.map((theme: any) => (
-        <option value={theme.value}>{theme.name}</option>
-      ))}
-    </select>
-  </div>
-</RootElement>
+<div class="theme-selector relative w-[180px]">
+  <select
+    aria-label="Theme selector"
+    id="theme-select"
+    class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+  >
+    <option value="" disabled selected>Select theme</option>
+    {codeMirrorThemes.map((theme: any) => (
+      <option value={theme.value}>{theme.name}</option>
+    ))}
+  </select>
+</div>
 
 <script>
-RootElement.ready(($) => {
-  const selectElement = $("theme-select") as HTMLSelectElement;
+const selectElement = document.getElementById("theme-select") as
+  | HTMLSelectElement
+  | null;
 
+if (selectElement) {
   // Load the saved theme from localStorage
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
@@ -51,5 +50,5 @@ RootElement.ready(($) => {
     attributes: true,
     attributeFilter: ["data-theme"],
   });
-});
+}
 </script>

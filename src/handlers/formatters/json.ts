@@ -1,11 +1,13 @@
 import { Formatter } from "../interface";
 
-import init, { format_json, type JsonConfig } from "@wasm-fmt/web_fmt";
+import init, { format } from "@wasm-fmt/web_fmt/web";
+
+type JsonConfig = NonNullable<NonNullable<Parameters<typeof format>[2]>["json"]>;
 
 export class JSONFormatter extends Formatter {
   protected config: JsonConfig = {
-    indent_style: "space",
-    indent_width: 2,
+    indentStyle: "space",
+    indentWidth: 2,
   };
 
   constructor() {
@@ -13,15 +15,11 @@ export class JSONFormatter extends Formatter {
   }
 
   async init(): Promise<void> {
-    try {
-      await init();
-    } catch (err) {
-      console.error("err", err);
-    }
+    await init();
   }
 
   async formatCode(code: string): Promise<string> {
-    return format_json(code, this.config);
+    return format(code, "index.json", { json: this.config });
   }
 
   setConfig(config: JsonConfig): void {

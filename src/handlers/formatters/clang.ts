@@ -1,5 +1,5 @@
 import type { Style } from "@wasm-fmt/clang-format";
-import init, { format } from "@wasm-fmt/clang-format";
+import init, { format } from "@wasm-fmt/clang-format/web";
 import { Formatter } from "../interface";
 
 export class CFormatter extends Formatter {
@@ -14,7 +14,7 @@ export class CFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.c");
+    return format(code, "file.c", this.config);
   }
 
   setConfig(config: Style): void {
@@ -34,7 +34,7 @@ export class CppFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.cc");
+    return format(code, "file.cc", this.config);
   }
 
   setConfig(config: Style): void {
@@ -54,7 +54,7 @@ export class JavaFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.java");
+    return format(code, "file.java", this.config);
   }
 
   setConfig(config: Style): void {
@@ -74,7 +74,7 @@ export class CSharpFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.cs");
+    return format(code, "file.cs", this.config);
   }
 
   setConfig(config: Style): void {
@@ -94,7 +94,7 @@ export class ObjectiveCFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.m");
+    return format(code, "file.m", this.config);
   }
 
   setConfig(config: Style): void {
@@ -114,7 +114,7 @@ export class ObjectiveCppFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.mm");
+    return format(code, "file.mm", this.config);
   }
 
   setConfig(config: Style): void {
@@ -134,7 +134,7 @@ export class ProtoFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "file.proto");
+    return format(code, "file.proto", this.config);
   }
 
   setConfig(config: Style): void {

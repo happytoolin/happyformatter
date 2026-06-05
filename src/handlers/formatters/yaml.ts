@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/yamlfmt";
-import init, { format } from "@wasm-fmt/yamlfmt";
+import init, { format } from "@wasm-fmt/yamlfmt/web";
 import { Formatter } from "../interface";
 
 export class YamlFormatter extends Formatter {
@@ -15,7 +15,7 @@ export class YamlFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "sample.yaml", this.config);
+    return format(code, this.config);
   }
 
   setConfig(config: Config): void {

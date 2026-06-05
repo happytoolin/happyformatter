@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/ruff_fmt";
-import { default as init, format } from "@wasm-fmt/ruff_fmt";
+import init, { format } from "@wasm-fmt/ruff_fmt/web";
 import { Formatter } from "../interface";
 
 export class PythonRuffFormatter extends Formatter {
