@@ -1,55 +1,47 @@
 ---
+import { LANGUAGES } from "@/lib/languages";
+
 interface Props {
   language: string;
   minify: boolean;
 }
 
 const { language, minify } = Astro.props;
+const languageName = LANGUAGES[language]?.name
+  || language
+    .split("-")
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+const title = language === "privacy"
+  ? "Privacy Policy"
+  : language === "terms"
+  ? "Terms of Service"
+  : `${languageName} Formatter${minify ? " & Minifier" : ""}`;
 ---
 
-<section class="relative w-full border-b-2 border-foreground bg-secondary/30 overflow-hidden py-20">
-  <!-- Dynamic Background Text -->
-  <div class="absolute top-1/2 left-0 -translate-y-1/2 w-full select-none pointer-events-none opacity-5 overflow-hidden whitespace-nowrap">
-    <span
-      class="font-display text-[15vw] md:text-[20vw] leading-none text-foreground"
-    >
-      {language === "privacy"
-        ? "PRIVACY PRIVACY PRIVACY"
-        : language === "terms"
-        ? "TERMS TERMS TERMS"
-        : `${language} ${language} ${language}`}
-    </span>
-  </div>
-
-  <div class="container mx-auto px-4 relative z-10">
-    <div class="flex flex-col md:flex-row items-end justify-between gap-6">
-      <div class="space-y-4">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-3 h-3 bg-primary animate-pulse"></span>
-          <span
-            class="font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground"
-          >
-            System Status: Active
-          </span>
-        </div>
-
-        <h1 class="font-display text-4xl md:text-6xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.8]">
-          {language === "privacy"
-            ? "Privacy Policy"
-            : language === "terms"
-            ? "Terms of Service"
-            : `${language.toUpperCase()} Formatter${minify ? " & Minifier" : ""}`}
+<section class="border-b border-border bg-background">
+  <div class="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 lg:px-8 lg:py-6">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="min-w-0">
+        <p class="font-mono text-xs uppercase text-muted-foreground">
+          Formatter
+        </p>
+        <h1 class="mt-1 max-w-5xl text-2xl font-semibold leading-tight text-foreground sm:text-3xl">
+          {title}
         </h1>
       </div>
 
-      <div class="flex flex-col items-end gap-2 text-right">
-        <div class="border-2 border-accent text-accent font-mono text-xs font-bold px-2 py-1 uppercase transform -rotate-2">
-          {minify ? "Minification Engine Ready" : "Formatter Engine Ready"}
-        </div>
-        <p class="font-serif italic text-lg max-w-md text-muted-foreground border-l-2 border-primary pl-4">
-          "Zero-latency processing via WebAssembly. <br />Data never leaves your
-          local environment."
-        </p>
+      <div class="flex flex-wrap gap-2">
+        <span
+          class="rounded-md border border-border bg-card px-3 py-2 font-mono text-xs uppercase text-muted-foreground"
+        >
+          {minify ? "Format + minify" : "Format"}
+        </span>
+        <span
+          class="rounded-md border border-border bg-card px-3 py-2 font-mono text-xs uppercase text-muted-foreground"
+        >
+          No sign in
+        </span>
       </div>
     </div>
   </div>

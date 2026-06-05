@@ -198,17 +198,17 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
 >
   {/* Custom heading for variant pages */}
   {isVariant && (
-    <div class="container mx-auto px-4 py-6">
-      <div class="bg-linear-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-lg p-6 mb-6">
-        <div class="flex items-center gap-3 mb-2">
-          <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+    <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+      <div class="mb-6 rounded-lg border border-border bg-card p-5">
+        <div class="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <h1 class="text-2xl font-semibold tracking-[-0.03em] text-foreground md:text-3xl">
             {actualVariantData?.h1
               || `${actualLanguageConfig.name} ${
                 currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1)
               }`}
           </h1>
           <span
-            class="px-3 py-1 bg-primary text-primary-foreground text-sm font-mono rounded-full"
+            class="w-fit rounded-md border border-border bg-background px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
           >
             {actualLanguageConfig.name}
           </span>
@@ -220,9 +220,9 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
         <div class="mt-4 flex items-center gap-2">
           <a
             href={`/${actualLanguage}`}
-            class="text-primary hover:text-primary/80 underline text-sm"
+            class="inline-flex rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary"
           >
-            ← Back to
+            Back to
             {actualLanguageConfig.name}
             Formatter
           </a>
@@ -232,7 +232,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
   )}
 
   <Formatter
-    client:load
+    client:only="react"
     minifier={actualLanguageConfig.minify}
     language={actualLanguage}
   />
@@ -249,6 +249,6 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
     variant={currentVariant}
     variantData={actualVariantData}
     seoData={generatedSEOData}
-    client:idle
+    client:only="react"
   />
 </Layout>

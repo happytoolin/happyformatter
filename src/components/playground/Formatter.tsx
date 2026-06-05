@@ -1,15 +1,62 @@
 import { getFormatter, getMinifier } from "@/handlers";
-import { FileText, Minimize2 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { getInitialCode } from "@/lib/initialCode";
+import { LANGUAGES } from "@/lib/languages";
+import { Check, Copy, FileText, Minimize2 } from "lucide-react";
+import type { ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CodeMirrorThemeSelector from "./CodeMirrorThemeSelector";
 import CodePlayground from "./CodePlayground";
-import CodeValid from "./CodeValid";
 import { useFormatterStore } from "./formatterStore";
-import { ThemeProvider, useTheme } from "./ThemeContext";
+import { ThemeProvider } from "./ThemeContext";
 
 interface FormatterProps {
   minifier: boolean;
   language: string;
+}
+
+type ActionStatus =
+  | "format_success"
+  | "minify_success"
+  | "minifier_unavailable"
+  | "execution_failed"
+  | "copied"
+  | "copy_failed";
+
+function formatLanguageName(language: string) {
+  return LANGUAGES[language]?.name || language
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function ActionButton({
+  children,
+  onClick,
+  disabled,
+  variant = "secondary",
+  label,
+}: {
+  children: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  variant?: "primary" | "secondary";
+  label: string;
+}) {
+  const classes = variant === "primary"
+    ? "border-foreground bg-primary text-primary-foreground hover:opacity-90"
+    : "border-border bg-card text-foreground hover:border-foreground hover:bg-secondary";
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`inline-flex h-10 min-w-28 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors active:translate-y-px disabled:pointer-events-none disabled:opacity-50 ${classes}`}
+      aria-label={label}
+      title={label}
+    >
+      {children}
+    </button>
+  );
 }
 
 function FormatButtons({
@@ -18,82 +65,85 @@ function FormatButtons({
   onCopy,
   isProcessing,
   minifier,
+  lastAction,
 }: {
   onFormat: () => void;
   onMinify: () => void;
   onCopy: () => void;
   isProcessing: boolean;
   minifier: boolean;
+  lastAction: ActionStatus | null;
 }) {
-  const { currentTheme } = useTheme();
-
-  const isDarkTheme = currentTheme.includes("dark");
-  const iconColor = isDarkTheme ? "#ffffff" : "#000000";
+  const formatComplete = lastAction === "format_success";
+  const minifyComplete = lastAction === "minify_success";
+  const copyComplete = lastAction === "copied";
+  const copyFailed = lastAction === "copy_failed";
 
   return (
-    <div className="flex w-full md:w-auto gap-3">
+    <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
       {minifier && (
-        <button
+        <ActionButton
           onClick={onMinify}
           disabled={isProcessing}
-          className="flex-1 md:flex-none h-12 min-w-[120px] px-6 font-display uppercase tracking-wider text-sm border-2 border-foreground bg-transparent hover:bg-secondary transition-all duration-300 ease-in-out active:translate-y-1 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-          aria-label="Minify code (Ctrl+Shift+M)"
-          title="Minify code (Ctrl+Shift+M)"
+          label="Minify code"
         >
-          <Minimize2
-            size={16}
-            strokeWidth={2}
-            className="text-current transition-transform duration-300"
-          />
-          <span>MINIFY</span>
-        </button>
+          {minifyComplete
+            ? <Check size={16} strokeWidth={1.75} aria-hidden="true" />
+            : <Minimize2 size={16} strokeWidth={1.75} aria-hidden="true" />}
+          <span>{minifyComplete ? "Minified" : "Minify"}</span>
+        </ActionButton>
       )}
 
-      <button
+      <ActionButton
         onClick={onFormat}
         disabled={isProcessing}
-        className="flex-1 md:flex-none h-12 min-w-[120px] px-6 font-display uppercase tracking-wider text-sm border-2 border-foreground bg-primary text-white hover:bg-primary/90 transition-all duration-300 ease-in-out shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[4px] active:shadow-none disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] flex items-center justify-center gap-2"
-        aria-label="Format code (Ctrl+Shift+F)"
-        title="Format code (Ctrl+Shift+F)"
+        variant="primary"
+        label="Format code"
       >
-        <FileText
-          size={16}
-          strokeWidth={2}
-          style={{ color: iconColor }}
-          className="transition-transform duration-300"
-        />
-        <span>FORMAT</span>
-      </button>
+        {formatComplete
+          ? <Check size={16} strokeWidth={1.75} aria-hidden="true" />
+          : <FileText size={16} strokeWidth={1.75} aria-hidden="true" />}
+        <span>
+          {formatComplete ? "Formatted" : isProcessing ? "Working" : "Format"}
+        </span>
+      </ActionButton>
 
       <button
         onClick={onCopy}
-        className="h-12 w-12 flex items-center justify-center border-2 border-accent bg-transparent text-accent hover:bg-accent hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-1 active:shadow-none"
-        aria-label="Copy formatted code"
-        title="Copy formatted code"
+        className={`inline-flex h-10 min-w-24 items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors active:translate-y-px ${
+          copyComplete
+            ? "border-foreground bg-foreground text-background"
+            : copyFailed
+            ? "border-destructive bg-card text-destructive"
+            : "border-border bg-card text-foreground hover:border-foreground hover:bg-secondary"
+        }`}
+        aria-label={copyComplete ? "Code copied" : copyFailed ? "Copy failed" : "Copy code"}
+        title={copyComplete ? "Code copied" : copyFailed ? "Copy failed" : "Copy code"}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="square"
-          strokeLinejoin="miter"
-        >
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
+        {copyComplete
+          ? <Check size={16} strokeWidth={1.75} aria-hidden="true" />
+          : <Copy size={16} strokeWidth={1.75} aria-hidden="true" />}
+        <span>{copyComplete ? "Copied" : copyFailed ? "Failed" : "Copy"}</span>
       </button>
     </div>
   );
 }
 
+function ToolStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="inline-flex h-9 items-center gap-2 rounded-md border border-border bg-background px-2.5 font-mono text-xs">
+      <span className="uppercase text-muted-foreground">{label}</span>
+      <span className="text-foreground">{value}</span>
+    </div>
+  );
+}
+
 export default function Formatter({ minifier, language }: FormatterProps) {
-  const { code, setCode, initializeCode, setLanguage } = useFormatterStore();
+  const { code, language: storeLanguage, setCode, initializeCode, setLanguage } = useFormatterStore();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [lastAction, setLastAction] = useState<string | null>(null);
+  const [lastAction, setLastAction] = useState<ActionStatus | null>(null);
+  const initialCode = useMemo(() => getInitialCode(language), [language]);
+  const activeCode = storeLanguage === language ? code : initialCode;
 
   useEffect(() => {
     setLanguage(language);
@@ -105,37 +155,37 @@ export default function Formatter({ minifier, language }: FormatterProps) {
     try {
       if (type === "format") {
         const formatter = await getFormatter(language);
-        const result = await formatter.formatCode(code);
+        const result = await formatter.formatCode(activeCode);
         setCode(result);
-        setLastAction("FORMAT_SUCCESS");
+        setLastAction("format_success");
       } else {
         const minifierTool = await getMinifier(language);
         if (minifierTool) {
-          const result = await minifierTool.minifyCode(code);
+          const result = await minifierTool.minifyCode(activeCode);
           setCode(result);
-          setLastAction("MINIFY_SUCCESS");
+          setLastAction("minify_success");
         } else {
-          setLastAction("MINIFIER_NOT_AVAILABLE");
+          setLastAction("minifier_unavailable");
         }
       }
     } catch (e) {
       console.error(e);
-      setLastAction("ERR_EXECUTION_FAILED");
+      setLastAction("execution_failed");
     } finally {
       setIsProcessing(false);
-      setTimeout(() => setLastAction(null), 2000);
+      setTimeout(() => setLastAction(null), 1500);
     }
-  }, [language, code, setCode]);
+  }, [language, activeCode, setCode]);
 
   const copyToClipboard = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(code);
-      setLastAction("COPIED_TO_CLIPBOARD");
+      await navigator.clipboard.writeText(activeCode);
+      setLastAction("copied");
     } catch {
-      setLastAction("COPY_FAILED");
+      setLastAction("copy_failed");
     }
-    setTimeout(() => setLastAction(null), 2000);
-  }, [code]);
+    setTimeout(() => setLastAction(null), 1500);
+  }, [activeCode]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -160,7 +210,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
   return (
     <ThemeProvider>
       <FormatterContent
-        code={code}
+        code={activeCode}
         language={language}
         isProcessing={isProcessing}
         lastAction={lastAction}
@@ -186,80 +236,73 @@ function FormatterContent({
   code: string;
   language: string;
   isProcessing: boolean;
-  lastAction: string | null;
+  lastAction: ActionStatus | null;
   onFormat: () => void;
   onMinify: () => void;
   onCopy: () => void;
   minifier: boolean;
 }) {
   const { setCode } = useFormatterStore();
+  const languageName = formatLanguageName(language);
+  const lineCount = useMemo(() => code.split(/\r\n|\r|\n/).length, [code]);
+  const charCount = code.length;
+
+  const issueMessage = lastAction === "minifier_unavailable"
+    ? "Minifier unavailable"
+    : lastAction === "execution_failed"
+    ? "Format failed"
+    : lastAction === "copy_failed"
+    ? "Copy failed"
+    : "";
 
   return (
-    <div className="w-full bg-[#f8fafc] relative">
-      {/* Top Fade Grid Background */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, #e2e8f0 1px, transparent 1px),
-            linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)
-          `,
-          backgroundSize: "20px 30px",
-          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)",
-        }}
-      />
-      <div className="w-full py-12 border-b-2 border-foreground relative z-10" id="workspace">
-        <div className="container mx-auto px-4">
-          <div className="border-4 border-foreground bg-card relative shadow-[10px_10px_0px_0px_rgba(13,13,13,1)] dark:shadow-[10px_10px_0px_0px_#ffffff]">
-            <div className="flex flex-col md:flex-row justify-between items-center border-b-2 border-foreground bg-muted/20 p-2 gap-2">
-              <div className="flex items-center gap-4 px-2">
-                <div className="flex gap-1">
-                  <div className="w-3 h-3 rounded-full bg-primary border border-black"></div>
-                  <div className="w-3 h-3 rounded-full bg-transparent border-2 border-accent"></div>
-                  <div className="w-3 h-3 rounded-full bg-transparent border border-black"></div>
-                </div>
-                <span className="font-mono text-xs font-bold uppercase">{language.toUpperCase()}__SOURCE</span>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <CodeValid language={language} />
-                <CodeMirrorThemeSelector className="hidden md:flex" />
-              </div>
+    <section className="border-b border-border bg-background" id="workspace">
+      <div className="mx-auto max-w-350 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div className="overflow-hidden rounded-lg border border-border bg-card">
+          <div className="grid gap-4 border-b border-border px-4 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div className="min-w-0">
+              <p className="font-mono text-xs uppercase text-muted-foreground">
+                Editor
+              </p>
+              <h2 className="mt-1 truncate text-2xl font-semibold leading-tight text-foreground">
+                {languageName}
+              </h2>
             </div>
 
-            <div className="relative h-[400px] md:h-[600px] w-full bg-card">
-              <CodePlayground
-                inputCode={code}
-                language={language}
-                onCodeChange={setCode}
-              />
+            <div className="flex flex-wrap items-center gap-2">
+              <ToolStat label="Lines" value={lineCount.toLocaleString()} />
+              <ToolStat label="Chars" value={charCount.toLocaleString()} />
+              <CodeMirrorThemeSelector />
+            </div>
+          </div>
 
-              {lastAction && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-50">
-                  <div className="bg-primary text-black font-display text-4xl uppercase px-4 py-2 border-2 border-black -rotate-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                    {lastAction}
-                  </div>
-                </div>
-              )}
+          <div className="relative h-105 w-full bg-card md:h-130">
+            <CodePlayground
+              inputCode={code}
+              language={language}
+              onCodeChange={setCode}
+            />
+          </div>
+
+          <div className="flex flex-col gap-4 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div
+              className="min-h-5 font-mono text-xs uppercase text-destructive"
+              aria-live="polite"
+            >
+              {issueMessage}
             </div>
 
-            <div className="border-t-2 border-foreground p-4 bg-background flex flex-col md:flex-row gap-4 justify-between items-center">
-              <div className="font-mono text-[10px] text-muted-foreground hidden md:block">
-                CPU: LOCAL / WASM <br /> MEMORY: OPTIMIZED
-              </div>
-
-              <FormatButtons
-                onFormat={onFormat}
-                onMinify={onMinify}
-                onCopy={onCopy}
-                isProcessing={isProcessing}
-                minifier={minifier}
-              />
-            </div>
+            <FormatButtons
+              onFormat={onFormat}
+              onMinify={onMinify}
+              onCopy={onCopy}
+              isProcessing={isProcessing}
+              minifier={minifier}
+              lastAction={lastAction}
+            />
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -9,7 +9,7 @@ const language = "json";
 const languageConfig = LANGUAGES[language];
 
 const homepageTitle =
-  "Online Code Formatter & Minifier - 22+ Languages | Free HAPPYFMT";
+  "Online Code Formatter & Minifier - 22+ Languages | Free HappyFormatter";
 const homepageDescription =
   "Free online code formatter and beautifier for 22+ programming languages. Format, validate, and minify code online. Privacy-focused, client-side processing.";
 const homepageKeywords =
@@ -21,11 +21,27 @@ const homepageKeywords =
   description={homepageDescription}
   keywords={homepageKeywords}
 >
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          Local formatter
+        </p>
+        <h1 class="max-w-5xl text-[clamp(2.5rem,5vw,4.75rem)] font-semibold leading-[0.95] tracking-[-0.04em] text-foreground">
+          Format code without leaving your browser.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        Start with JSON or jump to any formatter below. Formatting runs
+        client-side and keeps your code on this device.
+      </p>
+    </div>
+  </section>
   <Formatter
-    client:load
+    client:only="react"
     minifier={languageConfig.minify}
     language={language}
   />
   <Info language={language} />
-  <FAQ language={language} client:idle />
+  <FAQ language={language} client:only="react" />
 </Layout>

@@ -1,194 +1,169 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import type { JSX } from "react";
-import { accordionData } from "./data";
 
-export function FAQ({ language, variant, variantData }: {
+interface VariantData {
+  h1?: string;
+}
+
+const languageNames: Record<string, string> = {
+  c: "C",
+  cpp: "C++",
+  csharp: "C#",
+  css: "CSS",
+  dart: "Dart",
+  go: "Go",
+  html: "HTML",
+  java: "Java",
+  javascript: "JavaScript",
+  "javascript-biome": "JavaScript Biome",
+  json: "JSON",
+  lua: "Lua",
+  markdown: "Markdown",
+  objectivec: "Objective-C",
+  objectivecpp: "Objective-C++",
+  php: "PHP",
+  "php-mago": "PHP Mago",
+  proto: "Protocol Buffers",
+  python: "Python",
+  "python-ruff": "Python Ruff",
+  rust: "Rust",
+  scss: "SCSS",
+  sql: "SQL",
+  swift: "Swift",
+  toml: "TOML",
+  typescript: "TypeScript",
+  "typescript-biome": "TypeScript Biome",
+  xml: "XML",
+  yaml: "YAML",
+  zig: "Zig",
+};
+
+const modeNames: Record<string, string> = {
+  beautifier: "beautifier",
+  biome: "Biome formatting pass",
+  free: "formatter",
+  minify: "minifier",
+  online: "formatter",
+  pretty: "pretty printer",
+  prettify: "pretty printer",
+  private: "private formatter",
+  ruff: "Ruff formatting pass",
+  secure: "private formatter",
+  validator: "validator",
+};
+
+const getLanguageName = (value: string) => {
+  if (languageNames[value]) {
+    return languageNames[value];
+  }
+
+  return value
+    .split("-")
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+};
+
+const getModeName = (
+  variant: string | null | undefined,
+  variantData: VariantData | null | undefined,
+) => {
+  if (variant && modeNames[variant]) {
+    return modeNames[variant];
+  }
+
+  if (variantData?.h1) {
+    return variantData.h1.replace(/online|free/gi, "").trim()
+      || "formatter";
+  }
+
+  return "formatter";
+};
+
+const getQuestions = (languageName: string, modeName: string) => [
+  {
+    tag: "Privacy",
+    title: "Is my code uploaded?",
+    content:
+      `No. The ${languageName} formatter runs in your browser. Still, do not paste secrets into any online tool.`,
+  },
+  {
+    tag: "Changes",
+    title: `What does the ${modeName} change?`,
+    content: "It cleans indentation, spacing, and line breaks. It does not rewrite program logic.",
+  },
+  {
+    tag: "Errors",
+    title: "What if Format fails?",
+    content: "Fix the highlighted syntax issue, then run Format again.",
+  },
+  {
+    tag: "Access",
+    title: "Do I need to sign in?",
+    content: "No. Open the page, paste code, format, and copy the result.",
+  },
+];
+
+export function FAQ({
+  language,
+  variant = null,
+  variantData = null,
+}: {
   language: string;
   variant?: string | null;
-  variantData?: any;
+  variantData?: VariantData | null;
 }): JSX.Element {
-  let data = accordionData[language] || [];
-
-  // Inject variant-specific questions at the beginning
-  if (variant && variantData) {
-    const variantQuestions = getVariantQuestions(variant, language, variantData);
-    data = [...variantQuestions, ...data];
-  }
-
-  // Helper function to get variant-specific questions
-  function getVariantQuestions(
-    variantType: string,
-    lang: string,
-    _data: any,
-  ): Array<{ title: string; content: string }> {
-    const questions = [];
-    const langName = lang.charAt(0).toUpperCase() + lang.slice(1);
-
-    switch (variantType) {
-      case "free":
-        questions.push({
-          title: `Is this ${langName} formatter really free?`,
-          content:
-            `Yes, this ${langName} formatter is completely free to use. There are no hidden costs, premium features, or usage limits. You can format as much ${langName} code as you need without paying anything or creating an account.`,
-        });
-        questions.push({
-          title: `Do I need to register to use the free ${langName} formatter?`,
-          content:
-            `No registration required! You can start formatting your ${langName} code immediately. Just paste your code and format it instantly without any signup process or personal information.`,
-        });
-        break;
-
-      case "online":
-        questions.push({
-          title: `How does the online ${langName} formatter work?`,
-          content:
-            `This ${langName} formatter works entirely in your web browser. Your code is processed locally on your device using advanced JavaScript libraries, so you don't need to install any software or wait for server processing.`,
-        });
-        questions.push({
-          title: `Can I use this ${langName} formatter on mobile devices?`,
-          content:
-            `Yes! Since this is an online ${langName} formatter, it works on any device with a web browser - desktop, tablet, or mobile. The interface is responsive and adapts to your screen size.`,
-        });
-        break;
-
-      case "secure":
-      case "private":
-        questions.push({
-          title: `How is this ${langName} formatter more secure than others?`,
-          content:
-            `Unlike server-side formatters, this tool processes your ${langName} code entirely within your browser. Your code never leaves your device, is never sent to our servers, and is never stored anywhere. This makes it completely secure for sensitive or proprietary code.`,
-        });
-        questions.push({
-          title: `Is my ${langName} code safe from prying eyes?`,
-          content:
-            `Absolutely! Since all processing happens client-side in your browser, nobody else can access your ${langName} code - not us, not third parties, not anyone. Your privacy is completely protected.`,
-        });
-        questions.push({
-          title: `Can I use this formatter offline?`,
-          content:
-            `Once the page is loaded, you can continue using this ${langName} formatter offline. The formatting libraries are cached in your browser, allowing you to format code without an internet connection.`,
-        });
-        break;
-
-      case "beautifier":
-        questions.push({
-          title: `What makes this a good ${langName} beautifier?`,
-          content:
-            `This ${langName} beautifier uses intelligent algorithms to transform minified or poorly formatted code into readable, properly indented code. It preserves functionality while dramatically improving readability with consistent formatting rules.`,
-        });
-        questions.push({
-          title: `Can this beautifier handle minified ${langName} code?`,
-          content:
-            `Yes! This ${langName} beautifier excels at transforming minified code into beautifully formatted, readable code. It automatically detects structure and applies appropriate indentation, spacing, and line breaks.`,
-        });
-        break;
-
-      case "validator":
-        questions.push({
-          title: `What errors can this ${langName} validator detect?`,
-          content:
-            `This ${langName} validator can detect syntax errors, structural problems, missing semicolons, unmatched brackets, and many other code issues. It provides detailed error messages with line and column numbers to help you quickly fix problems.`,
-        });
-        questions.push({
-          title: `Does this ${langName} validator check for best practices?`,
-          content:
-            `While primarily focused on syntax validation, this tool also identifies common issues that might affect code quality. However, for comprehensive linting and best practices checking, consider using specialized linting tools.`,
-        });
-        break;
-
-      case "minify":
-        questions.push({
-          title: `How much can this ${langName} minifier reduce file size?`,
-          content:
-            `The size reduction depends on your code structure, but typically you can expect 20-60% reduction in file size. This ${langName} minifier removes unnecessary whitespace, comments, and optimizes the code without changing functionality.`,
-        });
-        questions.push({
-          title: `Will minifying my ${langName} code affect performance?`,
-          content:
-            `Minified ${langName} code actually improves performance by reducing download size and parse time. This minifier preserves all functionality while making your code more efficient for production use.`,
-        });
-        break;
-
-      case "pretty":
-        questions.push({
-          title: `How does this ${langName} pretty printer work?`,
-          content:
-            `This ${langName} pretty printer analyzes your code structure and applies consistent formatting rules including proper indentation, spacing, and line breaks to make the code more readable and maintainable.`,
-        });
-        break;
-
-      case "biome":
-        questions.push({
-          title: `What is Biome for ${langName} formatting?`,
-          content:
-            `Biome is a fast, modern toolchain for ${langName} development. It provides extremely fast formatting, linting, and bundling. This formatter uses Biome's standards to ensure your code follows best practices and consistent style.`,
-        });
-        break;
-
-      case "ruff":
-        questions.push({
-          title: `What is Ruff for ${langName} formatting?`,
-          content:
-            `Ruff is an extremely fast Python linter and formatter written in Rust. When used as a ${langName} formatter, it applies consistent formatting rules and can also catch linting issues, making it a comprehensive code quality tool.`,
-        });
-        break;
-
-      case "mago":
-        questions.push({
-          title: `What is Mago for ${langName} formatting?`,
-          content:
-            `Mago is a modern PHP formatter that focuses on code consistency and readability. This ${langName} formatter uses Mago's rules to ensure your PHP code follows modern formatting standards and best practices.`,
-        });
-        break;
-    }
-
-    return questions;
-  }
+  const languageName = getLanguageName(language);
+  const modeName = getModeName(variant, variantData);
+  const questions = getQuestions(languageName, modeName);
 
   return (
-    <div className="w-full bg-foreground text-background py-24">
-      <div className="container mx-auto max-w-4xl px-4">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-background/20 pb-8 mb-12">
-          <h2
-            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl uppercase tracking-tighter text-transparent stroke-text break-words"
-            style={{ WebkitTextStroke: "1px var(--background)" }}
-          >
+    <section className="w-full border-b border-border bg-background py-16 sm:py-20">
+      <div className="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(240px,0.28fr)_minmax(0,1fr)] lg:px-8">
+        <aside className="border-y border-border py-6 lg:py-7">
+          <p className="font-mono text-xs uppercase text-muted-foreground">
             Troubleshoot
+          </p>
+          <h2 className="mt-5 max-w-sm text-4xl font-semibold leading-none text-foreground md:text-5xl">
+            Quick answers.
           </h2>
-          <span className="font-mono text-xs text-accent uppercase tracking-widest hidden md:block">
-            Database // {language}
-          </span>
-        </div>
+          <p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
+            Common questions about the {languageName} formatter.
+          </p>
+        </aside>
 
-        <Accordion type="single" collapsible className="w-full space-y-0 border-t border-background/20">
-          {data.map((item, index) => {
-            const num = (index + 1).toString().padStart(2, "0");
-            return (
-              <AccordionItem
-                key={item.title}
-                value={item.title}
-                className="border-b border-background/20 transition-all hover:bg-background/5"
-              >
-                <AccordionTrigger className="px-0 py-6 hover:no-underline hover:text-primary transition-colors">
-                  <div className="flex items-start gap-6 text-left">
-                    <span className="font-mono text-sm opacity-50 pt-1">/{num}</span>
-                    <span className="font-display text-lg md:text-xl lg:text-2xl uppercase leading-tight break-words">
-                      {item.title}
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pb-8 pt-2">
-                  <div className="pl-12 md:pl-16 pr-4">
-                    <p className="font-serif text-lg leading-relaxed text-background/80 max-w-2xl">
-                      {item.content}
-                    </p>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            );
-          })}
+        <Accordion
+          type="single"
+          collapsible
+          className="divide-y divide-border border-y border-border"
+        >
+          {questions.map((item, index) => (
+            <AccordionItem
+              key={item.title}
+              value={item.title}
+              className="border-0"
+            >
+              <AccordionTrigger className="gap-4 px-0 py-5 text-left hover:no-underline">
+                <div className="grid flex-1 grid-cols-[48px_82px_1fr] items-baseline gap-3 pr-4 max-sm:grid-cols-[42px_1fr]">
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-mono text-xs uppercase text-muted-foreground max-sm:hidden">
+                    {item.tag}
+                  </span>
+                  <span className="text-base font-semibold leading-tight text-foreground sm:text-lg">
+                    {item.title}
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-6 pt-0">
+                <p className="max-w-3xl pl-[143px] text-sm leading-6 text-muted-foreground max-sm:pl-[54px]">
+                  {item.content}
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
         </Accordion>
       </div>
-    </div>
+    </section>
   );
 }

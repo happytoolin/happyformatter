@@ -9,19 +9,13 @@ const props = Astro.props;
   viewBox="0 0 64 64"
   {...props}
 >
-  <!-- Background -->
-  <rect width="64" height="64" fill="#F2F2F0" />
-
-  <!-- Glowing Green Circle -->
-  <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-      <feMerge>
-        <feMergeNode in="coloredBlur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
-
-  <circle cx="32" cy="32" r="8" fill="#10B981" filter="url(#glow)" />
+  <rect x="8" y="8" width="48" height="48" rx="10" fill="currentColor" />
+  <path
+    d="M21 22v20M21 31h12M33 22v20M42 22h-9M33 32h8"
+    fill="none"
+    stroke="var(--background)"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>

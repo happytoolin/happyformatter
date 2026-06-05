@@ -4,19 +4,13 @@
   height="64"
   viewBox="0 0 64 64"
 >
-  <!-- Background -->
-  <rect width="64" height="64" fill="#F2F2F0" />
-
-  <!-- Glowing Green Circle -->
-  <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-      <feMerge>
-        <feMergeNode in="coloredBlur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
-
-  <circle cx="32" cy="32" r="8" fill="#10B981" filter="url(#glow)" />
+  <rect width="64" height="64" rx="14" fill="#1d1d1b" />
+  <path
+    d="M20 22v20M20 31h13M33 22v20M43 22H33M33 32h8"
+    fill="none"
+    stroke="#f7f7f4"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
 </svg>

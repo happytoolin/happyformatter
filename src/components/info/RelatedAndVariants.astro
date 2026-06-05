@@ -1,4 +1,5 @@
 ---
+import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 import { getLanguageVariants } from "@/lib/seo-variants";
 
 interface LanguageRelation {
@@ -71,7 +72,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter", "minifier", "validator", "pretty-print"],
     contextualReasons: {
       yaml: "Configuration data formatting",
-      xml: "Structured data formatting",
+      xml: "Format XML",
       javascript: "JSON in JavaScript projects",
       typescript: "TypeScript configuration",
     },
@@ -122,63 +123,63 @@ const languageRelationships: Record<string, LanguageRelation> = {
     related: ["c", "cpp", "json"],
     features: ["formatter"],
     contextualReasons: {
-      c: "Format and optimize your code",
-      cpp: "Format and optimize your code",
-      json: "Also has validator and minifier",
+      c: "Format C",
+      cpp: "C-family service code",
+      json: "API payload companion",
     },
   },
   c: {
     related: ["cpp", "objectivec", "csharp", "go"],
     features: ["formatter"],
     contextualReasons: {
-      cpp: "Format and optimize your code",
+      cpp: "Adjacent C-family source",
       objectivec: "Format Objective-C with clang-format",
-      csharp: "Format and optimize your code",
-      go: "Format and optimize your code",
+      csharp: "Managed C-family source",
+      go: "Systems-style service code",
     },
   },
   cpp: {
     related: ["c", "objectivecpp", "csharp", "go"],
     features: ["formatter"],
     contextualReasons: {
-      c: "Format and optimize your code",
+      c: "Format C",
       objectivecpp: "Format Objective-C++ with clang-format",
-      csharp: "Format and optimize your code",
-      go: "Format and optimize your code",
+      csharp: "Managed C-family source",
+      go: "Compiled service source",
     },
   },
   objectivec: {
     related: ["c", "objectivecpp", "cpp"],
     features: ["formatter"],
     contextualReasons: {
-      c: "Format and optimize your code",
+      c: "Format C",
       objectivecpp: "Format mixed Objective-C++ sources",
-      cpp: "Format related C++ sources",
+      cpp: "Format C++",
     },
   },
   objectivecpp: {
     related: ["cpp", "objectivec", "c"],
     features: ["formatter"],
     contextualReasons: {
-      cpp: "Format and optimize your code",
-      objectivec: "Format related Objective-C sources",
-      c: "Format and optimize your code",
+      cpp: "Format C++",
+      objectivec: "Format Objective-C",
+      c: "Format C",
     },
   },
   csharp: {
     related: ["c", "cpp", "json"],
     features: ["formatter"],
     contextualReasons: {
-      c: "Format and optimize your code",
-      cpp: "Format and optimize your code",
-      json: "Also has validator and minifier",
+      c: "Native C-family source",
+      cpp: "C++ source companion",
+      json: "Configuration and payload data",
     },
   },
   java: {
     related: ["json", "xml"],
     features: ["formatter"],
     contextualReasons: {
-      json: "Also has validator and minifier",
+      json: "Service payload data",
       xml: "Validate and enhance your markup",
     },
   },
@@ -187,7 +188,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter"],
     contextualReasons: {
       "php-mago": "Alternative formatting option",
-      json: "Also has validator and minifier",
+      json: "Request and response payloads",
       html: "Validate and enhance your markup",
       xml: "Validate and enhance your markup",
     },
@@ -197,40 +198,40 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter"],
     contextualReasons: {
       php: "Standard formatter available",
-      json: "Also has validator and minifier",
+      json: "Request and response payloads",
     },
   },
   rust: {
     related: ["c", "cpp", "go"],
     features: ["formatter"],
     contextualReasons: {
-      c: "Format and optimize your code",
-      cpp: "Format and optimize your code",
-      go: "Format and optimize your code",
+      c: "Format C",
+      cpp: "C++ source companion",
+      go: "Compiled service source",
     },
   },
   sql: {
     related: ["json", "yaml"],
     features: ["formatter", "beautifier"],
     contextualReasons: {
-      json: "Also has validator and minifier",
-      yaml: "Also has validator and pretty print",
+      json: "Structured result data",
+      yaml: "Configuration data",
     },
   },
   dart: {
     related: ["json", "yaml"],
     features: ["formatter"],
     contextualReasons: {
-      json: "Also has validator and minifier",
-      yaml: "Also has validator and pretty print",
+      json: "Runtime data payloads",
+      yaml: "Configuration data",
     },
   },
   lua: {
     related: ["json", "yaml"],
     features: ["formatter"],
     contextualReasons: {
-      json: "Also has validator and minifier",
-      yaml: "Also has validator and pretty print",
+      json: "Runtime data payloads",
+      yaml: "Configuration data",
     },
   },
   markdown: {
@@ -245,17 +246,17 @@ const languageRelationships: Record<string, LanguageRelation> = {
     related: ["json", "yaml"],
     features: ["formatter", "beautifier"],
     contextualReasons: {
-      json: "Also has validator and minifier",
-      yaml: "Also has validator and pretty print",
+      json: "Structured schema payloads",
+      yaml: "Configuration data",
     },
   },
   zig: {
     related: ["c", "cpp", "go"],
     features: ["formatter"],
     contextualReasons: {
-      c: "Format and optimize your code",
-      cpp: "Format and optimize your code",
-      go: "Format and optimize your code",
+      c: "Format C",
+      cpp: "C++ source companion",
+      go: "Compiled service source",
     },
   },
 };
@@ -289,6 +290,7 @@ const allTools: BaseTool[] = [
   { name: "Lua", url: "/lua", type: "FMT" },
   { name: "Python", url: "/python", type: "FMT" },
   { name: "Python Ruff", url: "/python-ruff", type: "FMT" },
+  { name: "Rust", url: "/rust", type: "FMT" },
   { name: "Markdown", url: "/markdown", type: "FMT" },
   { name: "C#", url: "/csharp", type: "FMT" },
   { name: "C", url: "/c", type: "FMT" },
@@ -301,17 +303,19 @@ const allTools: BaseTool[] = [
   { name: "Zig", url: "/zig", type: "FMT" },
 ];
 
-type Props = {
+interface Props {
   currentLanguage?: string;
   currentVariant?: string | null;
   minify?: boolean;
-};
+}
+
+const props = Astro.props as Props;
 
 const {
   currentLanguage,
   currentVariant: _currentVariant = null,
   minify = false,
-} = Astro.props;
+} = props;
 
 // Get language variants for the current language
 const variants = getLanguageVariants(currentLanguage || "");
@@ -327,19 +331,12 @@ const getRelatedTools = () => {
     .map(lang => {
       const tool = allTools.find(t => t.url === `/${lang}`);
       if (tool) {
-        const contextualReason = relationship.contextualReasons
-          ?.[
-            lang.replace("python/ruff", "python-ruff").replace(
-              "php/mago",
-              "php-mago",
-            )
-          ];
         return {
           name: tool.name,
           url: tool.url,
           type: tool.type,
-          reason: contextualReason || "Related language",
-          description: contextualReason || "Related language",
+          reason: `Format ${tool.name}`,
+          description: `Format ${tool.name}`,
         } as Tool;
       }
       return null;
@@ -372,7 +369,7 @@ const getMixedRecommendations = () => {
       name: variant.h1,
       url: `/${currentLanguage}-${variant.slug}`,
       type: "VAR",
-      reason: "Specialized tool",
+      reason: "Alternate workflow",
       description: variant.description.split(".")[0] + ".",
       category: "variant",
     });
@@ -405,7 +402,7 @@ const getMixedRecommendations = () => {
           name: remainingVariants[i].h1,
           url: `/${currentLanguage}-${remainingVariants[i].slug}`,
           type: "VAR",
-          reason: "Specialized tool",
+          reason: "Alternate workflow",
           description: remainingVariants[i].description.split(".")[0] + ".",
           category: "variant",
         });
@@ -421,24 +418,24 @@ const getMixedRecommendations = () => {
         name: "JSON",
         url: "/json",
         type: "FMT",
-        reason: "Popular Choice",
-        description: "Handle data exchange with JSON",
+        reason: "Format JSON",
+        description: "Format JSON",
         category: "fallback",
       },
       {
         name: "JavaScript",
         url: "/javascript",
         type: "FMT",
-        reason: "Web Development",
-        description: "Essential for web development",
+        reason: "Format JavaScript",
+        description: "Format JavaScript",
         category: "fallback",
       },
       {
         name: "Python",
         url: "/python",
         type: "FMT",
-        reason: "Popular Language",
-        description: "Versatile programming language",
+        reason: "Format Python",
+        description: "Format Python",
         category: "fallback",
       },
     ];
@@ -456,238 +453,140 @@ const getMixedRecommendations = () => {
   return allRecommendations.slice(0, 6);
 };
 
-// Function to get appropriate Lucide icon for a language
-const getLanguageIcon = (language: string) => {
-  const normalizedLang = language.replace(/^-+|-+$/g, "").toLowerCase();
+const getToolIcon = (url: string) => {
+  const urlParts = url.split("/").filter(Boolean);
+  if (urlParts[0] === "minify" || urlParts[0] === "validator") {
+    return urlParts[1] ?? urlParts[0];
+  }
+  return urlParts.length >= 2 ? urlParts.join("-") : urlParts[0];
+};
 
-  // Map languages to Lucide icons (using simple inline SVGs)
-  const iconMap: Record<string, string> = {
-    html:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"16 18 22 12 16 6\"/><polyline points=\"8 6 2 12 8 18\"/></svg>",
-    css:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m8 2 4-2 4 2\"/><path d=\"m8 22 4 2 4-2\"/><path d=\"M2 12h20\"/><path d=\"M7 4v16\"/><path d=\"M17 4v16\"/></svg>",
-    javascript:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"16 18 22 12 16 6\"/><polyline points=\"8 6 2 12 8 18\"/></svg>",
-    typescript:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"16 18 22 12 16 6\"/><polyline points=\"8 6 2 12 8 18\"/><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"22\"/></svg>",
-    json:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
-    xml:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
-    yaml:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/></svg>",
-    toml:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"8\" y1=\"13\" x2=\"16\" y2=\"13\"/><line x1=\"8\" y1=\"17\" x2=\"13\" y2=\"17\"/></svg>",
-    python:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"4 17 10 11 4 5\"/><line x1=\"12\" y1=\"19\" x2=\"20\" y2=\"19\"/></svg>",
-    sql:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\"/><path d=\"M21 12c0 1.66-4 3-9 3s-9-1.34-9-3\"/><path d=\"M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5\"/></svg>",
-    go:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg>",
-    rust:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\"/></svg>",
-    dart:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z\"/></svg>",
-    java:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2L2 7l10 5 10-5-10-5z\"/><path d=\"M2 17l10 5 10-5M2 12l10 5 10-5\"/></svg>",
-    php:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"12\" rx=\"2\"/></svg>",
-    ruby:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"/></svg>",
-    swift:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 12l8-8v8z\"/><path d=\"M20 12l-8-8v16z\"/></svg>",
-    c: "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"9\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/></svg>",
-    cpp:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"15\"/><line x1=\"15\" y1=\"9\" x2=\"9\" y2=\"15\"/></svg>",
-    objectivec:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"9\"/><line x1=\"9\" y1=\"15\" x2=\"15\" y2=\"15\"/></svg>",
-    objectivecpp:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"15\"/><line x1=\"15\" y1=\"9\" x2=\"9\" y2=\"15\"/></svg>",
-    csharp:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 12h16\"/><path d=\"M12 4v16\"/><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg>",
-    lua:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M8 14s1.5 2 4 2 4-2 4-2\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"9\"/></svg>",
-    markdown:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"/><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"/><polyline points=\"10 9 9 9 8 9\"/></svg>",
-    zig:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"13 2 3 14 12 14 11 22 21 10 12 10 13 2\"/></svg>",
-    proto:
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/></svg>",
-  };
+const getToolId = (url: string) => {
+  const parts = url.split("/").filter(Boolean);
+  return parts[parts.length - 1] ?? url.replace("/", "");
+};
 
-  return iconMap[normalizedLang] || iconMap["html"]; // Default to html icon
+const getToolSummary = (tool: Tool) => {
+  if (tool.category === "variant") {
+    return "Open this version.";
+  }
+
+  return `Format ${tool.name}.`;
 };
 
 const recommendations = getMixedRecommendations();
 const showSection = currentLanguage && recommendations.length > 0;
-
-const currentLanguageName = currentLanguage
-  ? currentLanguage.charAt(0).toUpperCase()
-    + currentLanguage.slice(1).replace("-", " ")
-  : "";
 ---
 
 {showSection && (
   <section
-    class="py-24 bg-background overflow-hidden"
+    class="border-b border-border bg-card py-16 sm:py-20"
     aria-labelledby="tools-heading"
   >
-    <!-- Decorative Grid Lines -->
-    <div class="relative bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] -m-8 p-8">
-    </div>
+    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(240px,0.28fr)_minmax(0,1fr)] lg:px-8">
+      <aside class="border-y border-border py-6 lg:py-7">
+        <p class="font-mono text-xs uppercase text-muted-foreground">
+          More
+        </p>
+        <h2
+          id="tools-heading"
+          class="mt-5 max-w-sm text-4xl font-semibold leading-none text-foreground md:text-5xl"
+        >
+          More formatters.
+        </h2>
+        <p class="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
+          Open another formatter from here.
+        </p>
+        <a
+          href="#more-tools"
+          class="mt-6 inline-flex rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px"
+        >
+          All tools
+        </a>
+      </aside>
 
-    <div class="container mx-auto px-4 max-w-6xl">
-      <!-- Header Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-foreground mb-8">
-        <!-- Title Block -->
-        <div class="col-span-12 lg:col-span-4 p-8 border-b-2 lg:border-b-0 lg:border-r-2 border-foreground bg-primary text-primary-foreground">
-          <span
-            class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
-          >
-            Tool Matrix // 002
-          </span>
-          <h2
-            id="tools-heading"
-            class="font-display text-3xl md:text-4xl uppercase leading-[0.9] mb-4"
-          >
-            Tool Variants
-          </h2>
-          <p class="font-serif text-lg leading-relaxed opacity-90">
-            Specialized {currentLanguageName} tools and related formatters
-          </p>
+      <div class="overflow-hidden rounded-lg border border-border bg-background">
+        <div class="grid grid-cols-[1fr_40px] gap-4 border-b border-border px-4 py-3 font-mono text-xs uppercase text-muted-foreground">
+          <span>Tool</span>
+          <span class="text-right">Open</span>
         </div>
 
-        <!-- Status Block -->
-        <div class="col-span-12 lg:col-span-8 p-8 bg-card border-b-2 lg:border-b-0 border-foreground">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <span
-                class="w-3 h-3 bg-green-500 animate-pulse border-2 border-foreground"
-              ></span>
-              <span
-                class="font-mono text-sm font-bold uppercase tracking-wider text-muted-foreground"
+        <div class="divide-y divide-border">
+          {recommendations.map((tool, _index) => {
+            const isCurrentLanguage = tool.url === `/${currentLanguage}`;
+            const isVariant = tool.category === "variant";
+            const targetLang = getToolId(tool.url);
+            const hasMinifier = languagesWithMinifiers.includes(targetLang);
+            const actionUrl = isCurrentLanguage
+              ? (minify && hasMinifier ? `/minify${tool.url}` : tool.url)
+              : (minify && hasMinifier ? `/minify${tool.url}` : tool.url);
+
+            return (
+              <a
+                href={actionUrl}
+                class="group grid min-h-[88px] grid-cols-[1fr_40px] items-center gap-4 px-4 py-4 transition-colors hover:bg-secondary active:translate-y-px"
               >
-                Smart Recommendations Active
-              </span>
-            </div>
-            <div class="font-mono text-xs text-muted-foreground">
-              {recommendations.length} Tools Available
-            </div>
-          </div>
-        </div>
-      </div>
+                <div class="flex min-w-0 items-center gap-3">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors group-hover:border-foreground group-hover:text-foreground">
+                    {isVariant && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 11l3 3L22 4" />
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                      </svg>
+                    )}
+                    {!isVariant && (
+                      <LanguageIcon
+                        icon={getToolIcon(tool.url)}
+                        class="h-5 w-5"
+                        title={tool.name}
+                      />
+                    )}
+                  </div>
 
-      <!-- Tools Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-foreground">
-        {recommendations.map((tool, _index) => {
-          const isCurrentLanguage = tool.url === `/${currentLanguage}`;
-          const isVariant = tool.category === "variant";
-
-          // Check if the target language has a working minifier
-          const targetLang = tool.url.replace(/^\//, "");
-          const hasMinifier = languagesWithMinifiers.includes(targetLang);
-
-          // Only generate minify URLs if the minifier actually exists
-          const actionUrl = isCurrentLanguage
-            ? (minify && hasMinifier ? `/minify${tool.url}` : tool.url)
-            : (minify && hasMinifier ? `/minify${tool.url}` : tool.url);
-
-          return (
-            <a
-              href={actionUrl}
-              class="group bg-secondary/20 border-r border-b border-foreground p-6 hover:bg-primary/10 transition-colors duration-200 flex items-start gap-4"
-            >
-              <div class="flex-shrink-0">
-                <div class="w-12 h-12 border-2 border-foreground bg-background flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200">
-                  {isVariant ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M9 11l3 3L22 4" />
-                      <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                    </svg>
-                  ) : (
-                     <div set:html={getLanguageIcon(tool.url.replace(/\//g, "-"))} />
-                   )}
-                </div>
-              </div>
-
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-3 border-b border-foreground/20 pb-2">
-                  <h3 class="font-display text-lg font-bold text-foreground group-hover:text-primary transition-colors uppercase">
-                    {tool.name}
-                  </h3>
-                  <span
-                    class={`text-xs font-mono px-2 py-1 border border-foreground ${
-                      isVariant
-                        ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
-                        : "bg-primary/20 text-primary"
-                    }`}
-                  >
-                    {tool.type}
-                  </span>
-                  {isCurrentLanguage && hasMinifier && (
-                    <span
-                      class="text-xs font-mono border-2 border-foreground bg-green-500/20 text-green-800 dark:text-green-400 px-2 py-1"
-                    >
-                      {minify ? "Format" : "Minify"}
-                    </span>
-                  )}
+                  <div class="min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span
+                        class="font-mono text-xs uppercase text-muted-foreground"
+                      >
+                        {tool.type}
+                      </span>
+                      <h3 class="truncate text-base font-semibold text-foreground sm:text-lg">
+                        {tool.name}
+                      </h3>
+                      {isCurrentLanguage && hasMinifier && (
+                        <span
+                          class="rounded-sm border border-border px-2 py-1 font-mono text-[10px] uppercase text-muted-foreground"
+                        >
+                          {minify ? "Format" : "Minify"}
+                        </span>
+                      )}
+                    </div>
+                    <p class="mt-1 text-sm leading-6 text-muted-foreground">
+                      {getToolSummary(tool)}
+                    </p>
+                  </div>
                 </div>
 
-                <p class="font-mono text-sm text-muted-foreground mb-2 leading-relaxed">
-                  {tool.reason}
-                </p>
-                {tool.description && tool.description !== tool.reason && (
-                  <p class="text-xs text-muted-foreground mb-4 leading-relaxed font-serif italic">
-                    {tool.description}
-                  </p>
-                )}
-
-                <div class="flex items-center gap-2 text-xs font-mono text-foreground">
-                  <span
-                    class="opacity-60 group-hover:opacity-100 transition-opacity"
-                  >
-                    {isCurrentLanguage && hasMinifier
-                      ? (minify ? "Switch to formatter" : "Switch to minifier")
-                      : isVariant
-                      ? "Try variant"
-                      : "Open tool"}
-                  </span>
-                  <span
-                    class="group-hover:translate-x-1 transition-transform inline-block"
-                  >→</span>
-                </div>
-              </div>
-            </a>
-          );
-        })
-        }
-      </div>
-
-      <!-- Footer Navigation -->
-      <div class="mt-8 border-2 border-foreground bg-card p-6">
-        <div class="flex items-center justify-between">
-          <a
-            href="#more-tools"
-            class="group inline-flex items-center gap-3 text-sm font-mono font-bold uppercase tracking-wider text-foreground hover:text-primary transition-colors"
-          >
-            <span
-              class="group-hover:-translate-x-1 transition-transform inline-block"
-            >←</span>
-            <span>View All Tools</span>
-          </a>
-          <div class="font-mono text-xs text-muted-foreground">
-            {allTools.length} Total Formatters Available
-          </div>
+                <span
+                  class="text-right font-mono text-xs text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
+                  aria-hidden="true"
+                >
+                  -&gt;
+                </span>
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>

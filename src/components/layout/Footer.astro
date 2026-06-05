@@ -2,55 +2,43 @@
 
 ---
 
-<footer class="py-8 border-t-2 border-foreground bg-background">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
-      <div class="text-center md:text-left">
-        <div class="font-display text-lg font-black uppercase tracking-tighter text-foreground">
-          HAPPYFMT // {new Date().getFullYear()}
-        </div>
-        <div class="font-mono text-xs uppercase tracking-widest mt-1 bg-primary text-primary-foreground px-2 py-1">
-          <a
-            href="https://happytoolin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-muted-foreground transition-colors duration-200 uppercase tracking-wider"
-          >
-            BY HAPPYTOOLIN ↗
-          </a>
-        </div>
+<footer class="border-t border-border bg-card py-8">
+  <div class="mx-auto flex max-w-[1400px] flex-col gap-6 px-4 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+    <div>
+      <div class="text-sm font-semibold tracking-tight text-foreground">
+        HappyFormatter
       </div>
-
-      <div class="flex flex-col md:flex-row items-center gap-6">
-        <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-          <div class="flex space-x-6 font-mono text-xs">
-            <a
-              href="/privacy-policy"
-              class="text-foreground hover:text-primary transition-colors duration-200 uppercase tracking-wider"
-            >Privacy</a>
-            <span class="text-foreground">|</span>
-            <a
-              href="/terms-of-service"
-              class="text-foreground hover:text-primary transition-colors duration-200 uppercase tracking-wider"
-            >Terms</a>
-          </div>
-
-          <div class="font-mono text-xs text-muted-foreground">
-            <a
-              href="https://happytokenizer.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-muted-foreground hover:text-primary transition-colors duration-200 uppercase tracking-wider"
-            >
-              HAPPYTOKENIZER ↗
-            </a>
-          </div>
-        </div>
-
-        <div class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          v2.0 // BY HAPPYTOOLIN
-        </div>
+      <div class="mt-1 font-mono text-[11px] text-muted-foreground">
+        {new Date().getFullYear()} / client-side developer tools
       </div>
     </div>
+
+    <nav class="flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+      <a href="/privacy-policy" class="transition-colors hover:text-foreground">
+        Privacy
+      </a>
+      <a
+        href="/terms-of-service"
+        class="transition-colors hover:text-foreground"
+      >
+        Terms
+      </a>
+      <a
+        href="https://happytoolin.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="transition-colors hover:text-foreground"
+      >
+        Happytoolin
+      </a>
+      <a
+        href="https://happytokenizer.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="transition-colors hover:text-foreground"
+      >
+        HappyTokenizer
+      </a>
+    </nav>
   </div>
 </footer>

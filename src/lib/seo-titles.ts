@@ -6,7 +6,7 @@ export function generatePageTitle(
   minify = false,
 ): string {
   if (!language) {
-    return "Online Code Formatter & Minifier - 22+ Languages | Free HAPPYFMT";
+    return "Online Code Formatter & Minifier - 22+ Languages | Free HappyFormatter";
   }
 
   // Get proper language name from configuration
@@ -16,12 +16,12 @@ export function generatePageTitle(
     : language.charAt(0).toUpperCase() + language.slice(1).replace("/", " ");
 
   if (minify) {
-    return `${languageName} Code Minifier Online | Free HAPPYFMT Tool`;
+    return `${languageName} Code Minifier Online | Free HappyFormatter Tool`;
   }
 
   if (variant) {
-    return `${languageName} ${variant} Formatter Online | Free HAPPYFMT Tool`;
+    return `${languageName} ${variant} Formatter Online | Free HappyFormatter Tool`;
   }
 
-  return `${languageName} Code Formatter & Minifier Online | Free HAPPYFMT Tool`;
+  return `${languageName} Code Formatter & Minifier Online | Free HappyFormatter Tool`;
 }

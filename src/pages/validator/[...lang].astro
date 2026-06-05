@@ -96,15 +96,15 @@ if (!actualLanguage || !actualLanguageConfig) {
   language={actualLanguage}
   minify={false}
 >
-  <div class="container mx-auto px-4 py-6">
-    <div class="bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-6">
-      <div class="flex items-center gap-3 mb-2">
-        <h1 class="text-2xl md:text-3xl font-display font-bold text-foreground">
+  <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-6 rounded-lg border border-border bg-card p-5">
+      <div class="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <h1 class="text-2xl font-semibold tracking-[-0.03em] text-foreground md:text-3xl">
           {actualLanguageConfig.name}
           {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Validator
         </h1>
         <span
-          class="px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 text-sm font-mono rounded-full"
+          class="w-fit rounded-md border border-border bg-background px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
         >
           Validate
         </span>
@@ -117,9 +117,9 @@ if (!actualLanguage || !actualLanguageConfig) {
       <div class="mt-4 flex items-center gap-2">
         <a
           href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
-          class="text-primary hover:text-primary/80 underline text-sm"
+          class="inline-flex rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary"
         >
-          ← Back to {actualLanguageConfig.name}
+          Back to {actualLanguageConfig.name}
           {variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""}Tool
         </a>
       </div>
@@ -127,10 +127,10 @@ if (!actualLanguage || !actualLanguageConfig) {
   </div>
 
   <Formatter
-    client:load
+    client:only="react"
     minifier={false}
     language={actualLanguage}
   />
   <Info language={actualLanguage} />
-  <FAQ language={actualLanguage} client:idle />
+  <FAQ language={actualLanguage} client:only="react" />
 </Layout>

@@ -1,193 +1,190 @@
 ---
-import { languageInfoData } from "./data";
+interface VariantData {
+  h1?: string;
+}
+
 interface Props {
   language: string;
   variant?: string | null;
-  variantData?: any;
+  variantData?: VariantData | null;
 }
 
 const { language, variant, variantData } = Astro.props;
-const defaultLanguage = "default";
-let info = languageInfoData[language] || languageInfoData[defaultLanguage];
 
-// Enhance content based on variant
-if (variant && variantData) {
-  // Create a deep copy to avoid mutating the original
-  info = JSON.parse(JSON.stringify(info));
+const languageNames: Record<string, string> = {
+  c: "C",
+  cpp: "C++",
+  csharp: "C#",
+  css: "CSS",
+  dart: "Dart",
+  go: "Go",
+  html: "HTML",
+  java: "Java",
+  javascript: "JavaScript",
+  "javascript-biome": "JavaScript Biome",
+  json: "JSON",
+  lua: "Lua",
+  markdown: "Markdown",
+  objectivec: "Objective-C",
+  objectivecpp: "Objective-C++",
+  php: "PHP",
+  "php-mago": "PHP Mago",
+  proto: "Protocol Buffers",
+  python: "Python",
+  "python-ruff": "Python Ruff",
+  rust: "Rust",
+  scss: "SCSS",
+  sql: "SQL",
+  swift: "Swift",
+  toml: "TOML",
+  typescript: "TypeScript",
+  "typescript-biome": "TypeScript Biome",
+  xml: "XML",
+  yaml: "YAML",
+  zig: "Zig",
+};
 
-  // Customize content based on variant type
-  switch (variant) {
-    case "free":
-      info.description =
-        `${info.description} Completely free to use with no limitations or registration required.`;
-      info.features.unshift(
-        "100% Free Forever",
-        "No Registration Required",
-        "No Usage Limits",
-      );
-      if (info.validator && info.validator.features) {
-        info.validator.features.unshift("Free validation without limits");
-      }
-      break;
+const modeNames: Record<string, string> = {
+  beautifier: "Beautifier",
+  biome: "Biome pass",
+  free: "Formatter",
+  minify: "Minifier",
+  online: "Formatter",
+  pretty: "Pretty printer",
+  prettify: "Pretty printer",
+  private: "Private formatter",
+  ruff: "Ruff pass",
+  secure: "Private formatter",
+  validator: "Validator",
+};
 
-    case "online":
-      info.description =
-        `${info.description} Works entirely online in your browser with no downloads required.`;
-      info.features.unshift(
-        "Browser-based Processing",
-        "No Installation",
-        "Instant Access",
-      );
-      if (info.validator && info.validator.features) {
-        info.validator.features.unshift(
-          "Online validation with instant results",
-        );
-      }
-      break;
-
-    case "secure":
-    case "private":
-      info.description =
-        `${info.description} Your ${language} code never leaves your browser. Complete privacy and security for sensitive code.`;
-      info.features.unshift(
-        "Client-side Processing",
-        "Complete Privacy",
-        "No Data Transmission",
-      );
-      if (info.validator && info.validator.features) {
-        info.validator.features.unshift(
-          "Secure validation without server requests",
-        );
-      }
-      break;
-
-    case "beautifier":
-      info.description =
-        `${info.description} Transform minified ${language} code into readable, properly formatted, and indented code.`;
-      info.features.unshift(
-        "Reads Minified Code",
-        "Intelligent Formatting",
-        "Proper Indentation",
-      );
-      info.title = `${
-        language.charAt(0).toUpperCase() + language.slice(1)
-      } Beautifier`;
-      break;
-
-    case "validator":
-      info.description =
-        `${info.description} Check for syntax errors and validate your ${language} code with detailed error reporting.`;
-      info.features.unshift(
-        "Syntax Validation",
-        "Detailed Error Reporting",
-        "Real-time Checking",
-      );
-      info.title = `${
-        language.charAt(0).toUpperCase() + language.slice(1)
-      } Validator`;
-      if (info.validator) {
-        info.validator.title = `${
-          language.charAt(0).toUpperCase() + language.slice(1)
-        } Validation`;
-      }
-      break;
-
-    case "minify":
-      info.description =
-        `${info.description} Compress and optimize your ${language} code by removing unnecessary whitespace and characters.`;
-      info.features.unshift(
-        "File Size Reduction",
-        "Performance Optimization",
-        "Whitespace Removal",
-      );
-      info.title = `${
-        language.charAt(0).toUpperCase() + language.slice(1)
-      } Minifier`;
-      break;
-
-    case "pretty":
-    case "prettify":
-      info.description =
-        `${info.description} Format and beautify your ${language} data with proper indentation and structure for better readability.`;
-      info.features.unshift(
-        "Pretty Printing",
-        "Structured Output",
-        "Enhanced Readability",
-      );
-      info.title = `${
-        language.charAt(0).toUpperCase() + language.slice(1)
-      } Pretty Printer`;
-      break;
-
-    default:
-      // For tool-specific variants (biome, ruff, etc.)
-      if (variantData.h1) {
-        info.title = variantData.h1;
-        info.description = variantData.description;
-      }
-      break;
+const getLanguageName = (value: string) => {
+  if (languageNames[value]) {
+    return languageNames[value];
   }
-}
+
+  return value
+    .split("-")
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+};
+
+const getModeName = (
+  variantValue: string | null | undefined,
+  data: VariantData | null | undefined,
+) => {
+  if (variantValue && modeNames[variantValue]) {
+    return modeNames[variantValue];
+  }
+
+  if (data?.h1) {
+    const compactName = data.h1
+      .replace(/online/gi, "")
+      .replace(/free/gi, "")
+      .trim();
+
+    return compactName || "Formatter";
+  }
+
+  return "Formatter";
+};
+
+const languageName = getLanguageName(language);
+const modeName = getModeName(variant, variantData);
+
+const notes = [
+  {
+    label: "Input",
+    value: "Paste code",
+    detail: "Use a snippet or a full file.",
+  },
+  {
+    label: "Format",
+    value: modeName,
+    detail: "Clean indentation, spacing, and line breaks.",
+  },
+  {
+    label: "Issues",
+    value: "Highlighted lines",
+    detail: "If formatting stops, fix the shown line and try again.",
+  },
+  {
+    label: "Result",
+    value: "Copy output",
+    detail: "Move the formatted code back to your editor.",
+  },
+];
+
+const checkpoints = [
+  "Paste your code.",
+  `Click ${modeName}.`,
+  "Fix highlighted issues if formatting stops.",
+  "Copy the formatted result.",
+];
 ---
 
-<section class="py-24 bg-background relative overflow-hidden">
-  <!-- Decorative Grid Lines -->
-  <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]">
-  </div>
+<section class="border-b border-border bg-card py-16 sm:py-20">
+  <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(240px,0.28fr)_minmax(0,1fr)] lg:px-8">
+    <aside class="border-y border-border py-6 lg:py-7">
+      <p class="font-mono text-xs uppercase text-muted-foreground">
+        Notes
+      </p>
+      <h2 class="mt-5 max-w-sm text-4xl font-semibold leading-none text-foreground md:text-5xl">
+        Format {languageName}.
+      </h2>
+      <p class="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
+        Paste code, clean it up, and copy the formatted result.
+      </p>
+    </aside>
 
-  <div class="container mx-auto px-4 relative z-10 max-w-6xl">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-foreground">
-      <!-- Title Block -->
-      <div class="col-span-12 lg:col-span-4 p-8 border-b-2 lg:border-b-0 lg:border-r-2 border-foreground bg-primary text-primary-foreground">
-        <span
-          class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
-        >Spec Sheet // 001</span>
-        <h2 class="font-display text-3xl md:text-5xl uppercase leading-[0.9] mb-6">
-          {info.title}
-        </h2>
-        <p class="font-serif text-xl leading-relaxed opacity-90">
-          {info.description}
-        </p>
+    <div class="space-y-8">
+      <div class="grid overflow-hidden rounded-lg border border-border bg-background md:grid-cols-[0.95fr_1.05fr]">
+        <div class="border-b border-border p-5 md:border-b-0 md:border-r">
+          <p class="font-mono text-xs uppercase text-muted-foreground">
+            Tool
+          </p>
+          <div class="mt-8 grid gap-4 sm:grid-cols-2">
+            <div>
+              <p class="text-sm text-muted-foreground">Language</p>
+              <p class="mt-1 text-2xl font-semibold leading-tight">
+                {languageName}
+              </p>
+            </div>
+            <div>
+              <p class="text-sm text-muted-foreground">Mode</p>
+              <p class="mt-1 text-2xl font-semibold leading-tight">
+                {modeName}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <ol class="divide-y divide-border">
+          {checkpoints.map((checkpoint, index) => (
+            <li class="grid grid-cols-[48px_1fr] items-start gap-3 p-4 text-sm leading-6">
+              <span class="font-mono text-xs text-muted-foreground">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span>{checkpoint}</span>
+            </li>
+          ))}
+        </ol>
       </div>
 
-      <!-- Features Grid -->
-      <div class="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2">
-        {/* Validator Module */}
-        <div class="p-8 border-b-2 md:border-b-0 md:border-r-2 border-foreground bg-card">
-          <div class="flex items-center gap-2 mb-6">
-            <span class="w-2 h-2 border-2 border-accent"></span>
-            <h3 class="font-display text-xl uppercase">
-              {info.validator.title}
+      <div class="divide-y divide-border border-y border-border">
+        {notes.map(note => (
+          <article class="grid gap-3 py-5 sm:grid-cols-[150px_160px_1fr] sm:items-baseline">
+            <p class="font-mono text-xs uppercase text-muted-foreground">
+              {note.label}
+            </p>
+            <h3 class="text-base font-semibold text-foreground">
+              {note.value}
             </h3>
-          </div>
-          <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
-            {info.validator.description}
-          </p>
-          <ul class="space-y-3">
-            {info.validator.features.slice(0, 3).map(f => (
-              <li class="flex items-start gap-3 text-sm font-medium">
-                <span class="text-primary mt-1">→</span>
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Technical Data */}
-        <div class="p-8 bg-secondary/20">
-          <div class="flex items-center gap-2 mb-6">
-            <span class="w-2 h-2 bg-foreground"></span>
-            <h3 class="font-display text-xl uppercase">Capabilities</h3>
-          </div>
-          <ul class="space-y-4 font-mono text-xs">
-            {info.features.slice(0, 5).map((feature, i) => (
-              <li class="border-b border-foreground/10 pb-2">
-                <span class="text-muted-foreground mr-2">0{i + 1}</span>
-                {feature}
-              </li>
-            ))}
-          </ul>
-        </div>
+            <p class="text-sm leading-6 text-muted-foreground">
+              {note.detail}
+            </p>
+          </article>
+        ))}
       </div>
     </div>
   </div>

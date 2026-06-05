@@ -1,147 +1,121 @@
 ---
 import Logo from "../../icons/Logo.astro";
 import ThemeIcon from "../ThemeIcon.astro";
+
+const primaryLinks = [
+  { label: "JSON", href: "/json" },
+  { label: "JavaScript", href: "/javascript" },
+  { label: "CSS", href: "/css" },
+  { label: "SQL", href: "/sql" },
+  { label: "Python", href: "/python" },
+];
 ---
 
-<header class="group sticky top-0 z-50 w-full border-b-2 border-foreground bg-background/80 backdrop-blur-md">
-  <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 group">
-      <div class="bg-primary text-black p-1 transition-transform group-hover:rotate-180 duration-500">
-        <Logo class="h-8 w-8" fill="currentColor" />
-      </div>
+<header class="sticky top-0 z-40 w-full border-b border-border bg-background">
+  <div class="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 sm:px-6 lg:px-8">
+    <a
+      href="/"
+      class="group inline-flex items-center gap-3 rounded-md text-foreground transition-opacity hover:opacity-80"
+      aria-label="HappyFormatter home"
+    >
+      <Logo class="h-8 w-8" />
       <div class="flex flex-col leading-none">
-        <span class="font-display text-2xl font-black tracking-tighter">
-          HAPPY<span class="text-accent">FMT</span>
-        </span>
+        <span class="text-base font-semibold tracking-tight"
+        >HappyFormatter</span>
         <span
-          class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+          class="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground"
         >
-          v2.0 // BY HAPPYTOOLIN
+          local code tools
         </span>
       </div>
     </a>
 
     <nav
-      class="hidden md:flex items-center gap-8"
-      aria-label="Language navigation"
+      class="hidden items-center gap-1 md:flex"
+      aria-label="Primary language navigation"
     >
-      {["javascript", "css", "json", "sql", "python"].map((lang) => (
+      {primaryLinks.map((link) => (
         <a
-          href={`/${lang}`}
-          class="font-mono text-sm font-bold uppercase hover:text-primary transition-colors relative group"
-          aria-label={`Format ${lang} code`}
+          href={link.href}
+          class="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          aria-label={`Open ${link.label} formatter`}
         >
-          <span
-            class="opacity-0 group-hover:opacity-100 absolute -left-3 text-accent"
-            aria-hidden="true"
-          >/</span>
-          {lang}
+          {link.label}
         </a>
       ))}
     </nav>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2">
       <a
         href="#more-tools"
-        class="hidden md:block font-display text-sm uppercase border-b-2 border-transparent hover:border-primary"
+        class="hidden rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px md:inline-flex"
       >
-        All Modules
+        All tools
       </a>
-      <div class="h-8 w-[2px] bg-foreground/20 hidden md:block"></div>
       <ThemeIcon />
       <button
         id="menu-button"
-        class="md:hidden flex items-center gap-2 text-[10px] font-mono border-2 border-foreground px-2 py-1 hover:bg-primary hover:text-black transition-colors relative z-[55]"
+        class="inline-flex h-9 items-center rounded-md border border-border bg-card px-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px md:hidden"
         aria-controls="mobile-menu"
         aria-expanded="false"
         aria-label="Open navigation menu"
       >
-        <span
-          class="w-2 h-2 rounded-full border border-accent animate-pulse"
-          aria-hidden="true"
-        ></span>
-        MENU
+        Menu
       </button>
     </div>
-  </div>
-
-  <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-accent via-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
   </div>
 </header>
 
 <div
-  class="md:hidden fixed inset-0 z-[60] bg-background/95 backdrop-blur hidden"
+  class="fixed inset-0 z-50 hidden bg-background"
   role="dialog"
   aria-modal="true"
   aria-labelledby="mobile-menu-title"
   id="mobile-menu"
 >
-  <div
-    class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background border-l-2 border-foreground"
-    role="document"
-  >
-    <div class="flex flex-col h-full">
-      <div class="flex items-center justify-between p-4 border-b-2 border-foreground">
-        <h2 id="mobile-menu-title" class="sr-only">Navigation Menu</h2>
-        <a href="/" class="flex items-center gap-3 group">
-          <div class="bg-primary text-black p-1">
-            <Logo class="h-6 w-6" fill="currentColor" />
-          </div>
-          <div class="flex flex-col leading-none">
-            <span class="font-display text-xl font-black tracking-tighter">
-              HAPPY<span class="text-accent">FMT</span>
-            </span>
-            <span
-              class="font-mono text-[8px] uppercase tracking-widest text-muted-foreground"
-            >
-              v2.0 // BY HAPPYTOOLIN
-            </span>
-          </div>
-        </a>
-        <button
-          type="button"
-          class="p-2 border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-          id="close-menu-button"
-          aria-label="Close navigation menu"
+  <div class="flex min-h-[100dvh] flex-col">
+    <div class="flex h-16 items-center justify-between border-b border-border px-4">
+      <h2 id="mobile-menu-title" class="sr-only">Navigation Menu</h2>
+      <a href="/" class="inline-flex items-center gap-3">
+        <Logo class="h-8 w-8" />
+        <span class="text-base font-semibold tracking-tight"
+        >HappyFormatter</span>
+      </a>
+      <button
+        type="button"
+        class="inline-flex h-9 items-center rounded-md border border-border bg-card px-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px"
+        id="close-menu-button"
+        aria-label="Close navigation menu"
+      >
+        Close
+      </button>
+    </div>
+
+    <nav
+      class="grid gap-px border-b border-border bg-border"
+      aria-label="Mobile language navigation"
+    >
+      {primaryLinks.map((link) => (
+        <a
+          href={link.href}
+          class="bg-background px-4 py-4 text-lg font-medium text-foreground transition-colors hover:bg-secondary"
+          aria-label={`Open ${link.label} formatter`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+          {link.label}
+        </a>
+      ))}
+      <a
+        href="#more-tools"
+        class="bg-background px-4 py-4 text-lg font-medium text-foreground transition-colors hover:bg-secondary"
+      >
+        All tools
+      </a>
+    </nav>
 
-      <div class="flex-1 p-4">
-        <nav aria-label="Mobile language navigation">
-          <div class="space-y-2">
-            {["javascript", "css", "json", "sql", "python"].map((lang) => (
-              <a
-                href={`/${lang}`}
-                class="block px-4 py-3 font-mono text-sm font-bold uppercase border-2 border-foreground hover:bg-primary hover:text-black transition-colors"
-                aria-label={`Format ${lang} code`}
-              >{lang}</a>
-            ))}
-          </div>
-        </nav>
-        <nav aria-label="Additional tools">
-          <a
-            href="#more-tools"
-            class="block mt-4 px-4 py-3 font-display text-sm uppercase border-2 border-foreground opacity-50 hover:opacity-100 transition-colors"
-          >All Modules</a>
-        </nav>
-      </div>
-
-      <div class="p-4 border-t-2 border-foreground">
-        <ThemeIcon />
-      </div>
+    <div class="mt-auto flex items-center justify-between px-4 py-5">
+      <span class="font-mono text-xs text-muted-foreground"
+      >Client-side formatting</span>
+      <ThemeIcon />
     </div>
   </div>
 </div>
@@ -154,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   menuButton?.addEventListener("click", function(e) {
     e.preventDefault();
-    e.stopPropagation();
     mobileMenu?.classList.remove("hidden");
     document.body.style.overflow = "hidden";
     menuButton.setAttribute("aria-expanded", "true");
@@ -163,11 +136,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   closeMenuButton?.addEventListener("click", function(e) {
     e.preventDefault();
-    e.stopPropagation();
     mobileMenu?.classList.add("hidden");
     document.body.style.overflow = "";
     menuButton?.setAttribute("aria-expanded", "false");
-    menuButton?.setAttribute("aria-label", "Open navigation menu");
     menuButton?.focus();
   });
 

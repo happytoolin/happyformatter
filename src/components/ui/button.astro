@@ -3,10 +3,10 @@ import { cn } from "@/lib/utils";
 
 const buttonVariants = {
   default:
-    "bg-primary text-black border-2 border-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[4px_4px_0px_0px_#FFF]",
+    "border border-foreground bg-primary text-primary-foreground hover:opacity-90",
   outline:
-    "bg-transparent text-foreground border-2 border-foreground hover:bg-secondary",
-  ghost: "hover:bg-accent hover:text-white",
+    "border border-border bg-transparent text-foreground hover:border-foreground hover:bg-secondary",
+  ghost: "text-foreground hover:bg-secondary",
 };
 
 const buttonSizes = {
@@ -30,7 +30,7 @@ const { variant = "default", size = "default", className, ...props } =
 
 <button
   class={cn(
-    "inline-flex items-center justify-center font-display font-bold uppercase tracking-wide transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none active:translate-y-0 active:shadow-none",
+    "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 active:translate-y-px",
     buttonVariants[variant],
     buttonSizes[size],
     className,

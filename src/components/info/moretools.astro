@@ -1,128 +1,370 @@
 ---
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 
-const tools = [
-  { name: "HTML Formatter", url: "/html", type: "FMT" },
-  { name: "HTML Minifier", url: "/minify/html", type: "MIN" },
-  { name: "CSS Formatter", url: "/css", type: "FMT" },
-  { name: "CSS Minifier", url: "/minify/css", type: "MIN" },
-  { name: "JS Formatter", url: "/javascript", type: "FMT" },
-  { name: "JS Minifier", url: "/minify/javascript", type: "MIN" },
-  { name: "JS Biome Formatter", url: "/javascript-biome", type: "FMT" },
-  { name: "JS Biome Minifier", url: "/minify/javascript-biome", type: "MIN" },
-  { name: "JSON Formatter", url: "/json", type: "FMT" },
-  { name: "JSON Minifier", url: "/minify/json", type: "MIN" },
-  { name: "XML Formatter", url: "/xml", type: "FMT" },
-  { name: "XML Minifier", url: "/minify/xml", type: "MIN" },
-  { name: "YAML Formatter", url: "/yaml", type: "FMT" },
-  { name: "SQL Formatter", url: "/sql", type: "FMT" },
-  { name: "Go Formatter", url: "/go", type: "FMT" },
-  { name: "Dart Formatter", url: "/dart", type: "FMT" },
-  { name: "SCSS Formatter", url: "/scss", type: "FMT" },
-  { name: "SCSS Minifier", url: "/minify/scss", type: "MIN" },
-  { name: "Java Formatter", url: "/java", type: "FMT" },
-  { name: "Lua Formatter", url: "/lua", type: "FMT" },
-  { name: "Python Formatter", url: "/python", type: "FMT" },
-  { name: "Python Ruff Formatter", url: "/python-ruff", type: "FMT" },
-  { name: "TS Formatter", url: "/typescript", type: "FMT" },
-  { name: "TS Minifier", url: "/minify/typescript", type: "MIN" },
-  { name: "TS Validator", url: "/validator/typescript", type: "VAL" },
-  { name: "TS Biome Formatter", url: "/typescript-biome", type: "FMT" },
-  { name: "TS Biome Minifier", url: "/minify/typescript-biome", type: "MIN" },
-  { name: "Markdown", url: "/markdown", type: "FMT" },
-  { name: "C# Formatter", url: "/csharp", type: "FMT" },
-  { name: "C Formatter", url: "/c", type: "FMT" },
-  { name: "C++ Formatter", url: "/cpp", type: "FMT" },
-  { name: "Objective-C Formatter", url: "/objectivec", type: "FMT" },
-  { name: "Objective-C++ Formatter", url: "/objectivecpp", type: "FMT" },
-  { name: "PHP Formatter", url: "/php", type: "FMT" },
-  { name: "PHP Mago Formatter", url: "/php-mago", type: "FMT" },
-  { name: "Proto Formatter", url: "/proto", type: "FMT" },
-  { name: "TOML Formatter", url: "/toml", type: "FMT" },
-  { name: "Zig Formatter", url: "/zig", type: "FMT" },
+type ToolType = "FMT" | "MIN" | "VAL";
+
+interface ToolAction {
+  label: string;
+  url: string;
+  type: ToolType;
+}
+
+interface ToolFamily {
+  name: string;
+  icon: string;
+  group: "Web" | "Data" | "Runtime" | "Systems";
+  descriptor: string;
+  actions: ToolAction[];
+}
+
+const toolFamilies: ToolFamily[] = [
+  {
+    name: "HTML",
+    icon: "html",
+    group: "Web",
+    descriptor: "Markup",
+    actions: [
+      { label: "Format", url: "/html", type: "FMT" },
+      { label: "Minify", url: "/minify/html", type: "MIN" },
+    ],
+  },
+  {
+    name: "CSS",
+    icon: "css",
+    group: "Web",
+    descriptor: "Stylesheet",
+    actions: [
+      { label: "Format", url: "/css", type: "FMT" },
+      { label: "Minify", url: "/minify/css", type: "MIN" },
+    ],
+  },
+  {
+    name: "JavaScript",
+    icon: "javascript",
+    group: "Web",
+    descriptor: "Browser script",
+    actions: [
+      { label: "Format", url: "/javascript", type: "FMT" },
+      { label: "Minify", url: "/minify/javascript", type: "MIN" },
+      { label: "Biome", url: "/javascript-biome", type: "FMT" },
+      { label: "Biome", url: "/minify/javascript-biome", type: "MIN" },
+    ],
+  },
+  {
+    name: "TypeScript",
+    icon: "typescript",
+    group: "Web",
+    descriptor: "Typed script",
+    actions: [
+      { label: "Format", url: "/typescript", type: "FMT" },
+      { label: "Minify", url: "/minify/typescript", type: "MIN" },
+      { label: "Validate", url: "/validator/typescript", type: "VAL" },
+      { label: "Biome", url: "/typescript-biome", type: "FMT" },
+      { label: "Biome", url: "/minify/typescript-biome", type: "MIN" },
+    ],
+  },
+  {
+    name: "SCSS",
+    icon: "scss",
+    group: "Web",
+    descriptor: "Stylesheet",
+    actions: [
+      { label: "Format", url: "/scss", type: "FMT" },
+      { label: "Minify", url: "/minify/scss", type: "MIN" },
+    ],
+  },
+  {
+    name: "JSON",
+    icon: "json",
+    group: "Data",
+    descriptor: "Structured data",
+    actions: [
+      { label: "Format", url: "/json", type: "FMT" },
+      { label: "Minify", url: "/minify/json", type: "MIN" },
+    ],
+  },
+  {
+    name: "XML",
+    icon: "xml",
+    group: "Data",
+    descriptor: "Structured markup",
+    actions: [
+      { label: "Format", url: "/xml", type: "FMT" },
+      { label: "Minify", url: "/minify/xml", type: "MIN" },
+    ],
+  },
+  {
+    name: "YAML",
+    icon: "yaml",
+    group: "Data",
+    descriptor: "Config data",
+    actions: [{ label: "Format", url: "/yaml", type: "FMT" }],
+  },
+  {
+    name: "TOML",
+    icon: "toml",
+    group: "Data",
+    descriptor: "Config data",
+    actions: [{ label: "Format", url: "/toml", type: "FMT" }],
+  },
+  {
+    name: "SQL",
+    icon: "sql",
+    group: "Data",
+    descriptor: "Query language",
+    actions: [{ label: "Format", url: "/sql", type: "FMT" }],
+  },
+  {
+    name: "Proto",
+    icon: "proto",
+    group: "Data",
+    descriptor: "Schema",
+    actions: [{ label: "Format", url: "/proto", type: "FMT" }],
+  },
+  {
+    name: "Markdown",
+    icon: "markdown",
+    group: "Data",
+    descriptor: "Document",
+    actions: [{ label: "Format", url: "/markdown", type: "FMT" }],
+  },
+  {
+    name: "Python",
+    icon: "python",
+    group: "Runtime",
+    descriptor: "Application code",
+    actions: [
+      { label: "Format", url: "/python", type: "FMT" },
+      { label: "Ruff", url: "/python-ruff", type: "FMT" },
+    ],
+  },
+  {
+    name: "PHP",
+    icon: "php",
+    group: "Runtime",
+    descriptor: "Server script",
+    actions: [
+      { label: "Format", url: "/php", type: "FMT" },
+      { label: "Mago", url: "/php-mago", type: "FMT" },
+    ],
+  },
+  {
+    name: "Go",
+    icon: "go",
+    group: "Runtime",
+    descriptor: "Application code",
+    actions: [{ label: "Format", url: "/go", type: "FMT" }],
+  },
+  {
+    name: "Dart",
+    icon: "dart",
+    group: "Runtime",
+    descriptor: "Application code",
+    actions: [{ label: "Format", url: "/dart", type: "FMT" }],
+  },
+  {
+    name: "Java",
+    icon: "java",
+    group: "Runtime",
+    descriptor: "Application code",
+    actions: [{ label: "Format", url: "/java", type: "FMT" }],
+  },
+  {
+    name: "Lua",
+    icon: "lua",
+    group: "Runtime",
+    descriptor: "Script",
+    actions: [{ label: "Format", url: "/lua", type: "FMT" }],
+  },
+  {
+    name: "Rust",
+    icon: "rust",
+    group: "Runtime",
+    descriptor: "Systems code",
+    actions: [{ label: "Format", url: "/rust", type: "FMT" }],
+  },
+  {
+    name: "C",
+    icon: "c",
+    group: "Systems",
+    descriptor: "Native source",
+    actions: [{ label: "Format", url: "/c", type: "FMT" }],
+  },
+  {
+    name: "C++",
+    icon: "cpp",
+    group: "Systems",
+    descriptor: "Native source",
+    actions: [{ label: "Format", url: "/cpp", type: "FMT" }],
+  },
+  {
+    name: "C#",
+    icon: "csharp",
+    group: "Systems",
+    descriptor: ".NET source",
+    actions: [{ label: "Format", url: "/csharp", type: "FMT" }],
+  },
+  {
+    name: "Objective-C",
+    icon: "objectivec",
+    group: "Systems",
+    descriptor: "Apple source",
+    actions: [
+      { label: "Format", url: "/objectivec", type: "FMT" },
+      { label: "Objective-C++", url: "/objectivecpp", type: "FMT" },
+    ],
+  },
+  {
+    name: "Zig",
+    icon: "zig",
+    group: "Systems",
+    descriptor: "Systems code",
+    actions: [{ label: "Format", url: "/zig", type: "FMT" }],
+  },
 ];
+
+const groupOrder: ToolFamily["group"][] = ["Web", "Data", "Runtime", "Systems"];
+const sections = groupOrder.map((group) => ({
+  group,
+  id: `tools-${group.toLowerCase()}`,
+  families: toolFamilies.filter((family) => family.group === group),
+}));
+
+const allActions = toolFamilies.flatMap((family) => family.actions);
+const minifierCount =
+  allActions.filter((action) => action.type === "MIN").length;
+const validatorCount =
+  allActions.filter((action) => action.type === "VAL").length;
+
+const typeLabel: Record<ToolType, string> = {
+  FMT: "Format",
+  MIN: "Minify",
+  VAL: "Validate",
+};
 ---
 
-<div
-  class="border-t-2 border-foreground bg-foreground text-background py-16"
+<section
+  class="border-t border-border bg-background py-16 sm:py-20"
   id="more-tools"
 >
-  <div class="container mx-auto px-4">
-    <div class="flex items-center justify-between mb-8">
-      <h2 class="text-3xl font-display font-black uppercase tracking-tight text-background dark:text-background">
-        System Modules <span class="text-primary">({tools.length})</span>
-      </h2>
-      <div class="hidden md:flex gap-2">
-        <span class="w-3 h-3 bg-white rounded-full"></span>
-        <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-10 lg:grid-cols-[minmax(240px,330px)_minmax(0,1fr)]">
+      <aside class="self-start lg:sticky lg:top-24">
+        <div class="border-y border-border py-6">
+          <p class="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+            Directory
+          </p>
+          <h2 class="mt-4 max-w-[8ch] text-4xl font-semibold leading-[0.92] tracking-[-0.05em] text-foreground md:text-5xl">
+            Tool index.
+          </h2>
+
+          <dl class="mt-7 grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-border bg-border">
+            <div class="bg-card p-3">
+              <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                Routes
+              </dt>
+              <dd class="mt-2 font-mono text-lg text-foreground">
+                {allActions.length}
+              </dd>
+            </div>
+            <div class="bg-card p-3">
+              <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                Minify
+              </dt>
+              <dd class="mt-2 font-mono text-lg text-foreground">
+                {minifierCount}
+              </dd>
+            </div>
+            <div class="bg-card p-3">
+              <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                Check
+              </dt>
+              <dd class="mt-2 font-mono text-lg text-foreground">
+                {validatorCount}
+              </dd>
+            </div>
+          </dl>
+
+          <nav
+            class="mt-5 flex flex-wrap gap-2"
+            aria-label="Tool directory groups"
+          >
+            {sections.map((section) => (
+              <a
+                href={`#${section.id}`}
+                class="rounded-md border border-border bg-card px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {section.group}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </aside>
+
+      <div class="space-y-10">
+        {sections.map((section) => (
+          <section id={section.id} aria-labelledby={`${section.id}-heading`}>
+            <div class="mb-3 flex items-end justify-between gap-4 border-b border-border pb-3">
+              <h3
+                id={`${section.id}-heading`}
+                class="text-xl font-semibold tracking-[-0.03em] text-foreground"
+              >
+                {section.group}
+              </h3>
+              <span
+                class="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
+              >
+                {section.families.length} families
+              </span>
+            </div>
+
+            <div class="divide-y divide-border border-b border-border">
+              {section.families.map((family) => (
+                <article class="grid gap-4 py-4 md:grid-cols-[minmax(190px,0.38fr)_minmax(0,1fr)] md:items-center">
+                  <div class="flex min-w-0 items-center gap-3">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-card">
+                      <LanguageIcon icon={family.icon} class="h-6 w-6" />
+                    </div>
+                    <div class="min-w-0">
+                      <h4 class="truncate text-base font-medium tracking-[-0.02em] text-foreground">
+                        {family.name}
+                      </h4>
+                      <p class="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                        {family.descriptor}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-wrap gap-2 md:justify-end">
+                    {family.actions.map((action) => (
+                      <a
+                        href={action.url}
+                        data-tool-action
+                        class="group/action inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 font-mono text-[11px] uppercase tracking-[0.13em] text-muted-foreground transition-colors hover:border-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px"
+                      >
+                        <span class="text-foreground">{action.type}</span>
+                        <span
+                          class="h-1 w-1 rounded-full bg-muted-foreground/50 transition-colors group-hover/action:bg-foreground/70"
+                        />
+                        <span>{action.label || typeLabel[action.type]}</span>
+                      </a>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 bg-zinc-800 dark:bg-zinc-900 border-2 border-white/20 dark:border-white/10 gap-px">
-      {tools.map((tool) => {
-        const cleanName = tool.name.replace("Formatter", "").replace("Minifier", "")
-          .trim();
-
-        const urlParts = tool.url.split("/").filter(Boolean);
-        let iconName: string;
-        if (urlParts.length >= 2) {
-          iconName = urlParts.join("-");
-        } else {
-          iconName = urlParts[0];
-        }
-
-        return (
-          <a
-            href={tool.url}
-            class="tool group relative bg-black dark:bg-zinc-950 p-6 hover:bg-white hover:dark:bg-zinc-100 transition-colors duration-200 flex flex-col justify-between h-32 overflow-hidden"
-          >
-            <div class="absolute bottom-2 right-2 opacity-15 grayscale transition-opacity">
-              <LanguageIcon
-                icon={iconName}
-                class="w-16 h-16"
-              />
-            </div>
-
-            <div class="flex justify-between items-start">
-              <span
-                class="text-[10px] font-mono font-bold text-primary border border-primary px-1"
-              >
-                {tool.type}
-              </span>
-              <span
-                class="border-accent group-hover:border-accent/80 dark:group-hover:border-accent/70 opacity-50 group-hover:opacity-100 transition-opacity"
-                style="color: inherit !important"
-              >↗</span>
-            </div>
-
-            <div class="relative z-10">
-              <span
-                class="block text-lg font-bold font-display uppercase tracking-wider text-white dark:text-zinc-100 group-hover:text-black group-hover:dark:text-zinc-900"
-              >
-                {cleanName}
-              </span>
-              <span
-                class="text-[10px] font-mono text-zinc-500 dark:text-zinc-600 group-hover:text-zinc-800 group-hover:dark:text-zinc-700"
-              >
-                {tool.name.includes("Minifier") ? "Compression" : "Standardization"}
-              </span>
-            </div>
-          </a>
-        );
-      })}
-    </div>
-
-    <div class="mt-4 text-right font-mono text-[10px] text-zinc-500 dark:text-zinc-600">
-      SYSTEM STATUS: ALL SYSTEMS OPERATIONAL
-    </div>
   </div>
-</div>
+</section>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const tools = document.querySelectorAll(".tool");
+  const tools = document.querySelectorAll("[data-tool-action]");
   tools.forEach((tool) => {
-    const toolName = tool.getAttribute("href")?.replace("/", "") || "";
+    const toolName = tool.getAttribute("href")?.replace(/^\//, "") || "";
 
     tool.addEventListener("click", () => {
       if (typeof window.gtag === "function") {

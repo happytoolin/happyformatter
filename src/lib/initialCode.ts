@@ -2,13 +2,13 @@ export function getInitialCode(language: string): string {
   switch (language) {
     case "json":
       return `{
-  "greeting": "Welcome to HAPPYFMT!",
+  "greeting": "Welcome to HappyFormatter!",
   "instructions": [
     "Type or paste JSON here",
-    "HAPPYFMT will format your code"
+    "HappyFormatter will format your code"
   ],
   "example": {
-    "name": "HAPPYFMT",
+    "name": "HappyFormatter",
     "version": "1.0.0",
     "features": ["formatting", "syntax highlighting", "auto-completion"]
   },
@@ -18,15 +18,15 @@ export function getInitialCode(language: string): string {
   }
 }`;
     case "javascript":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 function greet() {
-  console.log("Welcome to HAPPYFMT!");
+  console.log("Welcome to HappyFormatter!");
 }
 
 function showInstructions() {
   const instructions = [
     "Type or paste JavaScript here",
-    "HAPPYFMT will format your code"
+    "HappyFormatter will format your code"
   ];
   instructions.forEach(instruction => console.log(instruction));
 }
@@ -35,17 +35,17 @@ greet();
 showInstructions();
 
 // DOM Manipulation Example
-document.body.innerHTML = "<h1>Welcome to HAPPYFMT!</h1>";`;
+document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
     case "typescript":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 function greet(): void {
-  console.log("Welcome to HAPPYFMT!");
+  console.log("Welcome to HappyFormatter!");
 }
 
 function showInstructions(): void {
   const instructions: string[] = [
     "Type or paste TypeScript here",
-    "HAPPYFMT will format your code"
+    "HappyFormatter will format your code"
   ];
   instructions.forEach(instruction => console.log(instruction));
 }
@@ -54,9 +54,9 @@ greet();
 showInstructions();
 
 // DOM Manipulation Example
-document.body.innerHTML = "<h1>Welcome to HAPPYFMT!</h1>";`;
+document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
     case "css":
-      return `/* Welcome to HAPPYFMT! */
+      return `/* Welcome to HappyFormatter! */
 body {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
@@ -86,7 +86,7 @@ body {
   }
 }`;
     case "scss":
-      return `/* Welcome to HAPPYFMT! */
+      return `/* Welcome to HappyFormatter! */
 body {
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
@@ -104,13 +104,13 @@ body {
   color: green;
 }`;
     case "html":
-      return `<!-- Welcome to HAPPYFMT! -->
+      return `<!-- Welcome to HappyFormatter! -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HAPPYFMT</title>
+  <title>HappyFormatter</title>
   <style>
     body {
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -121,20 +121,20 @@ body {
   </style>
 </head>
 <body>
-  <h1>Welcome to HAPPYFMT!</h1>
-  <p>Type or paste HTML here, and HAPPYFMT will format your code.</p>
+  <h1>Welcome to HappyFormatter!</h1>
+  <p>Type or paste HTML here, and HappyFormatter will format your code.</p>
   <footer>
-    <p>&copy; 2024 HAPPYFMT</p>
+    <p>&copy; 2024 HappyFormatter</p>
   </footer>
 </body>
 </html>`;
     case "xml":
-      return `<!-- Welcome to HAPPYFMT! -->
+      return `<!-- Welcome to HappyFormatter! -->
 <greeting>
-  <message>Welcome to HAPPYFMT!</message>
+  <message>Welcome to HappyFormatter!</message>
   <instructions>
     <step>Type or paste XML here</step>
-    <step>HAPPYFMT will format your code</step>
+    <step>HappyFormatter will format your code</step>
   </instructions>
   <metadata>
     <author>Happy Dev</author>
@@ -142,7 +142,7 @@ body {
   </metadata>
 </greeting>`;
     case "go":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 package main
 
 import ("fmt"
@@ -150,13 +150,13 @@ import ("fmt"
 )
 
 func greet() {
-  fmt.Println("Welcome to HAPPYFMT!")
+  fmt.Println("Welcome to HappyFormatter!")
 }
 
 func showInstructions() {
   instructions := []string{
     "Type or paste Go code here",
-    "HAPPYFMT will format your code",
+    "HappyFormatter will format your code",
   }
   for _, instruction := range instructions {
     fmt.Println(instruction)
@@ -176,14 +176,14 @@ func main() {
   time.Sleep(3 * time.Second)
 }`;
     case "java":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HAPPYFMT {
+public class HappyFormatter {
     public static void main(String[] args) {
-        JFrame frame = new JFrame("HAPPYFMT");
+        JFrame frame = new JFrame("HappyFormatter");
         frame.add(label);
 
         JButton button = new JButton("Click Me");
@@ -198,19 +198,19 @@ public class HAPPYFMT {
     }
 }`;
     case "cs":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 using System;
 
 class Program {
   static void Main() {
-    Console.WriteLine("Welcome to HAPPYFMT!");
+    Console.WriteLine("Welcome to HappyFormatter!");
     ShowInstructions();
   }
 
   static void ShowInstructions() {
     string[] instructions = {
       "Type or paste C# code here",
-      "HAPPYFMT will format your code"
+      "HappyFormatter will format your code"
     };
     foreach (string instruction in instructions) {
       Console.WriteLine(instruction);
@@ -218,7 +218,7 @@ class Program {
   }
 }`;
     case "proto":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 syntax = "proto3";
 
 message Greeting {
@@ -237,13 +237,13 @@ message Example {
   repeated string features = 3;
 }`;
     case "markdown":
-      return `<!-- Welcome to HAPPYFMT! -->
+      return `<!-- Welcome to HappyFormatter! -->
 
-# HAPPYFMT
+# HappyFormatter
 
 - Type or paste Markdown here
 
-- HAPPYFMT will format your code
+- HappyFormatter will format your code
 
 ## Features
 
@@ -252,68 +252,68 @@ message Example {
 
       `;
     case "dart":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 import 'dart:io';
 
 void main() {
-  print('Welcome to HAPPYFMT!');
+  print('Welcome to HappyFormatter!');
 }`;
     case "lua":
-      return `-- Welcome to HAPPYFMT!
-print("Welcome to HAPPYFMT!")`;
+      return `-- Welcome to HappyFormatter!
+print("Welcome to HappyFormatter!")`;
     case "python":
-      return `# Welcome to HAPPYFMT!
+      return `# Welcome to HappyFormatter!
 
-print("Welcome to HAPPYFMT!")`;
+print("Welcome to HappyFormatter!")`;
     case "sql":
-      return `-- Welcome to HAPPYFMT!
+      return `-- Welcome to HappyFormatter!
 SELECT * FROM users;`;
     case "rust":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 fn main() {
-  println!("Welcome to HAPPYFMT!");
+  println!("Welcome to HappyFormatter!");
 }`;
     case "csharp":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 using System;
 
 class Program {
   static void Main() {
-    Console.WriteLine("Welcome to HAPPYFMT!");
+    Console.WriteLine("Welcome to HappyFormatter!");
   }
 }`;
     case "c":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 #include <stdio.h>
 
 int main() {
-  printf("Welcome to HAPPYFMT!");
+  printf("Welcome to HappyFormatter!");
          return 0;
 }
 `;
     case "cpp":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 #include <iostream>
 
 int main() {
-  std::cout << "Welcome to HAPPYFMT!" << std::endl;
+  std::cout << "Welcome to HappyFormatter!" << std::endl;
   return 0;
 }
 `;
     case "objectivec":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 #import <Foundation/Foundation.h>
 
 int main(int argc, const char * argv[]) {
   @autoreleasepool {
-    NSString *message = @"Welcome to HAPPYFMT!";
+    NSString *message = @"Welcome to HappyFormatter!";
     NSLog(@"%@", message);
   }
   return 0;
 }
 `;
     case "objectivecpp":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 #import <Foundation/Foundation.h>
 #include <vector>
 
@@ -321,7 +321,7 @@ int main(int argc, const char * argv[]) {
   @autoreleasepool {
     std::vector<NSString *> messages = {
       @"Type or paste Objective-C++ here",
-      @"HAPPYFMT will format your code"
+      @"HappyFormatter will format your code"
     };
 
     for (NSString *message : messages) {
@@ -333,32 +333,32 @@ int main(int argc, const char * argv[]) {
 `;
     case "php":
       return `<?php
-// Welcome to HAPPYFMT!
-echo "Welcome to HAPPYFMT!";
+// Welcome to HappyFormatter!
+echo "Welcome to HappyFormatter!";
 ?>`;
     case "zig":
-      return `// Welcome to HAPPYFMT!
+      return `// Welcome to HappyFormatter!
 pub fn main() void {
-  println!("Welcome to HAPPYFMT!");
+  println!("Welcome to HappyFormatter!");
 }
 `;
     case "yaml":
-      return `# Welcome to HAPPYFMT!
+      return `# Welcome to HappyFormatter!
 
-greeting: Welcome to HAPPYFMT!
+greeting: Welcome to HappyFormatter!
 instructions:
   - Type or paste YAML here
-  - HAPPYFMT will format your code
+  - HappyFormatter will format your code
 
 example:
       `;
     case "toml":
-      return `# Welcome to HAPPYFMT!
+      return `# Welcome to HappyFormatter!
 
-greeting = "Welcome to HAPPYFMT!"
+greeting = "Welcome to HappyFormatter!"
 instructions = [
   "Type or paste TOML code here",
-  "HAPPYFMT will format your code"
+  "HappyFormatter will format your code"
 ]
 
       `;

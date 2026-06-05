@@ -52,31 +52,32 @@ export default function CodeValid({ language }: CodeValidProps) {
   const getStatusColor = () => {
     switch (status) {
       case "VALID SYNTAX":
-        return "text-green-600";
+        return "text-foreground";
       case "SYNTAX ERROR":
-        return "text-red-600";
+        return "text-destructive";
       default:
-        return "";
+        return "text-muted-foreground";
     }
   };
 
   const getStatusDotClass = () => {
     switch (status) {
       case "VALID SYNTAX":
-        return "w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(0,255,0,0.8)]";
+        return "h-2 w-2 rounded-full bg-foreground";
       case "SYNTAX ERROR":
-        return "w-2 h-2 rounded-full bg-red-500 animate-pulse";
+        return "h-2 w-2 rounded-full bg-destructive";
       case "IDLE":
-        return "w-2 h-2 rounded-full bg-gray-400";
+        return "h-2 w-2 rounded-full bg-muted-foreground";
       default:
-        return "w-2 h-2 rounded-full bg-primary";
+        return "h-2 w-2 rounded-full border border-muted-foreground";
     }
   };
 
   return (
     <div className="flex items-center">
-      <span className="font-mono text-[10px] font-bold uppercase flex items-center gap-2 px-2 py-1 bg-muted border border-border">
-        STATUS: <span className={getStatusColor()}>{status}</span>
+      <span className="flex h-9 items-center gap-2 rounded-md border border-border bg-background px-2.5 font-mono text-xs uppercase">
+        <span className="text-muted-foreground">Check</span>
+        <span className={getStatusColor()}>{status}</span>
         <span
           className={getStatusDotClass()}
           aria-hidden="true"
@@ -90,7 +91,7 @@ export default function CodeValid({ language }: CodeValidProps) {
         aria-live="polite"
         aria-atomic="true"
       >
-        Code validation status: {status}
+        Code check: {status}
       </div>
     </div>
   );

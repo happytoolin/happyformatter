@@ -1,4 +1,6 @@
 ---
+import { defaultEditorThemeByMode, editorThemes } from "@/lib/theme";
+
 type Props = {
   title: string;
   description: string;
@@ -13,7 +15,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const {
   title,
   description,
-  image = "/images/og.png",
+  image = "/images/happyformatter-workbench-reference.png",
   keywords =
     "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, code validator, code linter, programming tools, developer tools",
   author = "HappyFormatter",
@@ -21,10 +23,108 @@ const {
 } = Astro.props;
 
 const ogImageURL = new URL(image, Astro.site);
+
+const lightEditorThemeIds = editorThemes
+  .filter(theme => theme.type === "light")
+  .map(theme => theme.id);
+const darkEditorThemeIds = editorThemes
+  .filter(theme => theme.type === "dark")
+  .map(theme => theme.id);
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<script
+  is:inline
+  define:vars={{ darkEditorThemeIds, defaultEditorThemeByMode, lightEditorThemeIds }}
+>
+(() => {
+  const themeKey = "theme";
+  const editorThemeKey = "codemirror-theme";
+  const root = document.documentElement;
+  const lightThemes = new Set(lightEditorThemeIds);
+  const darkThemes = new Set(darkEditorThemeIds);
+
+  const readStorage = (key) => {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  };
+
+  const writeStorage = (key, value) => {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch {
+      // Private browsing modes can reject storage writes.
+    }
+  };
+
+  const isMode = (value) => value === "light" || value === "dark";
+
+  const getInitialMode = () => {
+    const stored = readStorage(themeKey);
+    if (isMode(stored)) {
+      return stored;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
+  const isEditorThemeForMode = (theme, mode) => {
+    if (!theme) {
+      return false;
+    }
+    return mode === "dark" ? darkThemes.has(theme) : lightThemes.has(theme);
+  };
+
+  const getEditorThemeForMode = (mode) => {
+    const modeKey = `codemirror-theme-${mode}`;
+    const storedForMode = readStorage(modeKey);
+    if (isEditorThemeForMode(storedForMode, mode)) {
+      return storedForMode;
+    }
+
+    const current = readStorage(editorThemeKey);
+    if (isEditorThemeForMode(current, mode)) {
+      return current;
+    }
+
+    return defaultEditorThemeByMode[mode];
+  };
+
+  const mode = getInitialMode();
+  const editorTheme = getEditorThemeForMode(mode);
+
+  root.classList.toggle("dark", mode === "dark");
+  root.dataset.theme = mode;
+  root.style.colorScheme = mode;
+  writeStorage(themeKey, mode);
+  writeStorage(editorThemeKey, editorTheme);
+  writeStorage(`codemirror-theme-${mode}`, editorTheme);
+})();
+</script>
+<style is:inline>
+html {
+  background: #f7f7f4;
+  color-scheme: light;
+}
+
+html.dark {
+  background: #151513;
+  color-scheme: dark;
+}
+
+body {
+  background: #f7f7f4;
+}
+
+html.dark body {
+  background: #151513;
+}
+</style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -36,7 +136,7 @@ const ogImageURL = new URL(image, Astro.site);
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=JetBrains+Mono:wght@100..800&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 />
 <link rel="canonical" href={canonicalURL} />
@@ -47,7 +147,16 @@ const ogImageURL = new URL(image, Astro.site);
 <meta name="author" content={author} />
 <meta name="category" content={category} />
 <meta name="classification" content="Developer Tool" />
-<meta name="theme-color" content="#FF4D00" />
+<meta
+  name="theme-color"
+  content="#f7f7f4"
+  media="(prefers-color-scheme: light)"
+/>
+<meta
+  name="theme-color"
+  content="#151513"
+  media="(prefers-color-scheme: dark)"
+/>
 
 <link rel="alternate" hreflang="en" href={canonicalURL} />
 <meta property="og:type" content="website" />

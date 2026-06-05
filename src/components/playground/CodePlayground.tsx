@@ -1,4 +1,5 @@
 import { languageLoader } from "@/lib/languageLoader";
+import { LANGUAGES } from "@/lib/languages";
 import type { Extension } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { dracula } from "@uiw/codemirror-theme-dracula";
@@ -8,6 +9,7 @@ import { nord } from "@uiw/codemirror-theme-nord";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import CodeMirror from "@uiw/react-codemirror";
 import { vitesseDark } from "codemirror-theme-vitesse";
+import { AlertTriangle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "./ThemeContext";
 
@@ -17,11 +19,19 @@ interface CodePlaygroundProps {
   onCodeChange?: (code: string) => void;
 }
 
+function formatLanguageName(language: string) {
+  return LANGUAGES[language]?.name || language
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
 export default function CodePlayground({ inputCode, language, onCodeChange }: CodePlaygroundProps) {
   const [extensions, setExtensions] = useState<Extension[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { currentTheme } = useTheme();
+  const { currentTheme, ready } = useTheme();
+  const languageName = formatLanguageName(language);
 
   const getTheme = useCallback(() => {
     switch (currentTheme) {
@@ -102,36 +112,35 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
 
         setExtensions(exts);
       } catch (error) {
-        setError(`Failed to load language support for ${language}`);
+        setError(`Could not load the editor for ${languageName}`);
       } finally {
         setIsLoading(false);
       }
     };
 
     updateExtensions();
-  }, [language, getLanguageExtension]);
+  }, [language, languageName, getLanguageExtension]);
 
   return (
     <div
       className="w-full h-full bg-transparent overflow-hidden relative"
       data-language={language}
       role="application"
-      aria-label={`Code editor for ${language}`}
+      aria-label={`Code editor for ${languageName}`}
     >
       {/* Loading state */}
       {isLoading && (
         <div
-          className="absolute inset-0 flex items-center justify-center bg-background/80 z-10"
+          className="absolute inset-0 z-10 flex items-center justify-center bg-card/95"
           role="status"
           aria-live="polite"
         >
-          <div className="flex items-center gap-2">
-            <div
-              className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"
-              aria-hidden="true"
-            />
-            <span className="text-sm text-muted-foreground">
-              Loading {language} support...
+          <div className="w-full max-w-sm space-y-3 px-6">
+            <div className="h-3 w-40 rounded-sm bg-muted" aria-hidden="true" />
+            <div className="h-2 w-full rounded-sm bg-muted" aria-hidden="true" />
+            <div className="h-2 w-4/5 rounded-sm bg-muted" aria-hidden="true" />
+            <span className="block text-sm text-muted-foreground">
+              Loading editor
             </span>
           </div>
         </div>
@@ -139,23 +148,22 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
 
       {error && !isLoading && (
         <div
-          className="absolute inset-0 flex items-center justify-center bg-background/80 z-10"
+          className="absolute inset-0 z-10 flex items-center justify-center bg-card/95"
           role="alert"
           aria-live="assertive"
         >
-          <div className="text-center p-4">
-            <div
-              className="w-12 h-12 mx-auto mb-2 text-destructive"
+          <div className="max-w-sm rounded-lg border border-border bg-background p-5 text-center">
+            <AlertTriangle
+              className="mx-auto mb-3 h-8 w-8 text-destructive"
+              strokeWidth={1.75}
               aria-hidden="true"
-            >
-              ⚠️
-            </div>
+            />
             <p className="text-sm text-destructive mb-2">
               {error}
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="text-sm text-primary hover:underline"
+              className="rounded-md border border-border px-3 py-2 text-sm text-foreground transition-colors hover:border-foreground hover:bg-secondary"
               aria-label="Reload page to retry"
             >
               Retry
@@ -165,56 +173,60 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       )}
 
       {/* Code editor */}
-      <div className={(isLoading || error ? "opacity-50 pointer-events-none" : "") + " h-full"}>
-        <CodeMirror
-          value={inputCode}
-          height="100%"
-          theme={getTheme()}
-          extensions={extensions}
-          basicSetup={{
-            lineNumbers: true,
-            highlightActiveLineGutter: true,
-            highlightSpecialChars: true,
-            history: true,
-            foldGutter: true,
-            drawSelection: true,
-            dropCursor: true,
-            allowMultipleSelections: true,
-            indentOnInput: true,
-            bracketMatching: true,
-            closeBrackets: true,
-            autocompletion: true,
-            highlightSelectionMatches: true,
-            searchKeymap: true,
-          }}
-          editable={!isLoading && !error}
-          onChange={(value) => {
-            onCodeChange?.(value);
-          }}
-          onCreateEditor={(view) => {
-            const editorElement = view.dom;
-            editorElement.setAttribute("role", "textbox");
-            editorElement.setAttribute("aria-multiline", "true");
-            editorElement.setAttribute("aria-label", `Code editor for ${language}`);
+      {ready
+        ? (
+          <div className={(isLoading || error ? "opacity-50 pointer-events-none" : "") + " h-full"}>
+            <CodeMirror
+              value={inputCode}
+              height="100%"
+              theme={getTheme()}
+              extensions={extensions}
+              basicSetup={{
+                lineNumbers: true,
+                highlightActiveLineGutter: true,
+                highlightSpecialChars: true,
+                history: true,
+                foldGutter: true,
+                drawSelection: true,
+                dropCursor: true,
+                allowMultipleSelections: true,
+                indentOnInput: true,
+                bracketMatching: true,
+                closeBrackets: true,
+                autocompletion: true,
+                highlightSelectionMatches: true,
+                searchKeymap: true,
+              }}
+              editable={!isLoading && !error}
+              onChange={(value) => {
+                onCodeChange?.(value);
+              }}
+              onCreateEditor={(view) => {
+                const editorElement = view.dom;
+                editorElement.setAttribute("role", "textbox");
+                editorElement.setAttribute("aria-multiline", "true");
+                editorElement.setAttribute("aria-label", `Code editor for ${languageName}`);
 
-            const announcer = document.createElement("div");
-            announcer.setAttribute("aria-live", "polite");
-            announcer.setAttribute("aria-atomic", "true");
-            announcer.className = "sr-only";
-            document.body.appendChild(announcer);
+                const announcer = document.createElement("div");
+                announcer.setAttribute("aria-live", "polite");
+                announcer.setAttribute("aria-atomic", "true");
+                announcer.className = "sr-only";
+                document.body.appendChild(announcer);
 
-            announcer.textContent = `Language changed to ${language}`;
+                announcer.textContent = `Editor ready for ${languageName}`;
 
-            setTimeout(() => {
-              document.body.removeChild(announcer);
-            }, 1000);
-          }}
-        />
-      </div>
+                setTimeout(() => {
+                  document.body.removeChild(announcer);
+                }, 1000);
+              }}
+            />
+          </div>
+        )
+        : <div className="h-full bg-card" aria-hidden="true" />}
 
       <div className="sr-only" aria-live="polite" aria-atomic="true">
-        Editor currently loaded with {language} language support.
-        {isLoading && " Loading language features..."}
+        Editor ready for {languageName}.
+        {isLoading && " Loading editor..."}
         {error && ` Error: ${error}`}
       </div>
     </div>
