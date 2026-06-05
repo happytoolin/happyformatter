@@ -1,9 +1,9 @@
-import type { LayoutConfig } from "@wasm-fmt/dart_fmt";
-import init, { format } from "@wasm-fmt/dart_fmt";
+import type { Config } from "@wasm-fmt/dart_fmt";
+import init, { format } from "@wasm-fmt/dart_fmt/web";
 import { Formatter } from "../interface";
 
 export class DartFormatter extends Formatter {
-  protected config: LayoutConfig = {
+  protected config: Config = {
     line_ending: "crlf",
     line_width: 80,
   };
@@ -15,7 +15,7 @@ export class DartFormatter extends Formatter {
   async formatCode(code: string): Promise<string> {
     return format(code, "main.dart", this.config);
   }
-  setConfig(config: LayoutConfig): void {
+  setConfig(config: Config): void {
     this.config = config;
   }
 

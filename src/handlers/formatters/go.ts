@@ -1,4 +1,4 @@
-import init, { format } from "@wasm-fmt/gofmt";
+import init, { format } from "@wasm-fmt/gofmt/web";
 import { Formatter } from "../interface";
 
 export class GoFormatter extends Formatter {

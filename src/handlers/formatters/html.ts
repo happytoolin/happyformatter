@@ -1,12 +1,13 @@
-import type { Config } from "@wasm-fmt/web_fmt";
-import init, { format } from "@wasm-fmt/web_fmt";
+import init, { format } from "@wasm-fmt/web_fmt/web";
 import { Formatter } from "../interface";
+
+type Config = NonNullable<Parameters<typeof format>[2]>;
 
 export class HTMLFormatter extends Formatter {
   protected config: Config = {
     markup: {
-      indent_style: "space",
-      indent_width: 2,
+      indentStyle: "space",
+      indentWidth: 2,
     },
   };
 
@@ -15,7 +16,7 @@ export class HTMLFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "index.html");
+    return format(code, "index.html", this.config);
   }
 
   setConfig(config: Config): void {

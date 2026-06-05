@@ -1,5 +1,5 @@
 import type { Config } from "@wasm-fmt/sql_fmt";
-import init, { format } from "@wasm-fmt/sql_fmt";
+import init, { format } from "@wasm-fmt/sql_fmt/web";
 import { Formatter } from "../interface";
 
 export class SQLFormatter extends Formatter {
@@ -15,7 +15,7 @@ export class SQLFormatter extends Formatter {
   }
 
   async formatCode(code: string): Promise<string> {
-    return format(code, "query.sql", this.config);
+    return format(code, this.config);
   }
 
   setConfig(config: Config): void {

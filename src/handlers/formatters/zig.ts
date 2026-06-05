@@ -1,4 +1,4 @@
-import init, { format } from "@wasm-fmt/zig_fmt";
+import init, { format } from "@wasm-fmt/zig_fmt/web";
 import { Formatter } from "../interface";
 
 export class ZigFormatter extends Formatter {

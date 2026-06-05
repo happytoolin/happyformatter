@@ -36,6 +36,8 @@
   --animate-glitch: glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both
     infinite;
   --animate-noise: noise 0.2s infinite;
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
 
   @keyframes glitch {
     0% {
@@ -55,6 +57,24 @@
     }
     100% {
       transform: translate(0);
+    }
+  }
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
     }
   }
 }

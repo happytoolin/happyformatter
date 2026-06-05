@@ -1,4 +1,4 @@
-import { default as init, format } from "@wasm-fmt/mago_fmt";
+import init, { format } from "@wasm-fmt/mago_fmt/web";
 import { Formatter } from "../interface";
 
 export class PHPMagoFormatter extends Formatter {
