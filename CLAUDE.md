@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-HappyFormatter is a web-based code formatter and minifier supporting 22+ programming languages. It's built with Astro, React, and TypeScript, featuring client-side processing via WebAssembly modules for privacy and performance.
+HappyFormatter is a web-based code formatter and minifier supporting 25+ programming languages. It's built with Astro, React, and TypeScript, featuring client-side processing via WebAssembly modules for privacy and performance.
 
 ## Development Commands
 

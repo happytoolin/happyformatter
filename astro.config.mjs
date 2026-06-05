@@ -2,7 +2,7 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import playformCompress from "@playform/compress";
 import tailwind from "@tailwindcss/vite";
-import { defineConfig } from "astro/config";
+import { defineConfig, sessionDrivers } from "astro/config";
 import wasm from "vite-plugin-wasm";
 
 import partytown from "@astrojs/partytown";
@@ -12,6 +12,9 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
+  session: {
+    driver: sessionDrivers.null(),
+  },
 
   integrations: [
     sitemap({

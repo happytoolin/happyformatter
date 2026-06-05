@@ -1,21 +1,33 @@
-// import { Formatter } from "../interface";
-// // @ts-ignore
-// import tomlPlugin from "prettier-plugin-toml";
-// import prettier from "prettier/standalone";
-// export class TomlFormatter extends Formatter {
-//   protected config: any = {};
+import type { Options } from "@wasm-fmt/taplo_fmt";
+import init, { format } from "@wasm-fmt/taplo_fmt/vite";
+import { Formatter } from "../interface";
 
-//   async init(): Promise<void> {
-//   }
+export class TomlFormatter extends Formatter {
+  protected config: Options = {
+    align_entries: true,
+    column_width: 80,
+    indent_string: "  ",
+    trailing_newline: true,
+  };
 
-//   async formatCode(code: string): Promise<string> {
-//     return prettier.format(code, {
-//       plugins: [tomlPlugin],
-//       parser: "toml",
-//     });
-//   }
+  async init(): Promise<void> {
+    await init();
+  }
 
-//   setConfig(config: any): void {
-//     this.config = config;
-//   }
-// }
+  async formatCode(code: string): Promise<string> {
+    return format(code, this.config);
+  }
+
+  setConfig(config: Options): void {
+    this.config = config;
+  }
+
+  async validateCode(code: string): Promise<boolean> {
+    try {
+      await this.formatCode(code);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}

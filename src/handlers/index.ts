@@ -74,6 +74,7 @@ export async function getFormatter(language: string) {
       const cFormatter = new CFormatter();
       await cFormatter.init();
       return cFormatter;
+    case "objectivec":
     case "m":
       const { ObjectiveCFormatter } = await import(
         "@/handlers/formatters/clang"
@@ -81,6 +82,7 @@ export async function getFormatter(language: string) {
       const objcFormatter = new ObjectiveCFormatter();
       await objcFormatter.init();
       return objcFormatter;
+    case "objectivecpp":
     case "mm":
       const { ObjectiveCppFormatter } = await import(
         "@/handlers/formatters/clang"
@@ -125,6 +127,11 @@ export async function getFormatter(language: string) {
       const yamlFormatter = new YamlFormatter();
       await yamlFormatter.init();
       return yamlFormatter;
+    case "toml":
+      const { TomlFormatter } = await import("@/handlers/formatters/toml");
+      const tomlFormatter = new TomlFormatter();
+      await tomlFormatter.init();
+      return tomlFormatter;
     case "python-ruff":
       const { PythonRuffFormatter } = await import("@/handlers/formatters/python-ruff");
       const pythonRuffFormatter = new PythonRuffFormatter();
@@ -145,11 +152,6 @@ export async function getFormatter(language: string) {
       const phpMagoFormatter = new PHPMagoFormatter();
       await phpMagoFormatter.init();
       return phpMagoFormatter;
-    // case "toml":
-    //   const { TomlFormatter } = await import("@/handlers/formatters/toml");
-    //   const tomlFormatter = new TomlFormatter();
-    //   await tomlFormatter.init();
-    //   return tomlFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }

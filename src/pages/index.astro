@@ -2,7 +2,6 @@
 import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
 import Layout from "@/components/layout/layout.astro";
-import LeapOCR from "@/components/leapocr/LeapOCR.astro";
 import Formatter from "@/components/playground/Formatter";
 import { LANGUAGES } from "@/lib/languages";
 
@@ -27,7 +26,6 @@ const homepageKeywords =
     minifier={languageConfig.minify}
     language={language}
   />
-  <LeapOCR language={language} />
   <Info language={language} />
   <FAQ language={language} client:idle />
 </Layout>

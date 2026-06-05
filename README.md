@@ -2,11 +2,11 @@
 
 ![HappyFormatter Preview](./public/images/og.png)
 
-**HappyFormatter** is a modern, privacy-focused web application for formatting and minifying code across 26+ programming languages and formatting engines. All processing happens entirely in your browser using WebAssembly modules, ensuring your code never leaves your device.
+**HappyFormatter** is a modern, privacy-focused web application for formatting and minifying code across 25+ programming languages and 4 alternative formatting engines. All processing happens entirely in your browser using WebAssembly modules, ensuring your code never leaves your device.
 
 ## Features
 
-- **26+ Programming Languages**: Comprehensive support for popular languages and formats
+- **25+ Programming Languages**: Comprehensive support for popular languages and formats
 - **Multiple Formatter Engines**: Choose between different formatters like Prettier, Biome, Ruff, and Mago for optimal results
 - **Zero Data Transmission**: All formatting and minification happens client-side via WebAssembly
 - **Advanced Code Editor**: Powered by CodeMirror 6 with syntax highlighting, autocomplete, and bracket matching
@@ -18,7 +18,7 @@
 
 ## Supported Languages
 
-### Formatting Support (22 languages + 4 alternative formatters)
+### Formatting Support (25 languages + 4 alternative formatters)
 
 **Web Technologies**
 
@@ -38,6 +38,8 @@
 - Rust
 - C
 - C++
+- Objective-C
+- Objective-C++
 - C#
 - Java
 - Dart
@@ -50,6 +52,7 @@
 - Markdown
 - SQL
 - Protocol Buffers (.proto)
+- TOML
 
 ### Alternative Formatter Engines
 
@@ -77,7 +80,7 @@ The following languages support code minification:
 ### Prerequisites
 
 - **Node.js**: Version 18 or higher
-- **Package Manager**: pnpm (recommended) or npm
+- **Package Manager**: pnpm 11
 
 ### Installation
 
