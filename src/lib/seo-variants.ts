@@ -90,24 +90,6 @@ export const languageVariants: Record<string, LanguageVariants> = {
       ],
       h1: "JavaScript Beautifier",
     },
-    "validator": {
-      slug: "validator",
-      title: "JavaScript Validator - Validate and Format JavaScript Code",
-      description:
-        "JavaScript validator to check syntax errors and format your code. Instant validation with detailed error reporting and automatic code formatting.",
-      keywords: [
-        "javascript validator",
-        "js validator",
-        "javascript syntax validator",
-        "javascript code checker",
-        "validate javascript online",
-        "javascript syntax checker",
-        "js lint tool",
-        "javascript error detection",
-        "code validation javascript",
-      ],
-      h1: "JavaScript Validator",
-    },
     "biome": {
       slug: "biome",
       title: "JavaScript Biome Formatter - Format JS with Biome Tool",
@@ -307,11 +289,10 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "free",
       title: "Free JSON Formatter - Format JSON Code Online Free",
       description:
-        "Free JSON formatter and beautifier tool. Format JSON data online at no cost with validation. No registration required.",
+        "Free JSON formatter and beautifier tool. Format JSON data online at no cost. No registration required.",
       keywords: [
         "free json formatter",
         "free json beautifier",
-        "free json validator",
         "free json prettifier",
         "no cost json formatter",
         "free online json formatter",
@@ -335,27 +316,8 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "format json online",
         "online json beautifier",
         "json prettifier online",
-        "json validator online",
       ],
       h1: "Online JSON Formatter",
-    },
-    "validator": {
-      slug: "validator",
-      title: "JSON Validator - Validate and Format JSON Code",
-      description:
-        "JSON validator to check syntax errors and format your JSON data. Instant validation with detailed error reporting and automatic formatting.",
-      keywords: [
-        "json validator",
-        "json syntax validator",
-        "validate json online",
-        "json checker",
-        "json validation tool",
-        "json syntax checker",
-        "json error detection",
-        "json format validator",
-        "online json validator",
-      ],
-      h1: "JSON Validator",
     },
     "pretty": {
       slug: "pretty",
@@ -448,24 +410,6 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "html code beautifier",
       ],
       h1: "HTML Beautifier",
-    },
-    "validator": {
-      slug: "validator",
-      title: "HTML Validator - Validate and Format HTML Code",
-      description:
-        "HTML validator to check syntax errors and format your markup. Instant validation with detailed error reporting.",
-      keywords: [
-        "html validator",
-        "html syntax validator",
-        "validate html online",
-        "html checker",
-        "html validation tool",
-        "html syntax checker",
-        "html error detection",
-        "w3c html validator",
-        "online html validator",
-      ],
-      h1: "HTML Validator",
     },
   },
 
@@ -721,24 +665,6 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "yml formatter online",
       ],
       h1: "Online YAML Formatter",
-    },
-    "validator": {
-      slug: "validator",
-      title: "YAML Validator - Validate and Format YAML Code",
-      description:
-        "YAML validator to check syntax errors and format your YAML files. Instant validation with detailed error reporting.",
-      keywords: [
-        "yaml validator",
-        "yml validator",
-        "validate yaml online",
-        "yaml checker",
-        "yaml validation tool",
-        "yaml syntax checker",
-        "yaml error detection",
-        "online yaml validator",
-        "yaml format validator",
-      ],
-      h1: "YAML Validator",
     },
     "pretty": {
       slug: "pretty",
@@ -1414,24 +1340,6 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "xml code beautifier",
       ],
       h1: "XML Beautifier",
-    },
-    "validator": {
-      slug: "validator",
-      title: "XML Validator - Validate and Format XML Code",
-      description:
-        "XML validator to check syntax errors and format your markup. Instant validation with detailed error reporting.",
-      keywords: [
-        "xml validator",
-        "xml syntax validator",
-        "validate xml online",
-        "xml checker",
-        "xml validation tool",
-        "xml syntax checker",
-        "xml error detection",
-        "w3c xml validator",
-        "online xml validator",
-      ],
-      h1: "XML Validator",
     },
   },
 

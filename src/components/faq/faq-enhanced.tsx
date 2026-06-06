@@ -49,7 +49,6 @@ const modeNames: Record<string, string> = {
   private: "private formatter",
   ruff: "Ruff formatting pass",
   secure: "private formatter",
-  validator: "validator",
 };
 
 const getLanguageName = (value: string) => {
@@ -111,7 +110,6 @@ export function FAQ({
   language: string;
   variant?: string | null;
   variantData?: VariantData | null;
-  seoData?: unknown;
 }): JSX.Element {
   const languageName = getLanguageName(language);
   const modeName = getModeName(variant, variantData);

@@ -20,7 +20,7 @@ export async function getFormatter(language: string) {
       await cssFormatter.init();
       return cssFormatter;
     case "scss":
-      const { CSSFormatter: SCSSFormatter } = await import("@/handlers/formatters/css");
+      const { SCSSFormatter } = await import("@/handlers/formatters/css");
       const scssFormatter = new SCSSFormatter();
       await scssFormatter.init();
       return scssFormatter;
@@ -107,16 +107,22 @@ export async function getFormatter(language: string) {
       const pythonFormatter = new PythonFormatter();
       await pythonFormatter.init();
       return pythonFormatter;
+    case "rust":
+      const { RustFormatter } = await import("@/handlers/formatters/rust");
+      const rustFormatter = new RustFormatter();
+      await rustFormatter.init();
+      return rustFormatter;
     case "sql":
       const { SQLFormatter } = await import("@/handlers/formatters/sql");
       const sqlFormatter = new SQLFormatter();
       await sqlFormatter.init();
       return sqlFormatter;
     case "php":
-      const { PHPFormatter } = await import("@/handlers/formatters/php");
-      const phpFormatter = new PHPFormatter();
-      await phpFormatter.init();
-      return phpFormatter;
+    case "php-mago":
+      const { PHPMagoFormatter } = await import("@/handlers/formatters/php-mago");
+      const phpMagoFormatter = new PHPMagoFormatter();
+      await phpMagoFormatter.init();
+      return phpMagoFormatter;
     case "zig":
       const { ZigFormatter } = await import("@/handlers/formatters/zig");
       const zigFormatter = new ZigFormatter();
@@ -147,11 +153,6 @@ export async function getFormatter(language: string) {
       const tsBiomeFormatter = new TypeScriptBiomeFormatter();
       await tsBiomeFormatter.init();
       return tsBiomeFormatter;
-    case "php-mago":
-      const { PHPMagoFormatter } = await import("@/handlers/formatters/php-mago");
-      const phpMagoFormatter = new PHPMagoFormatter();
-      await phpMagoFormatter.init();
-      return phpMagoFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }

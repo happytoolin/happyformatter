@@ -1,7 +1,7 @@
 ---
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 
-type ToolType = "FMT" | "MIN" | "VAL";
+type ToolType = "FMT" | "MIN";
 
 interface ToolAction {
   label: string;
@@ -25,7 +25,6 @@ const toolFamilies: ToolFamily[] = [
     descriptor: "Markup",
     actions: [
       { label: "Format", url: "/html", type: "FMT" },
-      { label: "Minify", url: "/minify/html", type: "MIN" },
     ],
   },
   {
@@ -58,7 +57,6 @@ const toolFamilies: ToolFamily[] = [
     actions: [
       { label: "Format", url: "/typescript", type: "FMT" },
       { label: "Minify", url: "/minify/typescript", type: "MIN" },
-      { label: "Validate", url: "/validator/typescript", type: "VAL" },
       { label: "Biome", url: "/typescript-biome", type: "FMT" },
       { label: "Biome", url: "/minify/typescript-biome", type: "MIN" },
     ],
@@ -233,13 +231,10 @@ const sections = groupOrder.map((group) => ({
 const allActions = toolFamilies.flatMap((family) => family.actions);
 const minifierCount =
   allActions.filter((action) => action.type === "MIN").length;
-const validatorCount =
-  allActions.filter((action) => action.type === "VAL").length;
 
 const typeLabel: Record<ToolType, string> = {
   FMT: "Format",
   MIN: "Minify",
-  VAL: "Validate",
 };
 ---
 
@@ -258,7 +253,7 @@ const typeLabel: Record<ToolType, string> = {
             Tool index.
           </h2>
 
-          <dl class="mt-7 grid grid-cols-3 gap-px overflow-hidden rounded-lg border border-border bg-border">
+          <dl class="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border">
             <div class="bg-card p-3">
               <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                 Routes
@@ -273,14 +268,6 @@ const typeLabel: Record<ToolType, string> = {
               </dt>
               <dd class="mt-2 font-mono text-lg text-foreground">
                 {minifierCount}
-              </dd>
-            </div>
-            <div class="bg-card p-3">
-              <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                Check
-              </dt>
-              <dd class="mt-2 font-mono text-lg text-foreground">
-                {validatorCount}
               </dd>
             </div>
           </dl>
@@ -321,7 +308,12 @@ const typeLabel: Record<ToolType, string> = {
             <div class="divide-y divide-border border-b border-border">
               {section.families.map((family) => (
                 <article class="grid gap-4 py-4 md:grid-cols-[minmax(190px,0.38fr)_minmax(0,1fr)] md:items-center">
-                  <div class="flex min-w-0 items-center gap-3">
+                  <a
+                    href={family.actions[0].url}
+                    data-tool-action
+                    aria-label={`Open ${family.name} ${typeLabel[family.actions[0].type].toLowerCase()} tool`}
+                    class="-m-2 flex min-w-0 items-center gap-3 rounded-md p-2 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-card">
                       <LanguageIcon icon={family.icon} class="h-6 w-6" />
                     </div>
@@ -333,7 +325,7 @@ const typeLabel: Record<ToolType, string> = {
                         {family.descriptor}
                       </p>
                     </div>
-                  </div>
+                  </a>
 
                   <div class="flex flex-wrap gap-2 md:justify-end">
                     {family.actions.map((action) => (

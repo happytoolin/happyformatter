@@ -49,7 +49,6 @@ const modeNames: Record<string, string> = {
   private: "private formatter",
   ruff: "Ruff formatting pass",
   secure: "private formatter",
-  validator: "validator",
 };
 
 const getLanguageName = (value: string) => {

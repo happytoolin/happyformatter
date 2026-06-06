@@ -81,6 +81,10 @@ if (hyphenatedParts.length >= 2) {
 }
 
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
+const formatterLanguage = variant && runtimeFormatterVariants.has(variant)
+  ? `${actualLanguage}-${variant}`
+  : actualLanguage;
 
 // Safety checks
 if (!actualLanguage || !actualLanguageConfig) {
@@ -147,7 +151,7 @@ if (!actualLanguageConfig.minify) {
   <Formatter
     client:only="react"
     minifier={true}
-    language={actualLanguage}
+    language={formatterLanguage}
   />
   <Info language={actualLanguage} />
   <FAQ language={actualLanguage} client:only="react" />

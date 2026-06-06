@@ -27,7 +27,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     contextualReasons: {
       typescript: "Try TypeScript with Biome formatter",
       json: "Format and validate JSON data",
-      html: "Validate and beautify HTML markup",
+      html: "Format HTML markup",
       css: "Minify and style CSS code",
     },
   },
@@ -42,7 +42,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
   },
   html: {
     related: ["css", "javascript", "markdown", "xml"],
-    features: ["formatter", "minifier", "validator", "beautifier"],
+    features: ["formatter", "beautifier"],
     contextualReasons: {
       css: "Style and compress CSS code",
       javascript: "Enhanced JavaScript formatting",
@@ -64,12 +64,12 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter", "minifier"],
     contextualReasons: {
       css: "Advanced minification and styling support",
-      html: "Full validation and markup enhancement",
+      html: "Format HTML markup",
     },
   },
   json: {
     related: ["yaml", "xml", "javascript", "typescript"],
-    features: ["formatter", "minifier", "validator", "pretty-print"],
+    features: ["formatter", "minifier", "pretty-print"],
     contextualReasons: {
       yaml: "Configuration data formatting",
       xml: "Format XML",
@@ -79,7 +79,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
   },
   yaml: {
     related: ["json", "toml", "xml"],
-    features: ["formatter", "validator", "pretty-print"],
+    features: ["formatter", "pretty-print"],
     contextualReasons: {
       json: "Data file formatting",
       toml: "Configuration file formatting",
@@ -88,7 +88,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
   },
   toml: {
     related: ["yaml", "json"],
-    features: ["formatter", "validator", "pretty-print"],
+    features: ["formatter", "pretty-print"],
     contextualReasons: {
       yaml: "Configuration file formatting",
       json: "Data file formatting",
@@ -96,7 +96,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
   },
   xml: {
     related: ["json", "html"],
-    features: ["formatter", "validator", "beautifier"],
+    features: ["formatter", "minifier", "beautifier"],
     contextualReasons: {
       json: "Markup and data formatting",
       html: "Document structure formatting",
@@ -180,7 +180,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter"],
     contextualReasons: {
       json: "Service payload data",
-      xml: "Validate and enhance your markup",
+      xml: "Format XML markup",
     },
   },
   php: {
@@ -189,8 +189,8 @@ const languageRelationships: Record<string, LanguageRelation> = {
     contextualReasons: {
       "php-mago": "Alternative formatting option",
       json: "Request and response payloads",
-      html: "Validate and enhance your markup",
-      xml: "Validate and enhance your markup",
+      html: "Format HTML markup",
+      xml: "Format XML markup",
     },
   },
   "php-mago": {
@@ -238,8 +238,8 @@ const languageRelationships: Record<string, LanguageRelation> = {
     related: ["html", "xml"],
     features: ["formatter", "beautifier"],
     contextualReasons: {
-      html: "Validate and enhance your markup",
-      xml: "Validate and enhance your markup",
+      html: "Format HTML markup",
+      xml: "Format XML markup",
     },
   },
   proto: {
@@ -455,7 +455,7 @@ const getMixedRecommendations = () => {
 
 const getToolIcon = (url: string) => {
   const urlParts = url.split("/").filter(Boolean);
-  if (urlParts[0] === "minify" || urlParts[0] === "validator") {
+  if (urlParts[0] === "minify") {
     return urlParts[1] ?? urlParts[0];
   }
   return urlParts.length >= 2 ? urlParts.join("-") : urlParts[0];

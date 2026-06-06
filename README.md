@@ -59,7 +59,7 @@
 HappyFormatter now supports multiple formatter engines for optimal code formatting:
 
 - **Biome**: Fast JavaScript/TypeScript formatter with excellent performance
-- **Ruff**: Extremely fast Python formatter/linter written in Rust
+- **Ruff**: Extremely fast Python formatter written in Rust
 - **Mago**: Modern PHP formatter with advanced code style capabilities
 - **Prettier**: Default formatter for JavaScript, TypeScript, JSON, and PHP
 
@@ -179,13 +179,12 @@ public/
   - Biome (`@wasm-fmt/biome_fmt`) for JavaScript/TypeScript
   - Ruff (`@wasm-fmt/ruff_fmt`) for Python
   - Mago (`@wasm-fmt/mago_fmt`) for PHP
-  - Prettier for JavaScript, TypeScript, JSON, PHP
+  - Prettier for JavaScript, TypeScript, JSON, Rust
   - dprint for Markdown
   - xml-formatter for XML
 - **Minifiers**:
   - `@swc/wasm-web` for JavaScript/TypeScript
   - `lightningcss-wasm` for CSS/SCSS
-  - `@minify-html/wasm` for HTML
 - **Deployment**: Cloudflare Pages with edge optimization
 
 ## Contributing

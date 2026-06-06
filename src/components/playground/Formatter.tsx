@@ -4,8 +4,8 @@ import { LANGUAGES } from "@/lib/languages";
 import { Check, Copy, FileText, Minimize2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import CodeMirrorThemeSelector from "./CodeMirrorThemeSelector";
 import CodePlayground from "./CodePlayground";
+import EditorThemeSelector from "./EditorThemeSelector";
 import { useFormatterStore } from "./formatterStore";
 import { ThemeProvider } from "./ThemeContext";
 
@@ -272,7 +272,7 @@ function FormatterContent({
             <div className="flex flex-wrap items-center gap-2">
               <ToolStat label="Lines" value={lineCount.toLocaleString()} />
               <ToolStat label="Chars" value={charCount.toLocaleString()} />
-              <CodeMirrorThemeSelector />
+              <EditorThemeSelector />
             </div>
           </div>
 

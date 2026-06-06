@@ -1,5 +1,6 @@
 ---
 import { defaultEditorThemeByMode, editorThemes } from "@/lib/theme";
+import { modernMonacoEditorCoreUrl } from "happyformatter:modern-monaco-runtime";
 
 type Props = {
   title: string;
@@ -17,7 +18,7 @@ const {
   description,
   image = "/images/happyformatter-workbench-reference.png",
   keywords =
-    "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, code validator, code linter, programming tools, developer tools",
+    "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, programming tools, developer tools",
   author = "HappyFormatter",
   category = "Developer Tool, Technology, Development Tools, Programming",
 } = Astro.props;
@@ -30,10 +31,34 @@ const lightEditorThemeIds = editorThemes
 const darkEditorThemeIds = editorThemes
   .filter(theme => theme.type === "dark")
   .map(theme => theme.id);
+const unsupportedKeywordPattern =
+  /\b(validator|validation|syntax checker|code checker|type checker|linter|lint tool|obfuscator)\b/i;
+const sanitizedKeywords = keywords
+  .split(",")
+  .map(keyword => keyword.trim())
+  .filter(keyword => keyword && !unsupportedKeywordPattern.test(keyword))
+  .join(", ");
+const sanitizedDescription = description
+  .replace(/\bFormat,\s*validate,\s*and beautify\b/gi, "Format and beautify")
+  .replace(/\bformat,\s*validate,\s*and beautify\b/gi, "format and beautify")
+  .replace(/\b,\s*validate\b/gi, "")
+  .replace(/\bvalidation\b/gi, "formatting")
+  .replace(/\s{2,}/g, " ")
+  .trim();
+const modernMonacoImportMap = JSON.stringify(
+  {
+    imports: {
+      "modern-monaco/editor-core": modernMonacoEditorCoreUrl,
+    },
+  },
+  null,
+  2,
+);
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<script type="importmap" is:inline set:html={modernMonacoImportMap}></script>
 <script
   is:inline
   define:vars={{ darkEditorThemeIds, defaultEditorThemeByMode, lightEditorThemeIds }}
@@ -142,8 +167,8 @@ html.dark body {
 <link rel="canonical" href={canonicalURL} />
 <title>{title}</title>
 <meta name="title" content={title} />
-<meta name="description" content={description} />
-<meta name="keywords" content={keywords} />
+<meta name="description" content={sanitizedDescription} />
+<meta name="keywords" content={sanitizedKeywords} />
 <meta name="author" content={author} />
 <meta name="category" content={category} />
 <meta name="classification" content="Developer Tool" />
@@ -162,12 +187,12 @@ html.dark body {
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={sanitizedDescription} />
 <meta property="og:image" content={ogImageURL} />
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
+<meta property="twitter:description" content={sanitizedDescription} />
 <meta property="twitter:image" content={ogImageURL} />
 <meta property="twitter:site" content="@happyformatter" />
 <script

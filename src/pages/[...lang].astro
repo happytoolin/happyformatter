@@ -132,9 +132,28 @@ const isVariant = currentVariant && actualVariantData;
 const canonicalPath = isVariant
   ? `/${actualLanguage}-${currentVariant}`
   : `/${actualLanguage}`;
+const sanitizeUnsupportedToolCopy = (value: string) =>
+  value
+    .replace(/\bFormat,\s*validate,\s*and beautify\b/gi, "Format and beautify")
+    .replace(/\bformat,\s*validate,\s*and beautify\b/gi, "format and beautify")
+    .replace(/\b,\s*validate\b/gi, "")
+    .replace(/\bvalidation\b/gi, "formatting")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+const displayVariantData = actualVariantData
+  ? { h1: actualVariantData.h1 }
+  : null;
+const variantDescription = actualVariantData?.description
+  ? sanitizeUnsupportedToolCopy(actualVariantData.description)
+  : null;
 
 // Get the actual language config (in case we detected a hyphenated variant)
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
+const formatterLanguage =
+  currentVariant && runtimeFormatterVariants.has(currentVariant)
+    ? `${actualLanguage}-${currentVariant}`
+    : actualLanguage;
 
 // Try to get generated SEO data first
 const generatedSEO = getLayoutSEOData(
@@ -214,7 +233,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
           </span>
         </div>
         <p class="text-muted-foreground leading-relaxed">
-          {actualVariantData?.description
+          {variantDescription
             || `Format ${actualLanguage} code with ${currentVariant}`}
         </p>
         <div class="mt-4 flex items-center gap-2">
@@ -234,21 +253,19 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
   <Formatter
     client:only="react"
     minifier={actualLanguageConfig.minify}
-    language={actualLanguage}
+    language={formatterLanguage}
   />
 
   <Info
     language={actualLanguage}
     variant={currentVariant}
-    variantData={actualVariantData}
-    seoData={generatedSEOData}
+    variantData={displayVariantData}
   />
 
   <FAQ
     language={actualLanguage}
     variant={currentVariant}
-    variantData={actualVariantData}
-    seoData={generatedSEOData}
+    variantData={displayVariantData}
     client:only="react"
   />
 </Layout>

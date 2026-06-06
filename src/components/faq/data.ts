@@ -66,7 +66,7 @@ export const accordionData: Record<string, AccordionItem[]> = {
     {
       title: "Why use a JSON formatter?",
       content:
-        "Using a JSON formatter helps to ensure that your JSON data is properly structured and easy to read. It also allows you to validate and edit JSON data without the need for additional software.",
+        "Using a JSON formatter helps to ensure that your JSON data is properly structured and easy to read. It also makes editing JSON data easier without additional software.",
     },
     {
       title: "Is login required to save JSON data?",
@@ -320,10 +320,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
         "To format XML data, you can use an online XML formatter tool. Simply paste your data into the tool, and it will automatically format it for you.",
     },
     {
-      title: "Can I use HappyFormatter for validating XML?",
-      content: "Yes, HappyFormatter can also be used to validate XML data, ensuring it adheres to web standards.",
-    },
-    {
       title: "Is login required to use the XML formatter?",
       content:
         "No, login is not required to use the XML formatter. You can format your XML data directly from the tool without needing to create an account or log in.",
@@ -476,11 +472,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format Protocol Buffers code?",
       content:
         "To format Protocol Buffers code, you can use an online proto formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for validating Protocol Buffers?",
-      content:
-        "Yes, HappyFormatter can also be used to validate Protocol Buffers, ensuring they adhere to the correct syntax and structure.",
     },
     {
       title: "Is login required to use the Protocol Buffers formatter?",
