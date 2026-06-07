@@ -1,4 +1,5 @@
-import { createStreaming, type Formatter as DprintFormatter } from "@dprint/formatter";
+import { createFromBuffer, type Formatter as DprintFormatter } from "@dprint/formatter";
+import markdownWasmUrl from "@dprint/markdown/plugin.wasm?url";
 import { Formatter } from "../interface";
 
 export class MarkdownFormatter extends Formatter {
@@ -7,13 +8,23 @@ export class MarkdownFormatter extends Formatter {
     lineWidth: 80,
   };
 
-  #wasmUrl = "https://cdn.jsdelivr.net/npm/@dprint/markdown/plugin.wasm";
   #markdownFormatter: DprintFormatter | null = null;
+  #initPromise: Promise<void> | null = null;
 
   async init(): Promise<void> {
-    const response = await fetch(this.#wasmUrl);
-    this.#markdownFormatter = await createStreaming(response);
-    this.#markdownFormatter.setConfig(this.config, {});
+    this.#initPromise ??= (async () => {
+      const response = await fetch(markdownWasmUrl);
+
+      if (!response.ok) {
+        throw new Error(`Could not load Markdown formatter (${response.status})`);
+      }
+
+      const wasmModule = await response.arrayBuffer();
+      this.#markdownFormatter = createFromBuffer(wasmModule);
+      this.#markdownFormatter.setConfig(this.config, {});
+    })();
+
+    await this.#initPromise;
   }
 
   async formatCode(code: string): Promise<string> {
