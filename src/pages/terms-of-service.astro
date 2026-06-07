@@ -1,206 +1,123 @@
 ---
 import FormatHeading from "@/components/layout/FormatHeading.astro";
 import Layout from "@/components/layout/layout.astro";
+
+const termGroups = [
+  {
+    title: "What you get",
+    body:
+      "A free browser-based code formatter with local processing and no registration flow.",
+    points: [
+      "Instant formatting",
+      "Multiple language handlers",
+      "Client-side operation",
+      "No account required",
+    ],
+  },
+  {
+    title: "What is not guaranteed",
+    body:
+      "HappyFormatter is provided as-is. You are responsible for reviewing output before using it in production.",
+    points: [
+      "No warranties",
+      "No guaranteed availability",
+      "No support commitment",
+      "No liability for output",
+    ],
+  },
+];
+
+const details = [
+  {
+    title: "Code ownership",
+    body:
+      "You retain ownership of the code you paste into HappyFormatter. The tool does not claim rights over your source.",
+  },
+  {
+    title: "Service availability",
+    body:
+      "The service may change, become unavailable, or be discontinued without advance notice.",
+  },
+  {
+    title: "Acceptable use",
+    body:
+      "Do not use the service for illegal activity or to interfere with the availability of the site.",
+  },
+  {
+    title: "Data collection",
+    body:
+      "Your code is processed locally in the browser. Basic analytics may be used as described in the privacy policy.",
+  },
+];
 ---
 
 <Layout
   title="Terms of Service"
-  description="HappyFormatter's terms of service - Free tool for code formatting. Use it, break it, we don't care. No warranties provided."
-  image="/og-image-terms.png"
+  description="HappyFormatter's terms of service - Free browser-based tool for code formatting."
 >
   <FormatHeading language="terms" minify={false} />
 
-  <section class="py-24 bg-background relative overflow-hidden">
-    <!-- Decorative Grid Lines -->
-    <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]">
-    </div>
+  <section class="border-b border-border bg-card py-16 sm:py-20">
+    <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          Terms
+        </p>
+        <h2 class="text-3xl font-semibold leading-tight md:text-4xl">
+          Use the tool, review the output.
+        </h2>
+        <p class="max-w-md text-sm leading-6 text-muted-foreground">
+          HappyFormatter is a free browser utility. It is built for convenience,
+          not as a substitute for your own code review and testing.
+        </p>
+      </div>
 
-    <div class="container mx-auto px-4 relative z-10 max-w-6xl">
-      <!-- Main Content Block -->
-      <div class="border-2 border-foreground bg-card">
-        <!-- Header -->
-        <div class="p-8 border-b-2 border-foreground bg-primary text-primary-foreground">
-          <span
-            class="font-mono text-xs font-bold uppercase tracking-widest block mb-4"
-          >
-            Legal Document // TOS-001
-          </span>
-          <h1 class="font-display text-5xl uppercase leading-[0.9] mb-6">
-            Terms of Service
-          </h1>
-          <p class="font-serif text-xl leading-relaxed opacity-90">
-            Use at your own risk. We're not responsible if your code explodes.
-          </p>
-        </div>
-
-        <!-- Content -->
-        <div class="p-8 md:p-12">
-          <!-- Main Statement -->
-          <div class="mb-16">
-            <div class="flex items-center gap-2 mb-6">
-              <span class="w-2 h-2 border-2 border-accent"></span>
-              <h2 class="font-display text-2xl uppercase">The Deal</h2>
-            </div>
-            <p class="font-serif text-lg leading-relaxed mb-8 text-card-foreground">
-              HappyFormatter is a <strong class="text-primary"
-              >free tool</strong> that formats and minifies code in your
-              browser. Your code never leaves your device. We use basic
-              analytics to improve the service.
-            </p>
-          </div>
-
-          <!-- Grid of Terms -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-foreground">
-            <!-- What You Get -->
-            <div class="p-8 border-b-2 md:border-b-0 md:border-r-2 border-foreground bg-secondary/20">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="w-2 h-2 bg-foreground"></span>
-                <h3 class="font-display text-xl uppercase">What You Get</h3>
-              </div>
-              <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
-                A free code formatter that works offline. No strings attached.
-              </p>
-              <ul class="space-y-3 font-mono text-xs">
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">01</span>
-                  Instant formatting
-                </li>
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">02</span>
-                  22+ languages
-                </li>
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">03</span>
-                  Client-side only
-                </li>
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">04</span>
-                  No registration
-                </li>
-              </ul>
-            </div>
-
-            <!-- What We Don't Owe -->
-            <div class="p-8 bg-card">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="w-2 h-2 bg-foreground"></span>
-                <h3 class="font-display text-xl uppercase">
-                  What We Don't Owe
+      <div class="space-y-8">
+        <div class="divide-y divide-border border-y border-border">
+          {termGroups.map((group) => (
+            <article class="grid gap-5 py-6 md:grid-cols-[minmax(180px,0.35fr)_1fr]">
+              <div>
+                <h3 class="text-xl font-semibold">
+                  {group.title}
                 </h3>
+                <p class="mt-3 text-sm leading-6 text-muted-foreground">
+                  {group.body}
+                </p>
               </div>
-              <p class="font-mono text-sm text-muted-foreground mb-6 leading-relaxed">
-                Absolutely nothing. This is software provided "as-is".
-              </p>
-              <ul class="space-y-3 font-mono text-xs">
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">01</span>
-                  No warranties
-                </li>
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">02</span>
-                  No support
-                </li>
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">03</span>
-                  No guarantees
-                </li>
-                <li class="border-b border-foreground/10 pb-2">
-                  <span class="text-muted-foreground mr-2">04</span>
-                  No refunds (it's free)
-                </li>
+              <ul class="space-y-2 text-sm text-foreground">
+                {group.points.map((point) => (
+                  <li class="flex gap-2">
+                    <span
+                      class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ring"
+                      aria-hidden="true"
+                    />
+                    <span>{point}</span>
+                  </li>
+                ))}
               </ul>
-            </div>
-          </div>
+            </article>
+          ))}
+        </div>
 
-          <!-- Legal Stuff -->
-          <div class="mt-16">
-            <div class="flex items-center gap-2 mb-6">
-              <span class="w-2 h-2 border-2 border-accent"></span>
-              <h2 class="font-display text-2xl uppercase">The Fine Print</h2>
-            </div>
-            <div class="bg-card border-2 border-foreground p-8">
-              <div class="space-y-8">
-                <div>
-                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
-                    Liability
-                  </h3>
-                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
-                    HappyFormatter is provided "as-is" without any warranties,
-                    express or implied. We are not liable for any damage to your
-                    code, computer, or sanity. Use at your own risk.
-                  </p>
-                </div>
-                <div>
-                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
-                    Code Ownership
-                  </h3>
-                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
-                    You retain all rights to your code. We don't store, copy, or
-                    claim ownership of anything you format. Your code stays on
-                    your device.
-                  </p>
-                </div>
-                <div>
-                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
-                    Service Availability
-                  </h3>
-                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
-                    The service may be unavailable at any time, for any reason,
-                    without notice. We might shut it down tomorrow. We might
-                    not. No promises.
-                  </p>
-                </div>
-                <div>
-                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
-                    Acceptable Use
-                  </h3>
-                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
-                    Don't use the tool for illegal activities. But honestly,
-                    it's a code formatter that runs in your browser, so there's
-                    not much you can do wrong here.
-                  </p>
-                </div>
-                <div>
-                  <h3 class="font-mono text-sm font-bold uppercase tracking-widest mb-2 text-primary">
-                    Data Collection
-                  </h3>
-                  <p class="font-serif text-sm leading-relaxed text-card-foreground">
-                    Your code never leaves your browser. We may use standard
-                    analytics to understand how the service is being used, but
-                    this doesn't include collecting any of your actual code or
-                    personal information.
-                  </p>
-                </div>
+        <div class="border-y border-border py-6">
+          <h3 class="text-xl font-semibold">Fine print</h3>
+          <div class="mt-6 divide-y divide-border">
+            {details.map((detail) => (
+              <div class="grid gap-2 py-5 first:pt-0 last:pb-0 sm:grid-cols-[180px_1fr]">
+                <h4 class="text-sm font-medium text-muted-foreground">
+                  {detail.title}
+                </h4>
+                <p class="text-sm leading-6 text-foreground">
+                  {detail.body}
+                </p>
               </div>
-            </div>
-          </div>
-
-          <!-- Bottom Line -->
-          <div class="mt-16 border-2 border-foreground bg-secondary/20 p-8">
-            <div class="text-center">
-              <p class="font-display text-lg uppercase mb-4">
-                Bottom Line
-              </p>
-              <p class="font-serif text-sm leading-relaxed text-card-foreground">
-                It's a free tool. Use it if you want. Don't if you don't.
-                <br class="hidden md:block" />
-                We're not lawyers. This isn't legal advice.
-              </p>
-            </div>
-          </div>
-
-          <!-- Update Info -->
-          <div class="mt-16 text-center">
-            <p class="font-mono text-xs text-muted-foreground mb-4">
-              Last updated: <span class="text-foreground font-bold"
-              >December 2025</span>
-            </p>
-            <p class="font-serif text-sm text-muted-foreground">
-              These terms can change at any time. Check back periodically if you
-              care.
-            </p>
+            ))}
           </div>
         </div>
+
+        <p class="font-mono text-xs text-muted-foreground">
+          Last updated: December 2025
+        </p>
       </div>
     </div>
   </section>

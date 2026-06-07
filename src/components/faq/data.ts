@@ -5,29 +5,26 @@ interface AccordionItem {
 export const accordionData: Record<string, AccordionItem[]> = {
   javascript: [
     {
-      title: "Security Architecture: Is my JavaScript code private?",
-      content:
-        "Affirmative. Client-side WebAssembly processing ensures zero data transmission. All operations execute locally within your browser sandbox.",
+      title: "Is my JavaScript code uploaded?",
+      content: "No. JavaScript formatting runs in the browser. The code you paste is not sent to a formatting API.",
     },
     {
-      title: "Code Standardization: Why format JavaScript?",
+      title: "Why format JavaScript?",
       content:
-        "Unformatted JavaScript introduces technical debt. Standardized indentation improves code maintainability, enables team collaboration, and reduces cognitive load during debugging cycles.",
+        "Formatting makes indentation, spacing, and line breaks easier to scan before you move the code back to your editor.",
     },
     {
-      title: "Execution Protocol: How to process code?",
-      content:
-        "Input source code into the terminal interface. Select formatting parameters (indentation, quote style). Execute via 'FORMAT CODE' command. Instant output generation.",
+      title: "How do I run the formatter?",
+      content: "Paste JavaScript into the editor, choose Format code, then review and copy the result.",
     },
     {
-      title: "Payload Optimization: Minification support?",
+      title: "Can it minify JavaScript?",
       content:
-        "Confirmed. Toggle 'MINIFY' to enable compression algorithms. Removes non-essential characters, preserves functionality, optimizes network transfer.",
+        "Yes. Use Minify code to remove supported whitespace and shorten the output where the minifier can do so safely.",
     },
     {
-      title: "Access Control: Authentication required?",
-      content:
-        "Negative. Open-source utility with no authentication barriers. Full feature access without account registration or API keys.",
+      title: "Do I need an account?",
+      content: "No. Open the page and use the formatter without a login, API key, or account.",
     },
   ],
   typescript: [
@@ -66,7 +63,7 @@ export const accordionData: Record<string, AccordionItem[]> = {
     {
       title: "Why use a JSON formatter?",
       content:
-        "Using a JSON formatter helps to ensure that your JSON data is properly structured and easy to read. It also allows you to validate and edit JSON data without the need for additional software.",
+        "Using a JSON formatter helps to ensure that your JSON data is properly structured and easy to read. It also makes editing JSON data easier without additional software.",
     },
     {
       title: "Is login required to save JSON data?",
@@ -213,9 +210,9 @@ export const accordionData: Record<string, AccordionItem[]> = {
   ],
   html: [
     {
-      title: "Data Privacy Protocol: Is my code secure?",
+      title: "Is my code uploaded?",
       content:
-        "Yes. HappyFormatter operates on a 'Local-First' architecture. All processing executes within your browser's V8 engine using WebAssembly (WASM). Your code is never transmitted to our servers.",
+        "No. HTML formatting runs in your browser through WebAssembly. The code you paste is not sent to a formatting API.",
     },
     {
       title: "Why is HTML formatting required?",
@@ -224,17 +221,15 @@ export const accordionData: Record<string, AccordionItem[]> = {
     },
     {
       title: "How to execute the formatter?",
-      content:
-        "Paste raw code into the Input Interface. Select your indentation preference. Click 'FORMAT CODE' to execute the algorithm. The standardized output will render instantly.",
+      content: "Paste HTML into the editor, choose Format code, then review and copy the result.",
     },
     {
       title: "Does this tool support HTML Minification?",
-      content:
-        "Yes. Activate the 'MINIFY' module to strip whitespace, comments, and newlines. This reduces file size for production deployment.",
+      content: "Yes. Use Minify code to remove supported whitespace, comments, and newlines.",
     },
     {
       title: "Is user authentication required?",
-      content: "No. This utility is open-access. No login, API keys, or accounts are required for full functionality.",
+      content: "No. Open the page and use the formatter without a login, API key, or account.",
     },
   ],
   lua: [
@@ -318,10 +313,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format XML data?",
       content:
         "To format XML data, you can use an online XML formatter tool. Simply paste your data into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for validating XML?",
-      content: "Yes, HappyFormatter can also be used to validate XML data, ensuring it adheres to web standards.",
     },
     {
       title: "Is login required to use the XML formatter?",
@@ -476,11 +467,6 @@ export const accordionData: Record<string, AccordionItem[]> = {
       title: "How do I format Protocol Buffers code?",
       content:
         "To format Protocol Buffers code, you can use an online proto formatter tool. Simply paste your code into the tool, and it will automatically format it for you.",
-    },
-    {
-      title: "Can I use HappyFormatter for validating Protocol Buffers?",
-      content:
-        "Yes, HappyFormatter can also be used to validate Protocol Buffers, ensuring they adhere to the correct syntax and structure.",
     },
     {
       title: "Is login required to use the Protocol Buffers formatter?",

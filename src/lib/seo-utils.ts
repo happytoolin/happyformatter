@@ -577,6 +577,15 @@ export const languageSEOData: Record<string, LanguageSEOData> = {
   },
 };
 
+const unsupportedKeywordPattern =
+  /\b(validator|validation|syntax checker|code checker|type checker|linter|lint tool|obfuscator)\b/i;
+
+const buildKeywordList = (keywords: string[]) =>
+  keywords
+    .map(keyword => keyword.trim())
+    .filter(keyword => keyword && !unsupportedKeywordPattern.test(keyword))
+    .join(", ");
+
 export function getLanguageSEOData(language?: string, minify = false): {
   keywords: string;
   title: string;
@@ -585,12 +594,21 @@ export function getLanguageSEOData(language?: string, minify = false): {
 } {
   if (!language || !languageSEOData[language]) {
     return {
-      keywords:
-        "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, code validator, code linter, programming tools, developer tools",
-      title: minify ? "Code Minifier - Minify Code Online" : "Code Formatter - Format Code Online",
+      keywords: buildKeywordList([
+        "code formatter",
+        "code minifier",
+        "browser formatter",
+        "format code",
+        "minify code",
+        "code formatting tool",
+        "developer tools",
+      ]),
+      title: minify
+        ? "Code Minifier in Browser | HappyFormatter"
+        : "Code Formatter in Browser | HappyFormatter",
       description: minify
-        ? "Free online code minifier and compressor. Minify your code to reduce file size and improve performance. Privacy-focused, client-side processing."
-        : "Free online code formatter and beautifier. Format, validate, and beautify your code with syntax highlighting. Privacy-focused, client-side processing.",
+        ? "Minify code in your browser. Paste code, run the minifier, and copy the result."
+        : "Format code in your browser. Paste code, run the formatter, and copy the result.",
       category: "Developer Tool, Technology, Development Tools, Programming",
     };
   }
@@ -604,13 +622,13 @@ export function getLanguageSEOData(language?: string, minify = false): {
     : language.charAt(0).toUpperCase() + language.slice(1).replace("/", " ");
 
   return {
-    keywords: seoData.keywords.join(", "),
+    keywords: buildKeywordList(seoData.keywords),
     title: minify
-      ? `${languageName} Minifier - Minify ${languageName} Code Online`
-      : seoData.title,
+      ? `${languageName} Minifier in Browser | HappyFormatter`
+      : `${languageName} Formatter in Browser | HappyFormatter`,
     description: minify
-      ? `Free online ${languageName} minifier and compressor. Minify your ${languageName} code to reduce file size and improve performance. Privacy-focused, client-side processing.`
-      : seoData.description,
+      ? `Minify ${languageName} code in your browser. Paste code, run the minifier, and copy the result.`
+      : `Format ${languageName} code in your browser. Paste code, run the formatter, and copy the result.`,
     category: seoData.category,
   };
 }
@@ -631,7 +649,7 @@ export function generateBreadcrumbs(language?: string, minify = false): Array<{ 
     return [
       { name: "Home", url: "/" },
       { name: `${languageName} Formatter`, url: basePath },
-      { name: "Minify", url: `${basePath}/minify` },
+      { name: "Minify", url: `/minify/${language}` },
     ];
   } else {
     return [

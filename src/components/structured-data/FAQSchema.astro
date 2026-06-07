@@ -1,14 +1,28 @@
 ---
 import { accordionData } from "@/components/faq/data.ts";
+import type { ToolFAQItem } from "@/lib/tool-page-seo";
 
 interface Props {
-  language: string;
+  description?: string;
+  items?: ToolFAQItem[];
+  language?: string;
+  name?: string;
   url?: URL | string;
 }
 
-const { language, url = Astro.url } = Astro.props;
+const {
+  description,
+  items = [],
+  language,
+  name,
+  url = Astro.url,
+} = Astro.props;
 
-const faqData = accordionData[language] || [];
+const faqData = items.length > 0
+  ? items
+  : language
+  ? accordionData[language] || []
+  : [];
 
 if (faqData.length === 0) return;
 const mainEntity = faqData.slice(0, 3).map(item => ({
@@ -23,11 +37,17 @@ const mainEntity = faqData.slice(0, 3).map(item => ({
 const schema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "name": `Frequently Asked Questions - ${
-    language.charAt(0).toUpperCase() + language.slice(1)
-  } Code Formatter`,
-  "description":
-    `Common questions and answers about ${language} code formatting, privacy, and features on HappyFormatter`,
+  "name": name
+    ? `${name} FAQ`
+    : language
+    ? `Frequently Asked Questions - ${
+      language.charAt(0).toUpperCase() + language.slice(1)
+    } Code Formatter`
+    : "Frequently Asked Questions - HappyFormatter",
+  "description": description
+    || (language
+      ? `Common questions and answers about ${language} code formatting, privacy, and features on HappyFormatter`
+      : "Common questions and answers about HappyFormatter private browser tools."),
   "url": typeof url === "string" ? url : url.href,
   "mainEntity": mainEntity,
 };

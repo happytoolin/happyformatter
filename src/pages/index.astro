@@ -1,19 +1,18 @@
 ---
-import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
+import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter";
 import { LANGUAGES } from "@/lib/languages";
 
 const language = "json";
 const languageConfig = LANGUAGES[language];
 
 const homepageTitle =
-  "Online Code Formatter & Minifier - 22+ Languages | Free HAPPYFMT";
+  "Private Browser Code Formatter & Minifier - No Upload | HappyFormatter";
 const homepageDescription =
-  "Free online code formatter and beautifier for 22+ programming languages. Format, validate, and minify code online. Privacy-focused, client-side processing.";
+  "Format, minify, and inspect developer snippets locally in your browser. HappyFormatter keeps pasted code on your device with no upload.";
 const homepageKeywords =
-  "online code formatter, code minifier, free code formatter, format code online, code beautifier, web formatter, code formatting tool, programmer tools, developer tools";
+  "private code formatter, no upload code formatter, browser code formatter, code minifier, free code formatter, format code online, developer tools";
 ---
 
 <Layout
@@ -21,11 +20,49 @@ const homepageKeywords =
   description={homepageDescription}
   keywords={homepageKeywords}
 >
-  <Formatter
-    client:load
-    minifier={languageConfig.minify}
-    language={language}
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          Private browser formatter
+        </p>
+        <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
+          Format code without leaving your browser.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        Start with JSON or jump to private tools for formatting, minifying,
+        converting, decoding, hashing, and diffing. Workflows run client-side
+        and keep your input on this device.
+      </p>
+    </div>
+  </section>
+  <section class="border-b border-border bg-background py-5">
+    <div class="mx-auto flex max-w-[1400px] flex-wrap gap-2 px-4 sm:px-6 lg:px-8">
+      <a
+        href="/tools"
+        class="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        All private tools
+      </a>
+      <a
+        href="/tools/json"
+        class="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        JSON tools
+      </a>
+      <a
+        href="/tools/minifiers"
+        class="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Minifiers
+      </a>
+    </div>
+  </section>
+  <ReactIsland
+    kind="formatter"
+    props={{ minifier: languageConfig.minify, language }}
   />
   <Info language={language} />
-  <FAQ language={language} client:idle />
+  <ReactIsland kind="faq" props={{ language }} />
 </Layout>

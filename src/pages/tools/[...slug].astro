@@ -1,0 +1,325 @@
+---
+import ReactIsland from "@/components/islands/ReactIsland.astro";
+import Layout from "@/components/layout/layout.astro";
+import { LANGUAGES } from "@/lib/languages";
+import {
+  getUtilityCategoryBreadcrumbs,
+  getUtilityToolBreadcrumbs,
+  getUtilityToolFAQ,
+  getUtilityToolsByCategory,
+  UTILITY_CATEGORIES,
+  UTILITY_TOOLS,
+  type UtilityTool,
+  type UtilityToolCategory,
+} from "@/lib/utility-tools";
+
+type DirectoryKind = "formatters" | "minifiers";
+
+type PageProps = {
+  category?: UtilityToolCategory;
+  directoryKind?: DirectoryKind;
+  tool?: UtilityTool;
+};
+
+export function getStaticPaths() {
+  return [
+    ...UTILITY_TOOLS.map(tool => ({
+      params: { slug: tool.slug },
+      props: { tool },
+    })),
+    ...UTILITY_CATEGORIES.map(category => ({
+      params: { slug: category.slug },
+      props: { category },
+    })),
+    {
+      params: { slug: "formatters" },
+      props: { directoryKind: "formatters" satisfies DirectoryKind },
+    },
+    {
+      params: { slug: "minifiers" },
+      props: { directoryKind: "minifiers" satisfies DirectoryKind },
+    },
+  ];
+}
+
+const { tool, category, directoryKind } = Astro.props as PageProps;
+
+const formatterLanguages = Object.values(LANGUAGES);
+const minifierLanguages = formatterLanguages.filter(language =>
+  language.minify
+);
+
+const getDirectoryMeta = (kind: DirectoryKind) => {
+  if (kind === "minifiers") {
+    return {
+      title: "Private Code Minifiers - No Upload | HappyFormatter",
+      description:
+        "Minify JSON, JavaScript, TypeScript, CSS, SCSS, and XML locally in your browser without uploading source code.",
+      keywords:
+        "private code minifier, browser minifier, no upload minifier, json minifier, javascript minifier, css minifier",
+      heading: "Minify code without uploading it.",
+      eyebrow: "Private minifiers",
+      tools: minifierLanguages.map(language => ({
+        name: `${language.name} Minifier`,
+        url: `/minify/${language.id}`,
+        description: `Minify ${language.name} locally in the browser.`,
+      })),
+    };
+  }
+
+  return {
+    title: "Private Code Formatters - No Upload | HappyFormatter",
+    description:
+      "Format code for 26+ languages locally in your browser. Use private formatters for JSON, JavaScript, Python, SQL, XML, YAML, CSS, HTML, and more.",
+    keywords:
+      "private code formatter, browser formatter, no upload formatter, online code beautifier, format code locally",
+    heading: "Format code without uploading it.",
+    eyebrow: "Private formatters",
+    tools: formatterLanguages.map(language => ({
+      name: `${language.name} Formatter`,
+      url: `/${language.id}`,
+      description: language.description,
+    })),
+  };
+};
+
+const page = tool
+  ? {
+    title: tool.title,
+    description: tool.description,
+    keywords: tool.keywords,
+    canonicalPath: `/tools/${tool.slug}`,
+    breadcrumbs: getUtilityToolBreadcrumbs(tool),
+    faqItems: getUtilityToolFAQ(tool),
+    structuredDataName: tool.name,
+    structuredDataDescription: tool.description,
+  }
+  : category
+  ? {
+    title: category.title,
+    description: category.description,
+    keywords: category.keywords,
+    canonicalPath: `/tools/${category.slug}`,
+    breadcrumbs: getUtilityCategoryBreadcrumbs(category),
+    faqItems: [
+      {
+        title: `Are ${category.name.toLowerCase()} private?`,
+        content:
+          "Yes. These tools run in the browser and do not upload pasted text to HappyFormatter servers.",
+      },
+      {
+        title: `Which ${category.shortName.toLowerCase()} tools are included?`,
+        content: getUtilityToolsByCategory(category.id).map(item => item.name)
+          .join(", "),
+      },
+      {
+        title: "Can I use these tools for sensitive snippets?",
+        content:
+          "The tools are designed for local browser processing, but you should still avoid pasting secrets into any web page unless your organization allows it.",
+      },
+    ],
+    structuredDataName: category.name,
+    structuredDataDescription: category.description,
+  }
+  : directoryKind
+  ? (() => {
+    const meta = getDirectoryMeta(directoryKind);
+    return {
+      ...meta,
+      canonicalPath: `/tools/${directoryKind}`,
+      breadcrumbs: [
+        { name: "Home", url: "/" },
+        { name: "Tools", url: "/tools" },
+        {
+          name: directoryKind === "minifiers" ? "Minifiers" : "Formatters",
+          url: `/tools/${directoryKind}`,
+        },
+      ],
+      faqItems: [
+        {
+          title: `Are HappyFormatter ${directoryKind} private?`,
+          content:
+            "Yes. Formatting and minifying run locally in your browser for supported tools.",
+        },
+        {
+          title: directoryKind === "minifiers"
+            ? "Which minifiers are available?"
+            : "Which formatters are available?",
+          content: meta.tools.map(item => item.name).join(", "),
+        },
+        {
+          title: "Will old formatter URLs keep working?",
+          content:
+            "Yes. Legacy indexed formatter and minifier variants are redirected to canonical pages so users do not land on 404 pages.",
+        },
+      ],
+      structuredDataName: meta.eyebrow,
+      structuredDataDescription: meta.description,
+    };
+  })()
+  : null;
+
+if (!page) {
+  return Astro.redirect("/tools", 301);
+}
+---
+
+<Layout
+  title={page.title}
+  description={page.description}
+  keywords={page.keywords}
+  canonicalPath={page.canonicalPath}
+  breadcrumbs={page.breadcrumbs}
+  faqItems={page.faqItems}
+  structuredDataName={page.structuredDataName}
+  structuredDataDescription={page.structuredDataDescription}
+  showFormatHeading={false}
+>
+  {tool && (
+    <>
+      <section class="border-b border-border bg-background">
+        <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+          <div class="space-y-4">
+            <p class="text-sm font-medium text-muted-foreground">
+              Private browser utility
+            </p>
+            <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
+              {tool.name}
+            </h1>
+          </div>
+          <p class="max-w-md text-sm leading-6 text-muted-foreground">
+            {tool.description}
+          </p>
+        </div>
+      </section>
+
+      <ReactIsland kind="utility-tool" props={{ toolId: tool.id }} />
+
+      <section class="bg-background py-12 sm:py-16">
+        <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,360px)] lg:px-8">
+          <div>
+            <h2 class="text-3xl font-semibold leading-tight text-foreground">
+              What this tool is good for
+            </h2>
+            <div class="mt-5 divide-y divide-border border-y border-border">
+              {tool.features.map(feature => (
+                <p class="py-4 text-sm leading-6 text-muted-foreground">
+                  {feature}
+                </p>
+              ))}
+            </div>
+          </div>
+          <aside>
+            <h2 class="text-xl font-semibold text-foreground">
+              Common uses
+            </h2>
+            <div class="mt-4 flex flex-wrap gap-2">
+              {tool.useCases.map(useCase => (
+                <span
+                  class="rounded-md border border-border bg-card px-3 py-2 text-sm text-muted-foreground"
+                >
+                  {useCase}
+                </span>
+              ))}
+            </div>
+          </aside>
+        </div>
+      </section>
+    </>
+  )}
+
+  {category && (
+    <>
+      <section class="border-b border-border bg-background">
+        <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+          <div class="space-y-4">
+            <p class="text-sm font-medium text-muted-foreground">
+              Tool category
+            </p>
+            <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
+              {category.name}
+            </h1>
+          </div>
+          <p class="max-w-md text-sm leading-6 text-muted-foreground">
+            {category.description}
+          </p>
+        </div>
+      </section>
+
+      <section class="bg-background py-12 sm:py-16">
+        <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <div class="divide-y divide-border border-y border-border">
+            {getUtilityToolsByCategory(category.id).map(item => (
+              <article class="grid gap-4 py-5 md:grid-cols-[minmax(190px,0.28fr)_minmax(0,1fr)_auto] md:items-center">
+                <a
+                  href={`/tools/${item.slug}`}
+                  class="text-lg font-semibold text-foreground underline-offset-4 hover:underline"
+                >
+                  {item.name}
+                </a>
+                <p class="text-sm leading-6 text-muted-foreground">
+                  {item.description}
+                </p>
+                <a
+                  href={`/tools/${item.slug}`}
+                  class="inline-flex min-h-9 items-center justify-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  Open tool
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  )}
+
+  {directoryKind && (() => {
+    const meta = getDirectoryMeta(directoryKind);
+    return (
+      <>
+        <section class="border-b border-border bg-background">
+          <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+            <div class="space-y-4">
+              <p class="text-sm font-medium text-muted-foreground">
+                {meta.eyebrow}
+              </p>
+              <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
+                {meta.heading}
+              </h1>
+            </div>
+            <p class="max-w-md text-sm leading-6 text-muted-foreground">
+              {meta.description}
+            </p>
+          </div>
+        </section>
+
+        <section class="bg-background py-12 sm:py-16">
+          <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+            <div class="divide-y divide-border border-y border-border">
+              {meta.tools.map(item => (
+                <article class="grid gap-4 py-5 md:grid-cols-[minmax(210px,0.3fr)_minmax(0,1fr)_auto] md:items-center">
+                  <a
+                    href={item.url}
+                    class="text-lg font-semibold text-foreground underline-offset-4 hover:underline"
+                  >
+                    {item.name}
+                  </a>
+                  <p class="text-sm leading-6 text-muted-foreground">
+                    {item.description}
+                  </p>
+                  <a
+                    href={item.url}
+                    class="inline-flex min-h-9 items-center justify-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    Open
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      </>
+    );
+  })()}
+</Layout>

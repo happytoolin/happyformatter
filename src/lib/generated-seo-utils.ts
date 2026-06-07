@@ -3,10 +3,54 @@
  * This file provides helper functions to use the AI-generated SEO content with existing HappyFormatter components
  */
 
+import { LANGUAGES } from "./languages.js";
 import { type CompleteSEOData, type PageSEOData } from "./seo-types.js";
 
 // Cache for the loaded SEO data
 let seoDataCache: CompleteSEOData | null = null;
+
+const unsupportedKeywordPattern =
+  /\b(validator|validation|syntax checker|code checker|type checker|linter|lint tool|obfuscator)\b/i;
+
+const getDisplayLanguageName = (language: string) => {
+  const configuredName = LANGUAGES[language]?.name;
+  if (configuredName) {
+    return configuredName;
+  }
+
+  return language
+    .split("-")
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+};
+
+const getVariantLabel = (variant?: string | null) => {
+  if (!variant) {
+    return null;
+  }
+
+  const labels: Record<string, string> = {
+    beautifier: "Beautifier",
+    biome: "Biome Formatter",
+    free: "Formatter",
+    online: "Formatter",
+    private: "Private Formatter",
+    ruff: "Ruff Formatter",
+    secure: "Private Formatter",
+  };
+
+  return labels[variant]
+    || variant
+      .split("-")
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+};
+
+const buildKeywordList = (keywords: string[]) =>
+  keywords
+    .map(keyword => keyword.trim())
+    .filter(keyword => keyword && !unsupportedKeywordPattern.test(keyword))
+    .join(", ");
 
 /**
  * Load and cache the generated SEO data from JSON file
@@ -110,6 +154,8 @@ export function getPageSEOContent(
     if (variantPage) {
       return variantPage;
     }
+
+    return null;
   }
 
   // Find the main language page
@@ -158,15 +204,14 @@ export function getLanguageInfoData(language: string, variant?: string | null, p
       ...pageData.content.features.slice(0, 3).map((feature: string) => `${feature}.`),
       ...pageData.content.benefits.slice(0, 2).map((benefit: string) => `Benefit: ${benefit}.`),
     ],
-    validator: {
-      title: `${languageName} Integrity Checker`,
-      description:
-        `Comprehensive validation engine for ${languageName.toLowerCase()} data structures with real-time error detection.`,
+    checker: {
+      title: `${languageName} Issue Checker`,
+      description: `Reports parser issues for ${languageName.toLowerCase()} input while formatting runs.`,
       features: [
-        "Parse Error Detection: Pinpoints exact location of syntax violations.",
-        "Character Encoding Analysis: Validates proper character encoding compliance.",
-        "Structure Verification: Ensures proper nesting patterns and syntax compliance.",
-        "Performance Analysis: Benchmarks processing speed and memory efficiency.",
+        "Parse issues: Shows where formatting stopped.",
+        "Encoding: Keeps readable text intact.",
+        "Structure: Preserves nesting while formatting.",
+        "Runtime: Reports processing failures in the editor.",
       ],
     },
   };
@@ -178,7 +223,7 @@ export function getLanguageInfoData(language: string, variant?: string | null, p
 export function getLayoutSEOData(
   language: string,
   variant?: string | null,
-  _minify?: boolean,
+  minify?: boolean,
   preloadedData?: CompleteSEOData,
 ) {
   const pageData = getPageSEOContent(language, variant, preloadedData);
@@ -187,10 +232,21 @@ export function getLayoutSEOData(
     return null;
   }
 
+  const languageName = getDisplayLanguageName(language);
+  const variantLabel = getVariantLabel(variant);
+  const toolLabel = minify
+    ? "Minifier"
+    : variantLabel && variantLabel !== "Formatter"
+    ? variantLabel
+    : "Formatter";
+  const action = minify ? "minifier" : "formatter";
+
   return {
-    title: pageData.content.title,
-    description: pageData.content.description,
-    keywords: pageData.content.keywords.join(", "),
+    title: `${languageName} ${toolLabel} in Browser | HappyFormatter`,
+    description: `${
+      minify ? "Minify" : "Format"
+    } ${languageName} code in your browser. Paste code, run the ${action}, and copy the result.`,
+    keywords: buildKeywordList(pageData.content.keywords),
     category: pageData.content.category,
   };
 }
@@ -215,7 +271,7 @@ export function generatePageBreadcrumbs(
       return [
         { name: "Home", url: "/" },
         { name: `${languageName} Formatter`, url: basePath },
-        { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `${basePath}/${variant}` },
+        { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `/${language}-${variant}` },
       ];
     } else {
       return [
@@ -232,7 +288,7 @@ export function generatePageBreadcrumbs(
     return [
       { name: "Home", url: "/" },
       { name: languageName, url: basePath },
-      { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `${basePath}/${variant}` },
+      { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `/${language}-${variant}` },
     ];
   } else {
     return [

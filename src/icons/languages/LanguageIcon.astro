@@ -1,38 +1,118 @@
 ---
+import biomeIcon from "devicon/icons/biome/biome-original.svg?raw";
+import cIcon from "devicon/icons/c/c-original.svg?raw";
+import cppIcon from "devicon/icons/cplusplus/cplusplus-original.svg?raw";
+import csharpIcon from "devicon/icons/csharp/csharp-original.svg?raw";
+import cssIcon from "devicon/icons/css3/css3-original.svg?raw";
+import dartIcon from "devicon/icons/dart/dart-original.svg?raw";
+import goIcon from "devicon/icons/go/go-original.svg?raw";
+import htmlIcon from "devicon/icons/html5/html5-original.svg?raw";
+import javaIcon from "devicon/icons/java/java-original.svg?raw";
+import javascriptIcon from "devicon/icons/javascript/javascript-original.svg?raw";
+import jsonIcon from "devicon/icons/json/json-original.svg?raw";
+import luaIcon from "devicon/icons/lua/lua-original.svg?raw";
+import markdownIcon from "devicon/icons/markdown/markdown-original.svg?raw";
+import sqlIcon from "devicon/icons/microsoftsqlserver/microsoftsqlserver-original.svg?raw";
+import objectivecIcon from "devicon/icons/objectivec/objectivec-plain.svg?raw";
+import phpIcon from "devicon/icons/php/php-original.svg?raw";
+import pythonIcon from "devicon/icons/python/python-original.svg?raw";
+import rustIcon from "devicon/icons/rust/rust-original.svg?raw";
+import sassIcon from "devicon/icons/sass/sass-original.svg?raw";
+import swiftIcon from "devicon/icons/swift/swift-original.svg?raw";
+import typescriptIcon from "devicon/icons/typescript/typescript-original.svg?raw";
+import xmlIcon from "devicon/icons/xml/xml-original.svg?raw";
+import yamlIcon from "devicon/icons/yaml/yaml-original.svg?raw";
+import zigIcon from "devicon/icons/zig/zig-original.svg?raw";
+import protoIcon from "./proto.svg?raw";
+import tomlIcon from "./toml.svg?raw";
+
 export interface Props {
   icon: string;
   class?: string;
+  title?: string;
 }
 
-const { icon, ...attributes } = Astro.props as Props;
+const { icon, class: className = "", title, ...attributes } = Astro
+  .props as Props;
 
-// Fallback mapping for alternative formatters to base language icons
-const fallbackMap: Record<string, string> = {
-  "javascript-minify": "javascript",
-  "typescript-minify": "typescript",
-  "javascript-biome": "javascript",
-  "typescript-biome": "typescript",
-  "python-ruff": "python",
-  "php-mago": "php",
-  "objectivec": "c",
-  "objectivecpp": "cpp",
+const aliases: Record<string, string> = {
+  "atom-one-dark": "javascript",
+  "atom-one-light": "javascript",
+  "catppuccin-latte": "javascript",
+  "catppuccin-mocha": "javascript",
   "css-minify": "css",
-  "scss-minify": "scss",
+  "github-dark": "javascript",
+  "github-light": "javascript",
+  "html-minify": "html",
+  "javascript-biome": "javascript",
+  "javascript-minify": "javascript",
   "json-minify": "json",
+  "material-theme-palenight": "javascript",
+  "objectivecpp": "cplusplus",
+  "one-dark-pro": "javascript",
+  "php-mago": "php",
+  "python-ruff": "python",
+  "scss": "sass",
+  "scss-minify": "sass",
+  "solarized-dark": "javascript",
+  "solarized-light": "javascript",
+  "typescript-biome": "typescript",
+  "typescript-minify": "typescript",
+  "vitesse-dark": "javascript",
+  "vitesse-light": "javascript",
   "xml-minify": "xml",
 };
 
-const iconToUse = fallbackMap[icon] || icon;
+const icons: Record<string, string> = {
+  biome: biomeIcon,
+  c: cIcon,
+  cpp: cppIcon,
+  cplusplus: cppIcon,
+  csharp: csharpIcon,
+  css: cssIcon,
+  css3: cssIcon,
+  dart: dartIcon,
+  go: goIcon,
+  html: htmlIcon,
+  html5: htmlIcon,
+  java: javaIcon,
+  javascript: javascriptIcon,
+  json: jsonIcon,
+  lua: luaIcon,
+  markdown: markdownIcon,
+  objectivec: objectivecIcon,
+  php: phpIcon,
+  proto: protoIcon,
+  python: pythonIcon,
+  rust: rustIcon,
+  sass: sassIcon,
+  sql: sqlIcon,
+  swift: swiftIcon,
+  toml: tomlIcon,
+  typescript: typescriptIcon,
+  xml: xmlIcon,
+  yaml: yamlIcon,
+  zig: zigIcon,
+};
 
-let innerHTML;
-try {
-  const iconModule = await import(`./${iconToUse}.svg?raw`);
-  innerHTML = iconModule.default;
-} catch (error) {
-  // Fallback to generic file icon if specific icon doesn't exist
-  const fallbackModule = await import(`./javascript.svg?raw`);
-  innerHTML = fallbackModule.default;
-}
+const normalizedIcon = icon.toLowerCase().replace(/^\/+|\/+$/g, "");
+const iconKey = aliases[normalizedIcon] ?? normalizedIcon;
+const innerHTML = icons[iconKey] ?? javascriptIcon;
+const iconTitle = title ?? iconKey;
 ---
 
-<Fragment {...attributes} set:html={innerHTML} />
+<span
+  class:list={["hf-language-icon inline-block", className]}
+  role="img"
+  aria-label={`${iconTitle} icon`}
+  {...attributes}
+  set:html={innerHTML}
+/>
+
+<style>
+.hf-language-icon :global(svg) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>

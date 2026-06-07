@@ -1,0 +1,79 @@
+---
+import Header from "@/components/layout/header.astro";
+import { modernMonacoEditorCoreUrl } from "happyformatter:modern-monaco-runtime";
+import "../styles/globals.css";
+
+const modernMonacoImportMap = JSON.stringify(
+  {
+    imports: {
+      "modern-monaco/editor-core": modernMonacoEditorCoreUrl,
+    },
+  },
+  null,
+  2,
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Modern Monaco Test | HappyFormatter</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="importmap" is:inline set:html={modernMonacoImportMap}>
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+    (() => {
+      const root = document.documentElement;
+      const readTheme = () => {
+        try {
+          return window.localStorage.getItem("theme");
+        } catch {
+          return null;
+        }
+      };
+
+      const stored = readTheme();
+      const mode = stored === "light" || stored === "dark"
+        ? stored
+        : window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+
+      root.classList.toggle("dark", mode === "dark");
+      root.dataset.theme = mode;
+      root.style.colorScheme = mode;
+    })();
+    </script>
+    <style is:inline>
+    #modern-monaco-test-root code,
+    #modern-monaco-test-root pre,
+    #modern-monaco-test-root .monaco-editor {
+      font-family:
+        "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    </style>
+  </head>
+  <body class="bg-background text-foreground">
+    <Header />
+    <main
+      id="main-content"
+      role="main"
+      class="w-full max-w-full overflow-x-hidden"
+    >
+      <div id="modern-monaco-test-root"></div>
+    </main>
+    <script>
+    import "@/components/playground/ModernMonacoTestClient";
+    </script>
+  </body>
+</html>

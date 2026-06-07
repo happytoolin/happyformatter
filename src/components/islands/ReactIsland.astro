@@ -1,0 +1,17 @@
+---
+type ReactIslandKind = "formatter" | "faq" | "faq-enhanced" | "utility-tool";
+
+interface Props {
+  kind: ReactIslandKind;
+  props: Record<string, unknown>;
+}
+
+const { kind, props } = Astro.props;
+---
+
+<div data-hf-react-island={kind} data-hf-react-props={JSON.stringify(props)}>
+</div>
+
+<script>
+import "@/components/islands/reactIslands";
+</script>

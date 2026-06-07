@@ -1,30 +1,153 @@
 ---
+import { defaultEditorThemeByMode, editorThemes } from "@/lib/theme";
+import {
+  sanitizeSEODescription,
+  sanitizeSEOKeywords,
+} from "@/lib/tool-page-seo";
+import { modernMonacoEditorCoreUrl } from "happyformatter:modern-monaco-runtime";
+
 type Props = {
+  author?: string;
+  canonicalPath?: string;
+  category?: string;
+  image?: string;
+  imageAlt?: string;
+  keywords?: string;
+  robots?: string;
   title: string;
   description: string;
-  image?: string;
-  keywords?: string;
-  author?: string;
-  category?: string;
 };
-
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const {
   title,
   description,
-  image = "/images/og.png",
+  canonicalPath,
+  image = "/images/happyformatter-workbench-reference.png",
+  imageAlt = "HappyFormatter browser code formatter workbench",
   keywords =
-    "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, code validator, code linter, programming tools, developer tools",
+    "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, programming tools, developer tools",
   author = "HappyFormatter",
   category = "Developer Tool, Technology, Development Tools, Programming",
+  robots = "index, follow",
 } = Astro.props;
 
-const ogImageURL = new URL(image, Astro.site);
+const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
+const canonicalHref = canonicalURL.href;
+const ogImageURL = new URL(image, Astro.site).href;
+
+const lightEditorThemeIds = editorThemes
+  .filter(theme => theme.type === "light")
+  .map(theme => theme.id);
+const darkEditorThemeIds = editorThemes
+  .filter(theme => theme.type === "dark")
+  .map(theme => theme.id);
+const sanitizedKeywords = sanitizeSEOKeywords(keywords);
+const sanitizedDescription = sanitizeSEODescription(description);
+const modernMonacoImportMap = JSON.stringify(
+  {
+    imports: {
+      "modern-monaco/editor-core": modernMonacoEditorCoreUrl,
+    },
+  },
+  null,
+  2,
+);
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<script type="importmap" is:inline set:html={modernMonacoImportMap}></script>
+<script
+  is:inline
+  define:vars={{ darkEditorThemeIds, defaultEditorThemeByMode, lightEditorThemeIds }}
+>
+(() => {
+  const themeKey = "theme";
+  const editorThemeKey = "codemirror-theme";
+  const root = document.documentElement;
+  const lightThemes = new Set(lightEditorThemeIds);
+  const darkThemes = new Set(darkEditorThemeIds);
+
+  const readStorage = (key) => {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  };
+
+  const writeStorage = (key, value) => {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch {
+      // Private browsing modes can reject storage writes.
+    }
+  };
+
+  const isMode = (value) => value === "light" || value === "dark";
+
+  const getInitialMode = () => {
+    const stored = readStorage(themeKey);
+    if (isMode(stored)) {
+      return stored;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
+  const isEditorThemeForMode = (theme, mode) => {
+    if (!theme) {
+      return false;
+    }
+    return mode === "dark" ? darkThemes.has(theme) : lightThemes.has(theme);
+  };
+
+  const getEditorThemeForMode = (mode) => {
+    const modeKey = `codemirror-theme-${mode}`;
+    const storedForMode = readStorage(modeKey);
+    if (isEditorThemeForMode(storedForMode, mode)) {
+      return storedForMode;
+    }
+
+    const current = readStorage(editorThemeKey);
+    if (isEditorThemeForMode(current, mode)) {
+      return current;
+    }
+
+    return defaultEditorThemeByMode[mode];
+  };
+
+  const mode = getInitialMode();
+  const editorTheme = getEditorThemeForMode(mode);
+
+  root.classList.toggle("dark", mode === "dark");
+  root.dataset.theme = mode;
+  root.style.colorScheme = mode;
+  writeStorage(themeKey, mode);
+  writeStorage(editorThemeKey, editorTheme);
+  writeStorage(`codemirror-theme-${mode}`, editorTheme);
+})();
+</script>
+<style is:inline>
+html {
+  background: #f6f7f7;
+  color-scheme: light;
+}
+
+html.dark {
+  background: #111513;
+  color-scheme: dark;
+}
+
+body {
+  background: #f6f7f7;
+}
+
+html.dark body {
+  background: #111513;
+}
+</style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -32,42 +155,58 @@ const ogImageURL = new URL(image, Astro.site);
 <meta name="generator" content={Astro.generator} />
 <meta name="color-scheme" content="light dark" />
 <meta name="forced-color-adjust" content="auto" />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content={robots} />
+<link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=JetBrains+Mono:wght@100..800&display=swap"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 />
-<link rel="canonical" href={canonicalURL} />
+<link rel="canonical" href={canonicalHref} />
 <title>{title}</title>
 <meta name="title" content={title} />
-<meta name="description" content={description} />
-<meta name="keywords" content={keywords} />
+<meta name="description" content={sanitizedDescription} />
+<meta name="keywords" content={sanitizedKeywords} />
 <meta name="author" content={author} />
 <meta name="category" content={category} />
 <meta name="classification" content="Developer Tool" />
-<meta name="theme-color" content="#FF4D00" />
+<meta
+  name="theme-color"
+  content="#f6f7f7"
+  media="(prefers-color-scheme: light)"
+/>
+<meta
+  name="theme-color"
+  content="#111513"
+  media="(prefers-color-scheme: dark)"
+/>
 
-<link rel="alternate" hreflang="en" href={canonicalURL} />
+<link rel="alternate" hreflang="en" href={canonicalHref} />
+<link rel="alternate" hreflang="x-default" href={canonicalHref} />
 <meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:site_name" content="HappyFormatter" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content={canonicalHref} />
 <meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={sanitizedDescription} />
 <meta property="og:image" content={ogImageURL} />
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={ogImageURL} />
-<meta property="twitter:site" content="@happyformatter" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalHref} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={sanitizedDescription} />
+<meta name="twitter:image" content={ogImageURL} />
+<meta name="twitter:image:alt" content={imageAlt} />
+<meta name="twitter:site" content="@happyformatter" />
 <script
+  is:inline
   type="text/partytown"
   async
   src="https://www.googletagmanager.com/gtag/js?id=G-6SQ50M5SK0"
 >
 </script>
-<script type="text/partytown">
+<script type="text/partytown" is:inline>
 window.dataLayer = window.dataLayer || [];
 
 window.gtag = function gtag() {

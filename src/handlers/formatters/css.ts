@@ -69,8 +69,8 @@ export class SCSSFormatter extends Formatter {
 
   async validateCode(code: string): Promise<boolean> {
     try {
-      const valid = await this.validateCode(code);
-      return valid;
+      await this.formatCode(code);
+      return true;
     } catch (error) {
       return false;
     }

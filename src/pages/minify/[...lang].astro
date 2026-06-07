@@ -1,9 +1,9 @@
 ---
-import { FAQ } from "@/components/faq/faq";
-import Info from "@/components/info/info.astro";
+import Info from "@/components/info/info-enhanced.astro";
+import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter";
-import { LANGUAGES } from "@/lib/languages";
+import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import { buildToolPageSEO } from "@/lib/tool-page-seo";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = (async () => {
@@ -23,32 +23,12 @@ export const getStaticPaths: GetStaticPaths = (async () => {
     }
   });
 
-  // Add paths for hyphenated variants that support minification
-  const { getLanguageVariants } = await import("@/lib/seo-variants");
-
-  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
-    if (langConfig.minify) {
-      const variants = getLanguageVariants(langId);
-
-      variants.forEach(variant => {
-        paths.push({
-          params: { lang: `${langId}-${variant.slug}` },
-          props: {
-            language: langId,
-            languageConfig: langConfig,
-            lang: `${langId}-${variant.slug}`,
-          },
-        });
-      });
-    }
-  }
-
   return paths;
 }) satisfies GetStaticPaths;
 
 interface Props {
   language: string;
-  languageConfig: any;
+  languageConfig: LanguageConfig;
   lang: string;
 }
 
@@ -59,11 +39,12 @@ const langParam = _lang;
 const hyphenatedParts = langParam ? langParam.split("-") : [];
 let actualLanguage = language;
 let variant = null;
+let actualVariantData = null;
 
 if (hyphenatedParts.length >= 2) {
   // This might be a hyphenated variant like "javascript-biome"
   const potentialBaseLanguage = hyphenatedParts[0];
-  const potentialVariant = hyphenatedParts[1];
+  const potentialVariant = hyphenatedParts.slice(1).join("-");
 
   // Check if the base language exists and the variant is valid for it
   if (LANGUAGES[potentialBaseLanguage]) {
@@ -76,11 +57,16 @@ if (hyphenatedParts.length >= 2) {
     if (variantData) {
       actualLanguage = potentialBaseLanguage;
       variant = potentialVariant;
+      actualVariantData = variantData;
     }
   }
 }
 
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
+const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
+const formatterLanguage = variant && runtimeFormatterVariants.has(variant)
+  ? `${actualLanguage}-${variant}`
+  : actualLanguage;
 
 // Safety checks
 if (!actualLanguage || !actualLanguageConfig) {
@@ -93,65 +79,85 @@ if (!actualLanguage || !actualLanguageConfig) {
 if (!actualLanguageConfig.minify) {
   throw new Error(`${actualLanguageConfig.name} does not support minification`);
 }
+
+const toolSEO = buildToolPageSEO({
+  language: actualLanguage,
+  languageConfig: actualLanguageConfig,
+  minify: true,
+  variant,
+  variantData: actualVariantData,
+});
+const displayVariantData = variant ? { h1: toolSEO.h1 } : null;
 ---
 
 <Layout
-  title={`${actualLanguageConfig.name} ${
-    variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""
-  }Minifier - Minify ${actualLanguageConfig.name} Code Online`}
-  description={`Minify ${actualLanguageConfig.name} code to reduce file size and improve performance. Fast, secure minification in your browser.`}
+  title={toolSEO.title}
+  description={toolSEO.description}
   language={actualLanguage}
   minify={true}
+  canonicalPath={toolSEO.canonicalPath}
+  keywords={toolSEO.keywords}
+  category={toolSEO.category}
+  currentVariant={variant}
+  breadcrumbs={toolSEO.breadcrumbs}
+  faqItems={toolSEO.faqItems}
+  showFormatHeading={false}
+  structuredDataName={toolSEO.schemaName}
+  structuredDataDescription={toolSEO.schemaDescription}
 >
-  <div class="container mx-auto px-4 py-6">
-    <div class="bg-accent/10 border-2 border-accent p-6 mb-6">
-      <div class="flex items-center gap-4 mb-4">
-        <div class="flex items-center gap-3">
-          <h1 class="text-2xl md:text-4xl font-display font-black text-foreground tracking-tight">
-            {actualLanguageConfig.name}
-            {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
-            MINIFIER
+  <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-6 border-y border-border py-5">
+      <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-2xl font-semibold text-foreground md:text-4xl">
+            {toolSEO.h1}
           </h1>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 bg-accent animate-pulse"></span>
-            <span
-              class="px-3 py-1 bg-accent text-background text-sm font-mono font-bold uppercase border-2 border-accent"
-            >
-              Minify
-            </span>
-          </div>
+          <span
+            class="rounded-md border border-border bg-card px-2.5 py-1 text-sm text-muted-foreground"
+          >
+            Minify
+          </span>
         </div>
       </div>
-      <div class="border-l-4 border-accent pl-4 mb-4">
-        <p class="text-foreground font-medium leading-relaxed">
-          Minify your {actualLanguageConfig.name}
-          code{variant ? ` with ${variant}` : ""} to reduce file size and
-          improve loading performance. Optimized for production use.
+      <div class="mb-4 max-w-2xl">
+        <p class="font-medium leading-relaxed text-foreground">
+          {toolSEO.description}
         </p>
       </div>
       <div class="flex items-center gap-4">
         <a
           href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
-          class="inline-flex items-center gap-2 px-4 py-2 bg-background border-2 border-foreground text-foreground font-mono text-sm font-bold hover:bg-primary hover:text-background transition-colors"
+          class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
         >
-          <span class="text-lg">←</span>
           Back to {actualLanguageConfig.name}
           {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
           Tool
         </a>
-        <div class="hidden md:flex items-center gap-2 text-muted-foreground">
-          <span class="w-2 h-2 bg-foreground/50"></span>
-          <span class="font-mono text-xs uppercase">Production Ready</span>
+        <div class="hidden items-center gap-2 text-muted-foreground md:flex">
+          <span class="h-px w-6 bg-border"></span>
+          <span class="text-sm">Runs locally</span>
         </div>
       </div>
     </div>
   </div>
 
-  <Formatter
-    client:load
-    minifier={true}
-    language={actualLanguage}
+  <ReactIsland
+    kind="formatter"
+    props={{ minifier: true, language: formatterLanguage }}
   />
-  <Info language={actualLanguage} />
-  <FAQ language={actualLanguage} client:idle />
+  <Info
+    language={actualLanguage}
+    minify={true}
+    variant={variant}
+    variantData={displayVariantData}
+  />
+  <ReactIsland
+    kind="faq-enhanced"
+    props={{
+      language: actualLanguage,
+      minify: true,
+      variant,
+      variantData: displayVariantData,
+    }}
+  />
 </Layout>

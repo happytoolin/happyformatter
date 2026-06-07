@@ -1,8 +1,9 @@
-import { availableThemes } from "@/lib/shiki-config";
+import { defaultEditorThemeByMode, editorThemes, getEditorThemesForMode } from "@/lib/theme";
 
-// CodeMirror editor themes
-export const codeMirrorThemes = availableThemes.map((theme) => ({
+export const codeMirrorThemes = editorThemes.map((theme) => ({
   name: theme.name,
   value: theme.id,
   type: theme.type,
 }));
+
+export { defaultEditorThemeByMode, getEditorThemesForMode };
