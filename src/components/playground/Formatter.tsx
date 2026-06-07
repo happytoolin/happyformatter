@@ -1,7 +1,7 @@
 import { getFormatter, getMinifier } from "@/handlers";
 import { getInitialCode } from "@/lib/initialCode";
 import { LANGUAGES } from "@/lib/languages";
-import { Check, Copy, FileText, Minimize2 } from "lucide-react";
+import { Check, Copy, FileText, Loader2, Minimize2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import CodePlayground from "./CodePlayground";
@@ -21,12 +21,54 @@ type ActionStatus =
   | "execution_failed"
   | "copied"
   | "copy_failed";
+type ProcessingAction = "format" | "minify" | null;
+type ButtonState = "idle" | "success" | "error";
 
 function formatLanguageName(language: string) {
-  return LANGUAGES[language]?.name || language
-    .split("-")
+  if (LANGUAGES[language]?.name) {
+    return LANGUAGES[language].name;
+  }
+
+  const [baseLanguage, ...variantParts] = language.split("-");
+  const baseName = LANGUAGES[baseLanguage]?.name
+    || baseLanguage.charAt(0).toUpperCase() + baseLanguage.slice(1);
+  const variantName = variantParts
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+
+  return variantName ? `${baseName} ${variantName}` : baseName;
+}
+
+async function copyTextToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.top = "0";
+    textarea.style.left = "0";
+    textarea.style.width = "1px";
+    textarea.style.height = "1px";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    document.body.appendChild(textarea);
+    textarea.focus({ preventScroll: true });
+    textarea.select();
+    textarea.setSelectionRange(0, text.length);
+
+    const clipboardDocument = document as unknown as {
+      execCommand(commandId: string): boolean;
+    };
+    const copied = clipboardDocument.execCommand("copy");
+    textarea.remove();
+
+    if (!copied) {
+      throw new Error("Clipboard write failed");
+    }
+  }
 }
 
 function ActionButton({
@@ -34,24 +76,35 @@ function ActionButton({
   onClick,
   disabled,
   variant = "secondary",
+  state = "idle",
+  busy = false,
   label,
 }: {
   children: ReactNode;
   onClick: () => void;
   disabled?: boolean;
   variant?: "primary" | "secondary";
+  state?: ButtonState;
+  busy?: boolean;
   label: string;
 }) {
-  const classes = variant === "primary"
-    ? "border-foreground bg-primary text-primary-foreground hover:opacity-90"
+  const toneClasses = variant === "primary"
+    ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
     : "border-border bg-card text-foreground hover:border-foreground hover:bg-secondary";
+  const stateClasses = state === "success"
+    ? "border-foreground bg-foreground text-background hover:bg-foreground/90"
+    : state === "error"
+    ? "border-destructive bg-card text-destructive hover:bg-destructive/10"
+    : toneClasses;
 
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex h-10 min-w-28 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors active:translate-y-px disabled:pointer-events-none disabled:opacity-50 ${classes}`}
+      className={`inline-flex h-10 min-w-28 select-none items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 motion-reduce:transition-none ${stateClasses}`}
       aria-label={label}
+      aria-busy={busy || undefined}
       title={label}
     >
       {children}
@@ -63,17 +116,20 @@ function FormatButtons({
   onFormat,
   onMinify,
   onCopy,
-  isProcessing,
+  processingAction,
   minifier,
   lastAction,
 }: {
   onFormat: () => void;
   onMinify: () => void;
   onCopy: () => void;
-  isProcessing: boolean;
+  processingAction: ProcessingAction;
   minifier: boolean;
   lastAction: ActionStatus | null;
 }) {
+  const isProcessing = processingAction !== null;
+  const isFormatting = processingAction === "format";
+  const isMinifying = processingAction === "minify";
   const formatComplete = lastAction === "format_success";
   const minifyComplete = lastAction === "minify_success";
   const copyComplete = lastAction === "copied";
@@ -85,46 +141,60 @@ function FormatButtons({
         <ActionButton
           onClick={onMinify}
           disabled={isProcessing}
+          busy={isMinifying}
+          state={minifyComplete ? "success" : "idle"}
           label="Minify code"
         >
-          {minifyComplete
+          {isMinifying
+            ? (
+              <Loader2
+                size={16}
+                className="animate-spin motion-reduce:animate-none"
+                strokeWidth={1.75}
+                aria-hidden="true"
+              />
+            )
+            : minifyComplete
             ? <Check size={16} strokeWidth={1.75} aria-hidden="true" />
             : <Minimize2 size={16} strokeWidth={1.75} aria-hidden="true" />}
-          <span>{minifyComplete ? "Minified" : "Minify"}</span>
+          <span>Minify code</span>
         </ActionButton>
       )}
 
       <ActionButton
         onClick={onFormat}
         disabled={isProcessing}
+        busy={isFormatting}
         variant="primary"
+        state={formatComplete ? "success" : "idle"}
         label="Format code"
       >
-        {formatComplete
+        {isFormatting
+          ? (
+            <Loader2
+              size={16}
+              className="animate-spin motion-reduce:animate-none"
+              strokeWidth={1.75}
+              aria-hidden="true"
+            />
+          )
+          : formatComplete
           ? <Check size={16} strokeWidth={1.75} aria-hidden="true" />
           : <FileText size={16} strokeWidth={1.75} aria-hidden="true" />}
-        <span>
-          {formatComplete ? "Formatted" : isProcessing ? "Working" : "Format"}
-        </span>
+        <span>Format code</span>
       </ActionButton>
 
-      <button
+      <ActionButton
         onClick={onCopy}
-        className={`inline-flex h-10 min-w-24 items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors active:translate-y-px ${
-          copyComplete
-            ? "border-foreground bg-foreground text-background"
-            : copyFailed
-            ? "border-destructive bg-card text-destructive"
-            : "border-border bg-card text-foreground hover:border-foreground hover:bg-secondary"
-        }`}
-        aria-label={copyComplete ? "Code copied" : copyFailed ? "Copy failed" : "Copy code"}
-        title={copyComplete ? "Code copied" : copyFailed ? "Copy failed" : "Copy code"}
+        disabled={isProcessing}
+        state={copyComplete ? "success" : copyFailed ? "error" : "idle"}
+        label="Copy code"
       >
         {copyComplete
           ? <Check size={16} strokeWidth={1.75} aria-hidden="true" />
           : <Copy size={16} strokeWidth={1.75} aria-hidden="true" />}
-        <span>{copyComplete ? "Copied" : copyFailed ? "Failed" : "Copy"}</span>
-      </button>
+        <span>Copy code</span>
+      </ActionButton>
     </div>
   );
 }
@@ -140,7 +210,7 @@ function ToolStat({ label, value }: { label: string; value: string }) {
 
 export default function Formatter({ minifier, language }: FormatterProps) {
   const { code, language: storeLanguage, setCode, initializeCode, setLanguage } = useFormatterStore();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingAction, setProcessingAction] = useState<ProcessingAction>(null);
   const [lastAction, setLastAction] = useState<ActionStatus | null>(null);
   const initialCode = useMemo(() => getInitialCode(language), [language]);
   const activeCode = storeLanguage === language ? code : initialCode;
@@ -151,7 +221,12 @@ export default function Formatter({ minifier, language }: FormatterProps) {
   }, [language, setLanguage, initializeCode]);
 
   const handleAction = useCallback(async (type: "format" | "minify") => {
-    setIsProcessing(true);
+    if (processingAction !== null) {
+      return;
+    }
+
+    setProcessingAction(type);
+    setLastAction(null);
     try {
       if (type === "format") {
         const formatter = await getFormatter(language);
@@ -172,20 +247,27 @@ export default function Formatter({ minifier, language }: FormatterProps) {
       console.error(e);
       setLastAction("execution_failed");
     } finally {
-      setIsProcessing(false);
-      setTimeout(() => setLastAction(null), 1500);
+      setProcessingAction(null);
     }
-  }, [language, activeCode, setCode]);
+  }, [language, activeCode, processingAction, setCode]);
 
   const copyToClipboard = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(activeCode);
+      await copyTextToClipboard(activeCode);
       setLastAction("copied");
     } catch {
       setLastAction("copy_failed");
     }
-    setTimeout(() => setLastAction(null), 1500);
   }, [activeCode]);
+
+  useEffect(() => {
+    if (!lastAction) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => setLastAction(null), 1800);
+    return () => window.clearTimeout(timeoutId);
+  }, [lastAction]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -212,7 +294,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
       <FormatterContent
         code={activeCode}
         language={language}
-        isProcessing={isProcessing}
+        processingAction={processingAction}
         lastAction={lastAction}
         onFormat={() => handleAction("format")}
         onMinify={() => handleAction("minify")}
@@ -226,7 +308,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
 function FormatterContent({
   code,
   language,
-  isProcessing,
+  processingAction,
   lastAction,
   onFormat,
   onMinify,
@@ -235,7 +317,7 @@ function FormatterContent({
 }: {
   code: string;
   language: string;
-  isProcessing: boolean;
+  processingAction: ProcessingAction;
   lastAction: ActionStatus | null;
   onFormat: () => void;
   onMinify: () => void;
@@ -247,13 +329,24 @@ function FormatterContent({
   const lineCount = useMemo(() => code.split(/\r\n|\r|\n/).length, [code]);
   const charCount = code.length;
 
-  const issueMessage = lastAction === "minifier_unavailable"
-    ? "Minifier unavailable"
+  const statusMessage = lastAction === "minifier_unavailable"
+    ? `${languageName} minifier is unavailable`
     : lastAction === "execution_failed"
-    ? "Format failed"
+    ? `Could not process ${languageName}`
     : lastAction === "copy_failed"
-    ? "Copy failed"
+    ? "Could not copy code"
+    : lastAction === "format_success"
+    ? `Formatted ${languageName}`
+    : lastAction === "minify_success"
+    ? `Minified ${languageName}`
+    : lastAction === "copied"
+    ? "Copied code"
     : "";
+  const statusTone = lastAction === "minifier_unavailable"
+      || lastAction === "execution_failed"
+      || lastAction === "copy_failed"
+    ? "text-destructive"
+    : "text-muted-foreground";
 
   return (
     <section className="border-b border-border bg-background" id="workspace">
@@ -286,17 +379,19 @@ function FormatterContent({
 
           <div className="flex flex-col gap-4 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div
-              className="min-h-5 font-mono text-xs uppercase text-destructive"
+              id="formatter-status"
+              className={`min-h-5 font-mono text-xs ${statusTone}`}
               aria-live="polite"
+              aria-atomic="true"
             >
-              {issueMessage}
+              {statusMessage}
             </div>
 
             <FormatButtons
               onFormat={onFormat}
               onMinify={onMinify}
               onCopy={onCopy}
-              isProcessing={isProcessing}
+              processingAction={processingAction}
               minifier={minifier}
               lastAction={lastAction}
             />

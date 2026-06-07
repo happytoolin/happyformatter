@@ -46,13 +46,13 @@ const details = [
 >
   <FormatHeading language="privacy" minify={false} />
 
-  <section class="border-b border-border bg-card py-20">
+  <section class="border-b border-border bg-card py-16 sm:py-20">
     <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
       <div class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        <p class="text-sm font-medium text-muted-foreground">
           Policy
         </p>
-        <h2 class="text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
+        <h2 class="text-3xl font-semibold leading-tight md:text-4xl">
           Your code stays on your device.
         </h2>
         <p class="max-w-md text-sm leading-6 text-muted-foreground">
@@ -63,21 +63,24 @@ const details = [
       </div>
 
       <div class="space-y-8">
-        <div class="grid grid-flow-dense grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2">
+        <div class="divide-y divide-border border-y border-border">
           {privacyFeatures.map((feature) => (
-            <article class="bg-background p-6">
-              <h3 class="text-xl font-semibold tracking-tight">
-                {feature.title}
-              </h3>
-              <p class="mt-3 text-sm leading-6 text-muted-foreground">
-                {feature.body}
-              </p>
-              <ul class="mt-6 space-y-0 font-mono text-xs">
-                {feature.points.map((point, index) => (
-                  <li class="grid grid-cols-[44px_1fr] border-t border-border py-3">
+            <article class="grid gap-5 py-6 md:grid-cols-[minmax(180px,0.35fr)_1fr]">
+              <div>
+                <h3 class="text-xl font-semibold">
+                  {feature.title}
+                </h3>
+                <p class="mt-3 text-sm leading-6 text-muted-foreground">
+                  {feature.body}
+                </p>
+              </div>
+              <ul class="space-y-2 text-sm text-foreground">
+                {feature.points.map((point) => (
+                  <li class="flex gap-2">
                     <span
-                      class="text-muted-foreground"
-                    >{String(index + 1).padStart(2, "0")}</span>
+                      class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ring"
+                      aria-hidden="true"
+                    />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -86,17 +89,17 @@ const details = [
           ))}
         </div>
 
-        <div class="rounded-lg border border-border bg-background p-6">
-          <h3 class="text-xl font-semibold tracking-tight">
+        <div class="border-y border-border py-6">
+          <h3 class="text-xl font-semibold">
             Technical details
           </h3>
           <div class="mt-6 divide-y divide-border">
             {details.map((detail) => (
-              <div class="py-5 first:pt-0 last:pb-0">
-                <h4 class="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              <div class="grid gap-2 py-5 first:pt-0 last:pb-0 sm:grid-cols-[180px_1fr]">
+                <h4 class="text-sm font-medium text-muted-foreground">
                   {detail.title}
                 </h4>
-                <p class="mt-2 text-sm leading-6 text-foreground">
+                <p class="text-sm leading-6 text-foreground">
                   {detail.body}
                 </p>
               </div>

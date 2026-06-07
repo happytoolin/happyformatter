@@ -299,10 +299,10 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
             <button
               type="button"
               onClick={reloadPage}
-              className="rounded-md border border-border px-3 py-2 text-sm text-foreground transition-colors hover:border-foreground hover:bg-secondary"
-              aria-label="Reload page to retry"
+              className="rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground outline-none transition-colors hover:border-foreground hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px motion-reduce:transition-none"
+              aria-label="Reload editor"
             >
-              Retry
+              Reload editor
             </button>
           </div>
         </div>

@@ -133,21 +133,21 @@ const modernMonacoImportMap = JSON.stringify(
 </script>
 <style is:inline>
 html {
-  background: #f7f7f4;
+  background: #f6f7f7;
   color-scheme: light;
 }
 
 html.dark {
-  background: #151513;
+  background: #111513;
   color-scheme: dark;
 }
 
 body {
-  background: #f7f7f4;
+  background: #f6f7f7;
 }
 
 html.dark body {
-  background: #151513;
+  background: #111513;
 }
 </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -161,7 +161,7 @@ html.dark body {
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 />
 <link rel="canonical" href={canonicalURL} />
@@ -174,12 +174,12 @@ html.dark body {
 <meta name="classification" content="Developer Tool" />
 <meta
   name="theme-color"
-  content="#f7f7f4"
+  content="#f6f7f7"
   media="(prefers-color-scheme: light)"
 />
 <meta
   name="theme-color"
-  content="#151513"
+  content="#111513"
   media="(prefers-color-scheme: dark)"
 />
 
@@ -196,12 +196,13 @@ html.dark body {
 <meta property="twitter:image" content={ogImageURL} />
 <meta property="twitter:site" content="@happyformatter" />
 <script
+  is:inline
   type="text/partytown"
   async
   src="https://www.googletagmanager.com/gtag/js?id=G-6SQ50M5SK0"
 >
 </script>
-<script type="text/partytown">
+<script type="text/partytown" is:inline>
 window.dataLayer = window.dataLayer || [];
 
 window.gtag = function gtag() {

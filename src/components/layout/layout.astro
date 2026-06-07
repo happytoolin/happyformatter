@@ -39,7 +39,9 @@ const {
 // Get language-specific SEO data
 const seoData = getLanguageSEOData(language, minify);
 
-const pageTitle = generatePageTitle(language ?? "", currentVariant, minify);
+const pageTitle = _title
+  || generatePageTitle(language ?? "", currentVariant, minify);
+const pageDescription = _description || seoData.description;
 const finalBreadcrumbs = breadcrumbs.length > 0
   ? breadcrumbs
   : generateBreadcrumbs(language, minify);
@@ -50,7 +52,7 @@ const finalBreadcrumbs = breadcrumbs.length > 0
   <head>
     <Head
       title={pageTitle}
-      description={seoData.description}
+      description={pageDescription}
       image={image}
       keywords={keywords || seoData.keywords}
       category={category || seoData.category}

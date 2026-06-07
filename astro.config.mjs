@@ -32,6 +32,7 @@ const modernMonacoRuntimeBasePath = `/vendor/modern-monaco/${modernMonacoPackage
 const modernMonacoRuntimeDir = fileURLToPath(
   new URL("./node_modules/modern-monaco/dist/", import.meta.url),
 );
+const enablePartytown = process.env.NODE_ENV === "production";
 
 const shikiLanguageDependencies = [
   "@shikijs/langs/c",
@@ -136,6 +137,30 @@ function modernMonacoRuntimePlugin() {
   };
 }
 
+function noStoreDevModulesPlugin() {
+  return {
+    name: "happyformatter-no-store-dev-modules",
+    apply: "serve",
+    configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        const requestPath = request.url?.split("?")[0] ?? "";
+        const isModuleRequest = requestPath.startsWith("/@id/")
+          || requestPath.startsWith("/@react-refresh")
+          || requestPath.startsWith("/node_modules/")
+          || requestPath.startsWith("/src/");
+
+        if (isModuleRequest) {
+          delete request.headers["if-none-match"];
+          delete request.headers["if-modified-since"];
+          response.setHeader("Cache-Control", "no-store");
+        }
+
+        next();
+      });
+    },
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
@@ -150,19 +175,43 @@ export default defineConfig({
     }),
     react(),
     playformCompress(),
-    partytown({
-      config: {
-        forward: ["dataLayer.push", "gtag"],
-      },
-    }),
+    ...(enablePartytown
+      ? [
+        partytown({
+          config: {
+            forward: ["dataLayer.push", "gtag"],
+          },
+        }),
+      ]
+      : []),
   ],
 
   prefetch: true,
 
   vite: {
-    plugins: [modernMonacoRuntimePlugin(), wasm(), tailwind()],
+    plugins: [noStoreDevModulesPlugin(), modernMonacoRuntimePlugin(), wasm(), tailwind()],
+    resolve: {
+      dedupe: ["react", "react-dom"],
+    },
     optimizeDeps: {
+      include: [
+        "@radix-ui/react-accordion",
+        "@radix-ui/react-dropdown-menu",
+        "@radix-ui/react-select",
+        "@radix-ui/react-slot",
+        "class-variance-authority",
+        "clsx",
+        "lucide-react",
+        "react",
+        "react-dom",
+        "react-dom/client",
+        "react/jsx-dev-runtime",
+        "react/jsx-runtime",
+        "tailwind-merge",
+        "zustand",
+      ],
       exclude: [
+        "@astrojs/react/client.js",
         "@wasm-fmt/clang-format/web",
         "@wasm-fmt/dart_fmt/web",
         "@wasm-fmt/gofmt/web",

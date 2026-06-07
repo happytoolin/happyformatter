@@ -1,17 +1,16 @@
 ---
-import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
+import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter";
 import { LANGUAGES } from "@/lib/languages";
 
 const language = "json";
 const languageConfig = LANGUAGES[language];
 
 const homepageTitle =
-  "Online Code Formatter & Minifier - 22+ Languages | Free HappyFormatter";
+  "Browser Code Formatter & Minifier - 22+ Languages | HappyFormatter";
 const homepageDescription =
-  "Free online code formatter and beautifier for 22+ programming languages. Format, validate, and minify code online. Privacy-focused, client-side processing.";
+  "Format and minify code for 22+ programming languages in your browser. Paste code, run the action, and copy the result.";
 const homepageKeywords =
   "online code formatter, code minifier, free code formatter, format code online, code beautifier, web formatter, code formatting tool, programmer tools, developer tools";
 ---
@@ -24,10 +23,10 @@ const homepageKeywords =
   <section class="border-b border-border bg-background">
     <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
       <div class="space-y-4">
-        <p class="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+        <p class="text-sm font-medium text-muted-foreground">
           Local formatter
         </p>
-        <h1 class="max-w-5xl text-[clamp(2.5rem,5vw,4.75rem)] font-semibold leading-[0.95] tracking-[-0.04em] text-foreground">
+        <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
           Format code without leaving your browser.
         </h1>
       </div>
@@ -37,11 +36,10 @@ const homepageKeywords =
       </p>
     </div>
   </section>
-  <Formatter
-    client:only="react"
-    minifier={languageConfig.minify}
-    language={language}
+  <ReactIsland
+    kind="formatter"
+    props={{ minifier: languageConfig.minify, language }}
   />
   <Info language={language} />
-  <FAQ language={language} client:only="react" />
+  <ReactIsland kind="faq" props={{ language }} />
 </Layout>

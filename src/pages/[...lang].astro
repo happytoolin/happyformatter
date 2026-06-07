@@ -1,8 +1,7 @@
 ---
-import { FAQ } from "@/components/faq/faq-enhanced";
 import Info from "@/components/info/info-enhanced.astro";
+import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter";
 import {
   generatePageBreadcrumbs,
   getLayoutSEOData,
@@ -129,24 +128,6 @@ if (currentVariant && !actualVariantData) {
 }
 
 const isVariant = currentVariant && actualVariantData;
-const canonicalPath = isVariant
-  ? `/${actualLanguage}-${currentVariant}`
-  : `/${actualLanguage}`;
-const sanitizeUnsupportedToolCopy = (value: string) =>
-  value
-    .replace(/\bFormat,\s*validate,\s*and beautify\b/gi, "Format and beautify")
-    .replace(/\bformat,\s*validate,\s*and beautify\b/gi, "format and beautify")
-    .replace(/\b,\s*validate\b/gi, "")
-    .replace(/\bvalidation\b/gi, "formatting")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-const displayVariantData = actualVariantData
-  ? { h1: actualVariantData.h1 }
-  : null;
-const variantDescription = actualVariantData?.description
-  ? sanitizeUnsupportedToolCopy(actualVariantData.description)
-  : null;
-
 // Get the actual language config (in case we detected a hyphenated variant)
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
 const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
@@ -154,12 +135,66 @@ const formatterLanguage =
   currentVariant && runtimeFormatterVariants.has(currentVariant)
     ? `${actualLanguage}-${currentVariant}`
     : actualLanguage;
+const getVariantDisplay = (
+  languageName: string,
+  variantValue: string | null | undefined,
+) => {
+  switch (variantValue) {
+    case "biome":
+      return {
+        title: `${languageName} Biome Formatter`,
+        description:
+          `Format ${languageName} with Biome in the browser. Paste code, run the formatter, and copy the result.`,
+      };
+    case "ruff":
+      return {
+        title: `${languageName} Ruff Formatter`,
+        description:
+          `Format ${languageName} with Ruff in the browser. Paste code, run the formatter, and copy the result.`,
+      };
+    case "mago":
+      return {
+        title: `${languageName} Mago Formatter`,
+        description:
+          `Format ${languageName} with Mago in the browser. Paste code, run the formatter, and copy the result.`,
+      };
+    case "secure":
+    case "private":
+      return {
+        title: `Private ${languageName} Formatter`,
+        description:
+          `Format ${languageName} code in the browser. Your code stays on this device while you work.`,
+      };
+    case "beautifier":
+    case "pretty":
+    case "prettify":
+      return {
+        title: `${languageName} Beautifier`,
+        description:
+          `Format hard-to-read ${languageName} code into structured output with indentation and line breaks.`,
+      };
+    case "free":
+    case "online":
+    default:
+      return {
+        title: `${languageName} Formatter`,
+        description:
+          `Format ${languageName} code in your browser. Paste code, run the formatter, and copy the result.`,
+      };
+  }
+};
+const variantDisplay = currentVariant && actualVariantData
+  ? getVariantDisplay(actualLanguageConfig.name, currentVariant)
+  : null;
+const displayVariantData = variantDisplay
+  ? { h1: variantDisplay.title }
+  : null;
 
 // Try to get generated SEO data first
 const generatedSEO = getLayoutSEOData(
   actualLanguage,
   currentVariant,
-  actualLanguageConfig.minify,
+  false,
   generatedSEOData || undefined,
 );
 
@@ -218,28 +253,28 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
   {/* Custom heading for variant pages */}
   {isVariant && (
     <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
-      <div class="mb-6 rounded-lg border border-border bg-card p-5">
+      <div class="mb-6 border-y border-border py-5">
         <div class="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <h1 class="text-2xl font-semibold tracking-[-0.03em] text-foreground md:text-3xl">
-            {actualVariantData?.h1
+          <h1 class="text-2xl font-semibold text-foreground md:text-3xl">
+            {variantDisplay?.title
               || `${actualLanguageConfig.name} ${
                 currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1)
               }`}
           </h1>
           <span
-            class="w-fit rounded-md border border-border bg-background px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
+            class="w-fit rounded-md border border-border bg-card px-2.5 py-1 text-sm text-muted-foreground"
           >
             {actualLanguageConfig.name}
           </span>
         </div>
         <p class="text-muted-foreground leading-relaxed">
-          {variantDescription
+          {variantDisplay?.description
             || `Format ${actualLanguage} code with ${currentVariant}`}
         </p>
         <div class="mt-4 flex items-center gap-2">
           <a
             href={`/${actualLanguage}`}
-            class="inline-flex rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary"
+            class="inline-flex rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
           >
             Back to
             {actualLanguageConfig.name}
@@ -250,10 +285,9 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
     </div>
   )}
 
-  <Formatter
-    client:only="react"
-    minifier={actualLanguageConfig.minify}
-    language={formatterLanguage}
+  <ReactIsland
+    kind="formatter"
+    props={{ minifier: actualLanguageConfig.minify, language: formatterLanguage }}
   />
 
   <Info
@@ -262,10 +296,12 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
     variantData={displayVariantData}
   />
 
-  <FAQ
-    language={actualLanguage}
-    variant={currentVariant}
-    variantData={displayVariantData}
-    client:only="react"
+  <ReactIsland
+    kind="faq-enhanced"
+    props={{
+      language: actualLanguage,
+      variant: currentVariant,
+      variantData: displayVariantData,
+    }}
   />
 </Layout>

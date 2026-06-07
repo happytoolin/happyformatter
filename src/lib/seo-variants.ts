@@ -55,9 +55,9 @@ export const languageVariants: Record<string, LanguageVariants> = {
     },
     "secure": {
       slug: "secure",
-      title: "Secure JavaScript Formatter - Privacy-Focused JS Code Formatting",
+      title: "Private JavaScript Formatter - Browser JS Code Formatting",
       description:
-        "Secure JavaScript formatter with client-side processing. Your JavaScript code never leaves your browser. Complete privacy and security for sensitive code.",
+        "Private JavaScript formatter with browser-side processing. Your JavaScript code stays on this device while you format it.",
       keywords: [
         "secure javascript formatter",
         "private javascript formatter",
@@ -69,13 +69,13 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "secure code formatting",
         "private js beautifier",
       ],
-      h1: "Secure JavaScript Formatter",
+      h1: "Private JavaScript Formatter",
     },
     "beautifier": {
       slug: "beautifier",
       title: "JavaScript Beautifier - Pretty Print and Format JavaScript Code",
       description:
-        "JavaScript beautifier to format and pretty print your code. Transform minified JavaScript into readable, properly formatted code with indentation.",
+        "JavaScript beautifier to format and pretty print your code. Convert minified JavaScript into readable, properly formatted code with indentation.",
       keywords: [
         "javascript beautifier",
         "js beautifier",
@@ -93,8 +93,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
     "biome": {
       slug: "biome",
       title: "JavaScript Biome Formatter - Format JS with Biome Tool",
-      description:
-        "JavaScript Biome formatter to format code using Biome's fast formatter. Professional JavaScript formatting with Biome.",
+      description: "Format JavaScript with Biome in the browser. Paste code, run the formatter, and copy the result.",
       keywords: [
         "javascript biome",
         "biome formatter",
@@ -144,9 +143,9 @@ export const languageVariants: Record<string, LanguageVariants> = {
     },
     "secure": {
       slug: "secure",
-      title: "Secure TypeScript Formatter - Privacy-Focused TS Code Formatting",
+      title: "Private TypeScript Formatter - Browser TS Code Formatting",
       description:
-        "Secure TypeScript formatter with client-side processing. Your TypeScript code never leaves your browser. Complete privacy for sensitive code.",
+        "Private TypeScript formatter with browser-side processing. Your TypeScript code stays on this device while you format it.",
       keywords: [
         "secure typescript formatter",
         "private typescript formatter",
@@ -158,13 +157,13 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "secure code formatting",
         "private ts beautifier",
       ],
-      h1: "Secure TypeScript Formatter",
+      h1: "Private TypeScript Formatter",
     },
     "beautifier": {
       slug: "beautifier",
       title: "TypeScript Beautifier - Pretty Print and Format TypeScript Code",
       description:
-        "TypeScript beautifier to format and pretty print your code. Transform minified TypeScript into readable, properly formatted code with type annotations.",
+        "TypeScript beautifier to format and pretty print your code. Convert minified TypeScript into readable, properly formatted code with type annotations.",
       keywords: [
         "typescript beautifier",
         "ts beautifier",
@@ -182,8 +181,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
     "biome": {
       slug: "biome",
       title: "TypeScript Biome Formatter - Format TS with Biome Tool",
-      description:
-        "TypeScript Biome formatter to format code using Biome's fast formatter. Professional TypeScript formatting with Biome.",
+      description: "Format TypeScript with Biome in the browser. Paste code, run the formatter, and copy the result.",
       keywords: [
         "typescript biome",
         "biome formatter",
@@ -234,9 +232,9 @@ export const languageVariants: Record<string, LanguageVariants> = {
     },
     "secure": {
       slug: "secure",
-      title: "Secure Python Formatter - Privacy-Focused Python Code Formatting",
+      title: "Private Python Formatter - Browser Python Code Formatting",
       description:
-        "Secure Python formatter with client-side processing. Your Python code never leaves your browser. Complete privacy for sensitive code.",
+        "Private Python formatter with browser-side processing. Your Python code stays on this device while you format it.",
       keywords: [
         "secure python formatter",
         "private python formatter",
@@ -247,7 +245,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "secure code formatting",
         "private python beautifier",
       ],
-      h1: "Secure Python Formatter",
+      h1: "Private Python Formatter",
     },
     "pep8": {
       slug: "pep8",
@@ -270,8 +268,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
     "ruff": {
       slug: "ruff",
       title: "Python Ruff Formatter - Format Python with Ruff Tool",
-      description:
-        "Python Ruff formatter to format code using Ruff's fast formatter. Professional Python formatting with Ruff.",
+      description: "Format Python with Ruff in the browser. Paste code, run the formatter, and copy the result.",
       keywords: [
         "python ruff",
         "ruff formatter",
@@ -323,7 +320,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "pretty",
       title: "JSON Pretty Print - Format and Beautify JSON Data",
       description:
-        "JSON pretty print tool to format and beautify your JSON data. Transform compact JSON into readable, properly formatted output.",
+        "JSON pretty print tool to format and beautify your JSON data. Convert compact JSON into readable, properly formatted output.",
       keywords: [
         "json pretty print",
         "json beautifier",
@@ -397,7 +394,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "HTML Beautifier - Pretty Print and Format HTML Code",
       description:
-        "HTML beautifier to format and pretty print your code. Transform minified HTML into readable, properly formatted markup.",
+        "HTML beautifier to format and pretty print your code. Convert minified HTML into readable, properly formatted markup.",
       keywords: [
         "html beautifier",
         "html pretty printer",
@@ -452,7 +449,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "CSS Beautifier - Pretty Print and Format CSS Code",
       description:
-        "CSS beautifier to format and pretty print your stylesheets. Transform minified CSS into readable, properly formatted code.",
+        "CSS beautifier to format and pretty print your stylesheets. Convert minified CSS into readable, properly formatted code.",
       keywords: [
         "css beautifier",
         "css pretty printer",
@@ -524,9 +521,9 @@ export const languageVariants: Record<string, LanguageVariants> = {
     },
     "secure": {
       slug: "secure",
-      title: "Secure Go Formatter - Privacy-Focused Go Code Formatting",
+      title: "Private Go Formatter - Browser Go Code Formatting",
       description:
-        "Secure Go formatter with client-side processing. Your Go code never leaves your browser. Complete privacy for sensitive code.",
+        "Private Go formatter with browser-side processing. Your Go code stays on this device while you format it.",
       keywords: [
         "secure go formatter",
         "private go formatter",
@@ -537,7 +534,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "secure code formatting",
         "private go beautifier",
       ],
-      h1: "Secure Go Formatter",
+      h1: "Private Go Formatter",
     },
     "gofmt": {
       slug: "gofmt",
@@ -597,7 +594,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "SQL Beautifier - Pretty Print and Format SQL Queries",
       description:
-        "SQL beautifier to format and pretty print your queries. Transform compact SQL into readable, properly formatted statements.",
+        "SQL beautifier to format and pretty print your queries. Convert compact SQL into readable, properly formatted statements.",
       keywords: [
         "sql beautifier",
         "sql pretty printer",
@@ -670,7 +667,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "pretty",
       title: "YAML Pretty Print - Format and Beautify YAML Files",
       description:
-        "YAML pretty print tool to format and beautify your configuration files. Transform compact YAML into readable format.",
+        "YAML pretty print tool to format and beautify your configuration files. Convert compact YAML into readable format.",
       keywords: [
         "yaml pretty print",
         "yaml beautifier",
@@ -885,7 +882,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "compiler",
       title: "SCSS Compiler - Compile and Format SCSS to CSS",
       description:
-        "SCSS compiler to compile and format SCSS code to CSS. Transform SCSS stylesheets to browser-ready CSS.",
+        "SCSS compiler to compile and format SCSS code to CSS. Convert SCSS stylesheets to browser-ready CSS.",
       keywords: [
         "scss compiler",
         "sass compiler",
@@ -992,7 +989,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "google",
       title: "Google Java Formatter - Format Java with Google Style",
       description:
-        "Online Google Java formatter to format Java code according to Google's Java Style Guide. Professional code formatting.",
+        "Online Google Java formatter to format Java code according to Google's Java Style Guide. Formats Java code with the configured Java style rules.",
       keywords: [
         "google java formatter",
         "java google format",
@@ -1045,7 +1042,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "Lua Beautifier - Pretty Print and Format Lua Scripts",
       description:
-        "Lua beautifier to format and pretty print your scripts. Transform minified Lua into readable, properly formatted code.",
+        "Lua beautifier to format and pretty print your scripts. Convert minified Lua into readable, properly formatted code.",
       keywords: [
         "lua beautifier",
         "lua pretty printer",
@@ -1099,7 +1096,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "Markdown Beautifier - Pretty Print and Format Markdown",
       description:
-        "Markdown beautifier to format and pretty print your documents. Transform messy Markdown into properly formatted text.",
+        "Markdown beautifier to format and pretty print your documents. Convert messy Markdown into properly formatted text.",
       keywords: [
         "markdown beautifier",
         "md beautifier",
@@ -1152,7 +1149,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "PHP Beautifier - Pretty Print and Format PHP Code",
       description:
-        "PHP beautifier to format and pretty print your code. Transform minified PHP into readable, properly formatted scripts.",
+        "PHP beautifier to format and pretty print your code. Convert minified PHP into readable, properly formatted scripts.",
       keywords: [
         "php beautifier",
         "php pretty printer",
@@ -1169,7 +1166,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
     "mago": {
       slug: "mago",
       title: "PHP Mago Formatter - Format PHP with Mago Tool",
-      description: "PHP Mago formatter to format code using Mago's formatter. Professional PHP formatting with Mago.",
+      description: "Format PHP with Mago in the browser. Paste code, run the formatter, and copy the result.",
       keywords: [
         "php mago",
         "mago formatter",
@@ -1220,7 +1217,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "Protocol Buffers Beautifier - Pretty Print Proto Files",
       description:
-        "Protocol Buffers beautifier to format and pretty print your .proto files. Transform compact proto into readable format.",
+        "Protocol Buffers beautifier to format and pretty print your .proto files. Convert compact proto into readable format.",
       keywords: [
         "proto beautifier",
         "protobuf beautifier",
@@ -1327,7 +1324,7 @@ export const languageVariants: Record<string, LanguageVariants> = {
       slug: "beautifier",
       title: "XML Beautifier - Pretty Print and Format XML Code",
       description:
-        "XML beautifier to format and pretty print your markup. Transform minified XML into readable, properly formatted code.",
+        "XML beautifier to format and pretty print your markup. Convert minified XML into readable, properly formatted code.",
       keywords: [
         "xml beautifier",
         "xml pretty printer",

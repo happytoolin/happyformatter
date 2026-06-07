@@ -1,8 +1,7 @@
 ---
-import { FAQ } from "@/components/faq/faq";
 import Info from "@/components/info/info.astro";
+import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import Formatter from "@/components/playground/Formatter";
 import { LANGUAGES } from "@/lib/languages";
 import type { GetStaticPaths } from "astro";
 
@@ -102,57 +101,55 @@ if (!actualLanguageConfig.minify) {
 <Layout
   title={`${actualLanguageConfig.name} ${
     variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""
-  }Minifier - Minify ${actualLanguageConfig.name} Code Online`}
-  description={`Minify ${actualLanguageConfig.name} code to reduce file size and improve performance. Fast, secure minification in your browser.`}
+  }Minifier in Browser | HappyFormatter`}
+  description={`Minify ${actualLanguageConfig.name} code in your browser. Paste code, run the minifier, and copy the result.`}
   language={actualLanguage}
   minify={true}
 >
   <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
-    <div class="mb-6 rounded-lg border border-border bg-card p-5">
+    <div class="mb-6 border-y border-border py-5">
       <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-wrap items-center gap-3">
-          <h1 class="text-2xl font-semibold tracking-[-0.03em] text-foreground md:text-4xl">
+          <h1 class="text-2xl font-semibold text-foreground md:text-4xl">
             {actualLanguageConfig.name}
             {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
-            MINIFIER
+            minifier
           </h1>
           <span
-            class="rounded-md border border-border bg-background px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
+            class="rounded-md border border-border bg-card px-2.5 py-1 text-sm text-muted-foreground"
           >
             Minify
           </span>
         </div>
       </div>
-      <div class="mb-4 max-w-2xl border-l border-border pl-4">
-        <p class="text-foreground font-medium leading-relaxed">
+      <div class="mb-4 max-w-2xl">
+        <p class="font-medium leading-relaxed text-foreground">
           Minify your {actualLanguageConfig.name}
-          code{variant ? ` with ${variant}` : ""} to reduce file size and
-          improve loading performance. Optimized for production use.
+          code{variant ? ` with ${variant}` : ""}. The action removes supported
+          whitespace and keeps the result in the browser.
         </p>
       </div>
       <div class="flex items-center gap-4">
         <a
           href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
-          class="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary"
+          class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
         >
           Back to {actualLanguageConfig.name}
           {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
           Tool
         </a>
-        <div class="hidden md:flex items-center gap-2 text-muted-foreground">
+        <div class="hidden items-center gap-2 text-muted-foreground md:flex">
           <span class="h-px w-6 bg-border"></span>
-          <span class="font-mono text-xs uppercase tracking-[0.14em]"
-          >Production ready</span>
+          <span class="text-sm">Runs locally</span>
         </div>
       </div>
     </div>
   </div>
 
-  <Formatter
-    client:only="react"
-    minifier={true}
-    language={formatterLanguage}
+  <ReactIsland
+    kind="formatter"
+    props={{ minifier: true, language: formatterLanguage }}
   />
   <Info language={actualLanguage} />
-  <FAQ language={actualLanguage} client:only="react" />
+  <ReactIsland kind="faq" props={{ language: actualLanguage }} />
 </Layout>

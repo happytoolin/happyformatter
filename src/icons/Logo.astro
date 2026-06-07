@@ -7,15 +7,19 @@ const props = Astro.props;
   width="1em"
   height="1em"
   viewBox="0 0 64 64"
+  aria-hidden="true"
   {...props}
 >
-  <rect x="8" y="8" width="48" height="48" rx="10" fill="currentColor" />
+  <rect width="64" height="64" rx="14" fill="currentColor" />
   <path
-    d="M21 22v20M21 31h12M33 22v20M42 22h-9M33 32h8"
-    fill="none"
-    stroke="var(--background)"
-    stroke-width="4"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    d="M24 10h-5.5A8.5 8.5 0 0 0 10 18.5v6.6c0 2.4-1.8 4.1-4.2 4.1H5v5.6h.8c2.4 0 4.2 1.7 4.2 4.1v6.6a8.5 8.5 0 0 0 8.5 8.5H24v-6h-4.7a2.6 2.6 0 0 1-2.6-2.6v-7.7c0-2.6-1.2-4.5-3.4-5.7 2.2-1.2 3.4-3.1 3.4-5.7v-7.7a2.6 2.6 0 0 1 2.6-2.6H24z"
+    fill="var(--background)"
   />
+  <path
+    d="M40 10h5.5a8.5 8.5 0 0 1 8.5 8.5v6.6c0 2.4 1.8 4.1 4.2 4.1h.8v5.6h-.8c-2.4 0-4.2 1.7-4.2 4.1v6.6a8.5 8.5 0 0 1-8.5 8.5H40v-6h4.7a2.6 2.6 0 0 0 2.6-2.6v-7.7c0-2.6 1.2-4.5 3.4-5.7-2.2-1.2-3.4-3.1-3.4-5.7v-7.7a2.6 2.6 0 0 0-2.6-2.6H40z"
+    fill="var(--background)"
+  />
+  <rect x="26" y="22" width="14" height="4.5" rx="2.25" fill="#14b8a6" />
+  <rect x="26" y="30" width="12" height="4.5" rx="2.25" fill="#14b8a6" />
+  <rect x="26" y="38" width="8" height="4.5" rx="2.25" fill="#14b8a6" />
 </svg>

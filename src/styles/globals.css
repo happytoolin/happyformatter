@@ -29,8 +29,8 @@
   --color-card-foreground: var(--card-foreground);
 
   /* Typography Mapping */
-  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
@@ -57,65 +57,65 @@
 
 @layer base {
   :root {
-    --background: #f7f7f4;
-    --foreground: #1d1d1b;
+    --background: #f6f7f7;
+    --foreground: #171b18;
 
-    --card: #fffefb;
-    --card-foreground: #1d1d1b;
+    --card: #ffffff;
+    --card-foreground: #171b18;
 
-    --popover: #fffefb;
-    --popover-foreground: #1d1d1b;
+    --popover: #ffffff;
+    --popover-foreground: #171b18;
 
-    --primary: #1d1d1b;
-    --primary-foreground: #fffefb;
+    --primary: #171b18;
+    --primary-foreground: #ffffff;
 
-    --secondary: #ececea;
-    --secondary-foreground: #1d1d1b;
+    --secondary: #e9edeb;
+    --secondary-foreground: #171b18;
 
-    --muted: #e5e5e2;
-    --muted-foreground: #686862;
+    --muted: #e3e8e6;
+    --muted-foreground: #4f5b56;
 
-    --accent: #3f3f3a;
-    --accent-foreground: #fffefb;
+    --accent: #dcefed;
+    --accent-foreground: #0f3d38;
 
     --destructive: #9f1d1d;
-    --destructive-foreground: #fffefb;
+    --destructive-foreground: #ffffff;
 
-    --border: #d7d7d2;
-    --input: #c8c8c2;
-    --ring: #1d1d1b;
+    --border: #d4dbd8;
+    --input: #bac7c2;
+    --ring: #0f766e;
 
     --radius: 8px;
   }
 
   .dark {
-    --background: #151513;
-    --foreground: #f7f7f4;
+    --background: #111513;
+    --foreground: #eef4f1;
 
-    --card: #1f1f1c;
-    --card-foreground: #f7f7f4;
+    --card: #191f1c;
+    --card-foreground: #eef4f1;
 
-    --popover: #1f1f1c;
-    --popover-foreground: #f7f7f4;
+    --popover: #191f1c;
+    --popover-foreground: #eef4f1;
 
-    --primary: #f7f7f4;
-    --primary-foreground: #151513;
+    --primary: #eef4f1;
+    --primary-foreground: #111513;
 
-    --secondary: #2a2a26;
-    --secondary-foreground: #f7f7f4;
+    --secondary: #222b27;
+    --secondary-foreground: #eef4f1;
 
-    --muted: #30302b;
-    --muted-foreground: #b9b9b0;
+    --muted: #2b3430;
+    --muted-foreground: #b8c2bd;
 
-    --accent: #d8d8cf;
-    --accent-foreground: #151513;
+    --accent: #123d39;
+    --accent-foreground: #d9fffa;
 
     --destructive: #f0a8a8;
-    --destructive-foreground: #151513;
+    --destructive-foreground: #111513;
 
-    --border: #3a3a34;
-    --input: #4a4a43;
-    --ring: #f7f7f4;
+    --border: #37423d;
+    --input: #4a5852;
+    --ring: #5eead4;
   }
 
   * {
@@ -130,7 +130,12 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.025em;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
@@ -207,6 +212,17 @@
 pre {
   border-radius: var(--radius);
   font-family: var(--font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Apply JetBrains Mono to all code elements */

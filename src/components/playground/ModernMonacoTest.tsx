@@ -152,7 +152,7 @@ export default function ModernMonacoTest() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex h-9 items-center rounded-md border border-border bg-background px-2.5 font-mono text-xs uppercase text-muted-foreground">
+              <div className="inline-flex h-9 items-center rounded-md border border-border bg-background px-2.5 text-sm text-muted-foreground">
                 TypeScript only
               </div>
 
@@ -175,7 +175,7 @@ export default function ModernMonacoTest() {
               <button
                 type="button"
                 onClick={resetSample}
-                className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px"
+                className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
               >
                 <RefreshCw size={15} strokeWidth={1.75} aria-hidden="true" />
                 Reset
@@ -196,14 +196,14 @@ export default function ModernMonacoTest() {
             {loadState === "loading" && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-card/95">
                 <div className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
                   Loading modern-monaco
                 </div>
               </div>
             )}
 
             {loadState === "ready" && (
-              <div className="pointer-events-none absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 font-mono text-xs uppercase text-muted-foreground">
+              <div className="pointer-events-none absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-xs text-muted-foreground">
                 <Check size={13} strokeWidth={1.75} aria-hidden="true" />
                 Ready
               </div>

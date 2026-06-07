@@ -20,13 +20,19 @@ interface Tool extends BaseTool {
   category?: string;
 }
 
+interface VariantLink {
+  slug: string;
+  h1: string;
+  description: string;
+}
+
 const languageRelationships: Record<string, LanguageRelation> = {
   javascript: {
     related: ["typescript", "json", "html", "css"],
     features: ["formatter", "minifier", "biome-formatter"],
     contextualReasons: {
       typescript: "Try TypeScript with Biome formatter",
-      json: "Format and validate JSON data",
+      json: "Format JSON data files",
       html: "Format HTML markup",
       css: "Minify and style CSS code",
     },
@@ -36,7 +42,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter", "minifier", "biome-formatter"],
     contextualReasons: {
       javascript: "Format JavaScript with Biome",
-      json: "Compress and validate JSON files",
+      json: "Format compact JSON files",
       html: "Clean and format HTML structure",
     },
   },
@@ -45,17 +51,17 @@ const languageRelationships: Record<string, LanguageRelation> = {
     features: ["formatter", "beautifier"],
     contextualReasons: {
       css: "Style and compress CSS code",
-      javascript: "Enhanced JavaScript formatting",
+      javascript: "Format JavaScript",
       markdown: "Format markdown documents",
-      xml: "Structure and validate XML data",
+      xml: "Format XML data",
     },
   },
   css: {
     related: ["scss", "html", "javascript"],
     features: ["formatter", "minifier", "beautifier"],
     contextualReasons: {
-      scss: "Advanced CSS preprocessing",
-      html: "Comprehensive HTML formatting",
+      scss: "Format SCSS stylesheets",
+      html: "Format HTML markup",
       javascript: "Modern JavaScript tooling",
     },
   },
@@ -63,7 +69,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     related: ["css", "html"],
     features: ["formatter", "minifier"],
     contextualReasons: {
-      css: "Advanced minification and styling support",
+      css: "Format and minify CSS",
       html: "Format HTML markup",
     },
   },
@@ -320,6 +326,66 @@ const {
 // Get language variants for the current language
 const variants = getLanguageVariants(currentLanguage || "");
 
+const getLanguageName = (language: string) => {
+  const tool = allTools.find(item => item.url === `/${language}`);
+  if (tool) {
+    return tool.name;
+  }
+
+  return language
+    .split("-")
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+};
+
+const getVariantRecommendation = (
+  language: string,
+  variant: VariantLink,
+): Pick<Tool, "name" | "description"> => {
+  const languageName = getLanguageName(language);
+
+  switch (variant.slug) {
+    case "online":
+      return {
+        name: `Browser ${languageName} Formatter`,
+        description: `Format ${languageName} in the browser.`,
+      };
+    case "secure":
+    case "private":
+      return {
+        name: `Private ${languageName} Formatter`,
+        description: "Keep code on this device while formatting.",
+      };
+    case "biome":
+      return {
+        name: `${languageName} Biome Formatter`,
+        description: `Format ${languageName} with Biome.`,
+      };
+    case "ruff":
+      return {
+        name: `${languageName} Ruff Formatter`,
+        description: `Format ${languageName} with Ruff.`,
+      };
+    case "mago":
+      return {
+        name: `${languageName} Mago Formatter`,
+        description: `Format ${languageName} with Mago.`,
+      };
+    case "beautifier":
+    case "pretty":
+    case "prettify":
+      return {
+        name: `${languageName} Pretty Printer`,
+        description: `Make ${languageName} easier to read.`,
+      };
+    default:
+      return {
+        name: `${languageName} Formatter`,
+        description: `Format ${languageName} in the browser.`,
+      };
+  }
+};
+
 // Get related tools for the current language
 const getRelatedTools = () => {
   if (!currentLanguage || !languageRelationships[currentLanguage]) {
@@ -365,12 +431,13 @@ const getMixedRecommendations = () => {
 
   // Add up to 3 variants
   variants.slice(0, 3).forEach(variant => {
+    const display = getVariantRecommendation(currentLanguage || "", variant);
     allRecommendations.push({
-      name: variant.h1,
+      name: display.name,
       url: `/${currentLanguage}-${variant.slug}`,
       type: "VAR",
       reason: "Alternate workflow",
-      description: variant.description.split(".")[0] + ".",
+      description: display.description,
       category: "variant",
     });
   });
@@ -398,12 +465,17 @@ const getMixedRecommendations = () => {
         });
       }
       if (allRecommendations.length < 6 && i < remainingVariants.length) {
+        const variant = remainingVariants[i];
+        const display = getVariantRecommendation(
+          currentLanguage || "",
+          variant,
+        );
         allRecommendations.push({
-          name: remainingVariants[i].h1,
-          url: `/${currentLanguage}-${remainingVariants[i].slug}`,
+          name: display.name,
+          url: `/${currentLanguage}-${variant.slug}`,
           type: "VAR",
           reason: "Alternate workflow",
-          description: remainingVariants[i].description.split(".")[0] + ".",
+          description: display.description,
           category: "variant",
         });
       }
@@ -468,10 +540,18 @@ const getToolId = (url: string) => {
 
 const getToolSummary = (tool: Tool) => {
   if (tool.category === "variant") {
-    return "Open this version.";
+    return "Open this formatter variant.";
   }
 
   return `Format ${tool.name}.`;
+};
+
+const getRecommendationType = (tool: Tool) => {
+  if (tool.category === "variant") {
+    return "Variant";
+  }
+
+  return tool.type === "FMT" ? "Formatter" : tool.type;
 };
 
 const recommendations = getMixedRecommendations();
@@ -485,23 +565,24 @@ const showSection = currentLanguage && recommendations.length > 0;
   >
     <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(240px,0.28fr)_minmax(0,1fr)] lg:px-8">
       <aside class="border-y border-border py-6 lg:py-7">
-        <p class="font-mono text-xs uppercase text-muted-foreground">
-          More
+        <p class="text-sm font-medium text-muted-foreground">
+          Related tools
         </p>
         <h2
           id="tools-heading"
-          class="mt-5 max-w-sm text-4xl font-semibold leading-none text-foreground md:text-5xl"
+          class="mt-4 max-w-sm text-3xl font-semibold leading-tight text-foreground md:text-4xl"
         >
-          More formatters.
+          Keep working in the browser.
         </h2>
         <p class="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
-          Open another formatter from here.
+          Move between nearby languages, alternate formatter engines, and
+          minifier routes without leaving the workbench.
         </p>
         <a
           href="#more-tools"
-          class="mt-6 inline-flex rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px"
+          class="mt-6 inline-flex rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
         >
-          All tools
+          Browse all tools
         </a>
       </aside>
 
@@ -524,7 +605,7 @@ const showSection = currentLanguage && recommendations.length > 0;
             return (
               <a
                 href={actionUrl}
-                class="group grid min-h-[88px] grid-cols-[1fr_40px] items-center gap-4 px-4 py-4 transition-colors hover:bg-secondary active:translate-y-px"
+                class="group grid min-h-[88px] grid-cols-[1fr_40px] items-center gap-4 px-4 py-4 transition-[background-color,transform] duration-150 ease-out hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
               >
                 <div class="flex min-w-0 items-center gap-3">
                   <div class="flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors group-hover:border-foreground group-hover:text-foreground">
@@ -556,17 +637,15 @@ const showSection = currentLanguage && recommendations.length > 0;
 
                   <div class="min-w-0">
                     <div class="flex flex-wrap items-center gap-2">
-                      <span
-                        class="font-mono text-xs uppercase text-muted-foreground"
-                      >
-                        {tool.type}
+                      <span class="text-sm text-muted-foreground">
+                        {getRecommendationType(tool)}
                       </span>
                       <h3 class="truncate text-base font-semibold text-foreground sm:text-lg">
                         {tool.name}
                       </h3>
                       {isCurrentLanguage && hasMinifier && (
                         <span
-                          class="rounded-sm border border-border px-2 py-1 font-mono text-[10px] uppercase text-muted-foreground"
+                          class="rounded-sm border border-border px-2 py-1 text-xs text-muted-foreground"
                         >
                           {minify ? "Format" : "Minify"}
                         </span>
@@ -579,7 +658,7 @@ const showSection = currentLanguage && recommendations.length > 0;
                 </div>
 
                 <span
-                  class="text-right font-mono text-xs text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
+                  class="text-right font-mono text-xs text-muted-foreground transition-[color,transform] duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-foreground motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
                   aria-hidden="true"
                 >
                   -&gt;

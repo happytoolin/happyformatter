@@ -236,6 +236,26 @@ const typeLabel: Record<ToolType, string> = {
   FMT: "Format",
   MIN: "Minify",
 };
+
+const getActionText = (family: ToolFamily, action: ToolAction) => {
+  if (action.label === "Biome") {
+    return action.type === "MIN" ? "Minify with Biome" : "Format with Biome";
+  }
+
+  if (action.label === "Ruff") {
+    return "Format with Ruff";
+  }
+
+  if (action.label === "Mago") {
+    return "Format with Mago";
+  }
+
+  if (action.label === "Objective-C++") {
+    return "Format Objective-C++";
+  }
+
+  return `${typeLabel[action.type]} ${family.name}`;
+};
 ---
 
 <section
@@ -246,31 +266,16 @@ const typeLabel: Record<ToolType, string> = {
     <div class="grid gap-10 lg:grid-cols-[minmax(240px,330px)_minmax(0,1fr)]">
       <aside class="self-start lg:sticky lg:top-24">
         <div class="border-y border-border py-6">
-          <p class="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          <p class="text-sm font-medium text-muted-foreground">
             Directory
           </p>
-          <h2 class="mt-4 max-w-[8ch] text-4xl font-semibold leading-[0.92] tracking-[-0.05em] text-foreground md:text-5xl">
-            Tool index.
+          <h2 class="mt-4 max-w-sm text-3xl font-semibold leading-tight text-foreground md:text-4xl">
+            Find another tool.
           </h2>
-
-          <dl class="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border bg-border">
-            <div class="bg-card p-3">
-              <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                Routes
-              </dt>
-              <dd class="mt-2 font-mono text-lg text-foreground">
-                {allActions.length}
-              </dd>
-            </div>
-            <div class="bg-card p-3">
-              <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                Minify
-              </dt>
-              <dd class="mt-2 font-mono text-lg text-foreground">
-                {minifierCount}
-              </dd>
-            </div>
-          </dl>
+          <p class="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
+            {allActions.length} routes are grouped by file type. {minifierCount}
+            {" "}of them open a minifier.
+          </p>
 
           <nav
             class="mt-5 flex flex-wrap gap-2"
@@ -279,7 +284,7 @@ const typeLabel: Record<ToolType, string> = {
             {sections.map((section) => (
               <a
                 href={`#${section.id}`}
-                class="rounded-md border border-border bg-card px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                class="rounded-md border border-border bg-card px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {section.group}
               </a>
@@ -294,13 +299,11 @@ const typeLabel: Record<ToolType, string> = {
             <div class="mb-3 flex items-end justify-between gap-4 border-b border-border pb-3">
               <h3
                 id={`${section.id}-heading`}
-                class="text-xl font-semibold tracking-[-0.03em] text-foreground"
+                class="text-xl font-semibold text-foreground"
               >
                 {section.group}
               </h3>
-              <span
-                class="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground"
-              >
+              <span class="text-sm text-muted-foreground">
                 {section.families.length} families
               </span>
             </div>
@@ -318,10 +321,10 @@ const typeLabel: Record<ToolType, string> = {
                       <LanguageIcon icon={family.icon} class="h-6 w-6" />
                     </div>
                     <div class="min-w-0">
-                      <h4 class="truncate text-base font-medium tracking-[-0.02em] text-foreground">
+                      <h4 class="truncate text-base font-medium text-foreground">
                         {family.name}
                       </h4>
-                      <p class="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <p class="mt-1 text-sm text-muted-foreground">
                         {family.descriptor}
                       </p>
                     </div>
@@ -332,13 +335,9 @@ const typeLabel: Record<ToolType, string> = {
                       <a
                         href={action.url}
                         data-tool-action
-                        class="group/action inline-flex h-9 items-center gap-2 rounded-md border border-border bg-card px-3 font-mono text-[11px] uppercase tracking-[0.13em] text-muted-foreground transition-colors hover:border-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px"
+                        class="group/action inline-flex min-h-9 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
                       >
-                        <span class="text-foreground">{action.type}</span>
-                        <span
-                          class="h-1 w-1 rounded-full bg-muted-foreground/50 transition-colors group-hover/action:bg-foreground/70"
-                        />
-                        <span>{action.label || typeLabel[action.type]}</span>
+                        <span>{getActionText(family, action)}</span>
                       </a>
                     ))}
                   </div>

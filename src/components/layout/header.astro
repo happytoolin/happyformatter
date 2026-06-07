@@ -1,4 +1,5 @@
 ---
+import Icon from "../../icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
 import ThemeIcon from "../ThemeIcon.astro";
 
@@ -20,12 +21,9 @@ const primaryLinks = [
     >
       <Logo class="h-8 w-8" />
       <div class="flex flex-col leading-none">
-        <span class="text-base font-semibold tracking-tight"
-        >HappyFormatter</span>
-        <span
-          class="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground"
-        >
-          local code tools
+        <span class="text-base font-semibold">HappyFormatter</span>
+        <span class="mt-1 text-xs text-muted-foreground">
+          Local code tools
         </span>
       </div>
     </a>
@@ -48,19 +46,22 @@ const primaryLinks = [
     <div class="flex items-center gap-2">
       <a
         href="#more-tools"
-        class="hidden rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px md:inline-flex"
+        class="hidden rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none md:inline-flex"
       >
-        All tools
+        Browse tools
       </a>
       <ThemeIcon />
       <button
         id="menu-button"
-        class="inline-flex h-9 items-center rounded-md border border-border bg-card px-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px md:hidden"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px motion-reduce:transition-none md:hidden"
         aria-controls="mobile-menu"
         aria-expanded="false"
         aria-label="Open navigation menu"
+        title="Open navigation menu"
       >
-        Menu
+        <span class="[&>svg]:h-4 [&>svg]:w-4" aria-hidden="true">
+          <Icon icon="menu" />
+        </span>
       </button>
     </div>
   </div>
@@ -70,24 +71,28 @@ const primaryLinks = [
   class="fixed inset-0 z-50 hidden bg-background"
   role="dialog"
   aria-modal="true"
+  aria-hidden="true"
   aria-labelledby="mobile-menu-title"
   id="mobile-menu"
+  hidden
 >
   <div class="flex min-h-[100dvh] flex-col">
     <div class="flex h-16 items-center justify-between border-b border-border px-4">
       <h2 id="mobile-menu-title" class="sr-only">Navigation Menu</h2>
       <a href="/" class="inline-flex items-center gap-3">
         <Logo class="h-8 w-8" />
-        <span class="text-base font-semibold tracking-tight"
-        >HappyFormatter</span>
+        <span class="text-base font-semibold">HappyFormatter</span>
       </a>
       <button
         type="button"
-        class="inline-flex h-9 items-center rounded-md border border-border bg-card px-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-foreground hover:bg-secondary active:translate-y-px"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px motion-reduce:transition-none"
         id="close-menu-button"
         aria-label="Close navigation menu"
+        title="Close navigation menu"
       >
-        Close
+        <span class="[&>svg]:h-4 [&>svg]:w-4" aria-hidden="true">
+          <Icon icon="cross" />
+        </span>
       </button>
     </div>
 
@@ -125,33 +130,106 @@ document.addEventListener("DOMContentLoaded", function() {
   const menuButton = document.getElementById("menu-button");
   const mobileMenu = document.getElementById("mobile-menu");
   const closeMenuButton = document.getElementById("close-menu-button");
+  let previousBodyOverflow = "";
 
-  menuButton?.addEventListener("click", function(e) {
-    e.preventDefault();
-    mobileMenu?.classList.remove("hidden");
+  function isMenuOpen() {
+    return Boolean(mobileMenu && !mobileMenu.hidden);
+  }
+
+  function getFocusableMenuItems(): HTMLElement[] {
+    if (!mobileMenu) {
+      return [];
+    }
+
+    return Array.from(
+      mobileMenu.querySelectorAll<HTMLElement>(
+        "a[href], button:not([disabled]), [tabindex]:not([tabindex=\"-1\"])",
+      ),
+    );
+  }
+
+  function openMenu() {
+    if (!mobileMenu || !menuButton) {
+      return;
+    }
+
+    previousBodyOverflow = document.body.style.overflow;
+    mobileMenu.hidden = false;
+    mobileMenu.classList.remove("hidden");
+    mobileMenu.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
     menuButton.setAttribute("aria-expanded", "true");
     closeMenuButton?.focus();
+  }
+
+  function closeMenu(restoreFocus = true) {
+    if (!mobileMenu || !menuButton) {
+      return;
+    }
+
+    mobileMenu.classList.add("hidden");
+    mobileMenu.hidden = true;
+    mobileMenu.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = previousBodyOverflow;
+    menuButton.setAttribute("aria-expanded", "false");
+
+    if (restoreFocus) {
+      menuButton.focus();
+    }
+  }
+
+  menuButton?.addEventListener("click", function(e) {
+    e.preventDefault();
+    openMenu();
   });
 
   closeMenuButton?.addEventListener("click", function(e) {
     e.preventDefault();
-    mobileMenu?.classList.add("hidden");
-    document.body.style.overflow = "";
-    menuButton?.setAttribute("aria-expanded", "false");
-    menuButton?.focus();
+    closeMenu();
   });
 
   document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
-      closeMenuButton?.click();
+    if (!isMenuOpen()) {
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    if (event.key !== "Tab") {
+      return;
+    }
+
+    const focusableItems = getFocusableMenuItems();
+    const firstItem = focusableItems[0];
+    const lastItem = focusableItems[focusableItems.length - 1];
+
+    if (!firstItem || !lastItem) {
+      return;
+    }
+
+    if (event.shiftKey && document.activeElement === firstItem) {
+      event.preventDefault();
+      lastItem.focus();
+    } else if (!event.shiftKey && document.activeElement === lastItem) {
+      event.preventDefault();
+      firstItem.focus();
     }
   });
 
   mobileMenu?.addEventListener("click", function(event) {
     if (event.target === mobileMenu) {
-      closeMenuButton?.click();
+      closeMenu();
     }
+  });
+
+  mobileMenu?.querySelectorAll("a[href]").forEach((link) => {
+    link.addEventListener("click", function() {
+      closeMenu(false);
+    });
   });
 });
 </script>

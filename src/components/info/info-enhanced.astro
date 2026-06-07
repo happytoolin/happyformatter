@@ -90,6 +90,11 @@ const getModeName = (
 
 const languageName = getLanguageName(language);
 const modeName = getModeName(variant, variantData);
+const actionLabel = modeName === "Minifier"
+  ? "Minify code"
+  : modeName.includes("pass")
+  ? `Run ${modeName}`
+  : "Format code";
 
 const notes = [
   {
@@ -115,56 +120,64 @@ const notes = [
 ];
 
 const checkpoints = [
-  "Paste your code.",
-  `Click ${modeName}.`,
-  "Fix highlighted issues if formatting stops.",
-  "Copy the formatted result.",
+  {
+    label: "Start",
+    detail: "Paste a snippet or full file into the editor.",
+  },
+  {
+    label: "Run",
+    detail: `Use ${actionLabel} from the action bar.`,
+  },
+  {
+    label: "Review",
+    detail: "Fix syntax issues if processing stops.",
+  },
+  {
+    label: "Move",
+    detail: "Use Copy code when the result is ready.",
+  },
 ];
 ---
 
-<section class="border-b border-border bg-card py-16 sm:py-20">
+<section class="border-b border-border bg-card py-14 sm:py-18">
   <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(240px,0.28fr)_minmax(0,1fr)] lg:px-8">
     <aside class="border-y border-border py-6 lg:py-7">
-      <p class="font-mono text-xs uppercase text-muted-foreground">
-        Notes
+      <p class="text-sm font-medium text-muted-foreground">
+        Workflow
       </p>
-      <h2 class="mt-5 max-w-sm text-4xl font-semibold leading-none text-foreground md:text-5xl">
-        Format {languageName}.
+      <h2 class="mt-4 max-w-sm text-3xl font-semibold leading-tight text-foreground md:text-4xl">
+        Use {languageName} without sending code.
       </h2>
       <p class="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
-        Paste code, clean it up, and copy the formatted result.
+        The page stays centered on the editor: paste, run the action, review the
+        output, then copy it back to your work.
       </p>
     </aside>
 
     <div class="space-y-8">
-      <div class="grid overflow-hidden rounded-lg border border-border bg-background md:grid-cols-[0.95fr_1.05fr]">
-        <div class="border-b border-border p-5 md:border-b-0 md:border-r">
-          <p class="font-mono text-xs uppercase text-muted-foreground">
-            Tool
-          </p>
-          <div class="mt-8 grid gap-4 sm:grid-cols-2">
-            <div>
-              <p class="text-sm text-muted-foreground">Language</p>
-              <p class="mt-1 text-2xl font-semibold leading-tight">
-                {languageName}
-              </p>
-            </div>
-            <div>
-              <p class="text-sm text-muted-foreground">Mode</p>
-              <p class="mt-1 text-2xl font-semibold leading-tight">
-                {modeName}
-              </p>
-            </div>
+      <div class="border-y border-border">
+        <dl class="grid gap-4 border-b border-border py-5 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm text-muted-foreground">Current language</dt>
+            <dd class="mt-1 text-2xl font-semibold leading-tight">
+              {languageName}
+            </dd>
           </div>
-        </div>
+          <div>
+            <dt class="text-sm text-muted-foreground">Current action</dt>
+            <dd class="mt-1 text-2xl font-semibold leading-tight">
+              {modeName}
+            </dd>
+          </div>
+        </dl>
 
         <ol class="divide-y divide-border">
-          {checkpoints.map((checkpoint, index) => (
-            <li class="grid grid-cols-[48px_1fr] items-start gap-3 p-4 text-sm leading-6">
-              <span class="font-mono text-xs text-muted-foreground">
-                {String(index + 1).padStart(2, "0")}
+          {checkpoints.map((checkpoint) => (
+            <li class="grid gap-2 py-4 text-sm leading-6 sm:grid-cols-[160px_1fr] sm:gap-6">
+              <span class="font-medium text-foreground">
+                {checkpoint.label}
               </span>
-              <span>{checkpoint}</span>
+              <span class="text-muted-foreground">{checkpoint.detail}</span>
             </li>
           ))}
         </ol>
@@ -172,8 +185,8 @@ const checkpoints = [
 
       <div class="divide-y divide-border border-y border-border">
         {notes.map(note => (
-          <article class="grid gap-3 py-5 sm:grid-cols-[150px_160px_1fr] sm:items-baseline">
-            <p class="font-mono text-xs uppercase text-muted-foreground">
+          <article class="grid gap-2 py-5 sm:grid-cols-[150px_180px_1fr] sm:items-baseline sm:gap-5">
+            <p class="text-sm text-muted-foreground">
               {note.label}
             </p>
             <h3 class="text-base font-semibold text-foreground">

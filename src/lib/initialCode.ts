@@ -2,7 +2,7 @@ export function getInitialCode(language: string): string {
   switch (language) {
     case "json":
       return `{
-  "greeting": "Welcome to HappyFormatter!",
+  "greeting": "Formatter input ready",
   "instructions": [
     "Type or paste JSON here",
     "HappyFormatter will format your code"
@@ -18,9 +18,9 @@ export function getInitialCode(language: string): string {
   }
 }`;
     case "javascript":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 function greet() {
-  console.log("Welcome to HappyFormatter!");
+  console.log("Formatter input ready");
 }
 
 function showInstructions() {
@@ -35,11 +35,11 @@ greet();
 showInstructions();
 
 // DOM Manipulation Example
-document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
+document.body.innerHTML = "<h1>Formatter input ready</h1>";`;
     case "typescript":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 function greet(): void {
-  console.log("Welcome to HappyFormatter!");
+  console.log("Formatter input ready");
 }
 
 function showInstructions(): void {
@@ -54,14 +54,19 @@ greet();
 showInstructions();
 
 // DOM Manipulation Example
-document.body.innerHTML = "<h1>Welcome to HappyFormatter!</h1>";`;
+document.body.innerHTML = "<h1>Formatter input ready</h1>";`;
     case "css":
-      return `/* Welcome to HappyFormatter! */
+      return `/* Formatter input ready */
 body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 20px;
+}
+
+code,
+pre {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .foo {
@@ -86,12 +91,17 @@ body {
   }
 }`;
     case "scss":
-      return `/* Welcome to HappyFormatter! */
+      return `/* Formatter input ready */
 body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 20px;
+}
+
+code,
+pre {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .foo {
@@ -104,7 +114,7 @@ body {
   color: green;
 }`;
     case "html":
-      return `<!-- Welcome to HappyFormatter! -->
+      return `<!-- Formatter input ready -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -113,15 +123,20 @@ body {
   <title>HappyFormatter</title>
   <style>
     body {
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: #f0f0f0;
       margin: 0;
       padding: 20px;
     }
+
+    code,
+    pre {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to HappyFormatter!</h1>
+  <h1>Formatter input ready</h1>
   <p>Type or paste HTML here, and HappyFormatter will format your code.</p>
   <footer>
     <p>&copy; 2024 HappyFormatter</p>
@@ -129,9 +144,9 @@ body {
 </body>
 </html>`;
     case "xml":
-      return `<!-- Welcome to HappyFormatter! -->
+      return `<!-- Formatter input ready -->
 <greeting>
-  <message>Welcome to HappyFormatter!</message>
+  <message>Formatter input ready</message>
   <instructions>
     <step>Type or paste XML here</step>
     <step>HappyFormatter will format your code</step>
@@ -142,7 +157,7 @@ body {
   </metadata>
 </greeting>`;
     case "go":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 package main
 
 import ("fmt"
@@ -150,7 +165,7 @@ import ("fmt"
 )
 
 func greet() {
-  fmt.Println("Welcome to HappyFormatter!")
+  fmt.Println("Formatter input ready")
 }
 
 func showInstructions() {
@@ -176,7 +191,7 @@ func main() {
   time.Sleep(3 * time.Second)
 }`;
     case "java":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -198,12 +213,12 @@ public class HappyFormatter {
     }
 }`;
     case "cs":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 using System;
 
 class Program {
   static void Main() {
-    Console.WriteLine("Welcome to HappyFormatter!");
+    Console.WriteLine("Formatter input ready");
     ShowInstructions();
   }
 
@@ -218,7 +233,7 @@ class Program {
   }
 }`;
     case "proto":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 syntax = "proto3";
 
 message Greeting {
@@ -237,7 +252,7 @@ message Example {
   repeated string features = 3;
 }`;
     case "markdown":
-      return `<!-- Welcome to HappyFormatter! -->
+      return `<!-- Formatter input ready -->
 
 # HappyFormatter
 
@@ -252,68 +267,68 @@ message Example {
 
       `;
     case "dart":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 import 'dart:io';
 
 void main() {
-  print('Welcome to HappyFormatter!');
+  print('Formatter input ready');
 }`;
     case "lua":
-      return `-- Welcome to HappyFormatter!
-print("Welcome to HappyFormatter!")`;
+      return `-- Formatter input ready
+print("Formatter input ready")`;
     case "python":
-      return `# Welcome to HappyFormatter!
+      return `# Formatter input ready
 
-print("Welcome to HappyFormatter!")`;
+print("Formatter input ready")`;
     case "sql":
-      return `-- Welcome to HappyFormatter!
+      return `-- Formatter input ready
 SELECT * FROM users;`;
     case "rust":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 fn main() {
-  println!("Welcome to HappyFormatter!");
+  println!("Formatter input ready");
 }`;
     case "csharp":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 using System;
 
 class Program {
   static void Main() {
-    Console.WriteLine("Welcome to HappyFormatter!");
+    Console.WriteLine("Formatter input ready");
   }
 }`;
     case "c":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 #include <stdio.h>
 
 int main() {
-  printf("Welcome to HappyFormatter!");
+  printf("Formatter input ready");
          return 0;
 }
 `;
     case "cpp":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 #include <iostream>
 
 int main() {
-  std::cout << "Welcome to HappyFormatter!" << std::endl;
+  std::cout << "Formatter input ready" << std::endl;
   return 0;
 }
 `;
     case "objectivec":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 #import <Foundation/Foundation.h>
 
 int main(int argc, const char * argv[]) {
   @autoreleasepool {
-    NSString *message = @"Welcome to HappyFormatter!";
+    NSString *message = @"Formatter input ready";
     NSLog(@"%@", message);
   }
   return 0;
 }
 `;
     case "objectivecpp":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 #import <Foundation/Foundation.h>
 #include <vector>
 
@@ -333,19 +348,19 @@ int main(int argc, const char * argv[]) {
 `;
     case "php":
       return `<?php
-// Welcome to HappyFormatter!
-echo "Welcome to HappyFormatter!";
+// Formatter input ready
+echo "Formatter input ready";
 ?>`;
     case "zig":
-      return `// Welcome to HappyFormatter!
+      return `// Formatter input ready
 pub fn main() void {
-  println!("Welcome to HappyFormatter!");
+  println!("Formatter input ready");
 }
 `;
     case "yaml":
-      return `# Welcome to HappyFormatter!
+      return `# Formatter input ready
 
-greeting: Welcome to HappyFormatter!
+greeting: Formatter input ready
 instructions:
   - Type or paste YAML here
   - HappyFormatter will format your code
@@ -353,9 +368,9 @@ instructions:
 example:
       `;
     case "toml":
-      return `# Welcome to HappyFormatter!
+      return `# Formatter input ready
 
-greeting = "Welcome to HappyFormatter!"
+greeting = "Formatter input ready"
 instructions = [
   "Type or paste TOML code here",
   "HappyFormatter will format your code"
