@@ -125,6 +125,111 @@ function EditorPanel({
   );
 }
 
+function getDiffLineStyle(line: string) {
+  if (line.startsWith("+ ")) {
+    return {
+      label: "Added",
+      className: "border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200",
+      markerClassName: "bg-emerald-500 text-white",
+    };
+  }
+
+  if (line.startsWith("- ")) {
+    return {
+      label: "Removed",
+      className: "border-red-500/40 bg-red-500/10 text-red-800 dark:text-red-200",
+      markerClassName: "bg-red-500 text-white",
+    };
+  }
+
+  if (line.startsWith("~ ")) {
+    return {
+      label: "Changed",
+      className: "border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-200",
+      markerClassName: "bg-amber-500 text-black",
+    };
+  }
+
+  return {
+    label: "Info",
+    className: "border-border bg-muted/40 text-muted-foreground",
+    markerClassName: "bg-muted-foreground text-background",
+  };
+}
+
+function DiffOutputPanel({
+  ariaLabel,
+  heightClass = "h-[320px]",
+  label,
+  placeholder,
+  value,
+}: {
+  ariaLabel: string;
+  heightClass?: string;
+  label: string;
+  placeholder: string;
+  value: string;
+}) {
+  const lines = (value || placeholder).split(/\r?\n/);
+
+  return (
+    <div className="overflow-hidden rounded-md border border-border bg-card">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-3 py-2">
+        <h3 className="text-sm font-medium text-foreground">
+          {label}
+        </h3>
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
+            Added
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />
+            Removed
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
+            Changed
+          </span>
+        </div>
+      </div>
+      <div
+        aria-label={ariaLabel}
+        aria-readonly="true"
+        className={`${heightClass} overflow-auto bg-background p-3`}
+        role="textbox"
+        tabIndex={0}
+      >
+        <div className="space-y-2">
+          {lines.map((line, index) => {
+            const style = getDiffLineStyle(line);
+            const hasDiffMarker = /^[+~-] /.test(line);
+            const marker = hasDiffMarker ? line.slice(0, 1) : "i";
+            const content = hasDiffMarker ? line.slice(2) : line;
+
+            return (
+              <div
+                key={`${line}-${index}`}
+                className={`grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-md border px-3 py-2 font-mono text-sm leading-6 ${style.className}`}
+              >
+                <span
+                  className={`flex h-6 min-w-6 items-center justify-center rounded text-xs font-semibold ${style.markerClassName}`}
+                  title={style.label}
+                >
+                  {marker}
+                </span>
+                <span className="whitespace-pre-wrap break-words">
+                  {content}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function parseJson(input: string): JsonValue {
   return JSON.parse(input) as JsonValue;
 }
@@ -1168,6 +1273,16 @@ export default function UtilityTool({ toolId }: UtilityToolProps) {
                     <div className="min-h-[360px] rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive lg:min-h-[420px]">
                       {error}
                     </div>
+                  )
+                  : tool.id === "json-diff"
+                  ? (
+                    <DiffOutputPanel
+                      ariaLabel={`${tool.name} ${tool.outputLabel}`}
+                      heightClass="h-[360px] lg:h-[420px]"
+                      label={tool.outputLabel}
+                      placeholder={`Run ${tool.primaryAction} to see added, removed, and changed JSON paths.`}
+                      value={output}
+                    />
                   )
                   : (
                     <EditorPanel
