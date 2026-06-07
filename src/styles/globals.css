@@ -240,6 +240,66 @@ code, pre, .shiki, .cm-line, .cm-content {
   color: var(--foreground);
 }
 
+.hf-json-diff {
+  --diff-background-color: transparent;
+  --diff-text-color: var(--foreground);
+  --diff-font-family: var(--font-mono);
+  --diff-selection-background-color: var(--primary);
+  --diff-selection-text-color: var(--primary-foreground);
+  --diff-gutter-insert-background-color: #ddf7e8;
+  --diff-gutter-insert-text-color: #0f5132;
+  --diff-gutter-delete-background-color: #fee2e2;
+  --diff-gutter-delete-text-color: #7f1d1d;
+  --diff-code-insert-background-color: #ecfdf3;
+  --diff-code-insert-text-color: #0f5132;
+  --diff-code-delete-background-color: #fef2f2;
+  --diff-code-delete-text-color: #7f1d1d;
+  --diff-code-insert-edit-background-color: #bbf7d0;
+  --diff-code-delete-edit-background-color: #fecaca;
+}
+
+.dark .hf-json-diff {
+  --diff-gutter-insert-background-color: #12382a;
+  --diff-gutter-insert-text-color: #bbf7d0;
+  --diff-gutter-delete-background-color: #441b1f;
+  --diff-gutter-delete-text-color: #fecaca;
+  --diff-code-insert-background-color: #0f2f24;
+  --diff-code-insert-text-color: #dcfce7;
+  --diff-code-delete-background-color: #35171a;
+  --diff-code-delete-text-color: #fee2e2;
+  --diff-code-insert-edit-background-color: #166534;
+  --diff-code-delete-edit-background-color: #991b1b;
+}
+
+.hf-json-diff .diff {
+  min-width: 760px;
+  font-size: 0.8125rem;
+}
+
+.hf-json-diff .diff-line {
+  line-height: 1.65;
+}
+
+.hf-json-diff .diff-gutter {
+  padding-inline: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.hf-json-diff .diff-gutter-col {
+  width: 4.25rem;
+}
+
+.hf-json-diff .diff-code {
+  padding-inline: 0.75rem;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.hf-json-diff .diff-code-omit {
+  background: var(--muted);
+  opacity: 0.55;
+}
+
 /* Code Mirror Overrides */
 .cm-theme {
   height: 100% !important;

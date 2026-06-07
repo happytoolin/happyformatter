@@ -3,9 +3,12 @@ import EditorThemeSelector from "@/components/playground/EditorThemeSelector";
 import { ThemeProvider } from "@/components/playground/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { getUtilityToolById } from "@/lib/utility-tools";
+import { createTwoFilesPatch } from "diff";
 import { Clipboard, Play, RotateCcw, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
+import { Diff, type FileData, Hunk, isDelete, isInsert, parseDiff } from "react-diff-view";
+import "react-diff-view/style/index.css";
 
 interface UtilityToolProps {
   toolId: string;
@@ -125,131 +128,87 @@ function EditorPanel({
   );
 }
 
-type SplitDiffSide = "same" | "added" | "removed" | "empty";
-
-interface SplitDiffRow {
-  leftLineNumber: number | null;
-  leftText: string;
-  leftType: SplitDiffSide;
-  rightLineNumber: number | null;
-  rightText: string;
-  rightType: SplitDiffSide;
-}
-
 interface SplitDiffResult {
   additions: number;
+  files: FileData[];
+  leftLineCount: number;
   removals: number;
-  rows: SplitDiffRow[];
+  rightLineCount: number;
 }
 
 function formatJsonForDiff(input: string) {
-  return JSON.stringify(parseJson(input), null, 2).split(/\r?\n/);
+  return `${JSON.stringify(parseJson(input), null, 2)}\n`;
 }
 
-function createSplitDiffRows(leftLines: string[], rightLines: string[]): SplitDiffRow[] {
-  const leftCount = leftLines.length;
-  const rightCount = rightLines.length;
-  const table = Array.from({ length: leftCount + 1 }, () => Array<number>(rightCount + 1).fill(0));
+function countDiffLines(source: string) {
+  const normalized = source.endsWith("\n") ? source.slice(0, -1) : source;
+  return normalized ? normalized.split(/\r?\n/).length : 0;
+}
 
-  for (let leftIndex = leftCount - 1; leftIndex >= 0; leftIndex -= 1) {
-    for (let rightIndex = rightCount - 1; rightIndex >= 0; rightIndex -= 1) {
-      table[leftIndex][rightIndex] = leftLines[leftIndex] === rightLines[rightIndex]
-        ? table[leftIndex + 1][rightIndex + 1] + 1
-        : Math.max(table[leftIndex + 1][rightIndex], table[leftIndex][rightIndex + 1]);
-    }
-  }
+function createGitDiffPatch(leftSource: string, rightSource: string) {
+  const patch = createTwoFilesPatch(
+    "a/original.json",
+    "b/changed.json",
+    leftSource,
+    rightSource,
+    undefined,
+    undefined,
+    { context: 3 },
+  );
 
-  const rows: SplitDiffRow[] = [];
-  let leftIndex = 0;
-  let rightIndex = 0;
-
-  while (leftIndex < leftCount || rightIndex < rightCount) {
-    if (
-      leftIndex < leftCount
-      && rightIndex < rightCount
-      && leftLines[leftIndex] === rightLines[rightIndex]
-    ) {
-      rows.push({
-        leftLineNumber: leftIndex + 1,
-        leftText: leftLines[leftIndex],
-        leftType: "same",
-        rightLineNumber: rightIndex + 1,
-        rightText: rightLines[rightIndex],
-        rightType: "same",
-      });
-      leftIndex += 1;
-      rightIndex += 1;
-      continue;
-    }
-
-    if (
-      rightIndex < rightCount
-      && (leftIndex === leftCount || table[leftIndex][rightIndex + 1] >= table[leftIndex + 1][rightIndex])
-    ) {
-      rows.push({
-        leftLineNumber: null,
-        leftText: "",
-        leftType: "empty",
-        rightLineNumber: rightIndex + 1,
-        rightText: rightLines[rightIndex],
-        rightType: "added",
-      });
-      rightIndex += 1;
-      continue;
-    }
-
-    rows.push({
-      leftLineNumber: leftIndex + 1,
-      leftText: leftLines[leftIndex],
-      leftType: "removed",
-      rightLineNumber: null,
-      rightText: "",
-      rightType: "empty",
-    });
-    leftIndex += 1;
-  }
-
-  return rows;
+  return `diff --git a/original.json b/changed.json
+index 0000000..1111111 100644
+${patch.replace(/^={67}\r?\n/m, "")}`;
 }
 
 function createJsonSplitDiff(leftInput: string, rightInput: string): SplitDiffResult {
-  const rows = createSplitDiffRows(formatJsonForDiff(leftInput), formatJsonForDiff(rightInput));
+  const leftSource = formatJsonForDiff(leftInput);
+  const rightSource = formatJsonForDiff(rightInput);
+  const files = parseDiff(createGitDiffPatch(leftSource, rightSource), {
+    nearbySequences: "zip",
+  });
+
+  let additions = 0;
+  let removals = 0;
+
+  for (const file of files) {
+    for (const hunk of file.hunks) {
+      for (const change of hunk.changes) {
+        if (isInsert(change)) {
+          additions += 1;
+        }
+        if (isDelete(change)) {
+          removals += 1;
+        }
+      }
+    }
+  }
 
   return {
-    additions: rows.filter(row => row.rightType === "added").length,
-    removals: rows.filter(row => row.leftType === "removed").length,
-    rows,
+    additions,
+    files,
+    leftLineCount: countDiffLines(leftSource),
+    removals,
+    rightLineCount: countDiffLines(rightSource),
   };
 }
 
-function DiffLine({
-  lineNumber,
-  text,
-  type,
-}: {
-  lineNumber: number | null;
-  text: string;
-  type: SplitDiffSide;
-}) {
-  const typeClass = {
-    added: "bg-emerald-500/10 text-emerald-900",
-    empty: "bg-muted/30 text-muted-foreground",
-    removed: "bg-red-500/10 text-red-900",
-    same: "text-foreground",
-  }[type];
-
-  return (
-    <div
-      className={`grid min-h-6 grid-cols-[3.5rem_minmax(0,1fr)] items-start rounded-sm font-mono text-sm leading-6 ${typeClass}`}
-    >
-      <span className="select-none pr-3 text-right text-muted-foreground">
-        {lineNumber ?? ""}
-      </span>
-      <code className="whitespace-pre-wrap break-words px-2">
-        {text || " "}
-      </code>
-    </div>
+function formatJsonDiffSummary(result: SplitDiffResult) {
+  const lines = result.files.flatMap(file =>
+    file.hunks.flatMap(hunk =>
+      hunk.changes.flatMap(change => {
+        if (isInsert(change)) {
+          return [`+ ${change.content}`];
+        }
+        if (isDelete(change)) {
+          return [`- ${change.content}`];
+        }
+        return [];
+      })
+    )
   );
+
+  return lines.length ? lines.join("\n") : "No JSON differences found.";
 }
 
 function SplitDiffViewer({
@@ -259,9 +218,7 @@ function SplitDiffViewer({
   error: string;
   result: SplitDiffResult | null;
 }) {
-  const rows = result?.rows ?? [];
-  const leftLineCount = rows.filter(row => row.leftLineNumber !== null).length;
-  const rightLineCount = rows.filter(row => row.rightLineNumber !== null).length;
+  const hasChanges = result ? result.additions + result.removals > 0 : false;
 
   return (
     <div className="overflow-hidden rounded-md border border-border bg-card">
@@ -284,65 +241,57 @@ function SplitDiffViewer({
       <div className="grid border-b border-border bg-background text-xs font-medium text-muted-foreground lg:grid-cols-2">
         <div className="flex items-center justify-between border-b border-border px-4 py-2 lg:border-b-0 lg:border-r">
           <span>Original</span>
-          <span>{leftLineCount} lines</span>
+          <span>{result?.leftLineCount ?? 0} lines</span>
         </div>
         <div className="flex items-center justify-between px-4 py-2">
           <span>Changed</span>
-          <span>{rightLineCount} lines</span>
+          <span>{result?.rightLineCount ?? 0} lines</span>
         </div>
       </div>
 
-      <div className="grid min-h-[360px] bg-background lg:grid-cols-2">
-        <div
-          aria-label="Original JSON diff"
-          className="border-b border-border p-3 lg:border-b-0 lg:border-r"
-          role="region"
-          tabIndex={0}
-        >
-          {error
+      <div
+        aria-label="JSON diff"
+        className="min-h-[360px] bg-background"
+        role="region"
+        tabIndex={0}
+      >
+        {error
+          ? (
+            <div className="m-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive">
+              {error}
+            </div>
+          )
+          : result
+          ? hasChanges
             ? (
-              <div className="rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive">
-                {error}
+              <div className="hf-json-diff overflow-auto p-3">
+                {result.files.map((file, index) => (
+                  file.hunks.length
+                    ? (
+                      <Diff
+                        key={`${file.oldPath}-${file.newPath}-${index}`}
+                        diffType={file.type}
+                        hunks={file.hunks}
+                        optimizeSelection
+                        viewType="split"
+                      >
+                        {hunks => hunks.map(hunk => <Hunk key={hunk.content} hunk={hunk} />)}
+                      </Diff>
+                    )
+                    : null
+                ))}
               </div>
             )
-            : rows.length
-            ? rows.map((row, index) => (
-              <DiffLine
-                key={`left-${index}`}
-                lineNumber={row.leftLineNumber}
-                text={row.leftText}
-                type={row.leftType}
-              />
-            ))
             : (
-              <div className="flex h-full min-h-[320px] items-center justify-center text-sm text-muted-foreground">
-                Run Find difference to compare both JSON documents.
+              <div className="flex min-h-[360px] items-center justify-center text-sm text-muted-foreground">
+                No JSON differences found.
               </div>
-            )}
-        </div>
-        <div
-          aria-label="Changed JSON diff"
-          className="p-3"
-          role="region"
-          tabIndex={0}
-        >
-          {error
-            ? null
-            : rows.length
-            ? rows.map((row, index) => (
-              <DiffLine
-                key={`right-${index}`}
-                lineNumber={row.rightLineNumber}
-                text={row.rightText}
-                type={row.rightType}
-              />
-            ))
-            : (
-              <div className="flex h-full min-h-[320px] items-center justify-center text-sm text-muted-foreground">
-                Added lines appear in green and removed lines appear in red.
-              </div>
-            )}
-        </div>
+            )
+          : (
+            <div className="flex min-h-[360px] items-center justify-center text-sm text-muted-foreground">
+              Run Find difference to compare both JSON documents.
+            </div>
+          )}
       </div>
 
       <div
@@ -388,50 +337,6 @@ function describeJson(value: JsonValue): string {
   }
 
   return `${typeof value} value`;
-}
-
-function jsonDiff(left: JsonValue, right: JsonValue, path = "$"): string[] {
-  if (Object.is(left, right)) {
-    return [];
-  }
-
-  if (Array.isArray(left) || Array.isArray(right)) {
-    if (!Array.isArray(left) || !Array.isArray(right)) {
-      return [`~ ${path}: ${JSON.stringify(left)} -> ${JSON.stringify(right)}`];
-    }
-
-    const length = Math.max(left.length, right.length);
-    return Array.from({ length }, (_, index) => {
-      if (index >= left.length) {
-        return [`+ ${path}[${index}]: ${JSON.stringify(right[index])}`];
-      }
-      if (index >= right.length) {
-        return [`- ${path}[${index}]: ${JSON.stringify(left[index])}`];
-      }
-      return jsonDiff(left[index], right[index], `${path}[${index}]`);
-    }).flat();
-  }
-
-  if (
-    left && right && typeof left === "object" && typeof right === "object"
-  ) {
-    const keys = Array.from(
-      new Set([...Object.keys(left), ...Object.keys(right)]),
-    ).sort((a, b) => a.localeCompare(b));
-
-    return keys.flatMap((key) => {
-      const nextPath = `${path}.${key}`;
-      if (!(key in left)) {
-        return [`+ ${nextPath}: ${JSON.stringify(right[key])}`];
-      }
-      if (!(key in right)) {
-        return [`- ${nextPath}: ${JSON.stringify(left[key])}`];
-      }
-      return jsonDiff(left[key], right[key], nextPath);
-    });
-  }
-
-  return [`~ ${path}: ${JSON.stringify(left)} -> ${JSON.stringify(right)}`];
 }
 
 function scalarToYaml(value: JsonValue): string {
@@ -1222,8 +1127,7 @@ export default function UtilityTool({ toolId }: UtilityToolProps) {
           result = JSON.stringify(sortJsonKeys(parseJson(input)), null, 2);
           break;
         case "json-diff": {
-          const diff = jsonDiff(parseJson(input), parseJson(secondaryInput));
-          result = diff.length ? diff.join("\n") : "No JSON differences found.";
+          result = formatJsonDiffSummary(createJsonSplitDiff(input, secondaryInput));
           break;
         }
         case "json-to-yaml":

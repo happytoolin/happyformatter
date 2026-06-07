@@ -1,4 +1,5 @@
 ---
+import EngineIcon from "@/icons/EngineIcon.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 import { getLanguageVariants } from "@/lib/seo-variants";
 
@@ -616,6 +617,23 @@ const getToolId = (url: string) => {
   return parts[parts.length - 1] ?? url.replace("/", "");
 };
 
+const getVariantEngineName = (url: string) => {
+  const toolId = getToolId(url);
+  if (toolId.endsWith("-biome")) {
+    return "Biome";
+  }
+  if (toolId.endsWith("-oxc")) {
+    return "OXC";
+  }
+  if (toolId.endsWith("-ruff")) {
+    return "Ruff";
+  }
+  if (toolId.endsWith("-mago")) {
+    return "Mago";
+  }
+  return "formatter engine";
+};
+
 const getToolSummary = (tool: Tool) => {
   if (tool.category === "variant") {
     return "Open this formatter variant.";
@@ -688,21 +706,11 @@ const showSection = currentLanguage && recommendations.length > 0;
                 <div class="flex min-w-0 items-center gap-3">
                   <div class="flex h-10 w-10 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors group-hover:border-foreground group-hover:text-foreground">
                     {isVariant && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.75"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M9 11l3 3L22 4" />
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                      </svg>
+                      <EngineIcon
+                        engine={getVariantEngineName(tool.url)}
+                        class="h-5 w-5"
+                        title={tool.name}
+                      />
                     )}
                     {!isVariant && (
                       <LanguageIcon

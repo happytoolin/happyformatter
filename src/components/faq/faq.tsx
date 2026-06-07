@@ -116,24 +116,24 @@ export function FAQ({
   const questions = getQuestions(languageName, modeName);
 
   return (
-    <section className="w-full border-b border-border bg-background py-16 sm:py-20">
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(240px,0.28fr)_minmax(0,1fr)] lg:px-8">
-        <aside className="border-y border-border py-6 lg:py-7">
+    <section className="w-full border-b border-border bg-card py-10 sm:py-12">
+      <div className="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
+        <aside className="max-w-md">
           <p className="text-sm font-medium text-muted-foreground">
             Questions
           </p>
-          <h2 className="mt-4 max-w-sm text-3xl font-semibold leading-tight text-foreground md:text-4xl">
-            Answers while formatting.
+          <h2 className="mt-2 text-2xl font-semibold leading-tight text-foreground">
+            Quick answers for interrupted runs.
           </h2>
-          <p className="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
-            Short answers for the cases that interrupt a formatting run.
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Privacy, output changes, syntax errors, and access stay close to the editor.
           </p>
         </aside>
 
         <Accordion
           type="single"
           collapsible
-          className="divide-y divide-border border-y border-border"
+          className="overflow-hidden rounded-lg border border-border bg-background"
         >
           {questions.map((item) => (
             <AccordionItem
@@ -141,18 +141,18 @@ export function FAQ({
               value={item.title}
               className="border-0"
             >
-              <AccordionTrigger className="gap-4 px-0 py-5 text-left">
-                <div className="grid flex-1 gap-1 pr-4 sm:grid-cols-[140px_1fr] sm:items-baseline sm:gap-5">
+              <AccordionTrigger className="gap-4 rounded-none border-b border-border px-4 py-4 text-left transition-colors hover:bg-secondary data-[state=open]:bg-secondary">
+                <div className="grid flex-1 gap-1 pr-4 sm:grid-cols-[120px_1fr] sm:items-baseline sm:gap-5">
                   <span className="text-sm text-muted-foreground">
                     {item.tag}
                   </span>
-                  <span className="text-base font-semibold leading-tight text-foreground sm:text-lg">
+                  <span className="text-base font-semibold leading-tight text-foreground">
                     {item.title}
                   </span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="pb-6 pt-0">
-                <p className="max-w-3xl text-sm leading-6 text-muted-foreground sm:pl-[160px]">
+              <AccordionContent className="border-b border-border bg-background px-4 pb-5 pt-0">
+                <p className="max-w-3xl text-sm leading-6 text-muted-foreground sm:pl-[140px]">
                   {item.content}
                 </p>
               </AccordionContent>

@@ -95,7 +95,7 @@ const formatterEngines: Record<string, string> = {
   jsonc: "Prettier",
   less: "Malva",
   lua: "lua-fmt",
-  markdown: "Prettier",
+  markdown: "dprint",
   mdx: "Prettier",
   objectivec: "clang-format",
   objectivecpp: "clang-format",

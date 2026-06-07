@@ -2,6 +2,8 @@
 import Info from "@/components/info/info.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
+import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import UtilityIcon from "@/icons/UtilityIcon.astro";
 import { LANGUAGES } from "@/lib/languages";
 import { COMMON_FIX_LINKS, POPULAR_PRIVATE_LINKS } from "@/lib/seo-content";
 
@@ -14,6 +16,43 @@ const homepageDescription =
   "Format, minify, and inspect developer snippets locally in your browser. HappyFormatter keeps pasted code on your device with no upload.";
 const homepageKeywords =
   "private code formatter, no upload code formatter, browser code formatter, code minifier, free code formatter, format code online, developer tools";
+
+const shortcutIcons = {
+  "/json": { source: "language", icon: "json" },
+  "/tools/json-viewer": { source: "utility", icon: "viewer" },
+  "/python-ruff": { source: "language", icon: "python" },
+  "/javascript-biome": { source: "language", icon: "javascript" },
+  "/tools/jwt-decoder": { source: "utility", icon: "jwt" },
+  "/tools/hash-generator": { source: "utility", icon: "hash" },
+  "/errors/json-trailing-comma": { source: "utility", icon: "fix" },
+  "/errors/json-unexpected-token": { source: "utility", icon: "alert" },
+  "/errors/yaml-indentation": { source: "utility", icon: "indent" },
+  "/errors/jwt-invalid-token": { source: "utility", icon: "jwt" },
+  "/guides/minify-css-file": { source: "utility", icon: "minify" },
+  "/guides/convert-json-to-csv": { source: "utility", icon: "csv" },
+} as const;
+
+const addShortcutIcons = (links: typeof POPULAR_PRIVATE_LINKS) =>
+  links.map(link => ({
+    ...link,
+    icon: shortcutIcons[link.href as keyof typeof shortcutIcons] ?? {
+      source: "utility",
+      icon: "wrench",
+    },
+  }));
+
+const toolGroups = [
+  {
+    title: "Popular private tools",
+    description: "Open a local utility for the next snippet in your workflow.",
+    links: addShortcutIcons(POPULAR_PRIVATE_LINKS),
+  },
+  {
+    title: "Common developer fixes",
+    description: "Jump to focused repairs for syntax and conversion issues.",
+    links: addShortcutIcons(COMMON_FIX_LINKS),
+  },
+];
 ---
 
 <Layout
@@ -23,15 +62,15 @@ const homepageKeywords =
 >
   <section class="border-b border-border bg-background">
     <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
-      <div class="space-y-4">
+      <div class="min-w-0 space-y-4">
         <p class="text-sm font-medium text-muted-foreground">
           Private browser formatter
         </p>
-        <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
+        <h1 class="max-w-5xl break-words text-4xl font-semibold leading-tight text-foreground sm:text-5xl md:text-6xl md:leading-none">
           Format code without leaving your browser.
         </h1>
       </div>
-      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+      <p class="min-w-0 max-w-md text-sm leading-6 text-muted-foreground">
         Start with JSON or jump to private tools for formatting, minifying,
         converting, decoding, hashing, and diffing. Workflows run client-side
         and keep your input on this device.
@@ -64,47 +103,82 @@ const homepageKeywords =
     kind="formatter"
     props={{ minifier: languageConfig.minify, language }}
   />
-  <section class="border-b border-border bg-background py-12 sm:py-16">
-    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-      <div>
-        <h2 class="text-3xl font-semibold text-foreground">
-          Popular private tools
+  <section class="border-b border-border bg-card py-10 sm:py-12">
+    <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
+      <div class="min-w-0 max-w-md lg:pt-1">
+        <p class="text-sm font-medium text-muted-foreground">
+          Next actions
+        </p>
+        <h2 class="mt-2 text-2xl font-semibold leading-tight text-foreground">
+          Keep working from the editor.
         </h2>
-        <div class="mt-5 divide-y divide-border border-y border-border">
-          {POPULAR_PRIVATE_LINKS.map(link => (
-            <article class="grid gap-3 py-4 md:grid-cols-[minmax(170px,0.35fr)_minmax(0,1fr)] md:items-center">
-              <a
-                href={link.href}
-                class="text-base font-semibold text-foreground underline-offset-4 hover:underline"
-              >
-                {link.title}
-              </a>
-              <p class="text-sm leading-6 text-muted-foreground">
-                {link.description}
-              </p>
-            </article>
-          ))}
-        </div>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground">
+          Open another local tool or a targeted repair guide without turning the
+          page into a directory.
+        </p>
       </div>
-      <div>
-        <h2 class="text-3xl font-semibold text-foreground">
-          Common developer fixes
-        </h2>
-        <div class="mt-5 divide-y divide-border border-y border-border">
-          {COMMON_FIX_LINKS.map(link => (
-            <article class="grid gap-3 py-4 md:grid-cols-[minmax(170px,0.35fr)_minmax(0,1fr)] md:items-center">
-              <a
-                href={link.href}
-                class="text-base font-semibold text-foreground underline-offset-4 hover:underline"
-              >
-                {link.title}
-              </a>
-              <p class="text-sm leading-6 text-muted-foreground">
-                {link.description}
+
+      <div class="grid min-w-0 gap-4 xl:grid-cols-2">
+        {toolGroups.map(group => (
+          <section class="min-w-0 overflow-hidden rounded-lg border border-border bg-background">
+            <div class="border-b border-border px-4 py-4">
+              <h3 class="text-base font-semibold leading-tight text-foreground">
+                {group.title}
+              </h3>
+              <p class="mt-1 text-sm leading-6 text-muted-foreground">
+                {group.description}
               </p>
-            </article>
-          ))}
-        </div>
+            </div>
+            <div class="divide-y divide-border">
+              {group.links.map(link => (
+                <a
+                  href={link.href}
+                  class="group grid min-h-20 grid-cols-[2.25rem_minmax(0,1fr)] gap-3 px-4 py-3.5 transition-colors duration-150 ease-out hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring motion-reduce:transition-none"
+                >
+                  <span
+                    class="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors group-hover:text-foreground"
+                  >
+                    {link.icon.source === "language"
+                      ? (
+                        <LanguageIcon
+                          icon={link.icon.icon}
+                          class="h-5 w-5"
+                          title={link.title}
+                        />
+                      )
+                      : (
+                        <UtilityIcon
+                          icon={link.icon.icon}
+                          class="h-4.5 w-4.5"
+                          title={link.title}
+                        />
+                      )}
+                  </span>
+                  <span class="grid min-w-0 gap-1">
+                    <span
+                      class="flex min-w-0 items-baseline justify-between gap-3"
+                    >
+                      <span
+                        class="min-w-0 text-sm font-semibold leading-5 text-foreground"
+                      >
+                        {link.title}
+                      </span>
+                      <span
+                        class="shrink-0 text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground"
+                        aria-hidden="true"
+                      >
+                        Open
+                      </span>
+                    </span>
+                    <span class="text-sm leading-6 text-muted-foreground">
+                      {link.description}
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   </section>
