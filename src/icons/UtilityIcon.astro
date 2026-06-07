@@ -1,0 +1,86 @@
+---
+import {
+  ArrowRightLeft,
+  Braces,
+  CaseSensitive,
+  Clock3,
+  Code2,
+  Database,
+  Eye,
+  FileCode2,
+  FileJson2,
+  FileText,
+  Fingerprint,
+  Globe2,
+  Hash,
+  IndentIncrease,
+  KeyRound,
+  Link2,
+  Minimize2,
+  Palette,
+  Regex,
+  Scaling,
+  ShieldCheck,
+  Table2,
+  Timer,
+  TriangleAlert,
+  Wrench,
+} from "lucide-react";
+
+export interface Props {
+  icon: string;
+  class?: string;
+  title?: string;
+}
+
+const { icon, class: className = "", title, ...attributes } = Astro
+  .props as Props;
+
+const icons = {
+  "alert": TriangleAlert,
+  "base64": Code2,
+  "case": CaseSensitive,
+  "colors": Palette,
+  "converters": ArrowRightLeft,
+  "cron": Timer,
+  "css-tools": Scaling,
+  "csv": Table2,
+  "database": Database,
+  "diff": ArrowRightLeft,
+  "encoding": Globe2,
+  "fix": Wrench,
+  "fingerprint": Fingerprint,
+  "hash": Hash,
+  "headers": FileText,
+  "html-entities": Code2,
+  "indent": IndentIncrease,
+  "json": FileJson2,
+  "json-tools": Braces,
+  "jwt": KeyRound,
+  "markup": FileCode2,
+  "minify": Minimize2,
+  "query": Link2,
+  "regex": Regex,
+  "security": ShieldCheck,
+  "string": Braces,
+  "svg": FileCode2,
+  "text": FileText,
+  "time": Clock3,
+  "timestamp": Clock3,
+  "viewer": Eye,
+  "web": Globe2,
+  "wrench": Wrench,
+} as const;
+
+const Icon = icons[icon as keyof typeof icons] ?? Wrench;
+const iconTitle = title ?? icon.replace(/-/g, " ");
+---
+
+<span
+  class:list={["inline-flex items-center justify-center", className]}
+  role="img"
+  aria-label={`${iconTitle} icon`}
+  {...attributes}
+>
+  <Icon className="h-full w-full" strokeWidth={1.8} aria-hidden="true" />
+</span>

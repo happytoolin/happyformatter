@@ -20,20 +20,65 @@ export async function getFormatter(language: string) {
       await cssFormatter.init();
       return cssFormatter;
     case "scss":
-      const { SCSSFormatter } = await import("@/handlers/formatters/css");
+      const { SCSSMalvaFormatter: SCSSFormatter } = await import("@/handlers/formatters/malva");
       const scssFormatter = new SCSSFormatter();
       await scssFormatter.init();
       return scssFormatter;
+    case "sass":
+      const { SassFormatter } = await import("@/handlers/formatters/malva");
+      const sassFormatter = new SassFormatter();
+      await sassFormatter.init();
+      return sassFormatter;
+    case "less":
+      const { LessFormatter } = await import("@/handlers/formatters/malva");
+      const lessFormatter = new LessFormatter();
+      await lessFormatter.init();
+      return lessFormatter;
     case "html":
       const { HTMLFormatter } = await import("@/handlers/formatters/html");
       const htmlFormatter = new HTMLFormatter();
       await htmlFormatter.init();
       return htmlFormatter;
+    case "vue":
+      const { VueFormatter } = await import("@/handlers/formatters/markup");
+      const vueFormatter = new VueFormatter();
+      await vueFormatter.init();
+      return vueFormatter;
+    case "svelte":
+      const { SvelteFormatter } = await import("@/handlers/formatters/markup");
+      const svelteFormatter = new SvelteFormatter();
+      await svelteFormatter.init();
+      return svelteFormatter;
+    case "astro":
+      const { AstroFormatter } = await import("@/handlers/formatters/markup");
+      const astroFormatter = new AstroFormatter();
+      await astroFormatter.init();
+      return astroFormatter;
+    case "jinja":
+      const { JinjaFormatter } = await import("@/handlers/formatters/markup");
+      const jinjaFormatter = new JinjaFormatter();
+      await jinjaFormatter.init();
+      return jinjaFormatter;
+    case "twig":
+      const { TwigFormatter } = await import("@/handlers/formatters/markup");
+      const twigFormatter = new TwigFormatter();
+      await twigFormatter.init();
+      return twigFormatter;
     case "json":
       const { JSONFormatter } = await import("@/handlers/formatters/json");
       const jsonFormatter = new JSONFormatter();
       await jsonFormatter.init();
       return jsonFormatter;
+    case "jsonc":
+      const { JSONCFormatter } = await import("@/handlers/formatters/prettier-standalone");
+      const jsoncFormatter = new JSONCFormatter();
+      await jsoncFormatter.init();
+      return jsoncFormatter;
+    case "json5":
+      const { JSON5Formatter } = await import("@/handlers/formatters/prettier-standalone");
+      const json5Formatter = new JSON5Formatter();
+      await json5Formatter.init();
+      return json5Formatter;
     case "dart":
       const { DartFormatter } = await import("@/handlers/formatters/dart");
       const dartFormatter = new DartFormatter();
@@ -102,6 +147,21 @@ export async function getFormatter(language: string) {
       const markdownFormatter = new MarkdownFormatter();
       await markdownFormatter.init();
       return markdownFormatter;
+    case "mdx":
+      const { MDXFormatter } = await import("@/handlers/formatters/prettier-standalone");
+      const mdxFormatter = new MDXFormatter();
+      await mdxFormatter.init();
+      return mdxFormatter;
+    case "angular":
+      const { AngularFormatter } = await import("@/handlers/formatters/prettier-standalone");
+      const angularFormatter = new AngularFormatter();
+      await angularFormatter.init();
+      return angularFormatter;
+    case "handlebars":
+      const { HandlebarsFormatter } = await import("@/handlers/formatters/prettier-standalone");
+      const handlebarsFormatter = new HandlebarsFormatter();
+      await handlebarsFormatter.init();
+      return handlebarsFormatter;
     case "python":
       const { PythonFormatter } = await import("@/handlers/formatters/python");
       const pythonFormatter = new PythonFormatter();
@@ -117,6 +177,16 @@ export async function getFormatter(language: string) {
       const sqlFormatter = new SQLFormatter();
       await sqlFormatter.init();
       return sqlFormatter;
+    case "graphql":
+      const { GraphQLFormatter } = await import("@/handlers/formatters/graphql");
+      const graphQLFormatter = new GraphQLFormatter();
+      await graphQLFormatter.init();
+      return graphQLFormatter;
+    case "shell":
+      const { ShellFormatter } = await import("@/handlers/formatters/shell");
+      const shellFormatter = new ShellFormatter();
+      await shellFormatter.init();
+      return shellFormatter;
     case "php":
     case "php-mago":
       const { PHPMagoFormatter } = await import("@/handlers/formatters/php-mago");
@@ -153,6 +223,16 @@ export async function getFormatter(language: string) {
       const tsBiomeFormatter = new TypeScriptBiomeFormatter();
       await tsBiomeFormatter.init();
       return tsBiomeFormatter;
+    case "javascript-oxc":
+      const { JavaScriptOxcFormatter } = await import("@/handlers/formatters/oxc");
+      const jsOxcFormatter = new JavaScriptOxcFormatter();
+      await jsOxcFormatter.init();
+      return jsOxcFormatter;
+    case "typescript-oxc":
+      const { TypeScriptOxcFormatter } = await import("@/handlers/formatters/oxc");
+      const tsOxcFormatter = new TypeScriptOxcFormatter();
+      await tsOxcFormatter.init();
+      return tsOxcFormatter;
     default:
       throw new Error(`No formatter available for language: ${language}`);
   }
@@ -163,6 +243,7 @@ export async function getMinifier(language: string) {
     case "js":
     case "javascript":
     case "javascript-biome":
+    case "javascript-oxc":
       const { JavascriptMinifier } = await import(
         "@/handlers/minifiers/javascript"
       );
@@ -172,6 +253,7 @@ export async function getMinifier(language: string) {
     case "ts":
     case "typescript":
     case "typescript-biome":
+    case "typescript-oxc":
       const { TypescriptMinifier } = await import(
         "@/handlers/minifiers/javascript"
       );
@@ -184,15 +266,15 @@ export async function getMinifier(language: string) {
       await cssMinifier.init();
       return cssMinifier;
     case "scss":
-      const { CSSMiniFier: SCSSMinifier } = await import("@/handlers/minifiers/css");
+      const { SCSSMinifier } = await import("@/handlers/minifiers/css");
       const scssMinifier = new SCSSMinifier();
       await scssMinifier.init();
       return scssMinifier;
-    // case "html":
-    //   const { HTMLMinifier } = await import("@/handlers/minifiers/html");
-    //   const htmlMinifier = new HTMLMinifier();
-    //   htmlMinifier.init();
-    //   return htmlMinifier;
+    case "html":
+      const { HTMLMinifier } = await import("@/handlers/minifiers/html");
+      const htmlMinifier = new HTMLMinifier();
+      htmlMinifier.init();
+      return htmlMinifier;
     case "json":
       const { JSONMinifier } = await import("@/handlers/minifiers/json");
       const jsonMinifier = new JSONMinifier();
@@ -202,6 +284,15 @@ export async function getMinifier(language: string) {
       const { XMLMinifier } = await import("@/handlers/minifiers/xml");
       const xmlMinifier = new XMLMinifier();
       return xmlMinifier;
+    case "graphql":
+      const { GraphQLMinifier } = await import("@/handlers/minifiers/graphql");
+      const graphQLMinifier = new GraphQLMinifier();
+      return graphQLMinifier;
+    case "shell":
+      const { ShellMinifier } = await import("@/handlers/minifiers/shell");
+      const shellMinifier = new ShellMinifier();
+      await shellMinifier.init();
+      return shellMinifier;
     default:
       return null; // Return null if no minifier is available for the language
   }

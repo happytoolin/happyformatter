@@ -4,6 +4,7 @@ import Layout from "@/components/layout/layout.astro";
 import { LANGUAGES } from "@/lib/languages";
 import {
   getUtilityCategoryBreadcrumbs,
+  getUtilityCategoryById,
   getUtilityToolBreadcrumbs,
   getUtilityToolFAQ,
   getUtilityToolsByCategory,
@@ -13,7 +14,7 @@ import {
   type UtilityToolCategory,
 } from "@/lib/utility-tools";
 
-type DirectoryKind = "formatters" | "minifiers";
+type DirectoryKind = "formatters" | "minifiers" | "private";
 
 type PageProps = {
   category?: UtilityToolCategory;
@@ -39,6 +40,10 @@ export function getStaticPaths() {
       params: { slug: "minifiers" },
       props: { directoryKind: "minifiers" satisfies DirectoryKind },
     },
+    {
+      params: { slug: "private" },
+      props: { directoryKind: "private" satisfies DirectoryKind },
+    },
   ];
 }
 
@@ -50,6 +55,30 @@ const minifierLanguages = formatterLanguages.filter(language =>
 );
 
 const getDirectoryMeta = (kind: DirectoryKind) => {
+  if (kind === "private") {
+    return {
+      title: "Private No Upload Developer Tools | HappyFormatter",
+      description:
+        "Browse private formatter, minifier, converter, decoder, parser, and generator tools that run locally in your browser with no upload.",
+      keywords:
+        "private developer tools, no upload developer tools, browser formatter, private converter, private decoder",
+      heading: "Private developer tools with no upload.",
+      eyebrow: "No-upload tools",
+      tools: [
+        ...UTILITY_TOOLS.map(tool => ({
+          name: tool.name,
+          url: `/tools/${tool.slug}`,
+          description: tool.description,
+        })),
+        ...formatterLanguages.slice(0, 10).map(language => ({
+          name: `${language.name} Formatter`,
+          url: `/${language.id}`,
+          description: `Format ${language.name} locally in your browser.`,
+        })),
+      ],
+    };
+  }
+
   if (kind === "minifiers") {
     return {
       title: "Private Code Minifiers - No Upload | HappyFormatter",
@@ -131,7 +160,11 @@ const page = tool
         { name: "Home", url: "/" },
         { name: "Tools", url: "/tools" },
         {
-          name: directoryKind === "minifiers" ? "Minifiers" : "Formatters",
+          name: directoryKind === "private"
+            ? "Private Tools"
+            : directoryKind === "minifiers"
+            ? "Minifiers"
+            : "Formatters",
           url: `/tools/${directoryKind}`,
         },
       ],
@@ -139,11 +172,13 @@ const page = tool
         {
           title: `Are HappyFormatter ${directoryKind} private?`,
           content:
-            "Yes. Formatting and minifying run locally in your browser for supported tools.",
+            "Yes. HappyFormatter tools run locally in your browser for supported workflows and do not upload pasted snippets.",
         },
         {
           title: directoryKind === "minifiers"
             ? "Which minifiers are available?"
+            : directoryKind === "private"
+            ? "Which private tools are available?"
             : "Which formatters are available?",
           content: meta.tools.map(item => item.name).join(", "),
         },
@@ -162,6 +197,34 @@ const page = tool
 if (!page) {
   return Astro.redirect("/tools", 301);
 }
+
+const relatedUtilityLinks = tool
+  ? [
+    ...(getUtilityCategoryById(tool.category)
+      ? [{
+        title: `${getUtilityCategoryById(tool.category)?.shortName} tools`,
+        href: `/tools/${getUtilityCategoryById(tool.category)?.slug}`,
+        description: `Browse more private ${
+          getUtilityCategoryById(tool.category)?.name.toLowerCase()
+        }.`,
+      }]
+      : []),
+    {
+      title: "Private tools hub",
+      href: "/tools/private",
+      description: "Browse no-upload browser tools for developers.",
+    },
+    ...UTILITY_TOOLS.filter(item =>
+      item.category === tool.category && item.id !== tool.id
+    )
+      .slice(0, 3)
+      .map(item => ({
+        title: item.name,
+        href: `/tools/${item.slug}`,
+        description: item.description,
+      })),
+  ]
+  : [];
 ---
 
 <Layout
@@ -220,6 +283,26 @@ if (!page) {
                 >
                   {useCase}
                 </span>
+              ))}
+            </div>
+            <h2 class="mt-8 text-xl font-semibold text-foreground">
+              Related tools
+            </h2>
+            <div class="mt-4 space-y-3">
+              {relatedUtilityLinks.map(link => (
+                <a
+                  href={link.href}
+                  class="block rounded-md border border-border bg-card p-3 transition-colors hover:border-foreground hover:bg-secondary"
+                >
+                  <span class="text-sm font-semibold text-foreground">
+                    {link.title}
+                  </span>
+                  <span
+                    class="mt-1 block text-sm leading-6 text-muted-foreground"
+                  >
+                    {link.description}
+                  </span>
+                </a>
               ))}
             </div>
           </aside>

@@ -1,0 +1,258 @@
+---
+import { LANGUAGES } from "@/lib/languages";
+
+type Props = {
+  language: string;
+  minify?: boolean;
+  variant?: string | null;
+};
+
+const { language, minify = false, variant = null } = Astro.props;
+const languageConfig = LANGUAGES[language];
+const languageName = languageConfig?.name ?? language;
+const formatterPath = `/${language}${variant ? `-${variant}` : ""}`;
+const minifierPath = `/minify/${language}`;
+
+const examples: Record<
+  string,
+  { before: string; after: string; minified?: string }
+> = {
+  json: {
+    before: "{\"user\":{\"id\":42,\"name\":\"Ada\"},\"active\":true}",
+    after:
+      "{\n  \"user\": {\n    \"id\": 42,\n    \"name\": \"Ada\"\n  },\n  \"active\": true\n}",
+    minified: "{\"user\":{\"id\":42,\"name\":\"Ada\"},\"active\":true}",
+  },
+  javascript: {
+    before: "const user={name:'Ada',roles:['admin','editor']};",
+    after: "const user = { name: 'Ada', roles: ['admin', 'editor'] };",
+    minified: "const user={name:'Ada',roles:['admin','editor']};",
+  },
+  typescript: {
+    before:
+      "type User={id:number;name:string}\nconst user:User={id:1,name:'Ada'}",
+    after:
+      "type User = { id: number; name: string };\nconst user: User = { id: 1, name: 'Ada' };",
+    minified:
+      "type User={id:number;name:string};const user:User={id:1,name:'Ada'};",
+  },
+  python: {
+    before: "def greet(name):\n print(  f\"Hello, {name}\" )",
+    after: "def greet(name):\n    print(f\"Hello, {name}\")",
+  },
+  css: {
+    before: ".button {\n color: white;\n background: black;\n}",
+    after: ".button {\n  color: white;\n  background: black;\n}",
+    minified: ".button{color:white;background:black}",
+  },
+  yaml: {
+    before: "service: api\nports:\n- 80\n- 443",
+    after: "service: api\nports:\n  - 80\n  - 443",
+  },
+  toml: {
+    before: "name=\"api\"\n[server]\nport=8080",
+    after: "name = \"api\"\n\n[server]\nport = 8080",
+  },
+  xml: {
+    before: "<user><name>Ada</name><active>true</active></user>",
+    after: "<user>\n  <name>Ada</name>\n  <active>true</active>\n</user>",
+    minified: "<user><name>Ada</name><active>true</active></user>",
+  },
+  html: {
+    before: "<main><h1>Hello</h1><p>Private tools</p></main>",
+    after: "<main>\n  <h1>Hello</h1>\n  <p>Private tools</p>\n</main>",
+    minified: "<main><h1>Hello</h1><p>Private tools</p></main>",
+  },
+  vue: {
+    before:
+      "<template><button @click=\"count++\">{{count}}</button></template>",
+    after:
+      "<template><button @click=\"count++\">{{ count }}</button></template>",
+  },
+  svelte: {
+    before: "<script>let count=0;</script><button>{count}</button>",
+    after: "<script>\nlet count=0;\n</script><button>{count}</button>",
+  },
+  astro: {
+    before: "---\nconst title='Hi'\n---\n<h1>{title}</h1>",
+    after: "---\nconst title='Hi'\n---\n<h1>{title}</h1>",
+  },
+  angular: {
+    before: "<div *ngIf=\"ready\">{{value}}</div>",
+    after: "<div *ngIf=\"ready\">{{ value }}</div>",
+  },
+  handlebars: {
+    before: "<div>{{#if ready}}{{title}}{{/if}}</div>",
+    after: "<div>{{#if ready}}{{title}}{{/if}}</div>",
+  },
+  jinja: {
+    before: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+    after: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+  },
+  twig: {
+    before: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+    after: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+  },
+  sass: {
+    before: "$color: red\n.button\n color: $color",
+    after: "$color: red\n.button\n  color: $color",
+  },
+  less: {
+    before: "@color: red;.button{color:@color;}",
+    after: "@color: red;\n.button {\n  color: @color;\n}",
+  },
+  jsonc: {
+    before: "{// note\n\"enabled\":true,}",
+    after: "{\n  // note\n  \"enabled\": true,\n}",
+  },
+  json5: {
+    before: "{name:'Ada',active:true}",
+    after: "{ name: 'Ada', active: true }\n",
+  },
+  mdx: {
+    before: "# Hi\n<div>{value}</div>",
+    after: "# Hi\n\n<div>{value}</div>\n",
+  },
+  graphql: {
+    before: "query GetUser{id name posts{title}}",
+    after: "query GetUser {\n  id\n  name\n  posts {\n    title\n  }\n}",
+    minified: "query GetUser{id name posts{title}}",
+  },
+  shell: {
+    before: "if true; then echo hi; fi",
+    after: "if true; then echo hi; fi",
+    minified: "if true;then echo hi;fi",
+  },
+};
+
+const fallback = {
+  before: `function ${
+    language.replace(/[^a-z]/g, "") || "example"
+  }(){return true}`,
+  after: `function ${
+    language.replace(/[^a-z]/g, "") || "example"
+  }() {\n  return true\n}`,
+};
+const example = examples[language] ?? fallback;
+const after = minify
+  ? example.minified ?? example.after.replace(/\s+/g, " ").trim()
+  : example.after;
+
+const relatedLinks = [
+  ...(languageConfig?.minify && !minify
+    ? [{
+      title: `${languageName} Minifier`,
+      href: minifierPath,
+      description: `Minify ${languageName} locally after formatting.`,
+    }]
+    : []),
+  ...(minify
+    ? [{
+      title: `${languageName} Formatter`,
+      href: formatterPath,
+      description: `Format ${languageName} locally before minifying.`,
+    }]
+    : []),
+  ...(language === "json"
+    ? [
+      {
+        title: "JSON Viewer",
+        href: "/tools/json-viewer",
+        description: "Inspect formatted JSON structure.",
+      },
+      {
+        title: "JSON Diff",
+        href: "/tools/json-diff",
+        description: "Compare two JSON documents locally.",
+      },
+      {
+        title: "JSON to CSV",
+        href: "/tools/json-to-csv",
+        description: "Convert arrays of objects into CSV rows.",
+      },
+    ]
+    : []),
+  ...(language === "yaml"
+    ? [{
+      title: "YAML to JSON",
+      href: "/tools/yaml-to-json",
+      description: "Inspect YAML structure as JSON.",
+    }]
+    : []),
+  ...(language === "toml"
+    ? [{
+      title: "TOML to JSON",
+      href: "/tools/toml-to-json",
+      description: "Inspect TOML config as JSON.",
+    }]
+    : []),
+  ...(language === "css"
+    ? [{
+      title: "CSS Unit Converter",
+      href: "/tools/css-unit-converter",
+      description: "Convert px, rem, and em values locally.",
+    }]
+    : []),
+].slice(0, 4);
+---
+
+<section class="border-b border-border bg-background py-10 sm:py-12">
+  <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] lg:px-8">
+    <div>
+      <h2 class="text-3xl font-semibold text-foreground">
+        {minify ? "Minifier example" : "Formatter example"}
+      </h2>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        <article class="overflow-hidden rounded-md border border-border bg-card">
+          <div class="border-b border-border px-4 py-3">
+            <p class="text-sm font-semibold text-foreground">Before</p>
+          </div>
+          <pre class="overflow-auto p-4 text-sm leading-6"><code>{example.before}</code></pre>
+        </article>
+        <article class="overflow-hidden rounded-md border border-border bg-card">
+          <div class="border-b border-border px-4 py-3">
+            <p class="text-sm font-semibold text-foreground">After</p>
+          </div>
+          <pre class="overflow-auto p-4 text-sm leading-6"><code>{after}</code></pre>
+        </article>
+      </div>
+    </div>
+
+    <aside class="space-y-4">
+      <div class="rounded-md border border-border bg-card p-5">
+        <h2 class="text-xl font-semibold text-foreground">Privacy proof</h2>
+        <div class="mt-4 grid gap-3">
+          {["Runs in your browser", "No upload", "No account"].map(item => (
+            <p class="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+              {item}
+            </p>
+          ))}
+        </div>
+      </div>
+      {relatedLinks.length > 0 && (
+        <div class="rounded-md border border-border bg-card p-5">
+          <h2 class="text-xl font-semibold text-foreground">
+            Related workflows
+          </h2>
+          <div class="mt-4 space-y-3">
+            {relatedLinks.map(link => (
+              <a
+                href={link.href}
+                class="block rounded-md border border-border bg-background p-3 transition-colors hover:border-foreground hover:bg-secondary"
+              >
+                <span class="text-sm font-semibold text-foreground">
+                  {link.title}
+                </span>
+                <span
+                  class="mt-1 block text-sm leading-6 text-muted-foreground"
+                >
+                  {link.description}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </aside>
+  </div>
+</section>

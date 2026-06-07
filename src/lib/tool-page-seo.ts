@@ -37,9 +37,12 @@ const unsupportedKeywordPattern =
 
 const minifierLanguageIds = new Set([
   "css",
+  "graphql",
+  "html",
   "scss",
   "javascript",
   "json",
+  "shell",
   "typescript",
   "xml",
 ]);
@@ -61,6 +64,7 @@ const variantLabels: Record<string, string> = {
   mago: "Mago Formatter",
   minify: "Minifier",
   online: "Online Formatter",
+  oxc: "OXC Formatter",
   pep8: "PEP 8 Formatter",
   pretty: "Pretty Printer",
   prettify: "Pretty Printer",
@@ -77,23 +81,37 @@ const formatterEngines: Record<string, string> = {
   csharp: "clang-format",
   css: "Lightning CSS",
   dart: "dart format",
+  angular: "Prettier",
+  astro: "markup_fmt",
   go: "gofmt",
+  graphql: "pretty_graphql",
+  handlebars: "Prettier",
   html: "web_fmt",
   java: "clang-format",
   javascript: "web_fmt",
+  jinja: "markup_fmt",
   json: "JSON parser",
+  json5: "Prettier",
+  jsonc: "Prettier",
+  less: "Malva",
   lua: "lua-fmt",
-  markdown: "Prettier",
+  markdown: "dprint",
+  mdx: "Prettier",
   objectivec: "clang-format",
   objectivecpp: "clang-format",
   php: "Mago",
   proto: "clang-format",
   python: "Ruff formatter",
   rust: "rustfmt",
-  scss: "Lightning CSS",
+  sass: "Malva",
+  scss: "Malva",
+  shell: "shfmt",
   sql: "sql_fmt",
+  svelte: "markup_fmt",
   toml: "Taplo",
+  twig: "markup_fmt",
   typescript: "web_fmt",
+  vue: "markup_fmt",
   xml: "xml-formatter",
   yaml: "yamlfmt",
   zig: "zig fmt",
@@ -101,9 +119,12 @@ const formatterEngines: Record<string, string> = {
 
 const minifierEngines: Record<string, string> = {
   css: "Lightning CSS",
+  graphql: "graphql-js",
+  html: "html-minifier-terser",
   javascript: "SWC",
   json: "JSON.stringify",
   scss: "Lightning CSS",
+  shell: "shfmt",
   typescript: "SWC",
   xml: "xml-formatter",
 };
@@ -180,6 +201,8 @@ export function getFormatterEngineName(
       return "gofmt";
     case "mago":
       return "Mago";
+    case "oxc":
+      return "OXC";
     case "pep8":
     case "ruff":
       return "Ruff formatter";

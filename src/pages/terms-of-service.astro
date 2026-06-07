@@ -1,5 +1,4 @@
 ---
-import FormatHeading from "@/components/layout/FormatHeading.astro";
 import Layout from "@/components/layout/layout.astro";
 
 const termGroups = [
@@ -49,13 +48,79 @@ const details = [
       "Your code is processed locally in the browser. Basic analytics may be used as described in the privacy policy.",
   },
 ];
+
+const responsibilities = [
+  {
+    title: "Review generated output",
+    body:
+      "Formatter, minifier, converter, decoder, parser, and generator outputs can be useful, but you are responsible for reviewing them before production use.",
+  },
+  {
+    title: "Do not rely on decoding as verification",
+    body:
+      "JWT and Base64 tools decode text for inspection. Decoding does not prove authenticity, authorization, encryption, or signature validity.",
+  },
+  {
+    title: "Respect data policies",
+    body:
+      "HappyFormatter is designed as a no-upload browser tool, but you remain responsible for following your employer, client, or regulatory requirements.",
+  },
+  {
+    title: "Use project tooling for release work",
+    body:
+      "For production code, keep using your repository formatter, linter, type checker, tests, bundler, and CI pipeline.",
+  },
+];
+
+const relatedLinks = [
+  {
+    title: "Privacy Policy",
+    href: "/privacy-policy",
+    description: "Read how browser-side processing and analytics are handled.",
+  },
+  {
+    title: "Security",
+    href: "/security",
+    description: "Understand the no-upload security posture and limits.",
+  },
+  {
+    title: "Contact",
+    href: "/contact",
+    description: "Send corrections or feedback about these terms.",
+  },
+];
 ---
 
 <Layout
-  title="Terms of Service"
-  description="HappyFormatter's terms of service - Free browser-based tool for code formatting."
+  title="Terms of Service - Private Browser Developer Tools | HappyFormatter"
+  description="HappyFormatter terms for private browser developer tools. Use no-upload formatters, minifiers, and converters, but review output before production use."
+  canonicalPath="/terms-of-service"
+  keywords="HappyFormatter terms, no upload developer tools terms, private formatter terms"
+  breadcrumbs={[
+    { name: "Home", url: "/" },
+    { name: "Terms of Service", url: "/terms-of-service" },
+  ]}
+  showFormatHeading={false}
+  structuredDataName="HappyFormatter Terms of Service"
+  structuredDataDescription="Terms of service for HappyFormatter private browser developer tools."
 >
-  <FormatHeading language="terms" minify={false} />
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          Terms of service
+        </p>
+        <h1 class="max-w-5xl text-4xl font-semibold leading-none text-foreground md:text-6xl">
+          Use the tools, review the output.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        HappyFormatter is a free browser utility. It is built for convenience,
+        not as a substitute for your own code review, project formatter, or
+        tests.
+      </p>
+    </div>
+  </section>
 
   <section class="border-b border-border bg-card py-16 sm:py-20">
     <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
@@ -64,7 +129,7 @@ const details = [
           Terms
         </p>
         <h2 class="text-3xl font-semibold leading-tight md:text-4xl">
-          Use the tool, review the output.
+          Free browser tools.
         </h2>
         <p class="max-w-md text-sm leading-6 text-muted-foreground">
           HappyFormatter is a free browser utility. It is built for convenience,
@@ -116,9 +181,51 @@ const details = [
         </div>
 
         <p class="font-mono text-xs text-muted-foreground">
-          Last updated: December 2025
+          Last updated: June 2026
         </p>
       </div>
+    </div>
+  </section>
+
+  <section class="border-b border-border bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] lg:px-8">
+      <div>
+        <h2 class="text-3xl font-semibold text-foreground">
+          Your responsibilities
+        </h2>
+        <div class="mt-5 divide-y divide-border border-y border-border">
+          {responsibilities.map(item => (
+            <article class="grid gap-3 py-5 md:grid-cols-[minmax(190px,0.3fr)_minmax(0,1fr)]">
+              <h3 class="text-base font-semibold text-foreground">
+                {item.title}
+              </h3>
+              <p class="text-sm leading-6 text-muted-foreground">
+                {item.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+      <aside>
+        <h2 class="text-2xl font-semibold text-foreground">
+          Related terms
+        </h2>
+        <div class="mt-5 space-y-3">
+          {relatedLinks.map(link => (
+            <a
+              href={link.href}
+              class="block rounded-md border border-border bg-card p-4 transition-colors hover:border-foreground hover:bg-secondary"
+            >
+              <span class="text-sm font-semibold text-foreground">
+                {link.title}
+              </span>
+              <span class="mt-1 block text-sm leading-6 text-muted-foreground">
+                {link.description}
+              </span>
+            </a>
+          ))}
+        </div>
+      </aside>
     </div>
   </section>
 </Layout>

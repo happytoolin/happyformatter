@@ -1,0 +1,40 @@
+---
+import Layout from "@/components/layout/layout.astro";
+import SeoContentArticle from "@/components/seo/SeoContentArticle.astro";
+import HowToSchema from "@/components/structured-data/HowToSchema.astro";
+import {
+  getSeoContentBreadcrumbs,
+  GUIDE_PAGES,
+  type GuidePage,
+} from "@/lib/seo-content";
+
+export function getStaticPaths() {
+  return GUIDE_PAGES.map(page => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props as { page: GuidePage };
+const canonicalURL = new URL(page.canonicalPath, Astro.site);
+---
+
+<Layout
+  title={page.title}
+  description={page.description}
+  canonicalPath={page.canonicalPath}
+  keywords={page.keywords}
+  breadcrumbs={getSeoContentBreadcrumbs(page)}
+  faqItems={page.faqs}
+  showFormatHeading={false}
+  structuredDataName={page.h1}
+  structuredDataDescription={page.description}
+>
+  <HowToSchema
+    name={page.h1}
+    description={page.description}
+    steps={page.steps}
+    url={canonicalURL}
+  />
+  <SeoContentArticle page={page} />
+</Layout>

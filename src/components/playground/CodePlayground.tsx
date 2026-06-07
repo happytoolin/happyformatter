@@ -65,27 +65,50 @@ const languageLoaders: Record<string, MonacoLanguage> = {
   cpp: { id: "cpp", loader: () => import("@shikijs/langs/cpp") },
   objectivec: { id: "objective-c", loader: () => import("@shikijs/langs/objective-c") },
   objectivecpp: { id: "objective-cpp", loader: () => import("@shikijs/langs/objective-cpp") },
+  angular: { id: "angular-html", loader: () => import("@shikijs/langs/angular-html") },
+  astro: { id: "astro", loader: () => import("@shikijs/langs/astro") },
   csharp: { id: "csharp", loader: () => import("@shikijs/langs/csharp") },
   css: { id: "css", loader: () => import("@shikijs/langs/css") },
   scss: { id: "scss", loader: () => import("@shikijs/langs/scss") },
+  sass: { id: "sass", loader: () => import("@shikijs/langs/sass") },
+  less: { id: "less", loader: () => import("@shikijs/langs/less") },
   dart: { id: "dart", loader: () => import("@shikijs/langs/dart") },
+  graphql: { id: "graphql", loader: () => import("@shikijs/langs/graphql") },
   go: { id: "go", loader: () => import("@shikijs/langs/go") },
+  handlebars: { id: "handlebars", loader: () => import("@shikijs/langs/handlebars") },
   html: { id: "html", loader: () => import("@shikijs/langs/html") },
   java: { id: "java", loader: () => import("@shikijs/langs/java") },
   javascript: { id: "javascript", loader: () => import("@shikijs/langs/javascript") },
+  jinja: { id: "jinja", loader: () => import("@shikijs/langs/jinja") },
   json: { id: "json", loader: () => import("@shikijs/langs/json") },
+  json5: { id: "json5", loader: () => import("@shikijs/langs/json5") },
+  jsonc: { id: "jsonc", loader: () => import("@shikijs/langs/jsonc") },
   lua: { id: "lua", loader: () => import("@shikijs/langs/lua") },
   markdown: { id: "markdown", loader: () => import("@shikijs/langs/markdown") },
+  mdx: { id: "mdx", loader: () => import("@shikijs/langs/mdx") },
   php: { id: "php", loader: () => import("@shikijs/langs/php") },
   proto: { id: "proto", loader: () => import("@shikijs/langs/proto") },
   python: { id: "python", loader: () => import("@shikijs/langs/python") },
   rust: { id: "rust", loader: () => import("@shikijs/langs/rust") },
+  shell: { id: "shellscript", loader: () => import("@shikijs/langs/shellscript") },
   sql: { id: "sql", loader: () => import("@shikijs/langs/sql") },
+  svelte: { id: "svelte", loader: () => import("@shikijs/langs/svelte") },
   typescript: { id: "typescript", loader: () => import("@shikijs/langs/typescript") },
   toml: { id: "toml", loader: () => import("@shikijs/langs/toml") },
+  twig: { id: "twig", loader: () => import("@shikijs/langs/twig") },
+  vue: { id: "vue", loader: () => import("@shikijs/langs/vue") },
   xml: { id: "xml", loader: () => import("@shikijs/langs/xml") },
   yaml: { id: "yaml", loader: () => import("@shikijs/langs/yaml") },
   zig: { id: "zig", loader: () => import("@shikijs/langs/zig") },
+};
+
+const languageAliases: Record<string, string> = {
+  "javascript-biome": "javascript",
+  "javascript-oxc": "javascript",
+  "php-mago": "php",
+  "python-ruff": "python",
+  "typescript-biome": "typescript",
+  "typescript-oxc": "typescript",
 };
 
 let monacoPromise: Promise<MonacoApi> | null = null;
@@ -103,7 +126,8 @@ function getMonacoTheme(theme: string) {
 }
 
 function getMonacoLanguage(language: string): MonacoLanguage {
-  return languageLoaders[language] ?? { id: "plaintext", loader: null };
+  const normalizedLanguage = languageAliases[language] ?? language;
+  return languageLoaders[normalizedLanguage] ?? { id: "plaintext", loader: null };
 }
 
 async function getMonaco(language: MonacoLanguage) {
@@ -201,7 +225,8 @@ export default function CodePlayground({
           return;
         }
 
-        const extension = LANGUAGES[language]?.extensions[0] ?? "txt";
+        const normalizedLanguage = languageAliases[language] ?? language;
+        const extension = LANGUAGES[normalizedLanguage]?.extensions[0] ?? "txt";
         const model = monaco.editor.createModel(
           inputCodeRef.current,
           monacoLanguage.id,

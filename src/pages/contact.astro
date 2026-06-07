@@ -1,0 +1,90 @@
+---
+import Layout from "@/components/layout/layout.astro";
+
+const contactItems = [
+  {
+    title: "Product feedback",
+    body:
+      "Send missing tool ideas, broken examples, SEO page corrections, and workflow gaps.",
+  },
+  {
+    title: "Security notes",
+    body:
+      "Report issues with page behavior, unexpected network activity, or privacy copy that needs to be clearer.",
+  },
+  {
+    title: "Business and partnerships",
+    body:
+      "Reach out about Happytoolin ecosystem links, tool collaborations, and developer workflow partnerships.",
+  },
+];
+---
+
+<Layout
+  title="Contact HappyFormatter - Private Developer Tools"
+  description="Contact HappyFormatter for feedback, corrections, security notes, and private no-upload developer tool suggestions."
+  canonicalPath="/contact"
+  keywords="contact HappyFormatter, developer tool feedback, no upload tool suggestions"
+  breadcrumbs={[
+    { name: "Home", url: "/" },
+    { name: "Contact", url: "/contact" },
+  ]}
+  showFormatHeading={false}
+  structuredDataName="Contact HappyFormatter"
+  structuredDataDescription="Contact page for HappyFormatter private browser developer tools."
+>
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          Contact
+        </p>
+        <h1 class="max-w-5xl text-4xl font-semibold leading-none text-foreground md:text-6xl">
+          Send feedback about private developer tools.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        HappyFormatter improves through practical feedback: missing formats,
+        confusing errors, broken examples, and better no-upload workflows.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] lg:px-8">
+      <div>
+        <h2 class="text-3xl font-semibold text-foreground">
+          What to include
+        </h2>
+        <div class="mt-5 divide-y divide-border border-y border-border">
+          {contactItems.map(item => (
+            <article class="grid gap-3 py-5 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)]">
+              <h3 class="text-base font-semibold text-foreground">
+                {item.title}
+              </h3>
+              <p class="text-sm leading-6 text-muted-foreground">
+                {item.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+      <aside class="rounded-md border border-border bg-card p-5">
+        <h2 class="text-xl font-semibold text-foreground">Email</h2>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground">
+          Use the Happytoolin contact channel for now. Include the page URL,
+          browser, and a small reproducible snippet if you are reporting a tool
+          issue.
+        </p>
+        <a
+          href="https://happytoolin.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-5 inline-flex min-h-10 items-center rounded-md border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          Open Happytoolin
+        </a>
+      </aside>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,86 @@
+---
+import Layout from "@/components/layout/layout.astro";
+
+const safeguards = [
+  {
+    title: "Browser-side processing",
+    body:
+      "Formatter and utility actions are designed to execute in the browser tab. HappyFormatter does not provide an upload endpoint for pasted code snippets.",
+  },
+  {
+    title: "No account surface",
+    body:
+      "There is no login, workspace, saved project, or cloud history attached to the tools. That keeps the product surface intentionally small.",
+  },
+  {
+    title: "Review before production",
+    body:
+      "Formatters and converters can change whitespace, representation, or generated output. Review important output before using it in production systems.",
+  },
+];
+---
+
+<Layout
+  title="Security And Privacy Architecture - No Upload Tools | HappyFormatter"
+  description="How HappyFormatter keeps developer workflows local: browser-side processing, no upload requirement, no account, and practical security limitations."
+  canonicalPath="/security"
+  keywords="HappyFormatter security, no upload developer tools, browser-side formatter security, private code formatter"
+  breadcrumbs={[
+    { name: "Home", url: "/" },
+    { name: "Security", url: "/security" },
+  ]}
+  showFormatHeading={false}
+  structuredDataName="HappyFormatter Security"
+  structuredDataDescription="HappyFormatter security and privacy architecture for no-upload browser tools."
+>
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          Security
+        </p>
+        <h1 class="max-w-5xl text-4xl font-semibold leading-none text-foreground md:text-6xl">
+          No-upload tools with a small trust surface.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        HappyFormatter is designed for local browser processing. That reduces
+        exposure compared with server-side formatter APIs, but you should still
+        follow your organization’s rules for secrets and sensitive code.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-b border-border bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+      {safeguards.map(item => (
+        <article class="rounded-md border border-border bg-card p-5">
+          <h2 class="text-xl font-semibold text-foreground">{item.title}</h2>
+          <p class="mt-3 text-sm leading-6 text-muted-foreground">
+            {item.body}
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-background py-12 sm:py-16">
+    <div class="mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-semibold text-foreground">
+        Recommended use
+      </h2>
+      <div class="mt-5 divide-y divide-border border-y border-border">
+        {[
+          "Use private/no-upload tools for quick snippets, examples, configs, and troubleshooting.",
+          "Avoid pasting production secrets, private keys, long-lived tokens, or regulated data into any web page unless your policy allows it.",
+          "For JWTs, remember that decoding is not verification; verify signatures in a trusted server-side workflow.",
+          "For generated formatter output, run your local tests and project formatter before committing.",
+        ].map(item => (
+          <p class="py-4 text-sm leading-6 text-muted-foreground">
+            {item}
+          </p>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

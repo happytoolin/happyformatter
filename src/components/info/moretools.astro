@@ -1,13 +1,17 @@
 ---
+import EngineIcon from "@/icons/EngineIcon.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import UtilityIcon from "@/icons/UtilityIcon.astro";
 import {
   getUtilityToolsByCategory,
   UTILITY_CATEGORIES,
+  type UtilityToolCategoryId,
 } from "@/lib/utility-tools";
 
 type ToolType = "FMT" | "MIN" | "UTIL";
 
 interface ToolAction {
+  icon?: string;
   label: string;
   url: string;
   type: ToolType;
@@ -17,6 +21,8 @@ interface ToolFamily {
   name: string;
   icon?: string;
   initials?: string;
+  tag?: string;
+  utilityIcon?: string;
   group: "Web" | "Data" | "Runtime" | "Systems" | "Utilities";
   descriptor: string;
   actions: ToolAction[];
@@ -30,7 +36,64 @@ const toolFamilies: ToolFamily[] = [
     descriptor: "Markup",
     actions: [
       { label: "Format", url: "/html", type: "FMT" },
+      { label: "Minify", url: "/minify/html", type: "MIN" },
     ],
+  },
+  {
+    name: "Vue",
+    icon: "vue",
+    tag: "New",
+    group: "Web",
+    descriptor: "Component",
+    actions: [{ label: "Format", url: "/vue", type: "FMT" }],
+  },
+  {
+    name: "Svelte",
+    icon: "svelte",
+    tag: "New",
+    group: "Web",
+    descriptor: "Component",
+    actions: [{ label: "Format", url: "/svelte", type: "FMT" }],
+  },
+  {
+    name: "Astro",
+    icon: "astro",
+    tag: "New",
+    group: "Web",
+    descriptor: "Component",
+    actions: [{ label: "Format", url: "/astro", type: "FMT" }],
+  },
+  {
+    name: "Angular",
+    icon: "angular",
+    tag: "New",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/angular", type: "FMT" }],
+  },
+  {
+    name: "Handlebars",
+    icon: "handlebars",
+    tag: "New",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/handlebars", type: "FMT" }],
+  },
+  {
+    name: "Jinja",
+    icon: "jinja",
+    tag: "New",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/jinja", type: "FMT" }],
+  },
+  {
+    name: "Twig",
+    icon: "twig",
+    tag: "New",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/twig", type: "FMT" }],
   },
   {
     name: "CSS",
@@ -52,6 +115,8 @@ const toolFamilies: ToolFamily[] = [
       { label: "Minify", url: "/minify/javascript", type: "MIN" },
       { label: "Biome", url: "/javascript-biome", type: "FMT" },
       { label: "Biome", url: "/minify/javascript-biome", type: "MIN" },
+      { label: "OXC", url: "/javascript-oxc", type: "FMT" },
+      { label: "OXC", url: "/minify/javascript-oxc", type: "MIN" },
     ],
   },
   {
@@ -64,6 +129,8 @@ const toolFamilies: ToolFamily[] = [
       { label: "Minify", url: "/minify/typescript", type: "MIN" },
       { label: "Biome", url: "/typescript-biome", type: "FMT" },
       { label: "Biome", url: "/minify/typescript-biome", type: "MIN" },
+      { label: "OXC", url: "/typescript-oxc", type: "FMT" },
+      { label: "OXC", url: "/minify/typescript-oxc", type: "MIN" },
     ],
   },
   {
@@ -77,6 +144,22 @@ const toolFamilies: ToolFamily[] = [
     ],
   },
   {
+    name: "Sass",
+    icon: "sass",
+    tag: "New",
+    group: "Web",
+    descriptor: "Stylesheet",
+    actions: [{ label: "Format", url: "/sass", type: "FMT" }],
+  },
+  {
+    name: "Less",
+    icon: "less",
+    tag: "New",
+    group: "Web",
+    descriptor: "Stylesheet",
+    actions: [{ label: "Format", url: "/less", type: "FMT" }],
+  },
+  {
     name: "JSON",
     icon: "json",
     group: "Data",
@@ -85,6 +168,22 @@ const toolFamilies: ToolFamily[] = [
       { label: "Format", url: "/json", type: "FMT" },
       { label: "Minify", url: "/minify/json", type: "MIN" },
     ],
+  },
+  {
+    name: "JSONC",
+    icon: "jsonc",
+    tag: "New",
+    group: "Data",
+    descriptor: "Structured data",
+    actions: [{ label: "Format", url: "/jsonc", type: "FMT" }],
+  },
+  {
+    name: "JSON5",
+    icon: "json5",
+    tag: "New",
+    group: "Data",
+    descriptor: "Structured data",
+    actions: [{ label: "Format", url: "/json5", type: "FMT" }],
   },
   {
     name: "XML",
@@ -118,6 +217,17 @@ const toolFamilies: ToolFamily[] = [
     actions: [{ label: "Format", url: "/sql", type: "FMT" }],
   },
   {
+    name: "GraphQL",
+    icon: "graphql",
+    tag: "New",
+    group: "Data",
+    descriptor: "Schema and query",
+    actions: [
+      { label: "Format", url: "/graphql", type: "FMT" },
+      { label: "Minify", url: "/minify/graphql", type: "MIN" },
+    ],
+  },
+  {
     name: "Proto",
     icon: "proto",
     group: "Data",
@@ -130,6 +240,14 @@ const toolFamilies: ToolFamily[] = [
     group: "Data",
     descriptor: "Document",
     actions: [{ label: "Format", url: "/markdown", type: "FMT" }],
+  },
+  {
+    name: "MDX",
+    icon: "mdx",
+    tag: "New",
+    group: "Data",
+    descriptor: "Document",
+    actions: [{ label: "Format", url: "/mdx", type: "FMT" }],
   },
   {
     name: "Python",
@@ -180,6 +298,17 @@ const toolFamilies: ToolFamily[] = [
     actions: [{ label: "Format", url: "/lua", type: "FMT" }],
   },
   {
+    name: "Shell",
+    icon: "shell",
+    tag: "New",
+    group: "Runtime",
+    descriptor: "Script",
+    actions: [
+      { label: "Format", url: "/shell", type: "FMT" },
+      { label: "Minify", url: "/minify/shell", type: "MIN" },
+    ],
+  },
+  {
     name: "Rust",
     icon: "rust",
     group: "Runtime",
@@ -226,12 +355,57 @@ const toolFamilies: ToolFamily[] = [
   },
 ];
 
+const utilityCategoryIcons: Record<UtilityToolCategoryId, string> = {
+  colors: "colors",
+  converters: "converters",
+  css: "css-tools",
+  json: "json-tools",
+  markup: "markup",
+  security: "security",
+  text: "text",
+  time: "time",
+  web: "web",
+};
+
+const utilityToolIcons: Record<string, string> = {
+  "base64-encode-decode": "base64",
+  "color-converter": "colors",
+  "cron-expression-explainer": "cron",
+  "css-unit-converter": "css-tools",
+  "csv-to-json": "csv",
+  "csv-tsv-converter": "csv",
+  "hash-generator": "hash",
+  "html-entity-encode-decode": "html-entities",
+  "http-header-parser": "headers",
+  "json-diff": "diff",
+  "json-sort-keys": "json",
+  "json-to-csv": "csv",
+  "json-to-toml": "converters",
+  "json-to-yaml": "converters",
+  "json-viewer": "viewer",
+  "jwt-decoder": "jwt",
+  "markdown-preview": "viewer",
+  "markdown-to-html": "markup",
+  "query-string-parser": "query",
+  "regex-tester": "regex",
+  "string-escape-unescape": "string",
+  "svg-optimizer-pretty-printer": "svg",
+  "text-case-converter": "case",
+  "toml-to-json": "converters",
+  "unix-timestamp-converter": "timestamp",
+  "uuid-generator": "fingerprint",
+  "xml-to-json": "converters",
+  "yaml-to-json": "converters",
+};
+
 const utilityFamilies: ToolFamily[] = UTILITY_CATEGORIES.map(category => ({
   name: category.name,
   initials: category.shortName.slice(0, 2).toUpperCase(),
+  utilityIcon: utilityCategoryIcons[category.id],
   group: "Utilities",
   descriptor: category.shortName,
   actions: getUtilityToolsByCategory(category.id).map(tool => ({
+    icon: utilityToolIcons[tool.slug] ?? utilityCategoryIcons[category.id],
     label: tool.name,
     url: `/tools/${tool.slug}`,
     type: "UTIL",
@@ -262,25 +436,36 @@ const typeLabel: Record<ToolType, string> = {
   UTIL: "Open",
 };
 
+const genericActionLabels = new Set(["Format", "Minify"]);
+const engineActionLabels = new Set(["Biome", "Mago", "OXC", "Ruff"]);
+
+const getActionEngineName = (action: ToolAction) =>
+  engineActionLabels.has(action.label) ? action.label : null;
+
+const getActionLanguageIcon = (family: ToolFamily, action: ToolAction) => {
+  if (action.type === "UTIL" || getActionEngineName(action)) {
+    return null;
+  }
+
+  if (genericActionLabels.has(action.label)) {
+    return family.icon ?? null;
+  }
+
+  const actionId = action.url.split("/").filter(Boolean).at(-1);
+  return action.icon ?? actionId ?? family.icon ?? null;
+};
+
 const getActionText = (family: ToolFamily, action: ToolAction) => {
-  if (action.label === "Biome") {
-    return action.type === "MIN" ? "Minify with Biome" : "Format with Biome";
-  }
-
-  if (action.label === "Ruff") {
-    return "Format with Ruff";
-  }
-
-  if (action.label === "Mago") {
-    return "Format with Mago";
-  }
-
-  if (action.label === "Objective-C++") {
-    return "Format Objective-C++";
-  }
-
   if (action.type === "UTIL") {
     return action.label;
+  }
+
+  if (!genericActionLabels.has(action.label)) {
+    if (action.label === "Objective-C++") {
+      return "Format Objective-C++";
+    }
+
+    return `${typeLabel[action.type]} with ${action.label}`;
   }
 
   return `${typeLabel[action.type]} ${family.name}`;
@@ -350,6 +535,14 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-card">
                       {family.icon
                         ? <LanguageIcon icon={family.icon} class="h-6 w-6" />
+                        : family.utilityIcon
+                        ? (
+                          <UtilityIcon
+                            icon={family.utilityIcon}
+                            class="h-5 w-5 text-foreground"
+                            title={family.name}
+                          />
+                        )
                         : (
                           <span class="text-sm font-semibold text-foreground">
                             {family.initials}
@@ -357,9 +550,31 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                         )}
                     </div>
                     <div class="min-w-0">
-                      <h4 class="truncate text-base font-medium text-foreground">
-                        {family.name}
-                      </h4>
+                      <div class="flex min-w-0 flex-wrap items-center gap-2">
+                        <h4 class="truncate text-base font-medium text-foreground">
+                          {family.name}
+                        </h4>
+                        {family.tag && (
+                          <span
+                            class="new-tool-badge inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="11"
+                              height="11"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              class="new-tool-badge__star"
+                            >
+                              <path d="m12 2 2.9 6.2 6.7.8-4.9 4.6 1.3 6.6-6-3.3-6 3.3 1.3-6.6L2.4 9l6.7-.8L12 2Z" />
+                            </svg>
+                            <span class="new-tool-badge__label">
+                              {family.tag}
+                            </span>
+                          </span>
+                        )}
+                      </div>
                       <p class="mt-1 text-sm text-muted-foreground">
                         {family.descriptor}
                       </p>
@@ -367,15 +582,46 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                   </a>
 
                   <div class="flex flex-wrap gap-2 md:justify-end">
-                    {family.actions.map((action) => (
-                      <a
-                        href={action.url}
-                        data-tool-action
-                        class="group/action inline-flex min-h-9 items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
-                      >
-                        <span>{getActionText(family, action)}</span>
-                      </a>
-                    ))}
+                    {family.actions.map((action) => {
+                      const actionEngineName = getActionEngineName(action);
+                      const actionLanguageIcon = getActionLanguageIcon(
+                        family,
+                        action,
+                      );
+
+                      return (
+                        <a
+                          href={action.url}
+                          data-tool-action
+                          class="group/action inline-flex min-h-9 max-w-full items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
+                        >
+                          {action.icon && (
+                            <UtilityIcon
+                              icon={action.icon}
+                              class="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover/action:text-foreground"
+                              title={action.label}
+                            />
+                          )}
+                          {!action.icon && actionEngineName && (
+                            <EngineIcon
+                              engine={actionEngineName}
+                              class="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover/action:text-foreground"
+                              title={action.label}
+                            />
+                          )}
+                          {!action.icon && actionLanguageIcon && (
+                            <LanguageIcon
+                              icon={actionLanguageIcon}
+                              class="h-4 w-4 shrink-0"
+                              title={action.label}
+                            />
+                          )}
+                          <span class="truncate">
+                            {getActionText(family, action)}
+                          </span>
+                        </a>
+                      );
+                    })}
                   </div>
                 </article>
               ))}
@@ -404,3 +650,88 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+<style>
+.new-tool-badge {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, #d8a21b 58%, var(--border));
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 244, 184, 0.98),
+      rgba(235, 172, 32, 0.82)
+    ),
+    var(--secondary);
+  color: #5c3d00;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  animation: new-tool-glow 2.8s ease-out infinite;
+}
+
+.new-tool-badge::after {
+  position: absolute;
+  z-index: 0;
+  inset: -30% auto -30% -45%;
+  width: 42%;
+  content: "";
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.7),
+    transparent
+  );
+  transform: rotate(18deg) translateX(-120%);
+  animation: new-tool-shine 3.6s ease-out infinite;
+}
+
+.new-tool-badge__star {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 4px rgba(194, 126, 0, 0.45));
+  animation: new-tool-star 1.8s ease-out infinite;
+}
+
+.new-tool-badge__label {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes new-tool-glow {
+  0%,
+  100% {
+    border-color: color-mix(in srgb, #d8a21b 58%, var(--border));
+  }
+  45% {
+    border-color: #f4c64c;
+  }
+}
+
+@keyframes new-tool-shine {
+  0%,
+  58% {
+    transform: rotate(18deg) translateX(-120%);
+  }
+  82%,
+  100% {
+    transform: rotate(18deg) translateX(360%);
+  }
+}
+
+@keyframes new-tool-star {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  42% {
+    transform: scale(1.14) rotate(9deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .new-tool-badge,
+  .new-tool-badge::after,
+  .new-tool-badge__star {
+    animation: none;
+  }
+}
+</style>

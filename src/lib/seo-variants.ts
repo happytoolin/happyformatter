@@ -104,6 +104,20 @@ export const languageVariants: Record<string, LanguageVariants> = {
       ],
       h1: "JavaScript Biome Formatter",
     },
+    "oxc": {
+      slug: "oxc",
+      title: "JavaScript OXC Formatter - Format JS with Oxfmt",
+      description: "Format JavaScript with OXC in the browser. Paste code, run the OXC formatter, and copy the result.",
+      keywords: [
+        "javascript oxc",
+        "oxc formatter",
+        "oxfmt js formatter",
+        "javascript oxfmt tool",
+        "format javascript oxc",
+        "oxc code formatter",
+      ],
+      h1: "JavaScript OXC Formatter",
+    },
   },
 
   typescript: {
@@ -191,6 +205,20 @@ export const languageVariants: Record<string, LanguageVariants> = {
         "biome code formatter",
       ],
       h1: "TypeScript Biome Formatter",
+    },
+    "oxc": {
+      slug: "oxc",
+      title: "TypeScript OXC Formatter - Format TS with Oxfmt",
+      description: "Format TypeScript with OXC in the browser. Paste code, run the OXC formatter, and copy the result.",
+      keywords: [
+        "typescript oxc",
+        "oxc formatter",
+        "oxfmt ts formatter",
+        "typescript oxfmt tool",
+        "format typescript oxc",
+        "oxc code formatter",
+      ],
+      h1: "TypeScript OXC Formatter",
     },
   },
 

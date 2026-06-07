@@ -1,5 +1,6 @@
 ---
 import Info from "@/components/info/info-enhanced.astro";
+import ToolExamples from "@/components/info/ToolExamples.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
@@ -113,7 +114,7 @@ if (currentVariant && !actualVariantData) {
 const isVariant = currentVariant && actualVariantData;
 // Get the actual language config (in case we detected a hyphenated variant)
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
-const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
+const runtimeFormatterVariants = new Set(["biome", "ruff", "mago", "oxc"]);
 const formatterLanguage =
   currentVariant && runtimeFormatterVariants.has(currentVariant)
     ? `${actualLanguage}-${currentVariant}`
@@ -177,6 +178,12 @@ const displayVariantData = currentVariant ? { h1: toolSEO.h1 } : null;
   <ReactIsland
     kind="formatter"
     props={{ minifier: actualLanguageConfig.minify, language: formatterLanguage }}
+  />
+
+  <ToolExamples
+    language={actualLanguage}
+    minify={currentVariant === "minify"}
+    variant={currentVariant}
   />
 
   <Info

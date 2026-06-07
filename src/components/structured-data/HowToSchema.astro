@@ -1,0 +1,29 @@
+---
+type Props = {
+  name: string;
+  description: string;
+  steps: string[];
+  url: URL;
+};
+
+const { name, description, steps, url } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name,
+  description,
+  url: url.href,
+  step: steps.map((text, index) => ({
+    "@type": "HowToStep",
+    position: index + 1,
+    text,
+  })),
+};
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(schema)}
+/>
