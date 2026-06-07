@@ -125,106 +125,232 @@ function EditorPanel({
   );
 }
 
-function getDiffLineStyle(line: string) {
-  if (line.startsWith("+ ")) {
-    return {
-      label: "Added",
-      className: "border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200",
-      markerClassName: "bg-emerald-500 text-white",
-    };
+type SplitDiffSide = "same" | "added" | "removed" | "empty";
+
+interface SplitDiffRow {
+  leftLineNumber: number | null;
+  leftText: string;
+  leftType: SplitDiffSide;
+  rightLineNumber: number | null;
+  rightText: string;
+  rightType: SplitDiffSide;
+}
+
+interface SplitDiffResult {
+  additions: number;
+  removals: number;
+  rows: SplitDiffRow[];
+}
+
+function formatJsonForDiff(input: string) {
+  return JSON.stringify(parseJson(input), null, 2).split(/\r?\n/);
+}
+
+function createSplitDiffRows(leftLines: string[], rightLines: string[]): SplitDiffRow[] {
+  const leftCount = leftLines.length;
+  const rightCount = rightLines.length;
+  const table = Array.from({ length: leftCount + 1 }, () => Array<number>(rightCount + 1).fill(0));
+
+  for (let leftIndex = leftCount - 1; leftIndex >= 0; leftIndex -= 1) {
+    for (let rightIndex = rightCount - 1; rightIndex >= 0; rightIndex -= 1) {
+      table[leftIndex][rightIndex] = leftLines[leftIndex] === rightLines[rightIndex]
+        ? table[leftIndex + 1][rightIndex + 1] + 1
+        : Math.max(table[leftIndex + 1][rightIndex], table[leftIndex][rightIndex + 1]);
+    }
   }
 
-  if (line.startsWith("- ")) {
-    return {
-      label: "Removed",
-      className: "border-red-500/40 bg-red-500/10 text-red-800 dark:text-red-200",
-      markerClassName: "bg-red-500 text-white",
-    };
+  const rows: SplitDiffRow[] = [];
+  let leftIndex = 0;
+  let rightIndex = 0;
+
+  while (leftIndex < leftCount || rightIndex < rightCount) {
+    if (
+      leftIndex < leftCount
+      && rightIndex < rightCount
+      && leftLines[leftIndex] === rightLines[rightIndex]
+    ) {
+      rows.push({
+        leftLineNumber: leftIndex + 1,
+        leftText: leftLines[leftIndex],
+        leftType: "same",
+        rightLineNumber: rightIndex + 1,
+        rightText: rightLines[rightIndex],
+        rightType: "same",
+      });
+      leftIndex += 1;
+      rightIndex += 1;
+      continue;
+    }
+
+    if (
+      rightIndex < rightCount
+      && (leftIndex === leftCount || table[leftIndex][rightIndex + 1] >= table[leftIndex + 1][rightIndex])
+    ) {
+      rows.push({
+        leftLineNumber: null,
+        leftText: "",
+        leftType: "empty",
+        rightLineNumber: rightIndex + 1,
+        rightText: rightLines[rightIndex],
+        rightType: "added",
+      });
+      rightIndex += 1;
+      continue;
+    }
+
+    rows.push({
+      leftLineNumber: leftIndex + 1,
+      leftText: leftLines[leftIndex],
+      leftType: "removed",
+      rightLineNumber: null,
+      rightText: "",
+      rightType: "empty",
+    });
+    leftIndex += 1;
   }
 
-  if (line.startsWith("~ ")) {
-    return {
-      label: "Changed",
-      className: "border-amber-500/40 bg-amber-500/10 text-amber-900 dark:text-amber-200",
-      markerClassName: "bg-amber-500 text-black",
-    };
-  }
+  return rows;
+}
+
+function createJsonSplitDiff(leftInput: string, rightInput: string): SplitDiffResult {
+  const rows = createSplitDiffRows(formatJsonForDiff(leftInput), formatJsonForDiff(rightInput));
 
   return {
-    label: "Info",
-    className: "border-border bg-muted/40 text-muted-foreground",
-    markerClassName: "bg-muted-foreground text-background",
+    additions: rows.filter(row => row.rightType === "added").length,
+    removals: rows.filter(row => row.leftType === "removed").length,
+    rows,
   };
 }
 
-function DiffOutputPanel({
-  ariaLabel,
-  heightClass = "h-[320px]",
-  label,
-  placeholder,
-  value,
+function DiffLine({
+  lineNumber,
+  text,
+  type,
 }: {
-  ariaLabel: string;
-  heightClass?: string;
-  label: string;
-  placeholder: string;
-  value: string;
+  lineNumber: number | null;
+  text: string;
+  type: SplitDiffSide;
 }) {
-  const lines = (value || placeholder).split(/\r?\n/);
+  const typeClass = {
+    added: "bg-emerald-500/10 text-emerald-900",
+    empty: "bg-muted/30 text-muted-foreground",
+    removed: "bg-red-500/10 text-red-900",
+    same: "text-foreground",
+  }[type];
+
+  return (
+    <div
+      className={`grid min-h-6 grid-cols-[3.5rem_minmax(0,1fr)] items-start rounded-sm font-mono text-sm leading-6 ${typeClass}`}
+    >
+      <span className="select-none pr-3 text-right text-muted-foreground">
+        {lineNumber ?? ""}
+      </span>
+      <code className="whitespace-pre-wrap break-words px-2">
+        {text || " "}
+      </code>
+    </div>
+  );
+}
+
+function SplitDiffViewer({
+  error,
+  result,
+}: {
+  error: string;
+  result: SplitDiffResult | null;
+}) {
+  const rows = result?.rows ?? [];
+  const leftLineCount = rows.filter(row => row.leftLineNumber !== null).length;
+  const rightLineCount = rows.filter(row => row.rightLineNumber !== null).length;
 
   return (
     <div className="overflow-hidden rounded-md border border-border bg-card">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-3 py-2">
-        <h3 className="text-sm font-medium text-foreground">
-          {label}
-        </h3>
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
-            Added
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-muted/20 px-4 py-3">
+        <p className="text-base font-semibold text-foreground">
+          JSON diff
+        </p>
+        <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5 text-red-700">
+            <span className="h-2.5 w-2.5 rounded-full border border-red-600" aria-hidden="true" />
+            {result?.removals ?? 0} removals
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />
-            Removed
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
-            Changed
+          <span className="inline-flex items-center gap-1.5 text-emerald-700">
+            <span className="h-2.5 w-2.5 rounded-full border border-emerald-600 bg-emerald-500/20" aria-hidden="true" />
+            {result?.additions ?? 0} additions
           </span>
         </div>
       </div>
-      <div
-        aria-label={ariaLabel}
-        aria-readonly="true"
-        className={`${heightClass} overflow-auto bg-background p-3`}
-        role="textbox"
-        tabIndex={0}
-      >
-        <div className="space-y-2">
-          {lines.map((line, index) => {
-            const style = getDiffLineStyle(line);
-            const hasDiffMarker = /^[+~-] /.test(line);
-            const marker = hasDiffMarker ? line.slice(0, 1) : "i";
-            const content = hasDiffMarker ? line.slice(2) : line;
 
-            return (
-              <div
-                key={`${line}-${index}`}
-                className={`grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-md border px-3 py-2 font-mono text-sm leading-6 ${style.className}`}
-              >
-                <span
-                  className={`flex h-6 min-w-6 items-center justify-center rounded text-xs font-semibold ${style.markerClassName}`}
-                  title={style.label}
-                >
-                  {marker}
-                </span>
-                <span className="whitespace-pre-wrap break-words">
-                  {content}
-                </span>
-              </div>
-            );
-          })}
+      <div className="grid border-b border-border bg-background text-xs font-medium text-muted-foreground lg:grid-cols-2">
+        <div className="flex items-center justify-between border-b border-border px-4 py-2 lg:border-b-0 lg:border-r">
+          <span>Original</span>
+          <span>{leftLineCount} lines</span>
         </div>
+        <div className="flex items-center justify-between px-4 py-2">
+          <span>Changed</span>
+          <span>{rightLineCount} lines</span>
+        </div>
+      </div>
+
+      <div className="grid min-h-[360px] bg-background lg:grid-cols-2">
+        <div
+          aria-label="Original JSON diff"
+          className="border-b border-border p-3 lg:border-b-0 lg:border-r"
+          role="region"
+          tabIndex={0}
+        >
+          {error
+            ? (
+              <div className="rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive">
+                {error}
+              </div>
+            )
+            : rows.length
+            ? rows.map((row, index) => (
+              <DiffLine
+                key={`left-${index}`}
+                lineNumber={row.leftLineNumber}
+                text={row.leftText}
+                type={row.leftType}
+              />
+            ))
+            : (
+              <div className="flex h-full min-h-[320px] items-center justify-center text-sm text-muted-foreground">
+                Run Find difference to compare both JSON documents.
+              </div>
+            )}
+        </div>
+        <div
+          aria-label="Changed JSON diff"
+          className="p-3"
+          role="region"
+          tabIndex={0}
+        >
+          {error
+            ? null
+            : rows.length
+            ? rows.map((row, index) => (
+              <DiffLine
+                key={`right-${index}`}
+                lineNumber={row.rightLineNumber}
+                text={row.rightText}
+                type={row.rightType}
+              />
+            ))
+            : (
+              <div className="flex h-full min-h-[320px] items-center justify-center text-sm text-muted-foreground">
+                Added lines appear in green and removed lines appear in red.
+              </div>
+            )}
+        </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="grid h-1 grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+      >
+        <div className="bg-red-500/20" />
+        <div className="bg-emerald-500/20" />
       </div>
     </div>
   );
@@ -1212,6 +1338,86 @@ export default function UtilityTool({ toolId }: UtilityToolProps) {
   const colorPreview = tool.id === "color-converter" && output
     ? output.match(/HEX: (#[0-9a-f]{6})/i)?.[1]
     : null;
+  const splitDiffResult = tool.id === "json-diff" && output && !error
+    ? (() => {
+      try {
+        return createJsonSplitDiff(input, secondaryInput);
+      } catch {
+        return null;
+      }
+    })()
+    : null;
+
+  if (tool.id === "json-diff") {
+    return (
+      <ThemeProvider>
+        <section className="border-b border-border bg-background py-6 sm:py-8">
+          <div className="mx-auto max-w-[1600px] space-y-5 px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="font-mono text-xs uppercase text-muted-foreground">
+                  Private browser tool
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Compare two JSON documents side by side.
+                </p>
+              </div>
+              <EditorThemeSelector />
+            </div>
+
+            <SplitDiffViewer error={error} result={splitDiffResult} />
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              <EditorPanel
+                ariaLabel={`${tool.name} original text`}
+                heightClass="h-[260px]"
+                label="Original text"
+                language="json"
+                onChange={setInput}
+                value={input}
+              />
+
+              <EditorPanel
+                ariaLabel={`${tool.name} changed text`}
+                heightClass="h-[260px]"
+                label="Changed text"
+                language="json"
+                onChange={setSecondaryInput}
+                value={secondaryInput}
+              />
+            </div>
+
+            <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Button onClick={() => void runTool("primary")} isLoading={isRunning}>
+                  <Play className="h-4 w-4" aria-hidden="true" />
+                  Find difference
+                </Button>
+                <Button type="button" variant="outline" onClick={copyOutput} disabled={!output}>
+                  <Clipboard className="h-4 w-4" aria-hidden="true" />
+                  Copy summary
+                </Button>
+                <Button type="button" variant="ghost" onClick={resetInput}>
+                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                  Reset
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
+                <span>{stats}</span>
+                {output && <span>{outputLineCount} summary lines</span>}
+                {status && <span>{status}</span>}
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                  No upload
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider>
@@ -1273,16 +1479,6 @@ export default function UtilityTool({ toolId }: UtilityToolProps) {
                     <div className="min-h-[360px] rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive lg:min-h-[420px]">
                       {error}
                     </div>
-                  )
-                  : tool.id === "json-diff"
-                  ? (
-                    <DiffOutputPanel
-                      ariaLabel={`${tool.name} ${tool.outputLabel}`}
-                      heightClass="h-[360px] lg:h-[420px]"
-                      label={tool.outputLabel}
-                      placeholder={`Run ${tool.primaryAction} to see added, removed, and changed JSON paths.`}
-                      value={output}
-                    />
                   )
                   : (
                     <EditorPanel
