@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/playground/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { getUtilityToolById } from "@/lib/utility-tools";
 import { Clipboard, Play, RotateCcw, ShieldCheck } from "lucide-react";
+import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
 interface UtilityToolProps {
@@ -86,6 +87,8 @@ function getOutputLanguage(toolId: string) {
 
 function EditorPanel({
   ariaLabel,
+  headerAction,
+  heightClass = "h-[320px]",
   language,
   label,
   onChange,
@@ -93,6 +96,8 @@ function EditorPanel({
   value,
 }: {
   ariaLabel: string;
+  headerAction?: ReactNode;
+  heightClass?: string;
   language: string;
   label: string;
   onChange?: (value: string) => void;
@@ -101,12 +106,13 @@ function EditorPanel({
 }) {
   return (
     <div className="overflow-hidden rounded-md border border-border bg-card">
-      <div className="border-b border-border px-3 py-2">
+      <div className="flex items-center justify-between gap-3 border-b border-border px-3 py-2">
         <h3 className="text-sm font-medium text-foreground">
           {label}
         </h3>
+        {headerAction}
       </div>
-      <div className="h-[320px]">
+      <div className={heightClass}>
         <CodePlayground
           ariaLabel={ariaLabel}
           inputCode={value}
@@ -1106,120 +1112,134 @@ export default function UtilityTool({ toolId }: UtilityToolProps) {
     <ThemeProvider>
       <section className="border-b border-border bg-background py-10 sm:py-12">
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.44fr)]">
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
                 <p className="font-mono text-xs uppercase text-muted-foreground">
-                  Monaco editor
+                  Private browser tool
                 </p>
-                <EditorThemeSelector />
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Paste input, run the action, then review the result.
+                </p>
               </div>
-
-              <EditorPanel
-                ariaLabel={`${tool.name} ${tool.inputLabel}`}
-                label={tool.inputLabel}
-                language={getPrimaryLanguage(tool.id)}
-                onChange={setInput}
-                value={input}
-              />
-
-              {tool.secondaryInputLabel && (
-                <EditorPanel
-                  ariaLabel={`${tool.name} ${tool.secondaryInputLabel}`}
-                  label={tool.secondaryInputLabel}
-                  language={getSecondaryLanguage(tool.id)}
-                  onChange={setSecondaryInput}
-                  value={secondaryInput}
-                />
-              )}
-
-              {tool.id === "regex-tester" && (
-                <div className="max-w-xs space-y-2">
-                  <label htmlFor={`${tool.id}-flags`} className="text-sm font-medium text-foreground">
-                    Flags
-                  </label>
-                  <input
-                    id={`${tool.id}-flags`}
-                    value={flags}
-                    onChange={event => setFlags(event.target.value.replace(/[^dgimsuvy]/g, ""))}
-                    className="h-10 w-full rounded-md border border-border bg-card px-3 font-mono text-sm text-foreground outline-none transition-colors focus:border-foreground focus:ring-2 focus:ring-ring"
-                  />
-                </div>
-              )}
-
-              <div className="flex flex-wrap items-center gap-2">
-                <Button onClick={() => void runTool("primary")} isLoading={isRunning}>
-                  <Play className="h-4 w-4" aria-hidden="true" />
-                  {tool.primaryAction}
-                </Button>
-                {tool.secondaryAction && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => void runTool("secondary")}
-                    disabled={isRunning}
-                  >
-                    <Play className="h-4 w-4" aria-hidden="true" />
-                    {tool.secondaryAction}
-                  </Button>
-                )}
-                <Button type="button" variant="outline" onClick={copyOutput} disabled={!output}>
-                  <Clipboard className="h-4 w-4" aria-hidden="true" />
-                  Copy
-                </Button>
-                <Button type="button" variant="ghost" onClick={resetInput}>
-                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                  Reset
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                <span>{stats}</span>
-                {output && <span>{outputLineCount} output lines</span>}
-                {status && <span>{status}</span>}
-              </div>
+              <EditorThemeSelector />
             </div>
 
-            <aside className="space-y-4">
-              <div className="rounded-md border border-border bg-card p-4">
-                <div className="flex items-start gap-3">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-foreground" aria-hidden="true" />
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    {tool.privacyNote}
-                  </p>
-                </div>
+            <div className="grid gap-4 xl:grid-cols-2">
+              <div className="space-y-4">
+                <EditorPanel
+                  ariaLabel={`${tool.name} ${tool.inputLabel}`}
+                  heightClass="h-[360px] lg:h-[420px]"
+                  label={tool.inputLabel}
+                  language={getPrimaryLanguage(tool.id)}
+                  onChange={setInput}
+                  value={input}
+                />
+
+                {tool.secondaryInputLabel && (
+                  <EditorPanel
+                    ariaLabel={`${tool.name} ${tool.secondaryInputLabel}`}
+                    heightClass="h-[260px] lg:h-[320px]"
+                    label={tool.secondaryInputLabel}
+                    language={getSecondaryLanguage(tool.id)}
+                    onChange={setSecondaryInput}
+                    value={secondaryInput}
+                  />
+                )}
+
+                {tool.id === "regex-tester" && (
+                  <div className="max-w-xs space-y-2">
+                    <label htmlFor={`${tool.id}-flags`} className="text-sm font-medium text-foreground">
+                      Flags
+                    </label>
+                    <input
+                      id={`${tool.id}-flags`}
+                      value={flags}
+                      onChange={event => setFlags(event.target.value.replace(/[^dgimsuvy]/g, ""))}
+                      className="h-10 w-full rounded-md border border-border bg-card px-3 font-mono text-sm text-foreground outline-none transition-colors focus:border-foreground focus:ring-2 focus:ring-ring"
+                    />
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-sm font-medium text-foreground">
-                    {tool.outputLabel}
-                  </h2>
-                  {colorPreview && (
-                    <span
-                      className="h-7 w-10 rounded-md border border-border"
-                      style={{ backgroundColor: colorPreview }}
-                      aria-label={`Color preview ${colorPreview}`}
-                    />
-                  )}
-                </div>
+              <div className="space-y-4">
                 {error
                   ? (
-                    <div className="min-h-[320px] rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive">
+                    <div className="min-h-[360px] rounded-md border border-destructive/40 bg-destructive/10 p-4 font-mono text-sm leading-6 text-destructive lg:min-h-[420px]">
                       {error}
                     </div>
                   )
                   : (
                     <EditorPanel
                       ariaLabel={`${tool.name} ${tool.outputLabel}`}
+                      headerAction={colorPreview
+                        ? (
+                          <span
+                            className="h-7 w-10 rounded-md border border-border"
+                            style={{ backgroundColor: colorPreview }}
+                            aria-label={`Color preview ${colorPreview}`}
+                          />
+                        )
+                        : null}
+                      heightClass="h-[360px] lg:h-[420px]"
                       label={tool.outputLabel}
                       language={getOutputLanguage(tool.id)}
                       readOnly
-                      value={output || "Output appears here."}
+                      value={output || `Run ${tool.primaryAction} to see the result.`}
                     />
                   )}
               </div>
-            </aside>
+            </div>
+
+            <div className="flex flex-col gap-4 border-t border-border pt-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button onClick={() => void runTool("primary")} isLoading={isRunning}>
+                    <Play className="h-4 w-4" aria-hidden="true" />
+                    {tool.primaryAction}
+                  </Button>
+                  {tool.secondaryAction && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => void runTool("secondary")}
+                      disabled={isRunning}
+                    >
+                      <Play className="h-4 w-4" aria-hidden="true" />
+                      {tool.secondaryAction}
+                    </Button>
+                  )}
+                  <Button type="button" variant="outline" onClick={copyOutput} disabled={!output}>
+                    <Clipboard className="h-4 w-4" aria-hidden="true" />
+                    Copy
+                  </Button>
+                  <Button type="button" variant="ghost" onClick={resetInput}>
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    Reset
+                  </Button>
+                </div>
+
+                <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                  <span>{stats}</span>
+                  {output && <span>{outputLineCount} output lines</span>}
+                  {status && <span>{status}</span>}
+                </div>
+              </div>
+
+              <div className="max-w-xl rounded-md border border-border bg-card p-4">
+                <div className="flex items-start gap-3">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-foreground" aria-hidden="true" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      Private / no upload
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                      {tool.privacyNote}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
