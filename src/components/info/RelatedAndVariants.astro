@@ -323,8 +323,10 @@ const {
   minify = false,
 } = props;
 
-// Get language variants for the current language
-const variants = getLanguageVariants(currentLanguage || "");
+// Formatter variants are useful on formatter pages; minifier pages link to the
+// dedicated minifier route only to avoid thin duplicate URLs.
+const variants = minify ? [] : getLanguageVariants(currentLanguage || "");
+const canonicalVariants = variants.filter(variant => variant.slug !== "minify");
 
 const getLanguageName = (language: string) => {
   const tool = allTools.find(item => item.url === `/${language}`);
@@ -430,7 +432,7 @@ const getMixedRecommendations = () => {
   });
 
   // Add up to 3 variants
-  variants.slice(0, 3).forEach(variant => {
+  canonicalVariants.slice(0, 3).forEach(variant => {
     const display = getVariantRecommendation(currentLanguage || "", variant);
     allRecommendations.push({
       name: display.name,
@@ -445,7 +447,7 @@ const getMixedRecommendations = () => {
   // If we don't have enough recommendations, add more related tools or variants
   if (allRecommendations.length < 6) {
     const remainingRelated = related.slice(3);
-    const remainingVariants = variants.slice(3);
+    const remainingVariants = canonicalVariants.slice(3);
 
     // Alternate between adding more related tools and variants
     let i = 0;

@@ -1,6 +1,7 @@
 ---
 import { generatePageTitle } from "../../lib/seo-titles";
 import { generateBreadcrumbs, getLanguageSEOData } from "../../lib/seo-utils";
+import type { ToolFAQItem } from "../../lib/tool-page-seo";
 import "../../styles/globals.css";
 import MoreTools from "../info/moretools.astro";
 import RelatedAndVariants from "../info/RelatedAndVariants.astro";
@@ -13,27 +14,41 @@ import Head from "./Head.astro";
 import Header from "./header.astro";
 
 type Props = {
-  title: string;
-  description: string;
-  language?: string;
-  image?: string;
-  minify?: boolean;
   breadcrumbs?: Array<{ name: string; url: string }>;
-  currentVariant?: string | null;
-  keywords?: string;
+  canonicalPath?: string;
   category?: string;
+  currentVariant?: string | null;
+  description: string;
+  faqItems?: ToolFAQItem[];
+  image?: string;
+  imageAlt?: string;
+  keywords?: string;
+  language?: string;
+  minify?: boolean;
+  robots?: string;
+  showFormatHeading?: boolean;
+  structuredDataDescription?: string;
+  structuredDataName?: string;
+  title: string;
 };
 
 const {
   title: _title,
   description: _description,
+  breadcrumbs = [],
+  canonicalPath,
+  category,
+  currentVariant = null,
+  faqItems = [],
   image,
+  imageAlt,
+  keywords,
   language,
   minify,
-  breadcrumbs = [],
-  currentVariant = null,
-  keywords,
-  category,
+  robots,
+  showFormatHeading = true,
+  structuredDataDescription,
+  structuredDataName,
 } = Astro.props;
 
 // Get language-specific SEO data
@@ -45,6 +60,7 @@ const pageDescription = _description || seoData.description;
 const finalBreadcrumbs = breadcrumbs.length > 0
   ? breadcrumbs
   : generateBreadcrumbs(language, minify);
+const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -53,19 +69,36 @@ const finalBreadcrumbs = breadcrumbs.length > 0
     <Head
       title={pageTitle}
       description={pageDescription}
+      canonicalPath={canonicalPath}
       image={image}
+      imageAlt={imageAlt}
       keywords={keywords || seoData.keywords}
       category={category || seoData.category}
+      robots={robots}
     />
 
     <!-- Structured Data -->
-    <WebApplicationSchema language={language} />
+    <WebApplicationSchema
+      language={language}
+      minify={minify}
+      name={structuredDataName || pageTitle}
+      description={structuredDataDescription || pageDescription}
+      url={canonicalURL}
+    />
 
     <!-- Breadcrumbs Schema -->
-    {language && <Breadcrumbs items={finalBreadcrumbs} />}
+    {finalBreadcrumbs.length > 0 && <Breadcrumbs items={finalBreadcrumbs} />}
 
-    <!-- FAQ Schema for language pages -->
-    {language && <FAQSchema language={language} />}
+    <!-- FAQ Schema -->
+    {(language || faqItems.length > 0) && (
+      <FAQSchema
+        language={language}
+        items={faqItems}
+        name={structuredDataName}
+        description={structuredDataDescription}
+        url={canonicalURL}
+      />
+    )}
   </head>
   <body>
     <!-- Skip to main content link for keyboard navigation -->
@@ -83,7 +116,7 @@ const finalBreadcrumbs = breadcrumbs.length > 0
       role="main"
       class="w-full max-w-full overflow-x-hidden"
     >
-      {language && (
+      {language && showFormatHeading && (
         <FormatHeading language={language} minify={minify ?? false} />
       )}
       <slot />

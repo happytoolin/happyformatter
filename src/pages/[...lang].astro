@@ -2,17 +2,9 @@
 import Info from "@/components/info/info-enhanced.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import {
-  generatePageBreadcrumbs,
-  getLayoutSEOData,
-  loadGeneratedSEODataAsync,
-} from "@/lib/generated-seo-utils.js";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
-import { getLanguageSEOData } from "@/lib/seo-utils";
+import { buildToolPageSEO } from "@/lib/tool-page-seo";
 import type { GetStaticPaths } from "astro";
-
-// Load SEO data at build time
-const generatedSEOData = await loadGeneratedSEODataAsync();
 
 export const getStaticPaths: GetStaticPaths = (async () => {
   const paths: any[] = [];
@@ -30,14 +22,17 @@ export const getStaticPaths: GetStaticPaths = (async () => {
     });
   });
 
-  // Add variant pages (both hyphenated and path-based)
+  // Add canonical hyphenated variant pages (e.g., "javascript-biome")
   const { getLanguageVariants } = await import("@/lib/seo-variants");
 
   for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
     const variants = getLanguageVariants(langId);
 
     variants.forEach(variant => {
-      // Add hyphenated variant paths (e.g., "javascript-biome")
+      if (variant.slug === "minify") {
+        return;
+      }
+
       paths.push({
         params: { lang: `${langId}-${variant.slug}` },
         props: {
@@ -46,18 +41,6 @@ export const getStaticPaths: GetStaticPaths = (async () => {
           variant: variant.slug,
           variantData: variant,
           lang: `${langId}-${variant.slug}`,
-        },
-      });
-
-      // Also keep path-based variants for backwards compatibility
-      paths.push({
-        params: { lang: `${langId}/${variant.slug}` },
-        props: {
-          languageConfig: langConfig,
-          language: langId,
-          variant: variant.slug,
-          variantData: variant,
-          lang: `${langId}/${variant.slug}`,
         },
       });
     });
@@ -84,13 +67,13 @@ const detectedVariant = pathSegments.length > 1 ? pathSegments[1] : null;
 // Check if the first segment is a hyphenated variant (e.g., "javascript-biome")
 const firstSegment = pathSegments[0];
 const hyphenatedParts = firstSegment ? firstSegment.split("-") : [];
-let baseLanguage = firstSegment;
+let baseLanguage = language;
 let hyphenatedVariant = null;
 
 if (hyphenatedParts.length >= 2) {
   // This might be a hyphenated variant like "javascript-biome"
   const potentialBaseLanguage = hyphenatedParts[0];
-  const potentialVariant = hyphenatedParts[1];
+  const potentialVariant = hyphenatedParts.slice(1).join("-");
 
   // Check if the base language exists and the variant is valid for it
   if (LANGUAGES[potentialBaseLanguage]) {
@@ -135,120 +118,30 @@ const formatterLanguage =
   currentVariant && runtimeFormatterVariants.has(currentVariant)
     ? `${actualLanguage}-${currentVariant}`
     : actualLanguage;
-const getVariantDisplay = (
-  languageName: string,
-  variantValue: string | null | undefined,
-) => {
-  switch (variantValue) {
-    case "biome":
-      return {
-        title: `${languageName} Biome Formatter`,
-        description:
-          `Format ${languageName} with Biome in the browser. Paste code, run the formatter, and copy the result.`,
-      };
-    case "ruff":
-      return {
-        title: `${languageName} Ruff Formatter`,
-        description:
-          `Format ${languageName} with Ruff in the browser. Paste code, run the formatter, and copy the result.`,
-      };
-    case "mago":
-      return {
-        title: `${languageName} Mago Formatter`,
-        description:
-          `Format ${languageName} with Mago in the browser. Paste code, run the formatter, and copy the result.`,
-      };
-    case "secure":
-    case "private":
-      return {
-        title: `Private ${languageName} Formatter`,
-        description:
-          `Format ${languageName} code in the browser. Your code stays on this device while you work.`,
-      };
-    case "beautifier":
-    case "pretty":
-    case "prettify":
-      return {
-        title: `${languageName} Beautifier`,
-        description:
-          `Format hard-to-read ${languageName} code into structured output with indentation and line breaks.`,
-      };
-    case "free":
-    case "online":
-    default:
-      return {
-        title: `${languageName} Formatter`,
-        description:
-          `Format ${languageName} code in your browser. Paste code, run the formatter, and copy the result.`,
-      };
-  }
-};
-const variantDisplay = currentVariant && actualVariantData
-  ? getVariantDisplay(actualLanguageConfig.name, currentVariant)
-  : null;
-const displayVariantData = variantDisplay
-  ? { h1: variantDisplay.title }
-  : null;
-
-// Try to get generated SEO data first
-const generatedSEO = getLayoutSEOData(
-  actualLanguage,
-  currentVariant,
-  false,
-  generatedSEOData || undefined,
-);
-
-// Fall back to existing SEO logic if no generated data
-const fallbackSEO = {
-  title: getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).title,
-  description:
-    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).description,
-  keywords:
-    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).keywords,
-  category:
-    getLanguageSEOData(actualLanguage, actualLanguageConfig.minify).category,
-};
-
-const seoData = generatedSEO || fallbackSEO;
-
-// Try to get generated breadcrumbs
-const generatedBreadcrumbs = generatePageBreadcrumbs(
-  actualLanguage,
-  currentVariant,
-  actualLanguageConfig.minify,
-  generatedSEOData || undefined,
-);
-
-// Generate breadcrumbs with fallback
-const finalBreadcrumbs = generatedBreadcrumbs.length > 0
-  ? generatedBreadcrumbs
-  : [
-    { name: "Home", url: "/" },
-    {
-      name: `${actualLanguageConfig.name} ${
-        actualLanguageConfig.minify ? "Minifier" : "Formatter"
-      }`,
-      url: `/${actualLanguage}`,
-    },
-    ...(currentVariant
-      ? [{
-        name: actualVariantData?.h1
-          || currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1),
-        url: `/${actualLanguage}-${currentVariant}`,
-      }]
-      : []),
-  ];
+const toolSEO = buildToolPageSEO({
+  language: actualLanguage,
+  languageConfig: actualLanguageConfig,
+  minify: currentVariant === "minify",
+  variant: currentVariant,
+  variantData: actualVariantData,
+});
+const displayVariantData = currentVariant ? { h1: toolSEO.h1 } : null;
 ---
 
 <Layout
-  title={seoData.title}
-  description={seoData.description}
+  title={toolSEO.title}
+  description={toolSEO.description}
   language={actualLanguage}
-  minify={actualLanguageConfig.minify}
-  keywords={seoData.keywords}
-  category={seoData.category}
+  minify={currentVariant === "minify"}
+  canonicalPath={toolSEO.canonicalPath}
+  keywords={toolSEO.keywords}
+  category={toolSEO.category}
   currentVariant={currentVariant}
-  breadcrumbs={finalBreadcrumbs}
+  breadcrumbs={toolSEO.breadcrumbs}
+  faqItems={toolSEO.faqItems}
+  showFormatHeading={!currentVariant}
+  structuredDataName={toolSEO.schemaName}
+  structuredDataDescription={toolSEO.schemaDescription}
 >
   {/* Custom heading for variant pages */}
   {isVariant && (
@@ -256,10 +149,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
       <div class="mb-6 border-y border-border py-5">
         <div class="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center">
           <h1 class="text-2xl font-semibold text-foreground md:text-3xl">
-            {variantDisplay?.title
-              || `${actualLanguageConfig.name} ${
-                currentVariant.charAt(0).toUpperCase() + currentVariant.slice(1)
-              }`}
+            {toolSEO.h1}
           </h1>
           <span
             class="w-fit rounded-md border border-border bg-card px-2.5 py-1 text-sm text-muted-foreground"
@@ -268,8 +158,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
           </span>
         </div>
         <p class="text-muted-foreground leading-relaxed">
-          {variantDisplay?.description
-            || `Format ${actualLanguage} code with ${currentVariant}`}
+          {toolSEO.description}
         </p>
         <div class="mt-4 flex items-center gap-2">
           <a
@@ -292,6 +181,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
 
   <Info
     language={actualLanguage}
+    minify={currentVariant === "minify"}
     variant={currentVariant}
     variantData={displayVariantData}
   />
@@ -300,6 +190,7 @@ const finalBreadcrumbs = generatedBreadcrumbs.length > 0
     kind="faq-enhanced"
     props={{
       language: actualLanguage,
+      minify: currentVariant === "minify",
       variant: currentVariant,
       variantData: displayVariantData,
     }}

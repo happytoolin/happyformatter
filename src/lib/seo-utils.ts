@@ -649,7 +649,7 @@ export function generateBreadcrumbs(language?: string, minify = false): Array<{ 
     return [
       { name: "Home", url: "/" },
       { name: `${languageName} Formatter`, url: basePath },
-      { name: "Minify", url: `${basePath}/minify` },
+      { name: "Minify", url: `/minify/${language}` },
     ];
   } else {
     return [

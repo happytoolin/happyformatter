@@ -8,11 +8,11 @@ const language = "json";
 const languageConfig = LANGUAGES[language];
 
 const homepageTitle =
-  "Browser Code Formatter & Minifier - 22+ Languages | HappyFormatter";
+  "Private Browser Code Formatter & Minifier - No Upload | HappyFormatter";
 const homepageDescription =
-  "Format and minify code for 22+ programming languages in your browser. Paste code, run the action, and copy the result.";
+  "Format, minify, and inspect developer snippets locally in your browser. HappyFormatter keeps pasted code on your device with no upload.";
 const homepageKeywords =
-  "online code formatter, code minifier, free code formatter, format code online, code beautifier, web formatter, code formatting tool, programmer tools, developer tools";
+  "private code formatter, no upload code formatter, browser code formatter, code minifier, free code formatter, format code online, developer tools";
 ---
 
 <Layout
@@ -24,16 +24,39 @@ const homepageKeywords =
     <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
       <div class="space-y-4">
         <p class="text-sm font-medium text-muted-foreground">
-          Local formatter
+          Private browser formatter
         </p>
         <h1 class="max-w-5xl text-5xl font-semibold leading-none text-foreground md:text-6xl">
           Format code without leaving your browser.
         </h1>
       </div>
       <p class="max-w-md text-sm leading-6 text-muted-foreground">
-        Start with JSON or jump to any formatter below. Formatting runs
-        client-side and keeps your code on this device.
+        Start with JSON or jump to private tools for formatting, minifying,
+        converting, decoding, hashing, and diffing. Workflows run client-side
+        and keep your input on this device.
       </p>
+    </div>
+  </section>
+  <section class="border-b border-border bg-background py-5">
+    <div class="mx-auto flex max-w-[1400px] flex-wrap gap-2 px-4 sm:px-6 lg:px-8">
+      <a
+        href="/tools"
+        class="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        All private tools
+      </a>
+      <a
+        href="/tools/json"
+        class="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        JSON tools
+      </a>
+      <a
+        href="/tools/minifiers"
+        class="inline-flex min-h-9 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        Minifiers
+      </a>
     </div>
   </section>
   <ReactIsland

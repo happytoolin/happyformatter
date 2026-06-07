@@ -34,6 +34,91 @@ const modernMonacoRuntimeDir = fileURLToPath(
 );
 const enablePartytown = process.env.NODE_ENV === "production";
 
+const shouldIncludeInSitemap = page => {
+  const url = new URL(page);
+  const segments = url.pathname.split("/").filter(Boolean);
+
+  if (url.pathname === "/modern-monaco-test/") {
+    return false;
+  }
+
+  if (segments.length === 2 && segments[0] !== "minify" && segments[0] !== "tools") {
+    return false;
+  }
+
+  if (segments.length === 1 && segments[0].endsWith("-minify")) {
+    return false;
+  }
+
+  return true;
+};
+
+const legacyLanguageVariants = {
+  c: ["free", "online", "clang"],
+  cpp: ["free", "online", "clang"],
+  csharp: ["free", "online", "dotnet"],
+  css: ["free", "online", "beautifier", "minify"],
+  dart: ["free", "online", "flutter"],
+  go: ["free", "online", "secure", "gofmt"],
+  html: ["free", "online", "beautifier"],
+  java: ["free", "online", "google"],
+  javascript: ["free", "online", "secure", "beautifier", "biome"],
+  json: ["free", "online", "pretty", "minify"],
+  lua: ["free", "online", "beautifier"],
+  markdown: ["free", "online", "beautifier"],
+  php: ["free", "online", "beautifier", "mago"],
+  proto: ["free", "online", "beautifier"],
+  python: ["free", "online", "secure", "pep8", "ruff"],
+  rust: ["free", "online", "rustfmt"],
+  scss: ["free", "online", "compiler"],
+  sql: ["free", "online", "beautifier", "formatter"],
+  typescript: ["free", "online", "secure", "beautifier", "biome"],
+  xml: ["free", "online", "beautifier"],
+  yaml: ["free", "online", "pretty"],
+  zig: ["free", "online", "zig-fmt"],
+};
+
+const languagesWithMinifiers = [
+  "css",
+  "javascript",
+  "json",
+  "scss",
+  "typescript",
+  "xml",
+];
+
+const redirectTo = destination => ({
+  destination,
+  status: 301,
+});
+
+const createLegacyRedirects = () => {
+  const redirects = {};
+
+  for (const [language, variants] of Object.entries(legacyLanguageVariants)) {
+    for (const variant of variants) {
+      if (variant === "minify" && languagesWithMinifiers.includes(language)) {
+        redirects[`/${language}-${variant}`] = redirectTo(`/minify/${language}`);
+        redirects[`/${language}/${variant}`] = redirectTo(`/minify/${language}`);
+        continue;
+      }
+
+      redirects[`/${language}/${variant}`] = redirectTo(`/${language}-${variant}`);
+    }
+  }
+
+  for (const language of languagesWithMinifiers) {
+    redirects[`/${language}-minify`] = redirectTo(`/minify/${language}`);
+    redirects[`/${language}/minify`] = redirectTo(`/minify/${language}`);
+
+    for (const variant of legacyLanguageVariants[language] || []) {
+      redirects[`/minify/${language}-${variant}`] = redirectTo(`/minify/${language}`);
+    }
+  }
+
+  return redirects;
+};
+
 const shikiLanguageDependencies = [
   "@shikijs/langs/c",
   "@shikijs/langs/cpp",
@@ -164,13 +249,14 @@ function noStoreDevModulesPlugin() {
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
+  redirects: createLegacyRedirects(),
   session: {
     driver: sessionDrivers.null(),
   },
 
   integrations: [
     sitemap({
-      filter: page => page !== "https://happyformatter.com/modern-monaco-test/",
+      filter: shouldIncludeInSitemap,
       xslURL: "/sitemap.xsl",
     }),
     react(),

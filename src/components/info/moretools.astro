@@ -1,7 +1,11 @@
 ---
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import {
+  getUtilityToolsByCategory,
+  UTILITY_CATEGORIES,
+} from "@/lib/utility-tools";
 
-type ToolType = "FMT" | "MIN";
+type ToolType = "FMT" | "MIN" | "UTIL";
 
 interface ToolAction {
   label: string;
@@ -11,8 +15,9 @@ interface ToolAction {
 
 interface ToolFamily {
   name: string;
-  icon: string;
-  group: "Web" | "Data" | "Runtime" | "Systems";
+  icon?: string;
+  initials?: string;
+  group: "Web" | "Data" | "Runtime" | "Systems" | "Utilities";
   descriptor: string;
   actions: ToolAction[];
 }
@@ -221,20 +226,40 @@ const toolFamilies: ToolFamily[] = [
   },
 ];
 
-const groupOrder: ToolFamily["group"][] = ["Web", "Data", "Runtime", "Systems"];
+const utilityFamilies: ToolFamily[] = UTILITY_CATEGORIES.map(category => ({
+  name: category.name,
+  initials: category.shortName.slice(0, 2).toUpperCase(),
+  group: "Utilities",
+  descriptor: category.shortName,
+  actions: getUtilityToolsByCategory(category.id).map(tool => ({
+    label: tool.name,
+    url: `/tools/${tool.slug}`,
+    type: "UTIL",
+  })),
+}));
+
+const directoryFamilies = [...toolFamilies, ...utilityFamilies];
+const groupOrder: ToolFamily["group"][] = [
+  "Web",
+  "Data",
+  "Runtime",
+  "Systems",
+  "Utilities",
+];
 const sections = groupOrder.map((group) => ({
   group,
   id: `tools-${group.toLowerCase()}`,
-  families: toolFamilies.filter((family) => family.group === group),
+  families: directoryFamilies.filter((family) => family.group === group),
 }));
 
-const allActions = toolFamilies.flatMap((family) => family.actions);
+const allActions = directoryFamilies.flatMap((family) => family.actions);
 const minifierCount =
   allActions.filter((action) => action.type === "MIN").length;
 
 const typeLabel: Record<ToolType, string> = {
   FMT: "Format",
   MIN: "Minify",
+  UTIL: "Open",
 };
 
 const getActionText = (family: ToolFamily, action: ToolAction) => {
@@ -252,6 +277,10 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
 
   if (action.label === "Objective-C++") {
     return "Format Objective-C++";
+  }
+
+  if (action.type === "UTIL") {
+    return action.label;
   }
 
   return `${typeLabel[action.type]} ${family.name}`;
@@ -273,7 +302,8 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
             Find another tool.
           </h2>
           <p class="mt-5 max-w-sm text-sm leading-6 text-muted-foreground">
-            {allActions.length} routes are grouped by file type. {minifierCount}
+            {allActions.length} routes are grouped by file type and workflow.
+            {minifierCount}
             {" "}of them open a minifier.
           </p>
 
@@ -318,7 +348,13 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                     class="-m-2 flex min-w-0 items-center gap-3 rounded-md p-2 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-card">
-                      <LanguageIcon icon={family.icon} class="h-6 w-6" />
+                      {family.icon
+                        ? <LanguageIcon icon={family.icon} class="h-6 w-6" />
+                        : (
+                          <span class="text-sm font-semibold text-foreground">
+                            {family.initials}
+                          </span>
+                        )}
                     </div>
                     <div class="min-w-0">
                       <h4 class="truncate text-base font-medium text-foreground">

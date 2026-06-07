@@ -154,6 +154,8 @@ export function getPageSEOContent(
     if (variantPage) {
       return variantPage;
     }
+
+    return null;
   }
 
   // Find the main language page
@@ -269,7 +271,7 @@ export function generatePageBreadcrumbs(
       return [
         { name: "Home", url: "/" },
         { name: `${languageName} Formatter`, url: basePath },
-        { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `${basePath}/${variant}` },
+        { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `/${language}-${variant}` },
       ];
     } else {
       return [
@@ -286,7 +288,7 @@ export function generatePageBreadcrumbs(
     return [
       { name: "Home", url: "/" },
       { name: languageName, url: basePath },
-      { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `${basePath}/${variant}` },
+      { name: variant.charAt(0).toUpperCase() + variant.slice(1), url: `/${language}-${variant}` },
     ];
   } else {
     return [

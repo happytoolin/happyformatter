@@ -3,10 +3,11 @@ import "@vitejs/plugin-react/preamble";
 import { FAQ as BasicFAQ } from "@/components/faq/faq";
 import { FAQ as EnhancedFAQ } from "@/components/faq/faq-enhanced";
 import Formatter from "@/components/playground/Formatter";
+import UtilityTool from "@/components/tools/UtilityTool";
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 
-type IslandKind = "formatter" | "faq" | "faq-enhanced";
+type IslandKind = "formatter" | "faq" | "faq-enhanced" | "utility-tool";
 
 interface FormatterIslandProps {
   language: string;
@@ -15,8 +16,13 @@ interface FormatterIslandProps {
 
 interface FAQIslandProps {
   language: string;
+  minify?: boolean;
   variant?: string | null;
   variantData?: { h1?: string } | null;
+}
+
+interface UtilityToolIslandProps {
+  toolId: string;
 }
 
 type IslandElement = HTMLElement & {
@@ -40,6 +46,8 @@ function renderIsland(kind: IslandKind, props: Record<string, unknown>) {
   switch (kind) {
     case "formatter":
       return createElement(Formatter, props as unknown as FormatterIslandProps);
+    case "utility-tool":
+      return createElement(UtilityTool, props as unknown as UtilityToolIslandProps);
     case "faq-enhanced":
       return createElement(EnhancedFAQ, props as unknown as FAQIslandProps);
     case "faq":

@@ -1,121 +1,65 @@
 ---
+import { LANGUAGES } from "@/lib/languages";
+import {
+  formatExtensions,
+  getFormatterEngineName,
+  getLanguageDisplayName,
+  getToolModeName,
+} from "@/lib/tool-page-seo";
+
 interface VariantData {
   h1?: string;
 }
 
 interface Props {
   language: string;
+  minify?: boolean;
   variant?: string | null;
   variantData?: VariantData | null;
 }
 
-const { language, variant, variantData } = Astro.props;
+const { language, minify = false, variant, variantData } = Astro.props;
 
-const languageNames: Record<string, string> = {
-  c: "C",
-  cpp: "C++",
-  csharp: "C#",
-  css: "CSS",
-  dart: "Dart",
-  go: "Go",
-  html: "HTML",
-  java: "Java",
-  javascript: "JavaScript",
-  "javascript-biome": "JavaScript Biome",
-  json: "JSON",
-  lua: "Lua",
-  markdown: "Markdown",
-  objectivec: "Objective-C",
-  objectivecpp: "Objective-C++",
-  php: "PHP",
-  "php-mago": "PHP Mago",
-  proto: "Protocol Buffers",
-  python: "Python",
-  "python-ruff": "Python Ruff",
-  rust: "Rust",
-  scss: "SCSS",
-  sql: "SQL",
-  swift: "Swift",
-  toml: "TOML",
-  typescript: "TypeScript",
-  "typescript-biome": "TypeScript Biome",
-  xml: "XML",
-  yaml: "YAML",
-  zig: "Zig",
-};
-
-const modeNames: Record<string, string> = {
-  beautifier: "Beautifier",
-  biome: "Biome pass",
-  free: "Formatter",
-  minify: "Minifier",
-  online: "Formatter",
-  pretty: "Pretty printer",
-  prettify: "Pretty printer",
-  private: "Private formatter",
-  ruff: "Ruff pass",
-  secure: "Private formatter",
-};
-
-const getLanguageName = (value: string) => {
-  if (languageNames[value]) {
-    return languageNames[value];
-  }
-
-  return value
-    .split("-")
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-};
-
-const getModeName = (
-  variantValue: string | null | undefined,
-  data: VariantData | null | undefined,
-) => {
-  if (variantValue && modeNames[variantValue]) {
-    return modeNames[variantValue];
-  }
-
-  if (data?.h1) {
-    const compactName = data.h1
-      .replace(/online/gi, "")
-      .replace(/free/gi, "")
-      .trim();
-
-    return compactName || "Formatter";
-  }
-
-  return "Formatter";
-};
-
-const languageName = getLanguageName(language);
-const modeName = getModeName(variant, variantData);
-const actionLabel = modeName === "Minifier"
+const languageConfig = LANGUAGES[language];
+const isMinifier = minify || variant === "minify";
+const languageName = getLanguageDisplayName(language, languageConfig);
+const modeName = getToolModeName(isMinifier, variant, variantData);
+const engineName = getFormatterEngineName(language, isMinifier, variant);
+const extensionLabel = languageConfig
+  ? formatExtensions(languageConfig)
+  : "code snippets";
+const actionLabel = isMinifier
   ? "Minify code"
-  : modeName.includes("pass")
+  : modeName.includes("pass") || modeName.includes("Formatter")
   ? `Run ${modeName}`
   : "Format code";
+const outputLabel = isMinifier ? "Compact output" : "Readable output";
+const outputDetail = isMinifier
+  ? "Copy the compact result after checking it still parses as expected."
+  : "Move the formatted code back to your editor.";
 
 const notes = [
   {
-    label: "Input",
-    value: "Paste code",
-    detail: "Use a snippet or a full file.",
+    label: "Files",
+    value: extensionLabel,
+    detail: `Paste a ${languageName} snippet or a full source file.`,
   },
   {
-    label: "Format",
-    value: modeName,
-    detail: "Clean indentation, spacing, and line breaks.",
+    label: "Engine",
+    value: engineName,
+    detail: isMinifier
+      ? "Runs the browser-side minifier for compact output."
+      : "Runs the browser-side formatter for readable output.",
   },
   {
-    label: "Issues",
-    value: "Highlighted lines",
-    detail: "If formatting stops, fix the shown line and try again.",
+    label: "Privacy",
+    value: "Local run",
+    detail: "The editor does not send pasted code to a formatting API.",
   },
   {
     label: "Result",
-    value: "Copy output",
-    detail: "Move the formatted code back to your editor.",
+    value: outputLabel,
+    detail: outputDetail,
   },
 ];
 
@@ -130,7 +74,9 @@ const checkpoints = [
   },
   {
     label: "Review",
-    detail: "Fix syntax issues if processing stops.",
+    detail: isMinifier
+      ? "Check that the compact result is suitable for your target runtime."
+      : "Fix syntax issues if processing stops.",
   },
   {
     label: "Move",

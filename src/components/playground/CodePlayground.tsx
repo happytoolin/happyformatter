@@ -6,9 +6,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "./ThemeContext";
 
 interface CodePlaygroundProps {
+  ariaLabel?: string;
   inputCode: string;
   language: string;
   onCodeChange?: (code: string) => void;
+  readOnly?: boolean;
 }
 
 type MonacoApi = typeof Monaco;
@@ -132,7 +134,13 @@ function announceEditorReady(languageName: string) {
   }, 1000);
 }
 
-export default function CodePlayground({ inputCode, language, onCodeChange }: CodePlaygroundProps) {
+export default function CodePlayground({
+  ariaLabel,
+  inputCode,
+  language,
+  onCodeChange,
+  readOnly = false,
+}: CodePlaygroundProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const monacoRef = useRef<MonacoApi | null>(null);
   const editorRef = useRef<MonacoEditor | null>(null);
@@ -201,7 +209,7 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
         );
         const editor = monaco.editor.create(containerRef.current, {
           model,
-          ariaLabel: `Code editor for ${languageName}`,
+          ariaLabel: ariaLabel ?? `Code editor for ${languageName}`,
           automaticLayout: true,
           contextmenu: false,
           fontFamily: "\"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -211,6 +219,8 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
           minimap: { enabled: false },
           padding: { top: 16, bottom: 16 },
           renderLineHighlight: "line",
+          readOnly,
+          readOnlyMessage: { value: "Output is read-only" },
           scrollBeyondLastLine: false,
           tabSize: 2,
           wordWrap: "on",
@@ -255,14 +265,14 @@ export default function CodePlayground({ inputCode, language, onCodeChange }: Co
       modelRef.current = null;
       monacoRef.current = null;
     };
-  }, [currentTheme, language, languageName, ready]);
+  }, [ariaLabel, currentTheme, language, languageName, readOnly, ready]);
 
   return (
     <div
       className="relative h-full w-full overflow-hidden bg-transparent"
       data-language={language}
       role="application"
-      aria-label={`Code editor for ${languageName}`}
+      aria-label={ariaLabel ?? `Code editor for ${languageName}`}
     >
       {(isLoading || !ready) && (
         <div

@@ -1,8 +1,9 @@
 ---
-import Info from "@/components/info/info.astro";
+import Info from "@/components/info/info-enhanced.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
-import { LANGUAGES } from "@/lib/languages";
+import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
+import { buildToolPageSEO } from "@/lib/tool-page-seo";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = (async () => {
@@ -22,32 +23,12 @@ export const getStaticPaths: GetStaticPaths = (async () => {
     }
   });
 
-  // Add paths for hyphenated variants that support minification
-  const { getLanguageVariants } = await import("@/lib/seo-variants");
-
-  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
-    if (langConfig.minify) {
-      const variants = getLanguageVariants(langId);
-
-      variants.forEach(variant => {
-        paths.push({
-          params: { lang: `${langId}-${variant.slug}` },
-          props: {
-            language: langId,
-            languageConfig: langConfig,
-            lang: `${langId}-${variant.slug}`,
-          },
-        });
-      });
-    }
-  }
-
   return paths;
 }) satisfies GetStaticPaths;
 
 interface Props {
   language: string;
-  languageConfig: any;
+  languageConfig: LanguageConfig;
   lang: string;
 }
 
@@ -58,11 +39,12 @@ const langParam = _lang;
 const hyphenatedParts = langParam ? langParam.split("-") : [];
 let actualLanguage = language;
 let variant = null;
+let actualVariantData = null;
 
 if (hyphenatedParts.length >= 2) {
   // This might be a hyphenated variant like "javascript-biome"
   const potentialBaseLanguage = hyphenatedParts[0];
-  const potentialVariant = hyphenatedParts[1];
+  const potentialVariant = hyphenatedParts.slice(1).join("-");
 
   // Check if the base language exists and the variant is valid for it
   if (LANGUAGES[potentialBaseLanguage]) {
@@ -75,6 +57,7 @@ if (hyphenatedParts.length >= 2) {
     if (variantData) {
       actualLanguage = potentialBaseLanguage;
       variant = potentialVariant;
+      actualVariantData = variantData;
     }
   }
 }
@@ -96,24 +79,38 @@ if (!actualLanguage || !actualLanguageConfig) {
 if (!actualLanguageConfig.minify) {
   throw new Error(`${actualLanguageConfig.name} does not support minification`);
 }
+
+const toolSEO = buildToolPageSEO({
+  language: actualLanguage,
+  languageConfig: actualLanguageConfig,
+  minify: true,
+  variant,
+  variantData: actualVariantData,
+});
+const displayVariantData = variant ? { h1: toolSEO.h1 } : null;
 ---
 
 <Layout
-  title={`${actualLanguageConfig.name} ${
-    variant ? `${variant.charAt(0).toUpperCase() + variant.slice(1)} ` : ""
-  }Minifier in Browser | HappyFormatter`}
-  description={`Minify ${actualLanguageConfig.name} code in your browser. Paste code, run the minifier, and copy the result.`}
+  title={toolSEO.title}
+  description={toolSEO.description}
   language={actualLanguage}
   minify={true}
+  canonicalPath={toolSEO.canonicalPath}
+  keywords={toolSEO.keywords}
+  category={toolSEO.category}
+  currentVariant={variant}
+  breadcrumbs={toolSEO.breadcrumbs}
+  faqItems={toolSEO.faqItems}
+  showFormatHeading={false}
+  structuredDataName={toolSEO.schemaName}
+  structuredDataDescription={toolSEO.schemaDescription}
 >
   <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
     <div class="mb-6 border-y border-border py-5">
       <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="flex flex-wrap items-center gap-3">
           <h1 class="text-2xl font-semibold text-foreground md:text-4xl">
-            {actualLanguageConfig.name}
-            {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
-            minifier
+            {toolSEO.h1}
           </h1>
           <span
             class="rounded-md border border-border bg-card px-2.5 py-1 text-sm text-muted-foreground"
@@ -124,9 +121,7 @@ if (!actualLanguageConfig.minify) {
       </div>
       <div class="mb-4 max-w-2xl">
         <p class="font-medium leading-relaxed text-foreground">
-          Minify your {actualLanguageConfig.name}
-          code{variant ? ` with ${variant}` : ""}. The action removes supported
-          whitespace and keeps the result in the browser.
+          {toolSEO.description}
         </p>
       </div>
       <div class="flex items-center gap-4">
@@ -150,6 +145,19 @@ if (!actualLanguageConfig.minify) {
     kind="formatter"
     props={{ minifier: true, language: formatterLanguage }}
   />
-  <Info language={actualLanguage} />
-  <ReactIsland kind="faq" props={{ language: actualLanguage }} />
+  <Info
+    language={actualLanguage}
+    minify={true}
+    variant={variant}
+    variantData={displayVariantData}
+  />
+  <ReactIsland
+    kind="faq-enhanced"
+    props={{
+      language: actualLanguage,
+      minify: true,
+      variant,
+      variantData: displayVariantData,
+    }}
+  />
 </Layout>
