@@ -3,6 +3,7 @@ import Info from "@/components/info/info.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import { LANGUAGES } from "@/lib/languages";
+import { COMMON_FIX_LINKS, POPULAR_PRIVATE_LINKS } from "@/lib/seo-content";
 
 const language = "json";
 const languageConfig = LANGUAGES[language];
@@ -63,6 +64,50 @@ const homepageKeywords =
     kind="formatter"
     props={{ minifier: languageConfig.minify, language }}
   />
+  <section class="border-b border-border bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+      <div>
+        <h2 class="text-3xl font-semibold text-foreground">
+          Popular private tools
+        </h2>
+        <div class="mt-5 divide-y divide-border border-y border-border">
+          {POPULAR_PRIVATE_LINKS.map(link => (
+            <article class="grid gap-3 py-4 md:grid-cols-[minmax(170px,0.35fr)_minmax(0,1fr)] md:items-center">
+              <a
+                href={link.href}
+                class="text-base font-semibold text-foreground underline-offset-4 hover:underline"
+              >
+                {link.title}
+              </a>
+              <p class="text-sm leading-6 text-muted-foreground">
+                {link.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h2 class="text-3xl font-semibold text-foreground">
+          Common developer fixes
+        </h2>
+        <div class="mt-5 divide-y divide-border border-y border-border">
+          {COMMON_FIX_LINKS.map(link => (
+            <article class="grid gap-3 py-4 md:grid-cols-[minmax(170px,0.35fr)_minmax(0,1fr)] md:items-center">
+              <a
+                href={link.href}
+                class="text-base font-semibold text-foreground underline-offset-4 hover:underline"
+              >
+                {link.title}
+              </a>
+              <p class="text-sm leading-6 text-muted-foreground">
+                {link.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
   <Info language={language} />
   <ReactIsland kind="faq" props={{ language }} />
 </Layout>

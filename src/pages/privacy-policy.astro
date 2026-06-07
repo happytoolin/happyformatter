@@ -1,5 +1,4 @@
 ---
-import FormatHeading from "@/components/layout/FormatHeading.astro";
 import Layout from "@/components/layout/layout.astro";
 
 const privacyFeatures = [
@@ -38,13 +37,97 @@ const details = [
       "Anonymous page-level usage metrics may be collected. Those metrics do not include the code you paste into the editor.",
   },
 ];
+
+const dataRows = [
+  {
+    item: "Pasted code and text",
+    handling:
+      "Processed in the browser for formatter and utility actions. HappyFormatter does not intentionally upload this content for processing.",
+  },
+  {
+    item: "Generated output",
+    handling:
+      "Created in the browser and shown back to you. Copying, saving, or sharing output is controlled by your browser and device.",
+  },
+  {
+    item: "Page analytics",
+    handling:
+      "May include aggregate page views, tool clicks, browser type, and rough usage signals. Analytics do not include pasted source text.",
+  },
+  {
+    item: "Network requests",
+    handling:
+      "The page loads site assets, fonts, analytics scripts, and browser runtime files. Tool inputs are not sent to a formatter API.",
+  },
+];
+
+const privacyNotes = [
+  {
+    title: "Secrets and sensitive data",
+    body:
+      "No-upload design reduces exposure, but it does not override your company policy. Avoid pasting production secrets, private keys, regulated data, or long-lived tokens into any website unless your policy allows it.",
+  },
+  {
+    title: "Local storage",
+    body:
+      "The site may use browser storage for preferences such as theme or editor theme. Tool content is not intentionally stored as account data because there is no account system.",
+  },
+  {
+    title: "Retention",
+    body:
+      "Because pasted snippets are not intentionally uploaded for processing, HappyFormatter does not maintain a server-side history of your tool inputs or generated outputs.",
+  },
+];
+
+const relatedLinks = [
+  {
+    title: "Security",
+    href: "/security",
+    description: "Read the no-upload security posture.",
+  },
+  {
+    title: "About",
+    href: "/about",
+    description: "Learn what HappyFormatter is built for.",
+  },
+  {
+    title: "Contact",
+    href: "/contact",
+    description: "Send feedback or corrections.",
+  },
+];
 ---
 
 <Layout
-  title="Privacy Policy"
-  description="HappyFormatter's privacy policy - We don't collect your data. All formatting happens locally in your browser."
+  title="Privacy Policy - Private No Upload Developer Tools | HappyFormatter"
+  description="HappyFormatter privacy policy for private browser developer tools. Formatting, minifying, converting, and decoding are designed to run locally with no upload."
+  canonicalPath="/privacy-policy"
+  keywords="HappyFormatter privacy policy, no upload formatter privacy, private developer tools privacy"
+  breadcrumbs={[
+    { name: "Home", url: "/" },
+    { name: "Privacy Policy", url: "/privacy-policy" },
+  ]}
+  showFormatHeading={false}
+  structuredDataName="HappyFormatter Privacy Policy"
+  structuredDataDescription="Privacy policy for HappyFormatter private no-upload browser developer tools."
 >
-  <FormatHeading language="privacy" minify={false} />
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          Privacy policy
+        </p>
+        <h1 class="max-w-5xl text-4xl font-semibold leading-none text-foreground md:text-6xl">
+          Your code stays on your device.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        HappyFormatter is designed around local browser processing. The
+        formatter does not require an account, upload, or server-side formatting
+        call.
+      </p>
+    </div>
+  </section>
 
   <section class="border-b border-border bg-card py-16 sm:py-20">
     <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
@@ -53,7 +136,7 @@ const details = [
           Policy
         </p>
         <h2 class="text-3xl font-semibold leading-tight md:text-4xl">
-          Your code stays on your device.
+          Local processing first.
         </h2>
         <p class="max-w-md text-sm leading-6 text-muted-foreground">
           HappyFormatter is designed around local browser processing. The
@@ -108,8 +191,70 @@ const details = [
         </div>
 
         <p class="font-mono text-xs text-muted-foreground">
-          Last updated: December 2025
+          Last updated: June 2026
         </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-b border-border bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] lg:px-8">
+      <div>
+        <h2 class="text-3xl font-semibold text-foreground">
+          What happens to different data
+        </h2>
+        <div class="mt-5 divide-y divide-border border-y border-border">
+          {dataRows.map(row => (
+            <article class="grid gap-3 py-5 md:grid-cols-[minmax(180px,0.28fr)_minmax(0,1fr)]">
+              <h3 class="text-base font-semibold text-foreground">
+                {row.item}
+              </h3>
+              <p class="text-sm leading-6 text-muted-foreground">
+                {row.handling}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+      <aside>
+        <h2 class="text-2xl font-semibold text-foreground">
+          Practical limits
+        </h2>
+        <div class="mt-5 space-y-4">
+          {privacyNotes.map(note => (
+            <article class="rounded-md border border-border bg-card p-4">
+              <h3 class="text-base font-semibold text-foreground">
+                {note.title}
+              </h3>
+              <p class="mt-2 text-sm leading-6 text-muted-foreground">
+                {note.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bg-background py-12 sm:py-16">
+    <div class="mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-semibold text-foreground">
+        Related trust pages
+      </h2>
+      <div class="mt-5 grid gap-4 md:grid-cols-3">
+        {relatedLinks.map(link => (
+          <a
+            href={link.href}
+            class="rounded-md border border-border bg-card p-4 transition-colors hover:border-foreground hover:bg-secondary"
+          >
+            <span class="text-sm font-semibold text-foreground">
+              {link.title}
+            </span>
+            <span class="mt-1 block text-sm leading-6 text-muted-foreground">
+              {link.description}
+            </span>
+          </a>
+        ))}
       </div>
     </div>
   </section>

@@ -1,0 +1,20 @@
+---
+import Layout from "@/components/layout/layout.astro";
+import SeoContentHub from "@/components/seo/SeoContentHub.astro";
+import { getSeoHubBreadcrumbs, SEO_HUBS } from "@/lib/seo-content";
+
+const hub = SEO_HUBS.errors;
+---
+
+<Layout
+  title={hub.title}
+  description={hub.description}
+  canonicalPath={hub.canonicalPath}
+  keywords="developer error fixes, json error guide, yaml error guide, private developer tools"
+  breadcrumbs={getSeoHubBreadcrumbs("errors")}
+  showFormatHeading={false}
+  structuredDataName={hub.h1}
+  structuredDataDescription={hub.description}
+>
+  <SeoContentHub family="errors" />
+</Layout>

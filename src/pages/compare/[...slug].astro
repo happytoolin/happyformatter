@@ -1,0 +1,32 @@
+---
+import Layout from "@/components/layout/layout.astro";
+import SeoContentArticle from "@/components/seo/SeoContentArticle.astro";
+import {
+  COMPARISON_PAGES,
+  type ComparisonPage,
+  getSeoContentBreadcrumbs,
+} from "@/lib/seo-content";
+
+export function getStaticPaths() {
+  return COMPARISON_PAGES.map(page => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props as { page: ComparisonPage };
+---
+
+<Layout
+  title={page.title}
+  description={page.description}
+  canonicalPath={page.canonicalPath}
+  keywords={page.keywords}
+  breadcrumbs={getSeoContentBreadcrumbs(page)}
+  faqItems={page.faqs}
+  showFormatHeading={false}
+  structuredDataName={page.h1}
+  structuredDataDescription={page.description}
+>
+  <SeoContentArticle page={page} />
+</Layout>

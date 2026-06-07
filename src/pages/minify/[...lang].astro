@@ -1,5 +1,6 @@
 ---
 import Info from "@/components/info/info-enhanced.astro";
+import ToolExamples from "@/components/info/ToolExamples.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
@@ -145,6 +146,7 @@ const displayVariantData = variant ? { h1: toolSEO.h1 } : null;
     kind="formatter"
     props={{ minifier: true, language: formatterLanguage }}
   />
+  <ToolExamples language={actualLanguage} minify={true} variant={variant} />
   <Info
     language={actualLanguage}
     minify={true}

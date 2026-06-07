@@ -42,7 +42,14 @@ const shouldIncludeInSitemap = page => {
     return false;
   }
 
-  if (segments.length === 2 && segments[0] !== "minify" && segments[0] !== "tools") {
+  if (
+    segments.length === 2
+    && !["minify", "tools", "compare", "errors", "guides", "og"].includes(segments[0])
+  ) {
+    return false;
+  }
+
+  if (segments[0] === "og") {
     return false;
   }
 
@@ -115,6 +122,42 @@ const createLegacyRedirects = () => {
       redirects[`/minify/${language}-${variant}`] = redirectTo(`/minify/${language}`);
     }
   }
+
+  Object.assign(redirects, {
+    "/python-ruff-vs-black": redirectTo("/compare/python-ruff-vs-black"),
+    "/biome-vs-prettier": redirectTo("/compare/javascript-biome-vs-prettier"),
+    "/javascript-biome-vs-prettier": redirectTo("/compare/javascript-biome-vs-prettier"),
+    "/typescript-biome-vs-prettier": redirectTo("/compare/typescript-biome-vs-prettier"),
+    "/json-formatter-vs-viewer": redirectTo("/compare/json-formatter-vs-json-viewer"),
+    "/json-minifier-vs-formatter": redirectTo("/compare/json-minifier-vs-json-formatter"),
+    "/yaml-json": redirectTo("/compare/yaml-vs-json"),
+    "/toml-yaml": redirectTo("/compare/toml-vs-yaml"),
+    "/base64-url-encoding": redirectTo("/compare/base64-vs-url-encoding"),
+    "/json-trailing-comma-error": redirectTo("/errors/json-trailing-comma"),
+    "/json-unexpected-token-error": redirectTo("/errors/json-unexpected-token"),
+    "/yaml-indentation-error": redirectTo("/errors/yaml-indentation"),
+    "/xml-mismatched-tag-error": redirectTo("/errors/xml-mismatched-tag"),
+    "/invalid-base64": redirectTo("/errors/base64-invalid-character"),
+    "/invalid-jwt": redirectTo("/errors/jwt-invalid-token"),
+    "/regex-invalid-group-error": redirectTo("/errors/regex-invalid-group"),
+    "/css-missing-brace-error": redirectTo("/errors/css-missing-brace"),
+    "/format-json-file": redirectTo("/guides/format-json-file"),
+    "/format-yaml-file": redirectTo("/guides/format-yaml-file"),
+    "/format-toml-file": redirectTo("/guides/format-toml-file"),
+    "/format-python-file": redirectTo("/guides/format-python-file"),
+    "/minify-css-file": redirectTo("/guides/minify-css-file"),
+    "/minify-javascript-file": redirectTo("/guides/minify-javascript-file"),
+    "/convert-json-to-csv": redirectTo("/guides/convert-json-to-csv"),
+    "/decode-jwt-token": redirectTo("/guides/decode-jwt-token"),
+    "/generate-sha256-hash": redirectTo("/guides/generate-sha256-hash"),
+    "/tools/csv-to-tsv": redirectTo("/tools/csv-tsv-converter"),
+    "/tools/tsv-to-csv": redirectTo("/tools/csv-tsv-converter"),
+    "/tools/html-entity-encoder": redirectTo("/tools/html-entity-encode-decode"),
+    "/tools/html-entity-decoder": redirectTo("/tools/html-entity-encode-decode"),
+    "/tools/unix-timestamp": redirectTo("/tools/unix-timestamp-converter"),
+    "/tools/cron-explainer": redirectTo("/tools/cron-expression-explainer"),
+    "/tools/svg-optimizer": redirectTo("/tools/svg-optimizer-pretty-printer"),
+  });
 
   return redirects;
 };

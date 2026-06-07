@@ -1,0 +1,123 @@
+---
+import Layout from "@/components/layout/layout.astro";
+
+const principles = [
+  {
+    title: "Private by default",
+    body:
+      "HappyFormatter is built around browser-side processing. Formatter, minifier, converter, decoder, parser, and generator workflows are designed to run without uploading pasted snippets.",
+  },
+  {
+    title: "Practical developer workflows",
+    body:
+      "The site focuses on common jobs developers do every day: cleaning JSON, comparing formats, decoding tokens, converting data, checking timestamps, and preparing readable code.",
+  },
+  {
+    title: "Useful pages, not filler",
+    body:
+      "Tool, comparison, error, and guide pages are intended to include concrete examples, related tools, and visible privacy context instead of thin generated text.",
+  },
+];
+
+const links = [
+  {
+    title: "Private tools hub",
+    href: "/tools/private",
+    description: "Browse no-upload developer tools.",
+  },
+  {
+    title: "Security",
+    href: "/security",
+    description: "Read how local processing and browser isolation work.",
+  },
+  {
+    title: "Contact",
+    href: "/contact",
+    description: "Send feedback, corrections, or partnership notes.",
+  },
+];
+---
+
+<Layout
+  title="About HappyFormatter - Private No Upload Developer Tools"
+  description="Learn about HappyFormatter, a privacy-first browser toolkit for formatting, minifying, converting, decoding, and inspecting developer snippets with no upload."
+  canonicalPath="/about"
+  keywords="about HappyFormatter, private developer tools, no upload formatter, browser developer tools"
+  breadcrumbs={[
+    { name: "Home", url: "/" },
+    { name: "About", url: "/about" },
+  ]}
+  showFormatHeading={false}
+  structuredDataName="About HappyFormatter"
+  structuredDataDescription="HappyFormatter is a privacy-first browser toolkit for no-upload developer workflows."
+>
+  <section class="border-b border-border bg-background">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+      <div class="space-y-4">
+        <p class="text-sm font-medium text-muted-foreground">
+          About
+        </p>
+        <h1 class="max-w-5xl text-4xl font-semibold leading-none text-foreground md:text-6xl">
+          Private browser tools for everyday developer cleanup.
+        </h1>
+      </div>
+      <p class="max-w-md text-sm leading-6 text-muted-foreground">
+        HappyFormatter helps developers format, minify, convert, decode, hash,
+        parse, and inspect snippets locally in the browser. The core promise is
+        simple: useful tools with no upload requirement.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-b border-border bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-6 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+      {principles.map(item => (
+        <article class="rounded-md border border-border bg-card p-5">
+          <h2 class="text-xl font-semibold text-foreground">{item.title}</h2>
+          <p class="mt-3 text-sm leading-6 text-muted-foreground">
+            {item.body}
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-background py-12 sm:py-16">
+    <div class="mx-auto grid max-w-[1400px] gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] lg:px-8">
+      <div>
+        <h2 class="text-3xl font-semibold text-foreground">
+          What HappyFormatter is not
+        </h2>
+        <div class="mt-5 divide-y divide-border border-y border-border">
+          {[
+            "It is not a place to store code or secrets.",
+            "It is not a substitute for your project formatter, CI, tests, or security review.",
+            "It is not a server-side formatting API; tools are designed for browser workflows.",
+          ].map(item => (
+            <p class="py-4 text-sm leading-6 text-muted-foreground">
+              {item}
+            </p>
+          ))}
+        </div>
+      </div>
+      <aside>
+        <h2 class="text-2xl font-semibold text-foreground">Related</h2>
+        <div class="mt-5 space-y-3">
+          {links.map(link => (
+            <a
+              href={link.href}
+              class="block rounded-md border border-border bg-card p-4 transition-colors hover:border-foreground hover:bg-secondary"
+            >
+              <span class="text-sm font-semibold text-foreground">
+                {link.title}
+              </span>
+              <span class="mt-1 block text-sm leading-6 text-muted-foreground">
+                {link.description}
+              </span>
+            </a>
+          ))}
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>

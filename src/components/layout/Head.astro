@@ -22,8 +22,8 @@ const {
   title,
   description,
   canonicalPath,
-  image = "/images/happyformatter-workbench-reference.png",
-  imageAlt = "HappyFormatter browser code formatter workbench",
+  image,
+  imageAlt,
   keywords =
     "code formatter, code minifier, online formatter, code beautifier, code formatter online, minify code, format code, code formatting tool, web formatter, code prettifier, syntax highlighting, programming tools, developer tools",
   author = "HappyFormatter",
@@ -33,7 +33,14 @@ const {
 
 const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
 const canonicalHref = canonicalURL.href;
-const ogImageURL = new URL(image, Astro.site).href;
+const imagePath = image
+  ?? `/og${
+    canonicalURL.pathname === "/"
+      ? "/home"
+      : canonicalURL.pathname.replace(/\/$/, "")
+  }.svg`;
+const finalImageAlt = imageAlt ?? `${title} preview`;
+const ogImageURL = new URL(imagePath, Astro.site).href;
 
 const lightEditorThemeIds = editorThemes
   .filter(theme => theme.type === "light")
@@ -191,13 +198,13 @@ html.dark body {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={sanitizedDescription} />
 <meta property="og:image" content={ogImageURL} />
-<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:image:alt" content={finalImageAlt} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content={canonicalHref} />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={sanitizedDescription} />
 <meta name="twitter:image" content={ogImageURL} />
-<meta name="twitter:image:alt" content={imageAlt} />
+<meta name="twitter:image:alt" content={finalImageAlt} />
 <meta name="twitter:site" content="@happyformatter" />
 <script
   is:inline

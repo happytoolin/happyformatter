@@ -23,6 +23,13 @@ type ActionStatus =
   | "copy_failed";
 type ProcessingAction = "format" | "minify" | null;
 type ButtonState = "idle" | "success" | "error";
+type MinifyStats = {
+  inputBytes: number;
+  outputBytes: number;
+  savedPercent: number;
+  charDelta: number;
+  lineDelta: number;
+} | null;
 
 function formatLanguageName(language: string) {
   if (LANGUAGES[language]?.name) {
@@ -208,10 +215,19 @@ function ToolStat({ label, value }: { label: string; value: string }) {
   );
 }
 
+function getTextBytes(value: string) {
+  return new TextEncoder().encode(value).length;
+}
+
+function getLineCount(value: string) {
+  return value.length === 0 ? 0 : value.split(/\r\n|\r|\n/).length;
+}
+
 export default function Formatter({ minifier, language }: FormatterProps) {
   const { code, language: storeLanguage, setCode, initializeCode, setLanguage } = useFormatterStore();
   const [processingAction, setProcessingAction] = useState<ProcessingAction>(null);
   const [lastAction, setLastAction] = useState<ActionStatus | null>(null);
+  const [minifyStats, setMinifyStats] = useState<MinifyStats>(null);
   const initialCode = useMemo(() => getInitialCode(language), [language]);
   const activeCode = storeLanguage === language ? code : initialCode;
 
@@ -232,19 +248,34 @@ export default function Formatter({ minifier, language }: FormatterProps) {
         const formatter = await getFormatter(language);
         const result = await formatter.formatCode(activeCode);
         setCode(result);
+        setMinifyStats(null);
         setLastAction("format_success");
       } else {
         const minifierTool = await getMinifier(language);
         if (minifierTool) {
+          const before = activeCode;
           const result = await minifierTool.minifyCode(activeCode);
           setCode(result);
+          const inputBytes = getTextBytes(before);
+          const outputBytes = getTextBytes(result);
+          setMinifyStats({
+            inputBytes,
+            outputBytes,
+            savedPercent: inputBytes === 0
+              ? 0
+              : Math.max(0, ((inputBytes - outputBytes) / inputBytes) * 100),
+            charDelta: result.length - before.length,
+            lineDelta: getLineCount(result) - getLineCount(before),
+          });
           setLastAction("minify_success");
         } else {
+          setMinifyStats(null);
           setLastAction("minifier_unavailable");
         }
       }
     } catch (e) {
       console.error(e);
+      setMinifyStats(null);
       setLastAction("execution_failed");
     } finally {
       setProcessingAction(null);
@@ -300,6 +331,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
         onMinify={() => handleAction("minify")}
         onCopy={copyToClipboard}
         minifier={minifier}
+        minifyStats={minifyStats}
       />
     </ThemeProvider>
   );
@@ -314,6 +346,7 @@ function FormatterContent({
   onMinify,
   onCopy,
   minifier,
+  minifyStats,
 }: {
   code: string;
   language: string;
@@ -323,6 +356,7 @@ function FormatterContent({
   onMinify: () => void;
   onCopy: () => void;
   minifier: boolean;
+  minifyStats: MinifyStats;
 }) {
   const { setCode } = useFormatterStore();
   const languageName = formatLanguageName(language);
@@ -385,6 +419,30 @@ function FormatterContent({
               aria-atomic="true"
             >
               {statusMessage}
+              {minifyStats && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <ToolStat
+                    label="Input"
+                    value={`${minifyStats.inputBytes.toLocaleString()} B`}
+                  />
+                  <ToolStat
+                    label="Output"
+                    value={`${minifyStats.outputBytes.toLocaleString()} B`}
+                  />
+                  <ToolStat
+                    label="Saved"
+                    value={`${minifyStats.savedPercent.toFixed(1)}%`}
+                  />
+                  <ToolStat
+                    label="Chars"
+                    value={minifyStats.charDelta.toLocaleString()}
+                  />
+                  <ToolStat
+                    label="Lines"
+                    value={minifyStats.lineDelta.toLocaleString()}
+                  />
+                </div>
+              )}
             </div>
 
             <FormatButtons

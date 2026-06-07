@@ -1,0 +1,54 @@
+---
+import type { SeoContentFamily } from "@/lib/seo-content";
+import { getSeoContentPagesByFamily, SEO_HUBS } from "@/lib/seo-content";
+
+type Props = {
+  family: SeoContentFamily;
+};
+
+const { family } = Astro.props;
+const hub = SEO_HUBS[family];
+const pages = getSeoContentPagesByFamily(family);
+---
+
+<section class="border-b border-border bg-background">
+  <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
+    <div class="space-y-4">
+      <p class="text-sm font-medium text-muted-foreground">
+        Private / No Upload
+      </p>
+      <h1 class="max-w-5xl text-4xl font-semibold leading-none text-foreground md:text-6xl">
+        {hub.h1}
+      </h1>
+    </div>
+    <p class="max-w-md text-sm leading-6 text-muted-foreground">
+      {hub.description}
+    </p>
+  </div>
+</section>
+
+<section class="bg-background py-12 sm:py-16">
+  <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+    <div class="divide-y divide-border border-y border-border">
+      {pages.map(page => (
+        <article class="grid gap-4 py-5 md:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)_auto] md:items-center">
+          <a
+            href={page.canonicalPath}
+            class="text-lg font-semibold text-foreground underline-offset-4 hover:underline"
+          >
+            {page.h1}
+          </a>
+          <p class="text-sm leading-6 text-muted-foreground">
+            {page.summary}
+          </p>
+          <a
+            href={page.canonicalPath}
+            class="inline-flex min-h-9 items-center justify-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Open
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
