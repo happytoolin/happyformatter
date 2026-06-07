@@ -114,7 +114,7 @@ if (currentVariant && !actualVariantData) {
 const isVariant = currentVariant && actualVariantData;
 // Get the actual language config (in case we detected a hyphenated variant)
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
-const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
+const runtimeFormatterVariants = new Set(["biome", "ruff", "mago", "oxc"]);
 const formatterLanguage =
   currentVariant && runtimeFormatterVariants.has(currentVariant)
     ? `${actualLanguage}-${currentVariant}`

@@ -17,6 +17,24 @@ export function getInitialCode(language: string): string {
     "license": "MIT"
   }
 }`;
+    case "jsonc":
+      return `{
+  // Formatter input ready
+  "name": "HappyFormatter",
+  "features": [
+    "formatting",
+    "syntax highlighting",
+  ],
+}`;
+    case "json5":
+      return `{
+  // Formatter input ready
+  name: "HappyFormatter",
+  features: ["formatting", "syntax highlighting"],
+  metadata: {
+    local: true,
+  },
+}`;
     case "javascript":
       return `// Formatter input ready
 function greet() {
@@ -92,6 +110,8 @@ pre {
 }`;
     case "scss":
       return `/* Formatter input ready */
+$brand-color: #2563eb;
+
 body {
   font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f0f0f0;
@@ -105,13 +125,35 @@ pre {
 }
 
 .foo {
-  background: yellow;
+  background: $brand-color;
   border-radius: 2px;
   transition: background 200ms;
-}
 
-.foo.bar {
-  color: green;
+  &.bar {
+    color: green;
+  }
+}`;
+    case "sass":
+      return `// Formatter input ready
+$brand-color: #2563eb
+
+.button
+  background: $brand-color
+  border-radius: 4px
+
+  &:hover
+    background: #1d4ed8`;
+    case "less":
+      return `/* Formatter input ready */
+@brand-color: #2563eb;
+
+.button {
+  background: @brand-color;
+  border-radius: 4px;
+
+  &:hover {
+    background: #1d4ed8;
+  }
 }`;
     case "html":
       return `<!-- Formatter input ready -->
@@ -143,6 +185,96 @@ pre {
   </footer>
 </body>
 </html>`;
+    case "vue":
+      return `<template>
+  <section class="formatter-card">
+    <h1>{{ title }}</h1>
+    <button @click="count++">Count: {{ count }}</button>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+
+const title = "Formatter input ready";
+const count = ref(0);
+</script>
+
+<style scoped>
+.formatter-card {
+  display: grid;
+  gap: 1rem;
+}
+</style>`;
+    case "svelte":
+      return `<script lang="ts">
+  let count = 0;
+  const title = "Formatter input ready";
+</script>
+
+<section class="formatter-card">
+  <h1>{title}</h1>
+  <button on:click={() => count += 1}>Count: {count}</button>
+</section>
+
+<style>
+  .formatter-card {
+    display: grid;
+    gap: 1rem;
+  }
+</style>`;
+    case "astro":
+      return `---
+const title = "Formatter input ready";
+const instructions = ["Type or paste Astro here", "HappyFormatter will format your code"];
+---
+
+<section>
+  <h1>{title}</h1>
+  <ul>
+    {instructions.map((instruction) => <li>{instruction}</li>)}
+  </ul>
+</section>`;
+    case "angular":
+      return `<section class="formatter-card" *ngIf="ready">
+  <h1>{{ title }}</h1>
+  <button type="button" (click)="count = count + 1">
+    Count: {{ count }}
+  </button>
+</section>`;
+    case "handlebars":
+      return `<section class="formatter-card">
+  {{#if ready}}
+    <h1>{{title}}</h1>
+    <ul>
+      {{#each instructions}}
+        <li>{{this}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+</section>`;
+    case "jinja":
+      return `<section class="formatter-card">
+{% if ready %}
+<h1>{{ title }}</h1>
+<ul>
+{% for instruction in instructions %}
+<li>{{ instruction }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</section>`;
+    case "twig":
+      return `<section class="formatter-card">
+{% if ready %}
+<h1>{{ title }}</h1>
+<ul>
+{% for instruction in instructions %}
+<li>{{ instruction }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</section>`;
     case "xml":
       return `<!-- Formatter input ready -->
 <greeting>
@@ -266,6 +398,18 @@ message Example {
 2. Syntax highlighting
 
       `;
+    case "mdx":
+      return `# HappyFormatter
+
+<Callout tone="info">
+  Type or paste MDX here, and HappyFormatter will format your document.
+</Callout>
+
+export const features = ["formatting", "syntax highlighting"];
+
+{features.map((feature) => (
+  <span>{feature}</span>
+))}`;
     case "dart":
       return `// Formatter input ready
 import 'dart:io';
@@ -283,6 +427,29 @@ print("Formatter input ready")`;
     case "sql":
       return `-- Formatter input ready
 SELECT * FROM users;`;
+    case "graphql":
+      return `# Formatter input ready
+query GetUser($id: ID!) {
+  user(id: $id) {
+    id
+    name
+    posts {
+      title
+      publishedAt
+    }
+  }
+}`;
+    case "shell":
+      return `#!/usr/bin/env bash
+# Formatter input ready
+
+set -euo pipefail
+
+name="HappyFormatter"
+
+if [[ -n "$name" ]]; then
+  echo "Formatter input ready: $name"
+fi`;
     case "rust":
       return `// Formatter input ready
 fn main() {
@@ -380,8 +547,10 @@ instructions = [
     case "python-ruff":
       return getInitialCode("python");
     case "javascript-biome":
+    case "javascript-oxc":
       return getInitialCode("javascript");
     case "typescript-biome":
+    case "typescript-oxc":
       return getInitialCode("typescript");
     case "php-mago":
       return getInitialCode("php");

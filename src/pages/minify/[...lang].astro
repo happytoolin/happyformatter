@@ -9,6 +9,7 @@ import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = (async () => {
   const paths: any[] = [];
+  const generatedMinifierVariants = new Set(["oxc"]);
 
   // Generate paths only for languages that support minification
   Object.entries(LANGUAGES).forEach(([langId, langConfig]) => {
@@ -23,6 +24,30 @@ export const getStaticPaths: GetStaticPaths = (async () => {
       });
     }
   });
+
+  const { getLanguageVariants } = await import("@/lib/seo-variants");
+
+  for (const [langId, langConfig] of Object.entries(LANGUAGES)) {
+    if (!langConfig.minify) {
+      continue;
+    }
+
+    const variants = getLanguageVariants(langId);
+    variants.forEach(variant => {
+      if (!generatedMinifierVariants.has(variant.slug)) {
+        return;
+      }
+
+      paths.push({
+        params: { lang: `${langId}-${variant.slug}` },
+        props: {
+          language: langId,
+          languageConfig: langConfig,
+          lang: `${langId}-${variant.slug}`,
+        },
+      });
+    });
+  }
 
   return paths;
 }) satisfies GetStaticPaths;
@@ -64,7 +89,7 @@ if (hyphenatedParts.length >= 2) {
 }
 
 const actualLanguageConfig = LANGUAGES[actualLanguage] || languageConfig;
-const runtimeFormatterVariants = new Set(["biome", "ruff", "mago"]);
+const runtimeFormatterVariants = new Set(["biome", "ruff", "mago", "oxc"]);
 const formatterLanguage = variant && runtimeFormatterVariants.has(variant)
   ? `${actualLanguage}-${variant}`
   : actualLanguage;

@@ -47,8 +47,8 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   html: {
-    related: ["css", "javascript", "markdown", "xml"],
-    features: ["formatter", "beautifier"],
+    related: ["css", "javascript", "markdown", "xml", "vue", "svelte", "astro"],
+    features: ["formatter", "minifier", "beautifier"],
     contextualReasons: {
       css: "Style and compress CSS code",
       javascript: "Format JavaScript",
@@ -57,7 +57,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   css: {
-    related: ["scss", "html", "javascript"],
+    related: ["scss", "sass", "less", "html", "javascript"],
     features: ["formatter", "minifier", "beautifier"],
     contextualReasons: {
       scss: "Format SCSS stylesheets",
@@ -66,7 +66,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   scss: {
-    related: ["css", "html"],
+    related: ["css", "sass", "less", "html"],
     features: ["formatter", "minifier"],
     contextualReasons: {
       css: "Format and minify CSS",
@@ -74,7 +74,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   json: {
-    related: ["yaml", "xml", "javascript", "typescript"],
+    related: ["jsonc", "json5", "yaml", "xml", "javascript", "typescript"],
     features: ["formatter", "minifier", "pretty-print"],
     contextualReasons: {
       yaml: "Configuration data formatting",
@@ -84,7 +84,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   yaml: {
-    related: ["json", "toml", "xml"],
+    related: ["json", "jsonc", "toml", "xml"],
     features: ["formatter", "pretty-print"],
     contextualReasons: {
       json: "Data file formatting",
@@ -241,7 +241,7 @@ const languageRelationships: Record<string, LanguageRelation> = {
     },
   },
   markdown: {
-    related: ["html", "xml"],
+    related: ["mdx", "html", "xml"],
     features: ["formatter", "beautifier"],
     contextualReasons: {
       html: "Format HTML markup",
@@ -265,30 +265,100 @@ const languageRelationships: Record<string, LanguageRelation> = {
       go: "Compiled service source",
     },
   },
+  graphql: {
+    related: ["json", "javascript", "typescript"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      json: "Format response payload data",
+      javascript: "Format GraphQL client code",
+      typescript: "Format typed GraphQL clients",
+    },
+  },
+  shell: {
+    related: ["yaml", "json", "graphql"],
+    features: ["formatter", "minifier"],
+    contextualReasons: {
+      yaml: "Format workflow configuration",
+      json: "Format CLI payload data",
+      graphql: "Format CLI API queries",
+    },
+  },
+  vue: {
+    related: ["javascript", "typescript", "css", "html"],
+    features: ["formatter"],
+    contextualReasons: {
+      javascript: "Format script blocks",
+      typescript: "Format typed script blocks",
+      css: "Format component styles",
+      html: "Format nearby markup",
+    },
+  },
+  svelte: {
+    related: ["javascript", "typescript", "css", "html"],
+    features: ["formatter"],
+    contextualReasons: {
+      javascript: "Format script blocks",
+      typescript: "Format typed script blocks",
+      css: "Format component styles",
+      html: "Format nearby markup",
+    },
+  },
+  astro: {
+    related: ["html", "markdown", "javascript", "typescript"],
+    features: ["formatter"],
+    contextualReasons: {
+      html: "Format rendered markup",
+      markdown: "Format content pages",
+      javascript: "Format frontmatter scripts",
+      typescript: "Format typed frontmatter",
+    },
+  },
 };
 
 // Languages that actually have working minifiers implemented
 const languagesWithMinifiers = [
   "css",
   "scss",
+  "html",
   "javascript",
+  "javascript-biome",
+  "javascript-oxc",
   "typescript",
+  "typescript-biome",
+  "typescript-oxc",
   "json",
   "xml",
+  "graphql",
+  "shell",
 ];
 
 const allTools: BaseTool[] = [
   { name: "HTML", url: "/html", type: "FMT" },
+  { name: "Vue", url: "/vue", type: "FMT" },
+  { name: "Svelte", url: "/svelte", type: "FMT" },
+  { name: "Astro", url: "/astro", type: "FMT" },
+  { name: "Angular", url: "/angular", type: "FMT" },
+  { name: "Handlebars", url: "/handlebars", type: "FMT" },
+  { name: "Jinja", url: "/jinja", type: "FMT" },
+  { name: "Twig", url: "/twig", type: "FMT" },
   { name: "CSS", url: "/css", type: "FMT" },
+  { name: "Less", url: "/less", type: "FMT" },
+  { name: "Sass", url: "/sass", type: "FMT" },
   { name: "JavaScript", url: "/javascript", type: "FMT" },
   { name: "JavaScript Biome", url: "/javascript-biome", type: "FMT" },
+  { name: "JavaScript OXC", url: "/javascript-oxc", type: "FMT" },
   { name: "TypeScript", url: "/typescript", type: "FMT" },
   { name: "TypeScript Biome", url: "/typescript-biome", type: "FMT" },
+  { name: "TypeScript OXC", url: "/typescript-oxc", type: "FMT" },
   { name: "JSON", url: "/json", type: "FMT" },
+  { name: "JSONC", url: "/jsonc", type: "FMT" },
+  { name: "JSON5", url: "/json5", type: "FMT" },
   { name: "XML", url: "/xml", type: "FMT" },
   { name: "YAML", url: "/yaml", type: "FMT" },
   { name: "TOML", url: "/toml", type: "FMT" },
   { name: "SQL", url: "/sql", type: "FMT" },
+  { name: "GraphQL", url: "/graphql", type: "FMT" },
+  { name: "Shell", url: "/shell", type: "FMT" },
   { name: "Go", url: "/go", type: "FMT" },
   { name: "Dart", url: "/dart", type: "FMT" },
   { name: "SCSS", url: "/scss", type: "FMT" },
@@ -298,6 +368,7 @@ const allTools: BaseTool[] = [
   { name: "Python Ruff", url: "/python-ruff", type: "FMT" },
   { name: "Rust", url: "/rust", type: "FMT" },
   { name: "Markdown", url: "/markdown", type: "FMT" },
+  { name: "MDX", url: "/mdx", type: "FMT" },
   { name: "C#", url: "/csharp", type: "FMT" },
   { name: "C", url: "/c", type: "FMT" },
   { name: "C++", url: "/cpp", type: "FMT" },
@@ -372,6 +443,11 @@ const getVariantRecommendation = (
       return {
         name: `${languageName} Mago Formatter`,
         description: `Format ${languageName} with Mago.`,
+      };
+    case "oxc":
+      return {
+        name: `${languageName} OXC Formatter`,
+        description: `Format ${languageName} with OXC.`,
       };
     case "beautifier":
     case "pretty":

@@ -70,15 +70,30 @@ importers:
       "@wasm-fmt/gofmt":
         specifier: ^0.7.3
         version: 0.7.3
+      "@wasm-fmt/graphql_fmt":
+        specifier: ^0.2.9
+        version: 0.2.9
       "@wasm-fmt/lua_fmt":
         specifier: ^0.3.3
         version: 0.3.3
       "@wasm-fmt/mago_fmt":
         specifier: ^0.10.7
         version: 0.10.7
+      "@wasm-fmt/malva_fmt":
+        specifier: ^0.2.9
+        version: 0.2.9
+      "@wasm-fmt/markup_fmt":
+        specifier: ^0.2.9
+        version: 0.2.9
+      "@wasm-fmt/oxc_fmt":
+        specifier: ^0.2.9
+        version: 0.2.9
       "@wasm-fmt/ruff_fmt":
         specifier: ^0.15.15
         version: 0.15.15
+      "@wasm-fmt/shfmt":
+        specifier: ^0.2.7
+        version: 0.2.7
       "@wasm-fmt/sql_fmt":
         specifier: ^0.2.2
         version: 0.2.2
@@ -109,6 +124,12 @@ importers:
       devicon:
         specifier: ^2.17.0
         version: 2.17.0
+      graphql:
+        specifier: ^16.14.1
+        version: 16.14.1
+      html-minifier-terser:
+        specifier: ^7.2.0
+        version: 7.2.0
       lightningcss-wasm:
         specifier: ^1.32.0
         version: 1.32.0
@@ -155,6 +176,9 @@ importers:
       "@tailwindcss/vite":
         specifier: ^4.3.0
         version: 4.3.0(vite@7.3.5(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.9.0))
+      "@types/html-minifier-terser":
+        specifier: ^7.0.2
+        version: 7.0.2
       "@types/react":
         specifier: ^19.2.16
         version: 19.2.16
@@ -2376,6 +2400,11 @@ packages:
     }
     engines: { node: ">=16.17.0" }
 
+  "@wasm-fmt/graphql_fmt@0.2.9":
+    resolution: {
+      integrity: sha512-25Rs5XowH7A1YE4bIZRs3FbNeIAfHoacR2NrHTfqWE1nhSekZuYt7wddBRqN+ag9lgSKwP2QxWqlSHB7cTKEwg==,
+    }
+
   "@wasm-fmt/lua_fmt@0.3.3":
     resolution: {
       integrity: sha512-lDw0bP77etpSrMDGnES6m2aVuBeTvZsJOkVc43gsnLpvptUYv2baouHOJW7qcgi/Am5m+NOs81wmj4X1I+u1OQ==,
@@ -2386,10 +2415,31 @@ packages:
       integrity: sha512-NweG/GxW8UKAgt5IyPcoFKIcaA5lILQ7/1FEAVFPQsAEVXL/hkmfIG1//ZenR+XzIofh+d79ep2nK97Y6dUKBw==,
     }
 
+  "@wasm-fmt/malva_fmt@0.2.9":
+    resolution: {
+      integrity: sha512-9TF6dOtQj/smHMbs/Lmki7kaygLIyu+z3jSXkzgPDFXNC+Dq5yvUZixawwYT6Hfxfv/XkaJ15rECNjcncnimsw==,
+    }
+
+  "@wasm-fmt/markup_fmt@0.2.9":
+    resolution: {
+      integrity: sha512-B0+6DrR7Qo5MUJgwSZdqp9ajuEB+JmgVyBl+4HQFE9G2l49T3CyTki8mGgck51NHPbOsvaq3qXfxlrjf/fkweA==,
+    }
+
+  "@wasm-fmt/oxc_fmt@0.2.9":
+    resolution: {
+      integrity: sha512-RIFMPyyPXWXe+gB6xzVXezpE/N62Fkv5wMvjZKu3WnmKcaargh6x2bq8i04NniiOG/jOiZFG7Gj1QoLvJXAT0g==,
+    }
+
   "@wasm-fmt/ruff_fmt@0.15.15":
     resolution: {
       integrity: sha512-8UMF9Dyow2NDYHp6/ltyKO87zgHxozL/ilbE8I5n+fETVGA/cbi0mH198K9gobO4Go8piI/j/oEwibIRP309rA==,
     }
+
+  "@wasm-fmt/shfmt@0.2.7":
+    resolution: {
+      integrity: sha512-bxmf5pXBHe3ujjc2iEoXqRXKgrQmR44jHLZ9G5BsKsb5moDWsuqsISs+88Ov9/SAI88caXYIsP02U4c4YDQpIQ==,
+    }
+    engines: { node: ">=16.17.0" }
 
   "@wasm-fmt/sql_fmt@0.2.2":
     resolution: {
@@ -3035,6 +3085,12 @@ packages:
     resolution: {
       integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==,
     }
+
+  graphql@16.14.1:
+    resolution: {
+      integrity: sha512-cQOsSMS/IrDz82PVyRDvf/Q1F/bRbBVjJlh+xYOkI1qw2bWRvWGiWc+m2O0d6l4Bt1fyY+8kzJ8JFWGJqNeDBg==,
+    }
+    engines: { node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0 }
 
   h3@1.15.11:
     resolution: {
@@ -6275,11 +6331,21 @@ snapshots:
 
   "@wasm-fmt/gofmt@0.7.3": {}
 
+  "@wasm-fmt/graphql_fmt@0.2.9": {}
+
   "@wasm-fmt/lua_fmt@0.3.3": {}
 
   "@wasm-fmt/mago_fmt@0.10.7": {}
 
+  "@wasm-fmt/malva_fmt@0.2.9": {}
+
+  "@wasm-fmt/markup_fmt@0.2.9": {}
+
+  "@wasm-fmt/oxc_fmt@0.2.9": {}
+
   "@wasm-fmt/ruff_fmt@0.15.15": {}
+
+  "@wasm-fmt/shfmt@0.2.7": {}
 
   "@wasm-fmt/sql_fmt@0.2.2": {}
 
@@ -6774,6 +6840,8 @@ snapshots:
       is-glob: 4.0.3
 
   graceful-fs@4.2.11: {}
+
+  graphql@16.14.1: {}
 
   h3@1.15.11:
     dependencies:

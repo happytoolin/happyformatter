@@ -61,6 +61,67 @@ const examples: Record<
   html: {
     before: "<main><h1>Hello</h1><p>Private tools</p></main>",
     after: "<main>\n  <h1>Hello</h1>\n  <p>Private tools</p>\n</main>",
+    minified: "<main><h1>Hello</h1><p>Private tools</p></main>",
+  },
+  vue: {
+    before:
+      "<template><button @click=\"count++\">{{count}}</button></template>",
+    after:
+      "<template><button @click=\"count++\">{{ count }}</button></template>",
+  },
+  svelte: {
+    before: "<script>let count=0;</script><button>{count}</button>",
+    after: "<script>\nlet count=0;\n</script><button>{count}</button>",
+  },
+  astro: {
+    before: "---\nconst title='Hi'\n---\n<h1>{title}</h1>",
+    after: "---\nconst title='Hi'\n---\n<h1>{title}</h1>",
+  },
+  angular: {
+    before: "<div *ngIf=\"ready\">{{value}}</div>",
+    after: "<div *ngIf=\"ready\">{{ value }}</div>",
+  },
+  handlebars: {
+    before: "<div>{{#if ready}}{{title}}{{/if}}</div>",
+    after: "<div>{{#if ready}}{{title}}{{/if}}</div>",
+  },
+  jinja: {
+    before: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+    after: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+  },
+  twig: {
+    before: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+    after: "<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>",
+  },
+  sass: {
+    before: "$color: red\n.button\n color: $color",
+    after: "$color: red\n.button\n  color: $color",
+  },
+  less: {
+    before: "@color: red;.button{color:@color;}",
+    after: "@color: red;\n.button {\n  color: @color;\n}",
+  },
+  jsonc: {
+    before: "{// note\n\"enabled\":true,}",
+    after: "{\n  // note\n  \"enabled\": true,\n}",
+  },
+  json5: {
+    before: "{name:'Ada',active:true}",
+    after: "{ name: 'Ada', active: true }\n",
+  },
+  mdx: {
+    before: "# Hi\n<div>{value}</div>",
+    after: "# Hi\n\n<div>{value}</div>\n",
+  },
+  graphql: {
+    before: "query GetUser{id name posts{title}}",
+    after: "query GetUser {\n  id\n  name\n  posts {\n    title\n  }\n}",
+    minified: "query GetUser{id name posts{title}}",
+  },
+  shell: {
+    before: "if true; then echo hi; fi",
+    after: "if true; then echo hi; fi",
+    minified: "if true;then echo hi;fi",
   },
 };
 

@@ -30,7 +30,57 @@ const toolFamilies: ToolFamily[] = [
     descriptor: "Markup",
     actions: [
       { label: "Format", url: "/html", type: "FMT" },
+      { label: "Minify", url: "/minify/html", type: "MIN" },
     ],
+  },
+  {
+    name: "Vue",
+    icon: "vue",
+    group: "Web",
+    descriptor: "Component",
+    actions: [{ label: "Format", url: "/vue", type: "FMT" }],
+  },
+  {
+    name: "Svelte",
+    icon: "svelte",
+    group: "Web",
+    descriptor: "Component",
+    actions: [{ label: "Format", url: "/svelte", type: "FMT" }],
+  },
+  {
+    name: "Astro",
+    icon: "astro",
+    group: "Web",
+    descriptor: "Component",
+    actions: [{ label: "Format", url: "/astro", type: "FMT" }],
+  },
+  {
+    name: "Angular",
+    icon: "angular",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/angular", type: "FMT" }],
+  },
+  {
+    name: "Handlebars",
+    icon: "handlebars",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/handlebars", type: "FMT" }],
+  },
+  {
+    name: "Jinja",
+    icon: "jinja",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/jinja", type: "FMT" }],
+  },
+  {
+    name: "Twig",
+    icon: "twig",
+    group: "Web",
+    descriptor: "Template",
+    actions: [{ label: "Format", url: "/twig", type: "FMT" }],
   },
   {
     name: "CSS",
@@ -52,6 +102,8 @@ const toolFamilies: ToolFamily[] = [
       { label: "Minify", url: "/minify/javascript", type: "MIN" },
       { label: "Biome", url: "/javascript-biome", type: "FMT" },
       { label: "Biome", url: "/minify/javascript-biome", type: "MIN" },
+      { label: "OXC", url: "/javascript-oxc", type: "FMT" },
+      { label: "OXC", url: "/minify/javascript-oxc", type: "MIN" },
     ],
   },
   {
@@ -64,6 +116,8 @@ const toolFamilies: ToolFamily[] = [
       { label: "Minify", url: "/minify/typescript", type: "MIN" },
       { label: "Biome", url: "/typescript-biome", type: "FMT" },
       { label: "Biome", url: "/minify/typescript-biome", type: "MIN" },
+      { label: "OXC", url: "/typescript-oxc", type: "FMT" },
+      { label: "OXC", url: "/minify/typescript-oxc", type: "MIN" },
     ],
   },
   {
@@ -77,6 +131,20 @@ const toolFamilies: ToolFamily[] = [
     ],
   },
   {
+    name: "Sass",
+    icon: "sass",
+    group: "Web",
+    descriptor: "Stylesheet",
+    actions: [{ label: "Format", url: "/sass", type: "FMT" }],
+  },
+  {
+    name: "Less",
+    icon: "less",
+    group: "Web",
+    descriptor: "Stylesheet",
+    actions: [{ label: "Format", url: "/less", type: "FMT" }],
+  },
+  {
     name: "JSON",
     icon: "json",
     group: "Data",
@@ -85,6 +153,20 @@ const toolFamilies: ToolFamily[] = [
       { label: "Format", url: "/json", type: "FMT" },
       { label: "Minify", url: "/minify/json", type: "MIN" },
     ],
+  },
+  {
+    name: "JSONC",
+    icon: "jsonc",
+    group: "Data",
+    descriptor: "Structured data",
+    actions: [{ label: "Format", url: "/jsonc", type: "FMT" }],
+  },
+  {
+    name: "JSON5",
+    icon: "json5",
+    group: "Data",
+    descriptor: "Structured data",
+    actions: [{ label: "Format", url: "/json5", type: "FMT" }],
   },
   {
     name: "XML",
@@ -118,6 +200,16 @@ const toolFamilies: ToolFamily[] = [
     actions: [{ label: "Format", url: "/sql", type: "FMT" }],
   },
   {
+    name: "GraphQL",
+    icon: "graphql",
+    group: "Data",
+    descriptor: "Schema and query",
+    actions: [
+      { label: "Format", url: "/graphql", type: "FMT" },
+      { label: "Minify", url: "/minify/graphql", type: "MIN" },
+    ],
+  },
+  {
     name: "Proto",
     icon: "proto",
     group: "Data",
@@ -130,6 +222,13 @@ const toolFamilies: ToolFamily[] = [
     group: "Data",
     descriptor: "Document",
     actions: [{ label: "Format", url: "/markdown", type: "FMT" }],
+  },
+  {
+    name: "MDX",
+    icon: "mdx",
+    group: "Data",
+    descriptor: "Document",
+    actions: [{ label: "Format", url: "/mdx", type: "FMT" }],
   },
   {
     name: "Python",
@@ -178,6 +277,16 @@ const toolFamilies: ToolFamily[] = [
     group: "Runtime",
     descriptor: "Script",
     actions: [{ label: "Format", url: "/lua", type: "FMT" }],
+  },
+  {
+    name: "Shell",
+    icon: "shell",
+    group: "Runtime",
+    descriptor: "Script",
+    actions: [
+      { label: "Format", url: "/shell", type: "FMT" },
+      { label: "Minify", url: "/minify/shell", type: "MIN" },
+    ],
   },
   {
     name: "Rust",
