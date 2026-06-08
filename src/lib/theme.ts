@@ -1,4 +1,5 @@
 export type ColorMode = "light" | "dark";
+export type ThemePreference = ColorMode | "system";
 
 export type EditorThemeOption = {
   id: string;
@@ -7,6 +8,7 @@ export type EditorThemeOption = {
 };
 
 export const themeStorageKey = "theme";
+export const themePreferenceStorageKey = "theme-preference";
 export const editorThemeStorageKey = "codemirror-theme";
 
 export const editorThemeModeStorageKey = (mode: ColorMode) => `codemirror-theme-${mode}`;
@@ -37,6 +39,10 @@ export const editorThemes = [
 
 export function isColorMode(value: unknown): value is ColorMode {
   return value === "light" || value === "dark";
+}
+
+export function isThemePreference(value: unknown): value is ThemePreference {
+  return value === "system" || isColorMode(value);
 }
 
 export function getEditorThemesForMode(mode: ColorMode) {

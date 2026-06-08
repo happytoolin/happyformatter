@@ -175,7 +175,7 @@ export default function ModernMonacoTest() {
               <button
                 type="button"
                 onClick={resetSample}
-                className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-background px-3 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
+                className="hf-button hf-button-outline hf-button-md"
               >
                 <RefreshCw size={15} strokeWidth={1.75} aria-hidden="true" />
                 Reset

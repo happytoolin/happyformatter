@@ -1,5 +1,10 @@
 ---
-import { defaultEditorThemeByMode, editorThemes } from "@/lib/theme";
+import {
+  defaultEditorThemeByMode,
+  editorThemes,
+  themePreferenceStorageKey,
+  themeStorageKey,
+} from "@/lib/theme";
 import {
   sanitizeSEODescription,
   sanitizeSEOKeywords,
@@ -66,12 +71,18 @@ const modernMonacoImportMap = JSON.stringify(
 <script type="importmap" is:inline set:html={modernMonacoImportMap}></script>
 <script
   is:inline
-  define:vars={{ darkEditorThemeIds, defaultEditorThemeByMode, lightEditorThemeIds }}
+  define:vars={{
+    darkEditorThemeIds,
+    defaultEditorThemeByMode,
+    lightEditorThemeIds,
+    themePreferenceStorageKey,
+    themeStorageKey,
+  }}
 >
 (() => {
-  const themeKey = "theme";
   const editorThemeKey = "codemirror-theme";
   const root = document.documentElement;
+  const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const lightThemes = new Set(lightEditorThemeIds);
   const darkThemes = new Set(darkEditorThemeIds);
 
@@ -92,15 +103,23 @@ const modernMonacoImportMap = JSON.stringify(
   };
 
   const isMode = (value) => value === "light" || value === "dark";
+  const isPreference = (value) => value === "system" || isMode(value);
 
-  const getInitialMode = () => {
-    const stored = readStorage(themeKey);
-    if (isMode(stored)) {
+  const getInitialPreference = () => {
+    const stored = readStorage(themePreferenceStorageKey);
+    if (isPreference(stored)) {
       return stored;
     }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
+
+    return "system";
+  };
+
+  const resolvePreference = (preference) => {
+    if (preference !== "system") {
+      return preference;
+    }
+
+    return systemThemeQuery.matches ? "dark" : "light";
   };
 
   const isEditorThemeForMode = (theme, mode) => {
@@ -125,13 +144,15 @@ const modernMonacoImportMap = JSON.stringify(
     return defaultEditorThemeByMode[mode];
   };
 
-  const mode = getInitialMode();
+  const preference = getInitialPreference();
+  const mode = resolvePreference(preference);
   const editorTheme = getEditorThemeForMode(mode);
 
   root.classList.toggle("dark", mode === "dark");
   root.dataset.theme = mode;
+  root.dataset.themePreference = preference;
   root.style.colorScheme = mode;
-  writeStorage(themeKey, mode);
+  writeStorage(themeStorageKey, mode);
   writeStorage(editorThemeKey, editorTheme);
   writeStorage(`codemirror-theme-${mode}`, editorTheme);
 })();

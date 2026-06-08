@@ -5,7 +5,7 @@
 <button
   type="button"
   data-theme-toggle
-  class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-foreground outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px motion-reduce:transition-none"
+  class="hf-button hf-button-outline hf-button-icon"
   aria-label="Toggle theme"
   aria-pressed="false"
 >
@@ -76,7 +76,9 @@ if (!window.happyFormatterThemeToggleReady) {
   window.happyFormatterThemeToggleReady = true;
 
   const themeKey = "theme";
+  const themePreferenceKey = "theme-preference";
   const editorThemeKey = "codemirror-theme";
+  const systemThemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
   const defaultEditorThemeByMode = {
     light: "github-light",
     dark: "github-dark",
@@ -123,13 +125,41 @@ if (!window.happyFormatterThemeToggleReady) {
   const isMode = (value: string | null): value is "light" | "dark" =>
     value === "light" || value === "dark";
 
+  const isPreference = (
+    value: string | null,
+  ): value is "light" | "dark" | "system" =>
+    value === "system" || isMode(value);
+
+  const getStoredPreference = () => {
+    const storedPreference = readStorage(themePreferenceKey);
+    return isPreference(storedPreference) ? storedPreference : "system";
+  };
+
+  const resolvePreference = (preference: "light" | "dark" | "system") => {
+    if (preference !== "system") {
+      return preference;
+    }
+
+    return systemThemeQuery.matches ? "dark" : "light";
+  };
+
   const getCurrentMode = () => {
     const root = document.documentElement;
     const datasetMode = root.dataset.theme ?? null;
     if (isMode(datasetMode)) {
       return datasetMode;
     }
-    return root.classList.contains("dark") ? "dark" : "light";
+    return root.classList.contains("dark")
+      ? "dark"
+      : resolvePreference(getStoredPreference());
+  };
+
+  const getCurrentPreference = () => {
+    const root = document.documentElement;
+    const datasetPreference = root.dataset.themePreference ?? null;
+    return isPreference(datasetPreference)
+      ? datasetPreference
+      : getStoredPreference();
   };
 
   const isEditorThemeForMode = (
@@ -152,10 +182,14 @@ if (!window.happyFormatterThemeToggleReady) {
     return defaultEditorThemeByMode[mode];
   };
 
-  const updateButtons = (mode: "light" | "dark") => {
-    const label = mode === "dark"
-      ? "Switch to light theme"
-      : "Switch to dark theme";
+  const updateButtons = (
+    mode: "light" | "dark",
+    preference: "light" | "dark" | "system",
+  ) => {
+    const nextMode = mode === "dark" ? "light" : "dark";
+    const label = preference === "system"
+      ? `Following system ${mode} theme. Switch to ${nextMode} theme.`
+      : `Switch to ${nextMode} theme`;
 
     document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
       button.setAttribute("aria-label", label);
@@ -164,26 +198,34 @@ if (!window.happyFormatterThemeToggleReady) {
     });
   };
 
-  const applyTheme = (mode: "light" | "dark") => {
+  const applyThemePreference = (
+    preference: "light" | "dark" | "system",
+    persistPreference = false,
+  ) => {
+    const mode = resolvePreference(preference);
     const root = document.documentElement;
     const editorTheme = getEditorThemeForMode(mode);
 
     root.classList.toggle("dark", mode === "dark");
     root.dataset.theme = mode;
+    root.dataset.themePreference = preference;
     root.style.colorScheme = mode;
     writeStorage(themeKey, mode);
+    if (persistPreference) {
+      writeStorage(themePreferenceKey, preference);
+    }
     writeStorage(editorThemeKey, editorTheme);
     writeStorage(`codemirror-theme-${mode}`, editorTheme);
-    updateButtons(mode);
+    updateButtons(mode, preference);
 
     window.dispatchEvent(
       new CustomEvent("happyformatter:theme-change", {
-        detail: { editorTheme, theme: mode },
+        detail: { editorTheme, preference, theme: mode },
       }),
     );
   };
 
-  updateButtons(getCurrentMode());
+  applyThemePreference(getCurrentPreference());
 
   document.addEventListener("click", (event) => {
     const target = (event.target as Element | null)?.closest(
@@ -194,13 +236,23 @@ if (!window.happyFormatterThemeToggleReady) {
       return;
     }
 
-    applyTheme(getCurrentMode() === "dark" ? "light" : "dark");
+    applyThemePreference(getCurrentMode() === "dark" ? "light" : "dark", true);
   });
 
   window.addEventListener("storage", (event) => {
-    if (event.key === themeKey && isMode(event.newValue)) {
-      applyTheme(event.newValue);
+    if (event.key === themePreferenceKey) {
+      applyThemePreference(
+        isPreference(event.newValue) ? event.newValue : "system",
+      );
     }
   });
+
+  const handleSystemThemeChange = () => {
+    if (getCurrentPreference() === "system") {
+      applyThemePreference("system");
+    }
+  };
+
+  systemThemeQuery.addEventListener("change", handleSystemThemeChange);
 }
 </script>

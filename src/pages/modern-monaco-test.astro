@@ -1,5 +1,6 @@
 ---
 import Header from "@/components/layout/header.astro";
+import { themePreferenceStorageKey, themeStorageKey } from "@/lib/theme";
 import { modernMonacoEditorCoreUrl } from "happyformatter:modern-monaco-runtime";
 import "../styles/globals.css";
 
@@ -31,27 +32,44 @@ const modernMonacoImportMap = JSON.stringify(
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script is:inline>
+    <script
+      is:inline
+      define:vars={{ themePreferenceStorageKey, themeStorageKey }}
+    >
     (() => {
       const root = document.documentElement;
-      const readTheme = () => {
+      const systemThemeQuery = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      );
+      const readStorage = (key) => {
         try {
-          return window.localStorage.getItem("theme");
+          return window.localStorage.getItem(key);
         } catch {
           return null;
         }
       };
-
-      const stored = readTheme();
-      const mode = stored === "light" || stored === "dark"
-        ? stored
-        : window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+      const writeStorage = (key, value) => {
+        try {
+          window.localStorage.setItem(key, value);
+        } catch {
+          // Storage can be unavailable in private browsing modes.
+        }
+      };
+      const isMode = (value) => value === "light" || value === "dark";
+      const isPreference = (value) => value === "system" || isMode(value);
+      const storedPreference = readStorage(themePreferenceStorageKey);
+      const preference = isPreference(storedPreference)
+        ? storedPreference
+        : "system";
+      const mode = preference === "system"
+        ? systemThemeQuery.matches ? "dark" : "light"
+        : preference;
 
       root.classList.toggle("dark", mode === "dark");
       root.dataset.theme = mode;
+      root.dataset.themePreference = preference;
       root.style.colorScheme = mode;
+      writeStorage(themeStorageKey, mode);
     })();
     </script>
     <style is:inline>

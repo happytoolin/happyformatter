@@ -96,12 +96,12 @@ function ActionButton({
   label: string;
 }) {
   const toneClasses = variant === "primary"
-    ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
-    : "border-border bg-card text-foreground hover:border-foreground hover:bg-secondary";
+    ? "hf-button-default"
+    : "hf-button-outline";
   const stateClasses = state === "success"
-    ? "border-foreground bg-foreground text-background hover:bg-foreground/90"
+    ? "hf-button-success"
     : state === "error"
-    ? "border-destructive bg-card text-destructive hover:bg-destructive/10"
+    ? "hf-button-destructive"
     : toneClasses;
 
   return (
@@ -109,9 +109,10 @@ function ActionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex h-10 min-w-28 select-none items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 motion-reduce:transition-none ${stateClasses}`}
+      className={`hf-button hf-button-lg min-w-28 ${stateClasses}`}
       aria-label={label}
       aria-busy={busy || undefined}
+      data-loading={busy ? "true" : undefined}
       title={label}
     >
       {children}
@@ -143,7 +144,7 @@ function FormatButtons({
   const copyFailed = lastAction === "copy_failed";
 
   return (
-    <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
+    <div className="flex w-full flex-col gap-2 sm:w-auto sm:shrink-0 sm:flex-row sm:justify-end">
       {minifier && (
         <ActionButton
           onClick={onMinify}
@@ -221,6 +222,26 @@ function getTextBytes(value: string) {
 
 function getLineCount(value: string) {
   return value.length === 0 ? 0 : value.split(/\r\n|\r|\n/).length;
+}
+
+function formatSignedStat(value: number, label: string) {
+  if (value === 0) {
+    return `0 ${label}`;
+  }
+
+  const absoluteValue = Math.abs(value);
+  const pluralLabel = absoluteValue === 1 ? label : `${label}s`;
+  const sign = value > 0 ? "+" : "-";
+  return `${sign}${absoluteValue.toLocaleString()} ${pluralLabel}`;
+}
+
+function getMinifyStatsSummary(stats: NonNullable<MinifyStats>) {
+  return [
+    `${stats.inputBytes.toLocaleString()} B -> ${stats.outputBytes.toLocaleString()} B`,
+    `${stats.savedPercent.toFixed(1)}% saved`,
+    formatSignedStat(stats.charDelta, "char"),
+    formatSignedStat(stats.lineDelta, "line"),
+  ].join(", ");
 }
 
 export default function Formatter({ minifier, language }: FormatterProps) {
@@ -376,6 +397,9 @@ function FormatterContent({
     : lastAction === "copied"
     ? "Copied code"
     : "";
+  const statusLabel = lastAction === "minify_success" && minifyStats
+    ? `${statusMessage}: ${getMinifyStatsSummary(minifyStats)}`
+    : statusMessage;
   const statusTone = lastAction === "minifier_unavailable"
       || lastAction === "execution_failed"
       || lastAction === "copy_failed"
@@ -411,38 +435,15 @@ function FormatterContent({
             />
           </div>
 
-          <div className="flex flex-col gap-4 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
             <div
               id="formatter-status"
-              className={`min-h-5 font-mono text-xs ${statusTone}`}
+              className={`min-h-5 min-w-0 max-w-full flex-1 overflow-hidden font-mono text-xs ${statusTone}`}
               aria-live="polite"
               aria-atomic="true"
+              title={statusLabel || undefined}
             >
-              {statusMessage}
-              {minifyStats && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <ToolStat
-                    label="Input"
-                    value={`${minifyStats.inputBytes.toLocaleString()} B`}
-                  />
-                  <ToolStat
-                    label="Output"
-                    value={`${minifyStats.outputBytes.toLocaleString()} B`}
-                  />
-                  <ToolStat
-                    label="Saved"
-                    value={`${minifyStats.savedPercent.toFixed(1)}%`}
-                  />
-                  <ToolStat
-                    label="Chars"
-                    value={minifyStats.charDelta.toLocaleString()}
-                  />
-                  <ToolStat
-                    label="Lines"
-                    value={minifyStats.lineDelta.toLocaleString()}
-                  />
-                </div>
-              )}
+              <span className="block truncate">{statusLabel}</span>
             </div>
 
             <FormatButtons

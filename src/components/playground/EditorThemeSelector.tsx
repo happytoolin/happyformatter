@@ -16,10 +16,10 @@ export default function EditorThemeSelector({
         aria-hidden="true"
       >
         <span className="flex items-center border-r border-border px-2.5 uppercase text-muted-foreground">
-          Editor
+          Theme
         </span>
         <span className="flex items-center px-2 text-muted-foreground">
-          Theme
+          Loading
         </span>
       </div>
     );
@@ -33,14 +33,14 @@ export default function EditorThemeSelector({
         htmlFor="editor-theme-select"
         className="flex items-center border-r border-border px-2.5 uppercase text-muted-foreground"
       >
-        Editor
+        Theme
       </label>
       <select
         id="editor-theme-select"
         value={currentTheme}
         onChange={(event) => setTheme(event.target.value)}
         className="h-9 min-w-0 cursor-pointer bg-background px-2 text-foreground outline-none transition-colors hover:bg-secondary focus:bg-secondary motion-reduce:transition-none"
-        aria-label={`${mode} editor theme`}
+        aria-label={`${mode} theme`}
       >
         {themes.map((theme) => (
           <option key={theme.id} value={theme.id}>

@@ -334,7 +334,7 @@ export default function CodePlayground({
             <button
               type="button"
               onClick={reloadPage}
-              className="rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground outline-none transition-colors hover:border-foreground hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-px motion-reduce:transition-none"
+              className="hf-button hf-button-outline hf-button-md"
               aria-label="Reload editor"
             >
               Reload editor

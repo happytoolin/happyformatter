@@ -2,18 +2,24 @@
 import { cn } from "@/lib/utils";
 
 const buttonVariants = {
-  default:
-    "border border-primary bg-primary text-primary-foreground hover:bg-primary/90",
-  outline:
-    "border border-border bg-card text-foreground hover:border-foreground hover:bg-secondary",
-  ghost: "text-foreground hover:bg-secondary",
+  default: "hf-button-default",
+  destructive: "hf-button-destructive",
+  outline: "hf-button-outline",
+  secondary: "hf-button-secondary",
+  ghost: "hf-button-ghost",
+  link: "hf-button-link",
+  success: "hf-button-success",
 };
 
 const buttonSizes = {
-  default: "h-10 px-4 py-2",
-  sm: "h-9 px-3 text-xs",
-  lg: "h-11 px-5 text-base",
-  icon: "h-10 w-10",
+  default: "hf-button-md",
+  xs: "hf-button-xs",
+  sm: "hf-button-sm",
+  lg: "hf-button-lg",
+  icon: "hf-button-icon",
+  "icon-xs": "hf-button-icon-xs",
+  "icon-sm": "hf-button-icon-sm",
+  "icon-lg": "hf-button-icon-lg",
 };
 
 interface Props {
@@ -30,7 +36,7 @@ const { variant = "default", size = "default", className, ...props } =
 
 <button
   class={cn(
-    "inline-flex select-none items-center justify-center gap-2 rounded-md text-sm font-medium outline-none transition-[background-color,border-color,color,transform] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 active:translate-y-px motion-reduce:transition-none",
+    "hf-button",
     buttonVariants[variant],
     buttonSizes[size],
     className,

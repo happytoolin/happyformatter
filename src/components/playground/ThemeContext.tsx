@@ -6,6 +6,7 @@ import {
   getSafeEditorTheme,
   isColorMode,
   isEditorThemeForMode,
+  themePreferenceStorageKey,
 } from "@/lib/theme";
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
@@ -117,6 +118,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     const handleStorage = (event: StorageEvent) => {
       if (
         event.key === "theme"
+        || event.key === themePreferenceStorageKey
         || event.key === editorThemeStorageKey
         || event.key === editorThemeModeStorageKey("light")
         || event.key === editorThemeModeStorageKey("dark")

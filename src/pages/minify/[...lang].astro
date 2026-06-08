@@ -153,7 +153,7 @@ const displayVariantData = variant ? { h1: toolSEO.h1 } : null;
       <div class="flex items-center gap-4">
         <a
           href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
-          class="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
+          class="hf-button hf-button-outline hf-button-md"
         >
           Back to {actualLanguageConfig.name}
           {variant ? ` ${variant.charAt(0).toUpperCase() + variant.slice(1)}` : ""}
