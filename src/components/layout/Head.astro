@@ -44,9 +44,14 @@ const imagePath = image
     canonicalURL.pathname === "/"
       ? "/home"
       : canonicalURL.pathname.replace(/\/$/, "")
-  }.svg`;
+  }.png`;
 const finalImageAlt = imageAlt ?? `${title} preview`;
 const ogImageURL = new URL(imagePath, Astro.site).href;
+const ogImageType = imagePath.endsWith(".jpg") || imagePath.endsWith(".jpeg")
+  ? "image/jpeg"
+  : imagePath.endsWith(".webp")
+  ? "image/webp"
+  : "image/png";
 
 const lightEditorThemeIds = editorThemes
   .filter(theme => theme.type === "light")
@@ -220,6 +225,10 @@ html.dark body {
 <meta property="og:title" content={title} />
 <meta property="og:description" content={sanitizedDescription} />
 <meta property="og:image" content={ogImageURL} />
+<meta property="og:image:secure_url" content={ogImageURL} />
+<meta property="og:image:type" content={ogImageType} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={finalImageAlt} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content={canonicalHref} />
