@@ -529,7 +529,12 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                   <a
                     href={family.actions[0].url}
                     data-tool-action
-                    aria-label={`Open ${family.name} ${typeLabel[family.actions[0].type].toLowerCase()} tool`}
+                    data-analytics-event="tool_select"
+                    data-analytics-source="tool_directory_family"
+                    data-analytics-tool={family.name}
+                    data-analytics-tool-group={family.group}
+                    data-analytics-tool-action={typeLabel[family.actions[0].type]}
+                    data-analytics-destination={family.actions[0].url}
                     class="-m-2 flex min-w-0 items-center gap-3 rounded-md p-2 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-card">
@@ -593,6 +598,16 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                         <a
                           href={action.url}
                           data-tool-action
+                          data-analytics-event="tool_action_select"
+                          data-analytics-source="tool_directory_action"
+                          data-analytics-tool={family.name}
+                          data-analytics-tool-group={family.group}
+                          data-analytics-tool-action={getActionText(
+                            family,
+                            action,
+                          )}
+                          data-analytics-tool-type={action.type}
+                          data-analytics-destination={action.url}
                           class="group/action hf-button hf-button-outline hf-button-md max-w-full"
                         >
                           {action.icon && (
@@ -632,24 +647,6 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
     </div>
   </div>
 </section>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const tools = document.querySelectorAll("[data-tool-action]");
-  tools.forEach((tool) => {
-    const toolName = tool.getAttribute("href")?.replace(/^\//, "") || "";
-
-    tool.addEventListener("click", () => {
-      if (typeof window.gtag === "function") {
-        window.gtag("event", `Click ${toolName}`, {
-          "event_category": "Tool Interaction",
-          "value": toolName,
-        });
-      }
-    });
-  });
-});
-</script>
 
 <style>
 .new-tool-badge {

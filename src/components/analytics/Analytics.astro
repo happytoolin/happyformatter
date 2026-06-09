@@ -1,0 +1,222 @@
+---
+const measurementId = "G-6SQ50M5SK0";
+---
+
+<script
+  is:inline
+  type="text/partytown"
+  async
+  src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+>
+</script>
+<script
+  type="text/partytown"
+  is:inline
+  define:vars={{ measurementId }}
+>
+window.dataLayer = window.dataLayer || [];
+
+window.gtag = function gtag() {
+  dataLayer.push(arguments);
+};
+
+gtag("js", new Date());
+
+gtag("config", measurementId, {
+  page_path: window.location.pathname,
+  page_title: document.title,
+  transport_type: "beacon",
+});
+</script>
+<script is:inline>
+(() => {
+  const existingAnalytics = window.happyFormatterAnalytics;
+  if (existingAnalytics?.ready) {
+    return;
+  }
+
+  const maxEventNameLength = 40;
+  const maxParamNameLength = 40;
+  const maxStringValueLength = 100;
+  const maxPendingEvents = 20;
+  const maxFlushAttempts = 20;
+  const pendingEvents = [];
+  let flushIntervalId;
+  let flushAttempts = 0;
+
+  const normalizeEventName = (eventName) =>
+    String(eventName || "")
+      .trim()
+      .replace(/[^a-zA-Z0-9_]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .slice(0, maxEventNameLength);
+
+  const normalizeParamName = (paramName) =>
+    String(paramName || "")
+      .trim()
+      .replace(/-/g, "_")
+      .replace(/[^a-zA-Z0-9_]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .slice(0, maxParamNameLength);
+
+  const normalizeParamValue = (value) => {
+    if (typeof value === "number" || typeof value === "boolean") {
+      return value;
+    }
+
+    if (value === null || value === undefined) {
+      return undefined;
+    }
+
+    const stringValue = String(value).trim();
+    if (!stringValue) {
+      return undefined;
+    }
+
+    if (stringValue === "true") {
+      return true;
+    }
+
+    if (stringValue === "false") {
+      return false;
+    }
+
+    return stringValue.slice(0, maxStringValueLength);
+  };
+
+  const normalizeParams = (params = {}) =>
+    Object.fromEntries(
+      Object.entries(params)
+        .map(([key, value]) => [
+          normalizeParamName(key),
+          normalizeParamValue(value),
+        ])
+        .filter(([key, value]) => key && value !== undefined),
+    );
+
+  const readAnalyticsAttributes = (element) => {
+    const params = {};
+
+    for (const attribute of element.attributes) {
+      if (!attribute.name.startsWith("data-analytics-")) {
+        continue;
+      }
+
+      const key = attribute.name.replace("data-analytics-", "");
+      if (key === "event") {
+        continue;
+      }
+
+      params[key] = attribute.value;
+    }
+
+    return params;
+  };
+
+  const stopFlushTimer = () => {
+    if (flushIntervalId) {
+      window.clearInterval(flushIntervalId);
+      flushIntervalId = undefined;
+    }
+  };
+
+  const sendEvent = (eventName, params) => {
+    if (typeof window.gtag !== "function") {
+      return false;
+    }
+
+    window.gtag("event", eventName, params);
+    return true;
+  };
+
+  const flushPendingEvents = () => {
+    if (typeof window.gtag !== "function") {
+      return;
+    }
+
+    while (pendingEvents.length > 0) {
+      const pendingEvent = pendingEvents.shift();
+      sendEvent(pendingEvent.eventName, pendingEvent.params);
+    }
+
+    stopFlushTimer();
+  };
+
+  const scheduleFlush = () => {
+    if (flushIntervalId) {
+      return;
+    }
+
+    flushAttempts = 0;
+    flushIntervalId = window.setInterval(() => {
+      flushAttempts += 1;
+      flushPendingEvents();
+
+      if (pendingEvents.length === 0 || flushAttempts >= maxFlushAttempts) {
+        stopFlushTimer();
+      }
+    }, 500);
+  };
+
+  const track = (eventName, params = {}) => {
+    const normalizedEventName = normalizeEventName(eventName);
+    if (!normalizedEventName) {
+      return;
+    }
+
+    const normalizedParams = normalizeParams(params);
+    if (sendEvent(normalizedEventName, normalizedParams)) {
+      return;
+    }
+
+    pendingEvents.push({
+      eventName: normalizedEventName,
+      params: normalizedParams,
+    });
+
+    if (pendingEvents.length > maxPendingEvents) {
+      pendingEvents.shift();
+    }
+
+    scheduleFlush();
+  };
+
+  window.happyFormatterAnalytics = {
+    ready: true,
+    track,
+  };
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const analyticsElement = target.closest("[data-analytics-event]");
+    if (!analyticsElement) {
+      return;
+    }
+
+    const eventName = analyticsElement.getAttribute("data-analytics-event");
+    const params = readAnalyticsAttributes(analyticsElement);
+    const linkElement = analyticsElement instanceof HTMLAnchorElement
+      ? analyticsElement
+      : analyticsElement.closest("a[href]");
+
+    if (linkElement) {
+      params.link_url = linkElement.href;
+      params.link_text = linkElement.textContent;
+      params.transport_type = "beacon";
+    }
+
+    track(eventName, params);
+  });
+
+  window.addEventListener("load", flushPendingEvents);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      flushPendingEvents();
+    }
+  });
+})();
+</script>

@@ -17,7 +17,9 @@ const primaryLinks = [
     <a
       href="/"
       class="group inline-flex items-center gap-3 rounded-md text-foreground transition-opacity hover:opacity-80"
-      aria-label="HappyFormatter home"
+      data-analytics-event="navigation_click"
+      data-analytics-source="header_logo"
+      data-analytics-destination="/"
     >
       <Logo class="h-8 w-8" />
       <div class="flex flex-col leading-none">
@@ -36,7 +38,10 @@ const primaryLinks = [
         <a
           href={link.href}
           class="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          aria-label={`Open ${link.label} formatter`}
+          data-analytics-event="navigation_click"
+          data-analytics-source="header_primary"
+          data-analytics-item={link.label}
+          data-analytics-destination={link.href}
         >
           {link.label}
         </a>
@@ -47,6 +52,10 @@ const primaryLinks = [
       <a
         href="#more-tools"
         class="hf-button hf-button-outline hf-button-md hidden md:inline-flex"
+        data-analytics-event="navigation_click"
+        data-analytics-source="header_tools"
+        data-analytics-item="Browse tools"
+        data-analytics-destination="#more-tools"
       >
         Browse tools
       </a>
@@ -79,7 +88,13 @@ const primaryLinks = [
   <div class="flex min-h-[100dvh] flex-col">
     <div class="flex h-16 items-center justify-between border-b border-border px-4">
       <h2 id="mobile-menu-title" class="sr-only">Navigation Menu</h2>
-      <a href="/" class="inline-flex items-center gap-3">
+      <a
+        href="/"
+        class="inline-flex items-center gap-3"
+        data-analytics-event="navigation_click"
+        data-analytics-source="mobile_header_logo"
+        data-analytics-destination="/"
+      >
         <Logo class="h-8 w-8" />
         <span class="text-base font-semibold">HappyFormatter</span>
       </a>
@@ -104,7 +119,10 @@ const primaryLinks = [
         <a
           href={link.href}
           class="bg-background px-4 py-4 text-lg font-medium text-foreground transition-colors hover:bg-secondary"
-          aria-label={`Open ${link.label} formatter`}
+          data-analytics-event="navigation_click"
+          data-analytics-source="mobile_primary"
+          data-analytics-item={link.label}
+          data-analytics-destination={link.href}
         >
           {link.label}
         </a>
@@ -112,6 +130,10 @@ const primaryLinks = [
       <a
         href="#more-tools"
         class="bg-background px-4 py-4 text-lg font-medium text-foreground transition-colors hover:bg-secondary"
+        data-analytics-event="navigation_click"
+        data-analytics-source="mobile_tools"
+        data-analytics-item="All tools"
+        data-analytics-destination="#more-tools"
       >
         All tools
       </a>

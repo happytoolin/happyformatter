@@ -10,6 +10,7 @@ import {
   sanitizeSEOKeywords,
 } from "@/lib/tool-page-seo";
 import { modernMonacoEditorCoreUrl } from "happyformatter:modern-monaco-runtime";
+import Analytics from "../analytics/Analytics.astro";
 
 type Props = {
   author?: string;
@@ -227,21 +228,4 @@ html.dark body {
 <meta name="twitter:image" content={ogImageURL} />
 <meta name="twitter:image:alt" content={finalImageAlt} />
 <meta name="twitter:site" content="@happyformatter" />
-<script
-  is:inline
-  type="text/partytown"
-  async
-  src="https://www.googletagmanager.com/gtag/js?id=G-6SQ50M5SK0"
->
-</script>
-<script type="text/partytown" is:inline>
-window.dataLayer = window.dataLayer || [];
-
-window.gtag = function gtag() {
-  dataLayer.push(arguments);
-};
-
-gtag("js", new Date());
-
-gtag("config", "G-6SQ50M5SK0");
-</script>
+<Analytics />

@@ -518,6 +518,16 @@ code, pre, .shiki, .cm-line, .cm-content {
   font-family: var(--font-mono) !important;
 }
 
+.monaco-editor .line-numbers,
+.monaco-editor .line-numbers.active-line-number {
+  color: #59636e !important;
+}
+
+.dark .monaco-editor .line-numbers,
+.dark .monaco-editor .line-numbers.active-line-number {
+  color: #c4cbd3 !important;
+}
+
 /* Inline code elements */
 :not(pre) > code {
   background-color: var(--muted);

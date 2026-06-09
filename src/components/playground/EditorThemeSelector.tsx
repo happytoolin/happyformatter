@@ -1,3 +1,4 @@
+import { trackAnalyticsEvent } from "@/lib/analytics";
 import { useTheme } from "./ThemeContext";
 
 interface EditorThemeSelectorProps {
@@ -38,7 +39,14 @@ export default function EditorThemeSelector({
       <select
         id="editor-theme-select"
         value={currentTheme}
-        onChange={(event) => setTheme(event.target.value)}
+        onChange={(event) => {
+          const nextTheme = event.target.value;
+          setTheme(nextTheme);
+          trackAnalyticsEvent("editor_theme_change", {
+            mode,
+            theme: nextTheme,
+          });
+        }}
         className="h-9 min-w-0 cursor-pointer bg-background px-2 text-foreground outline-none transition-colors hover:bg-secondary focus:bg-secondary motion-reduce:transition-none"
         aria-label={`${mode} theme`}
       >

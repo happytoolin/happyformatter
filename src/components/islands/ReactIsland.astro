@@ -7,9 +7,14 @@ interface Props {
 }
 
 const { kind, props } = Astro.props;
+const formatterIslandClass = "block min-h-[52rem] lg:min-h-[46rem]";
 ---
 
-<div data-hf-react-island={kind} data-hf-react-props={JSON.stringify(props)}>
+<div
+  data-hf-react-island={kind}
+  data-hf-react-props={JSON.stringify(props)}
+  class:list={[kind === "formatter" && formatterIslandClass]}
+>
 </div>
 
 <script>

@@ -1,4 +1,5 @@
 import { getFormatter, getMinifier } from "@/handlers";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 import { getInitialCode } from "@/lib/initialCode";
 import { LANGUAGES } from "@/lib/languages";
 import { Check, Copy, FileText, Loader2, Minimize2 } from "lucide-react";
@@ -224,6 +225,70 @@ function getLineCount(value: string) {
   return value.length === 0 ? 0 : value.split(/\r\n|\r|\n/).length;
 }
 
+function getCodeSizeBucket(value: string) {
+  const bytes = getTextBytes(value);
+
+  if (bytes === 0) {
+    return "empty";
+  }
+
+  if (bytes <= 1024) {
+    return "up_to_1kb";
+  }
+
+  if (bytes <= 10 * 1024) {
+    return "up_to_10kb";
+  }
+
+  if (bytes <= 100 * 1024) {
+    return "up_to_100kb";
+  }
+
+  return "over_100kb";
+}
+
+function getLineCountBucket(value: string) {
+  const lines = getLineCount(value);
+
+  if (lines === 0) {
+    return "empty";
+  }
+
+  if (lines <= 25) {
+    return "up_to_25";
+  }
+
+  if (lines <= 100) {
+    return "up_to_100";
+  }
+
+  if (lines <= 500) {
+    return "up_to_500";
+  }
+
+  return "over_500";
+}
+
+function getSavedPercentBucket(savedPercent: number) {
+  if (savedPercent <= 0) {
+    return "none";
+  }
+
+  if (savedPercent < 10) {
+    return "under_10";
+  }
+
+  if (savedPercent < 25) {
+    return "under_25";
+  }
+
+  if (savedPercent < 50) {
+    return "under_50";
+  }
+
+  return "over_50";
+}
+
 function formatSignedStat(value: number, label: string) {
   if (value === 0) {
     return `0 ${label}`;
@@ -257,6 +322,23 @@ export default function Formatter({ minifier, language }: FormatterProps) {
     initializeCode(language);
   }, [language, setLanguage, initializeCode]);
 
+  const trackFormatterAction = useCallback((
+    action: "copy" | "format" | "minify",
+    status: "error" | "success" | "unavailable",
+    input: string,
+    extra: Record<string, string | number | boolean> = {},
+  ) => {
+    trackAnalyticsEvent("formatter_action", {
+      action,
+      has_minifier: minifier,
+      input_lines: getLineCountBucket(input),
+      input_size: getCodeSizeBucket(input),
+      language,
+      status,
+      ...extra,
+    });
+  }, [language, minifier]);
+
   const handleAction = useCallback(async (type: "format" | "minify") => {
     if (processingAction !== null) {
       return;
@@ -271,6 +353,9 @@ export default function Formatter({ minifier, language }: FormatterProps) {
         setCode(result);
         setMinifyStats(null);
         setLastAction("format_success");
+        trackFormatterAction("format", "success", activeCode, {
+          output_size: getCodeSizeBucket(result),
+        });
       } else {
         const minifierTool = await getMinifier(language);
         if (minifierTool) {
@@ -289,28 +374,46 @@ export default function Formatter({ minifier, language }: FormatterProps) {
             lineDelta: getLineCount(result) - getLineCount(before),
           });
           setLastAction("minify_success");
+          trackFormatterAction("minify", "success", before, {
+            output_size: getCodeSizeBucket(result),
+            saved_percent: getSavedPercentBucket(
+              inputBytes === 0
+                ? 0
+                : Math.max(0, ((inputBytes - outputBytes) / inputBytes) * 100),
+            ),
+          });
         } else {
           setMinifyStats(null);
           setLastAction("minifier_unavailable");
+          trackFormatterAction("minify", "unavailable", activeCode);
         }
       }
     } catch (e) {
       console.error(e);
       setMinifyStats(null);
       setLastAction("execution_failed");
+      trackFormatterAction(type, "error", activeCode);
     } finally {
       setProcessingAction(null);
     }
-  }, [language, activeCode, processingAction, setCode]);
+  }, [
+    language,
+    activeCode,
+    processingAction,
+    setCode,
+    trackFormatterAction,
+  ]);
 
   const copyToClipboard = useCallback(async () => {
     try {
       await copyTextToClipboard(activeCode);
       setLastAction("copied");
+      trackFormatterAction("copy", "success", activeCode);
     } catch {
       setLastAction("copy_failed");
+      trackFormatterAction("copy", "error", activeCode);
     }
-  }, [activeCode]);
+  }, [activeCode, trackFormatterAction]);
 
   useEffect(() => {
     if (!lastAction) {
