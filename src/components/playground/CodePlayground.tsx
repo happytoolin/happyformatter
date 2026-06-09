@@ -7,6 +7,7 @@ import { useTheme } from "./ThemeContext";
 
 interface CodePlaygroundProps {
   ariaLabel?: string;
+  deferEditorLoad?: boolean;
   inputCode: string;
   language: string;
   onCodeChange?: (code: string) => void;
@@ -160,6 +161,7 @@ function announceEditorReady(languageName: string) {
 
 export default function CodePlayground({
   ariaLabel,
+  deferEditorLoad = false,
   inputCode,
   language,
   onCodeChange,
@@ -175,6 +177,8 @@ export default function CodePlayground({
   const applyingExternalValueRef = useRef(false);
   const { currentTheme, ready } = useTheme();
   const languageName = formatLanguageName(language);
+  const [shouldLoadEditor, setShouldLoadEditor] = useState(!deferEditorLoad);
+  const [isEditorReady, setIsEditorReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -207,7 +211,53 @@ export default function CodePlayground({
   }, []);
 
   useEffect(() => {
-    if (!ready) {
+    if (!deferEditorLoad || shouldLoadEditor) {
+      return;
+    }
+
+    let cancelled = false;
+    const loadEditor = () => {
+      if (!cancelled) {
+        setShouldLoadEditor(true);
+      }
+    };
+    let timeoutId: number | undefined;
+    let idleCallbackId: number | undefined;
+    const startWhenIdle = () => {
+      timeoutId = window.setTimeout(() => {
+        if (cancelled) {
+          return;
+        }
+
+        if ("requestIdleCallback" in window) {
+          idleCallbackId = window.requestIdleCallback(loadEditor, { timeout: 12000 });
+          return;
+        }
+
+        loadEditor();
+      }, 8000);
+    };
+
+    if (document.readyState === "complete") {
+      startWhenIdle();
+    } else {
+      window.addEventListener("load", startWhenIdle, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+      if (idleCallbackId !== undefined && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      window.removeEventListener("load", startWhenIdle);
+    };
+  }, [deferEditorLoad, shouldLoadEditor]);
+
+  useEffect(() => {
+    if (!ready || !shouldLoadEditor) {
       return;
     }
 
@@ -265,6 +315,7 @@ export default function CodePlayground({
         monacoRef.current = monaco;
         modelRef.current = model;
         editorRef.current = editor;
+        setIsEditorReady(true);
         announceEditorReady(languageName);
       } catch (editorError) {
         console.error(`Could not load modern-monaco for ${languageName}`, editorError);
@@ -289,8 +340,9 @@ export default function CodePlayground({
       editorRef.current = null;
       modelRef.current = null;
       monacoRef.current = null;
+      setIsEditorReady(false);
     };
-  }, [ariaLabel, currentTheme, language, languageName, readOnly, ready]);
+  }, [ariaLabel, currentTheme, language, languageName, readOnly, ready, shouldLoadEditor]);
 
   return (
     <div
@@ -299,7 +351,7 @@ export default function CodePlayground({
       role="application"
       aria-label={ariaLabel ?? `Code editor for ${languageName}`}
     >
-      {(isLoading || !ready) && (
+      {(isLoading || !ready) && !deferEditorLoad && (
         <div
           className="absolute inset-0 z-10 flex items-center justify-center bg-card/95"
           role="status"
@@ -314,6 +366,21 @@ export default function CodePlayground({
             </span>
           </div>
         </div>
+      )}
+
+      {deferEditorLoad && !isEditorReady && !error && (
+        <textarea
+          className="absolute inset-0 z-0 h-full w-full resize-none border-0 bg-card p-4 font-mono text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-ring"
+          value={inputCode}
+          onChange={(event) => onCodeChangeRef.current?.(event.currentTarget.value)}
+          readOnly={readOnly}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoComplete="off"
+          autoCorrect="off"
+          aria-label={ariaLabel ?? `Code editor for ${languageName}`}
+          placeholder={`Paste ${languageName} here`}
+        />
       )}
 
       {error && !isLoading && (
@@ -343,7 +410,11 @@ export default function CodePlayground({
         </div>
       )}
 
-      <div className={(isLoading || error ? "pointer-events-none opacity-50" : "") + " h-full"}>
+      <div
+        className={(isLoading || error || (deferEditorLoad && !isEditorReady)
+          ? "pointer-events-none opacity-0"
+          : "") + " h-full"}
+      >
         <div ref={containerRef} className="h-full w-full" />
       </div>
 

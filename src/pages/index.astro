@@ -113,9 +113,9 @@ const toolGroups = [
     </div>
   </section>
   <ReactIsland
-    hydrate="interaction"
+    hydrate="load"
     kind="formatter"
-    props={{ minifier: languageConfig.minify, language }}
+    props={{ deferEditorLoad: true, minifier: languageConfig.minify, language }}
   >
     <section class="border-b border-border bg-background" id="workspace">
       <div class="mx-auto max-w-350 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -137,19 +137,16 @@ const toolGroups = [
               </span>
             </div>
           </div>
-          <div class="grid min-h-105 place-items-center bg-card px-4 py-10 md:min-h-130">
-            <div class="mx-auto max-w-md text-center">
-              <p class="text-sm leading-6 text-muted-foreground">
-                Load the private JSON formatter when you are ready to paste
-                code.
-              </p>
-              <button
-                type="button"
-                class="hf-button hf-button-default hf-button-lg mt-4"
-              >
-                Open editor
-              </button>
-            </div>
+          <div class="h-105 bg-card md:h-130">
+            <textarea
+              data-hf-editor-fallback
+              class="h-full w-full resize-none border-0 bg-card p-4 font-mono text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-ring"
+              spellcheck="false"
+              autocapitalize="off"
+              autocomplete="off"
+              autocorrect="off"
+              placeholder="Paste JSON here"
+            ></textarea>
           </div>
         </div>
       </div>

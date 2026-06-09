@@ -7,8 +7,10 @@ type IslandKind = "formatter" | "faq" | "faq-enhanced" | "utility-tool";
 type HydrationStrategy = "load" | "visible" | "idle" | "interaction";
 
 interface FormatterIslandProps {
+  deferEditorLoad?: boolean;
   language: string;
   minifier: boolean;
+  initialCode?: string;
 }
 
 interface FAQIslandProps {
@@ -64,6 +66,12 @@ function normalizeProps(kind: IslandKind, props: Record<string, unknown>) {
   }
 }
 
+function getFallbackCode(element: HTMLElement) {
+  const fallback = element.querySelector<HTMLTextAreaElement>("[data-hf-editor-fallback]");
+  const value = fallback?.value.trim();
+  return value ? fallback?.value : undefined;
+}
+
 async function mountIsland(element: IslandElement) {
   const kind = element.dataset.hfReactIsland as IslandKind | undefined;
   if (!kind || element.__happyFormatterMounting) {
@@ -76,10 +84,16 @@ async function mountIsland(element: IslandElement) {
     import("react-dom/client"),
     islandLoaders[kind](),
   ]);
+  const props = normalizeProps(kind, parseProps(element)) as unknown as Record<string, unknown>;
+  const fallbackCode = kind === "formatter" ? getFallbackCode(element) : undefined;
+  if (fallbackCode) {
+    props.initialCode = fallbackCode;
+  }
+
   const root = element.__happyFormatterRoot ?? createRoot(element);
   element.__happyFormatterRoot = root;
   root.render(
-    createElement(Component, normalizeProps(kind, parseProps(element)) as unknown as Record<string, unknown>),
+    createElement(Component, props),
   );
   element.__happyFormatterMounting = false;
 }
