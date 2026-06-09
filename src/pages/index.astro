@@ -1,4 +1,5 @@
 ---
+import Info from "@/components/info/info.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
@@ -58,8 +59,6 @@ const toolGroups = [
   title={homepageTitle}
   description={homepageDescription}
   keywords={homepageKeywords}
-  showMoreTools={false}
-  showRelatedAndVariants={false}
 >
   <section class="border-b border-border bg-background">
     <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
@@ -235,4 +234,6 @@ const toolGroups = [
       </div>
     </div>
   </section>
+  <Info language={language} />
+  <ReactIsland kind="faq" props={{ language }} />
 </Layout>

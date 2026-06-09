@@ -98,13 +98,13 @@ async function mountIsland(element: IslandElement) {
   element.__happyFormatterMounting = false;
 }
 
-function getHydrationStrategy(element: HTMLElement, kind: IslandKind): HydrationStrategy {
+function getHydrationStrategy(element: HTMLElement): HydrationStrategy {
   const strategy = element.dataset.hfHydrate;
   if (strategy === "load" || strategy === "visible" || strategy === "idle" || strategy === "interaction") {
     return strategy;
   }
 
-  return kind === "faq" || kind === "faq-enhanced" ? "visible" : "load";
+  return "load";
 }
 
 function mountWhenIdle(element: IslandElement) {
@@ -164,7 +164,7 @@ export function mountHappyFormatterReactIslands() {
         return;
       }
 
-      const strategy = getHydrationStrategy(element, kind);
+      const strategy = getHydrationStrategy(element);
       if (strategy === "interaction") {
         mountWhenInteracted(element);
       } else if (strategy === "visible") {
