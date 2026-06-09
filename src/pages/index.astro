@@ -112,9 +112,45 @@ const toolGroups = [
     </div>
   </section>
   <ReactIsland
+    hydrate="load"
     kind="formatter"
-    props={{ minifier: languageConfig.minify, language }}
-  />
+    props={{ deferEditorLoad: true, minifier: languageConfig.minify, language }}
+  >
+    <section class="border-b border-border bg-background" id="workspace">
+      <div class="mx-auto max-w-350 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div class="overflow-hidden rounded-lg border border-border bg-card">
+          <div class="grid gap-4 border-b border-border px-4 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div class="min-w-0">
+              <p class="font-mono text-xs uppercase text-muted-foreground">
+                Editor
+              </p>
+              <h2 class="mt-1 truncate text-2xl font-semibold leading-tight text-foreground">
+                JSON
+              </h2>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span
+                class="inline-flex h-9 items-center rounded-md border border-border bg-background px-2.5 font-mono text-xs text-muted-foreground"
+              >
+                Local browser tool
+              </span>
+            </div>
+          </div>
+          <div class="h-105 bg-card md:h-130">
+            <textarea
+              data-hf-editor-fallback
+              class="h-full w-full resize-none border-0 bg-card p-4 font-mono text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-ring"
+              spellcheck="false"
+              autocapitalize="off"
+              autocomplete="off"
+              autocorrect="off"
+              placeholder="Paste JSON here"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ReactIsland>
   <section class="border-b border-border bg-card py-10 sm:py-12">
     <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
       <div class="min-w-0 max-w-md lg:pt-1">

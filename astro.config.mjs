@@ -9,8 +9,6 @@ import tailwind from "@tailwindcss/vite";
 import { defineConfig, sessionDrivers } from "astro/config";
 import wasm from "vite-plugin-wasm";
 
-import partytown from "@astrojs/partytown";
-
 import cloudflare from "@astrojs/cloudflare";
 
 const modernMonacoRuntimeFiles = [
@@ -32,8 +30,6 @@ const modernMonacoRuntimeBasePath = `/vendor/modern-monaco/${modernMonacoPackage
 const modernMonacoRuntimeDir = fileURLToPath(
   new URL("./node_modules/modern-monaco/dist/", import.meta.url),
 );
-const enablePartytown = process.env.NODE_ENV === "production";
-
 const shouldIncludeInSitemap = page => {
   const url = new URL(page);
   const segments = url.pathname.split("/").filter(Boolean);
@@ -304,15 +300,6 @@ export default defineConfig({
     }),
     react(),
     playformCompress(),
-    ...(enablePartytown
-      ? [
-        partytown({
-          config: {
-            forward: ["dataLayer.push", "gtag"],
-          },
-        }),
-      ]
-      : []),
   ],
 
   prefetch: true,

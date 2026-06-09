@@ -1,20 +1,24 @@
 ---
 type ReactIslandKind = "formatter" | "faq" | "faq-enhanced" | "utility-tool";
+type HydrationStrategy = "load" | "visible" | "idle" | "interaction";
 
 interface Props {
+  hydrate?: HydrationStrategy;
   kind: ReactIslandKind;
   props: Record<string, unknown>;
 }
 
-const { kind, props } = Astro.props;
+const { hydrate, kind, props } = Astro.props;
 const formatterIslandClass = "block min-h-[52rem] lg:min-h-[46rem]";
 ---
 
 <div
+  data-hf-hydrate={hydrate}
   data-hf-react-island={kind}
   data-hf-react-props={JSON.stringify(props)}
   class:list={[kind === "formatter" && formatterIslandClass]}
 >
+  <slot />
 </div>
 
 <script>

@@ -11,8 +11,10 @@ import { useFormatterStore } from "./formatterStore";
 import { ThemeProvider } from "./ThemeContext";
 
 interface FormatterProps {
+  deferEditorLoad?: boolean;
   minifier: boolean;
   language: string;
+  initialCode?: string;
 }
 
 type ActionStatus =
@@ -309,18 +311,28 @@ function getMinifyStatsSummary(stats: NonNullable<MinifyStats>) {
   ].join(", ");
 }
 
-export default function Formatter({ minifier, language }: FormatterProps) {
+export default function Formatter({
+  deferEditorLoad = false,
+  minifier,
+  language,
+  initialCode: providedInitialCode,
+}: FormatterProps) {
   const { code, language: storeLanguage, setCode, initializeCode, setLanguage } = useFormatterStore();
   const [processingAction, setProcessingAction] = useState<ProcessingAction>(null);
   const [lastAction, setLastAction] = useState<ActionStatus | null>(null);
   const [minifyStats, setMinifyStats] = useState<MinifyStats>(null);
-  const initialCode = useMemo(() => getInitialCode(language), [language]);
+  const initialCode = useMemo(() => providedInitialCode ?? getInitialCode(language), [language, providedInitialCode]);
   const activeCode = storeLanguage === language ? code : initialCode;
 
   useEffect(() => {
     setLanguage(language);
+    if (providedInitialCode) {
+      setCode(providedInitialCode);
+      return;
+    }
+
     initializeCode(language);
-  }, [language, setLanguage, initializeCode]);
+  }, [language, providedInitialCode, setCode, setLanguage, initializeCode]);
 
   const trackFormatterAction = useCallback((
     action: "copy" | "format" | "minify",
@@ -448,6 +460,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
     <ThemeProvider>
       <FormatterContent
         code={activeCode}
+        deferEditorLoad={deferEditorLoad}
         language={language}
         processingAction={processingAction}
         lastAction={lastAction}
@@ -463,6 +476,7 @@ export default function Formatter({ minifier, language }: FormatterProps) {
 
 function FormatterContent({
   code,
+  deferEditorLoad,
   language,
   processingAction,
   lastAction,
@@ -473,6 +487,7 @@ function FormatterContent({
   minifyStats,
 }: {
   code: string;
+  deferEditorLoad: boolean;
   language: string;
   processingAction: ProcessingAction;
   lastAction: ActionStatus | null;
@@ -532,6 +547,7 @@ function FormatterContent({
 
           <div className="relative h-105 w-full bg-card md:h-130">
             <CodePlayground
+              deferEditorLoad={deferEditorLoad}
               inputCode={code}
               language={language}
               onCodeChange={setCode}

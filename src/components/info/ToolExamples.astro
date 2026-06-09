@@ -1,5 +1,6 @@
 ---
 import { LANGUAGES } from "@/lib/languages";
+import { codeToHtml } from "shiki";
 
 type Props = {
   language: string;
@@ -138,6 +139,45 @@ const after = minify
   ? example.minified ?? example.after.replace(/\s+/g, " ").trim()
   : example.after;
 
+const shikiLanguageAliases: Record<string, string> = {
+  javascript: "javascript",
+  "javascript-biome": "javascript",
+  "javascript-oxc": "javascript",
+  typescript: "typescript",
+  "typescript-biome": "typescript",
+  "typescript-oxc": "typescript",
+  shell: "bash",
+  objectivec: "objective-c",
+  objectivecpp: "objective-cpp",
+};
+const highlightedLanguage = shikiLanguageAliases[language] ?? language;
+const highlightOptions = {
+  lang: highlightedLanguage,
+  theme: "github-dark",
+};
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function highlightCode(value: string) {
+  try {
+    return await codeToHtml(value, highlightOptions);
+  } catch {
+    return `<pre class="shiki"><code>${escapeHtml(value)}</code></pre>`;
+  }
+}
+
+const [beforeHtml, afterHtml] = await Promise.all([
+  highlightCode(example.before),
+  highlightCode(after),
+]);
+
 const relatedLinks = [
   ...(languageConfig?.minify && !minify
     ? [{
@@ -196,52 +236,112 @@ const relatedLinks = [
 ].slice(0, 4);
 ---
 
-<section class="border-b border-border bg-background py-10 sm:py-12">
-  <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] lg:px-8">
-    <div>
-      <h2 class="text-3xl font-semibold text-foreground">
-        {minify ? "Minifier example" : "Formatter example"}
-      </h2>
-      <div class="mt-5 grid gap-4 md:grid-cols-2">
-        <article class="overflow-hidden rounded-md border border-border bg-card">
-          <div class="border-b border-border px-4 py-3">
+<section class="tool-examples border-b border-border bg-background py-10 sm:py-12">
+  <div class="mx-auto grid max-w-[1400px] gap-5 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8">
+    <div class="min-w-0 overflow-hidden rounded-lg border border-border bg-card">
+      <div class="flex flex-col gap-4 border-b border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="min-w-0">
+          <h2 class="text-xl font-semibold leading-7 text-foreground sm:text-2xl">
+            {minify ? "Minifier example" : "Formatter example"}
+          </h2>
+          <p class="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+            Compare the exact input shape with the cleaned output before opening
+            the editor.
+          </p>
+        </div>
+        <div class="flex shrink-0 items-center gap-2 rounded-md border border-border bg-background px-2.5 py-1.5 font-mono text-xs text-muted-foreground">
+          <span
+            class="h-2 w-2 rounded-full bg-[#14b8a6]"
+            aria-hidden="true"
+          ></span>
+          Local preview
+        </div>
+      </div>
+
+      <div class="grid min-w-0 gap-px bg-border md:grid-cols-2">
+        <article class="min-w-0 bg-card">
+          <div class="flex items-center justify-between border-b border-border px-4 py-3">
             <p class="text-sm font-semibold text-foreground">Before</p>
+            <span
+              class="rounded-sm bg-secondary px-2 py-1 font-mono text-[11px] text-muted-foreground"
+            >
+              input
+            </span>
           </div>
-          <pre class="overflow-auto p-4 text-sm leading-6"><code>{example.before}</code></pre>
+          <div class="min-w-0 bg-[#0d1117]">
+            <Fragment set:html={beforeHtml} />
+          </div>
         </article>
-        <article class="overflow-hidden rounded-md border border-border bg-card">
-          <div class="border-b border-border px-4 py-3">
+
+        <article class="min-w-0 bg-card">
+          <div class="flex items-center justify-between border-b border-border px-4 py-3">
             <p class="text-sm font-semibold text-foreground">After</p>
+            <span
+              class="rounded-sm bg-accent px-2 py-1 font-mono text-[11px] text-accent-foreground"
+            >
+              {minify ? "minified" : "formatted"}
+            </span>
           </div>
-          <pre class="overflow-auto p-4 text-sm leading-6"><code>{after}</code></pre>
+          <div class="min-w-0 bg-[#0d1117]">
+            <Fragment set:html={afterHtml} />
+          </div>
         </article>
       </div>
     </div>
 
-    <aside class="space-y-4">
-      <div class="rounded-md border border-border bg-card p-5">
-        <h2 class="text-xl font-semibold text-foreground">Privacy proof</h2>
-        <div class="mt-4 grid gap-3">
+    <aside class="min-w-0 space-y-5">
+      <div class="rounded-lg border border-border bg-card p-4">
+        <h2 class="text-base font-semibold leading-6 text-foreground">
+          Privacy proof
+        </h2>
+        <div class="mt-3 divide-y divide-border rounded-md border border-border bg-background">
           {["Runs in your browser", "No upload", "No account"].map(item => (
-            <p class="rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
-              {item}
-            </p>
+            <div class="flex items-center gap-3 px-3 py-2.5">
+              <span
+                class="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground"
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  class="h-3 w-3"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3.5 8.2 6.4 11 12.5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.8"
+                  >
+                  </path>
+                </svg>
+              </span>
+              <span class="text-sm text-foreground">{item}</span>
+            </div>
           ))}
         </div>
       </div>
+
       {relatedLinks.length > 0 && (
-        <div class="rounded-md border border-border bg-card p-5">
-          <h2 class="text-xl font-semibold text-foreground">
+        <div class="rounded-lg border border-border bg-card p-4">
+          <h2 class="text-base font-semibold leading-6 text-foreground">
             Related workflows
           </h2>
-          <div class="mt-4 space-y-3">
+          <div class="mt-3 grid gap-2">
             {relatedLinks.map(link => (
               <a
                 href={link.href}
-                class="block rounded-md border border-border bg-background p-3 transition-colors hover:border-foreground hover:bg-secondary"
+                class="group block rounded-md border border-border bg-background p-3 transition-colors duration-150 hover:border-ring hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <span class="text-sm font-semibold text-foreground">
-                  {link.title}
+                <span class="flex items-center justify-between gap-3">
+                  <span class="min-w-0 text-sm font-semibold text-foreground">
+                    {link.title}
+                  </span>
+                  <span
+                    class="shrink-0 text-sm text-muted-foreground transition-colors group-hover:text-foreground"
+                  >
+                    Open
+                  </span>
                 </span>
                 <span
                   class="mt-1 block text-sm leading-6 text-muted-foreground"
@@ -256,3 +356,30 @@ const relatedLinks = [
     </aside>
   </div>
 </section>
+
+<style>
+.tool-examples :global(.shiki) {
+  margin: 0;
+  min-height: 9rem;
+  overflow: auto;
+  background: #0d1117 !important;
+  padding: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.5rem;
+}
+
+.tool-examples :global(.shiki code) {
+  display: block;
+  font-family:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+@media (min-width: 768px) {
+  .tool-examples :global(.shiki) {
+    min-height: 10.5rem;
+  }
+}
+</style>
