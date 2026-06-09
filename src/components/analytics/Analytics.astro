@@ -46,17 +46,6 @@ const measurementId = "G-6SQ50M5SK0";
     flushPendingEvents();
   };
 
-  const startAnalyticsAfterLoad = () => {
-    window.setTimeout(() => {
-      if ("requestIdleCallback" in window) {
-        window.requestIdleCallback(startAnalytics, { timeout: 5000 });
-        return;
-      }
-
-      startAnalytics();
-    }, 10000);
-  };
-
   const normalizeEventName = (eventName) =>
     String(eventName || "")
       .trim()
@@ -225,11 +214,7 @@ const measurementId = "G-6SQ50M5SK0";
     track(eventName, params);
   });
 
-  if (document.readyState === "complete") {
-    startAnalyticsAfterLoad();
-  } else {
-    window.addEventListener("load", startAnalyticsAfterLoad, { once: true });
-  }
+  startAnalytics();
 
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
