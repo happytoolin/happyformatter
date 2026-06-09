@@ -230,12 +230,12 @@ export default function CodePlayground({
         }
 
         if ("requestIdleCallback" in window) {
-          idleCallbackId = window.requestIdleCallback(loadEditor, { timeout: 12000 });
+          idleCallbackId = window.requestIdleCallback(loadEditor, { timeout: 2000 });
           return;
         }
 
         loadEditor();
-      }, 8000);
+      }, 600);
     };
 
     if (document.readyState === "complete") {
@@ -372,6 +372,7 @@ export default function CodePlayground({
         <textarea
           className="absolute inset-0 z-0 h-full w-full resize-none border-0 bg-card p-4 font-mono text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-ring"
           value={inputCode}
+          onFocus={() => setShouldLoadEditor(true)}
           onChange={(event) => onCodeChangeRef.current?.(event.currentTarget.value)}
           readOnly={readOnly}
           spellCheck={false}
