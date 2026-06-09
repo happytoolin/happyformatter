@@ -27,6 +27,8 @@ type Props = {
   minify?: boolean;
   robots?: string;
   showFormatHeading?: boolean;
+  showMoreTools?: boolean;
+  showRelatedAndVariants?: boolean;
   structuredDataDescription?: string;
   structuredDataName?: string;
   title: string;
@@ -47,6 +49,8 @@ const {
   minify,
   robots,
   showFormatHeading = true,
+  showMoreTools = true,
+  showRelatedAndVariants = true,
   structuredDataDescription,
   structuredDataName,
 } = Astro.props;
@@ -122,12 +126,14 @@ const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
       <slot />
     </main>
 
-    <RelatedAndVariants
-      currentLanguage={language}
-      currentVariant={currentVariant}
-      minify={minify}
-    />
-    <MoreTools />
+    {showRelatedAndVariants && (
+      <RelatedAndVariants
+        currentLanguage={language}
+        currentVariant={currentVariant}
+        minify={minify}
+      />
+    )}
+    {showMoreTools && <MoreTools />}
     <Footer />
   </body>
 </html>

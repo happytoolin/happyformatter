@@ -1,5 +1,4 @@
 ---
-import Info from "@/components/info/info.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
@@ -59,6 +58,8 @@ const toolGroups = [
   title={homepageTitle}
   description={homepageDescription}
   keywords={homepageKeywords}
+  showMoreTools={false}
+  showRelatedAndVariants={false}
 >
   <section class="border-b border-border bg-background">
     <div class="mx-auto grid max-w-[1400px] gap-6 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(260px,420px)] md:items-end lg:px-8 lg:py-14">
@@ -112,9 +113,48 @@ const toolGroups = [
     </div>
   </section>
   <ReactIsland
+    hydrate="interaction"
     kind="formatter"
     props={{ minifier: languageConfig.minify, language }}
-  />
+  >
+    <section class="border-b border-border bg-background" id="workspace">
+      <div class="mx-auto max-w-350 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <div class="overflow-hidden rounded-lg border border-border bg-card">
+          <div class="grid gap-4 border-b border-border px-4 py-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div class="min-w-0">
+              <p class="font-mono text-xs uppercase text-muted-foreground">
+                Editor
+              </p>
+              <h2 class="mt-1 truncate text-2xl font-semibold leading-tight text-foreground">
+                JSON
+              </h2>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span
+                class="inline-flex h-9 items-center rounded-md border border-border bg-background px-2.5 font-mono text-xs text-muted-foreground"
+              >
+                Local browser tool
+              </span>
+            </div>
+          </div>
+          <div class="grid min-h-105 place-items-center bg-card px-4 py-10 md:min-h-130">
+            <div class="mx-auto max-w-md text-center">
+              <p class="text-sm leading-6 text-muted-foreground">
+                Load the private JSON formatter when you are ready to paste
+                code.
+              </p>
+              <button
+                type="button"
+                class="hf-button hf-button-default hf-button-lg mt-4"
+              >
+                Open editor
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ReactIsland>
   <section class="border-b border-border bg-card py-10 sm:py-12">
     <div class="mx-auto grid max-w-[1400px] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)] lg:px-8">
       <div class="min-w-0 max-w-md lg:pt-1">
@@ -198,6 +238,4 @@ const toolGroups = [
       </div>
     </div>
   </section>
-  <Info language={language} />
-  <ReactIsland kind="faq" props={{ language }} />
 </Layout>

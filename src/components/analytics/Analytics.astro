@@ -2,33 +2,7 @@
 const measurementId = "G-6SQ50M5SK0";
 ---
 
-<script
-  is:inline
-  type="text/partytown"
-  async
-  src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
->
-</script>
-<script
-  type="text/partytown"
-  is:inline
-  define:vars={{ measurementId }}
->
-window.dataLayer = window.dataLayer || [];
-
-window.gtag = function gtag() {
-  dataLayer.push(arguments);
-};
-
-gtag("js", new Date());
-
-gtag("config", measurementId, {
-  page_path: window.location.pathname,
-  page_title: document.title,
-  transport_type: "beacon",
-});
-</script>
-<script is:inline>
+<script is:inline define:vars={{ measurementId }}>
 (() => {
   const existingAnalytics = window.happyFormatterAnalytics;
   if (existingAnalytics?.ready) {
@@ -43,6 +17,45 @@ gtag("config", measurementId, {
   const pendingEvents = [];
   let flushIntervalId;
   let flushAttempts = 0;
+  let analyticsStarted = false;
+
+  const startAnalytics = () => {
+    if (analyticsStarted) {
+      return;
+    }
+
+    analyticsStarted = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() {
+      dataLayer.push(arguments);
+    };
+
+    const gtagScript = document.createElement("script");
+    gtagScript.async = true;
+    gtagScript.src =
+      `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.append(gtagScript);
+
+    gtag("js", new Date());
+    gtag("config", measurementId, {
+      page_path: window.location.pathname,
+      page_title: document.title,
+      transport_type: "beacon",
+    });
+
+    flushPendingEvents();
+  };
+
+  const startAnalyticsAfterLoad = () => {
+    window.setTimeout(() => {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(startAnalytics, { timeout: 5000 });
+        return;
+      }
+
+      startAnalytics();
+    }, 10000);
+  };
 
   const normalizeEventName = (eventName) =>
     String(eventName || "")
@@ -212,9 +225,15 @@ gtag("config", measurementId, {
     track(eventName, params);
   });
 
-  window.addEventListener("load", flushPendingEvents);
+  if (document.readyState === "complete") {
+    startAnalyticsAfterLoad();
+  } else {
+    window.addEventListener("load", startAnalyticsAfterLoad, { once: true });
+  }
+
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
+      startAnalytics();
       flushPendingEvents();
     }
   });
