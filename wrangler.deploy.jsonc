@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "happyformatter",
+  "main": "./src/assets-worker.js",
+  "compatibility_date": "2025-11-17",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist/client",
+  },
+  "workers_dev": true,
+  "observability": {
+    "enabled": false,
+  },
+  "routes": [
+    {
+      "pattern": "happyformatter.com",
+      "custom_domain": true,
+    },
+  ],
+}

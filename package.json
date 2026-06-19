@@ -7,7 +7,7 @@
     "astro": "astro",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' astro build",
     "check": "astro check",
-    "deploy": "wrangler pages deploy dist",
+    "deploy": "wrangler deploy --config wrangler.deploy.jsonc && wrangler deploy --config wrangler.www-redirect.jsonc",
     "dev": "astro dev",
     "format": "dprint fmt",
     "generate-seo": "bun scripts/generate-seo-content.ts",

@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "happyformatter-www-redirect",
+  "main": "./src/www-redirect-worker.js",
+  "compatibility_date": "2025-11-17",
+  "routes": [
+    {
+      "custom_domain": true,
+      "pattern": "www.happyformatter.com",
+    },
+  ],
+}
