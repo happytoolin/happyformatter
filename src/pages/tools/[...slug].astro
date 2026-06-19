@@ -226,6 +226,15 @@ const relatedUtilityLinks = tool
       })),
   ]
   : [];
+
+const toolExampleRows = tool
+  ? [
+    { label: tool.inputLabel, value: tool.sampleInput },
+    ...(tool.secondaryInputLabel && tool.sampleSecondaryInput
+      ? [{ label: tool.secondaryInputLabel, value: tool.sampleSecondaryInput }]
+      : []),
+  ]
+  : [];
 ---
 
 <Layout
@@ -272,9 +281,32 @@ const relatedUtilityLinks = tool
                 </p>
               ))}
             </div>
+            <div class="mt-10">
+              <h2 class="text-3xl font-semibold leading-tight text-foreground">
+                Example input
+              </h2>
+              <div class="mt-5 divide-y divide-border border-y border-border">
+                {toolExampleRows.map(row => (
+                  <div class="grid gap-3 py-4 md:grid-cols-[180px_minmax(0,1fr)]">
+                    <p class="font-mono text-xs uppercase tracking-wide text-muted-foreground">
+                      {row.label}
+                    </p>
+                    <pre class="overflow-auto rounded-md border border-border bg-card p-4 text-sm leading-6 text-foreground"><code>{row.value}</code></pre>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <aside>
-            <h2 class="text-xl font-semibold text-foreground">
+            <div class="rounded-md border border-border bg-card p-4">
+              <h2 class="text-xl font-semibold text-foreground">
+                Private by default
+              </h2>
+              <p class="mt-3 text-sm leading-6 text-muted-foreground">
+                {tool.privacyNote}
+              </p>
+            </div>
+            <h2 class="mt-8 text-xl font-semibold text-foreground">
               Common uses
             </h2>
             <div class="mt-4 flex flex-wrap gap-2">
