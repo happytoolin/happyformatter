@@ -5,8 +5,8 @@
   "compatibility_date": "2025-11-17",
   "routes": [
     {
-      "custom_domain": true,
-      "pattern": "www.happyformatter.com",
+      "pattern": "www.happyformatter.com/*",
+      "zone_name": "happyformatter.com",
     },
   ],
 }
