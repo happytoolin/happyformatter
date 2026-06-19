@@ -90,8 +90,16 @@ const languagesWithMinifiers = [
   "xml",
 ];
 
+const withRedirectTrailingSlash = destination => {
+  if (!destination.startsWith("/") || destination === "/") {
+    return destination;
+  }
+
+  return destination.endsWith("/") ? destination : `${destination}/`;
+};
+
 const redirectTo = destination => ({
-  destination,
+  destination: withRedirectTrailingSlash(destination),
   status: 301,
 });
 
@@ -146,6 +154,8 @@ const createLegacyRedirects = () => {
     "/convert-json-to-csv": redirectTo("/guides/convert-json-to-csv"),
     "/decode-jwt-token": redirectTo("/guides/decode-jwt-token"),
     "/generate-sha256-hash": redirectTo("/guides/generate-sha256-hash"),
+    "/validator/go-gofmt": redirectTo("/go-gofmt"),
+    "/ruby": redirectTo("/tools/formatters"),
     "/tools/csv-to-tsv": redirectTo("/tools/csv-tsv-converter"),
     "/tools/tsv-to-csv": redirectTo("/tools/csv-tsv-converter"),
     "/tools/html-entity-encoder": redirectTo("/tools/html-entity-encode-decode"),
@@ -288,6 +298,7 @@ function noStoreDevModulesPlugin() {
 // https://astro.build/config
 export default defineConfig({
   site: "https://happyformatter.com",
+  trailingSlash: "always",
   redirects: createLegacyRedirects(),
   session: {
     driver: sessionDrivers.null(),

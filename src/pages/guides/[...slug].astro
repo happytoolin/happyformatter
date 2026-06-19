@@ -2,6 +2,7 @@
 import Layout from "@/components/layout/layout.astro";
 import SeoContentArticle from "@/components/seo/SeoContentArticle.astro";
 import HowToSchema from "@/components/structured-data/HowToSchema.astro";
+import { toCanonicalURL } from "@/lib/canonical-url";
 import {
   getSeoContentBreadcrumbs,
   GUIDE_PAGES,
@@ -16,7 +17,7 @@ export function getStaticPaths() {
 }
 
 const { page } = Astro.props as { page: GuidePage };
-const canonicalURL = new URL(page.canonicalPath, Astro.site);
+const canonicalURL = toCanonicalURL(page.canonicalPath, Astro.site);
 ---
 
 <Layout

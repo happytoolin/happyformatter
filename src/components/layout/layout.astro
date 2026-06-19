@@ -1,4 +1,5 @@
 ---
+import { toCanonicalURL } from "../../lib/canonical-url";
 import { generatePageTitle } from "../../lib/seo-titles";
 import { generateBreadcrumbs, getLanguageSEOData } from "../../lib/seo-utils";
 import type { ToolFAQItem } from "../../lib/tool-page-seo";
@@ -64,7 +65,10 @@ const pageDescription = _description || seoData.description;
 const finalBreadcrumbs = breadcrumbs.length > 0
   ? breadcrumbs
   : generateBreadcrumbs(language, minify);
-const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, Astro.site);
+const canonicalURL = toCanonicalURL(
+  canonicalPath ?? Astro.url.pathname,
+  Astro.site,
+);
 ---
 
 <!DOCTYPE html>

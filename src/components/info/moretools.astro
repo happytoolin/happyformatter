@@ -2,6 +2,7 @@
 import EngineIcon from "@/icons/EngineIcon.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 import UtilityIcon from "@/icons/UtilityIcon.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 import {
   getUtilityToolsByCategory,
   UTILITY_CATEGORIES,
@@ -114,7 +115,7 @@ const toolFamilies: ToolFamily[] = [
       { label: "Format", url: "/javascript", type: "FMT" },
       { label: "Minify", url: "/minify/javascript", type: "MIN" },
       { label: "Biome", url: "/javascript-biome", type: "FMT" },
-      { label: "Biome", url: "/minify/javascript-biome", type: "MIN" },
+      { label: "Biome", url: "/minify/javascript", type: "MIN" },
       { label: "OXC", url: "/javascript-oxc", type: "FMT" },
       { label: "OXC", url: "/minify/javascript-oxc", type: "MIN" },
     ],
@@ -128,7 +129,7 @@ const toolFamilies: ToolFamily[] = [
       { label: "Format", url: "/typescript", type: "FMT" },
       { label: "Minify", url: "/minify/typescript", type: "MIN" },
       { label: "Biome", url: "/typescript-biome", type: "FMT" },
-      { label: "Biome", url: "/minify/typescript-biome", type: "MIN" },
+      { label: "Biome", url: "/minify/typescript", type: "MIN" },
       { label: "OXC", url: "/typescript-oxc", type: "FMT" },
       { label: "OXC", url: "/minify/typescript-oxc", type: "MIN" },
     ],
@@ -527,14 +528,16 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
               {section.families.map((family) => (
                 <article class="grid gap-4 py-4 md:grid-cols-[minmax(190px,0.38fr)_minmax(0,1fr)] md:items-center">
                   <a
-                    href={family.actions[0].url}
+                    href={withTrailingSlash(family.actions[0].url)}
                     data-tool-action
                     data-analytics-event="tool_select"
                     data-analytics-source="tool_directory_family"
                     data-analytics-tool={family.name}
                     data-analytics-tool-group={family.group}
                     data-analytics-tool-action={typeLabel[family.actions[0].type]}
-                    data-analytics-destination={family.actions[0].url}
+                    data-analytics-destination={withTrailingSlash(
+                      family.actions[0].url,
+                    )}
                     class="-m-2 flex min-w-0 items-center gap-3 rounded-md p-2 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-card">
@@ -596,7 +599,7 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
 
                       return (
                         <a
-                          href={action.url}
+                          href={withTrailingSlash(action.url)}
                           data-tool-action
                           data-analytics-event="tool_action_select"
                           data-analytics-source="tool_directory_action"
@@ -607,7 +610,9 @@ const getActionText = (family: ToolFamily, action: ToolAction) => {
                             action,
                           )}
                           data-analytics-tool-type={action.type}
-                          data-analytics-destination={action.url}
+                          data-analytics-destination={withTrailingSlash(
+                            action.url,
+                          )}
                           class="group/action hf-button hf-button-outline hf-button-md max-w-full"
                         >
                           {action.icon && (

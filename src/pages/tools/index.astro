@@ -1,5 +1,6 @@
 ---
 import Layout from "@/components/layout/layout.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 import {
   getUtilityToolsByCategory,
   UTILITY_CATEGORIES,
@@ -91,7 +92,7 @@ const topLinks = [
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {topLinks.map(link => (
           <a
-            href={link.url}
+            href={withTrailingSlash(link.url)}
             class="rounded-md border border-border bg-card p-5 transition-colors hover:border-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <h2 class="text-lg font-semibold text-foreground">{link.name}</h2>
@@ -130,7 +131,7 @@ const topLinks = [
                   {category.name}
                 </h3>
                 <a
-                  href={`/tools/${category.slug}`}
+                  href={withTrailingSlash(`/tools/${category.slug}`)}
                   class="text-sm font-medium text-foreground underline-offset-4 hover:underline"
                 >
                   View category
@@ -140,7 +141,7 @@ const topLinks = [
                 {categoryTools.map(tool => (
                   <article class="grid gap-3 py-4 md:grid-cols-[minmax(190px,0.28fr)_minmax(0,1fr)_auto] md:items-center">
                     <a
-                      href={`/tools/${tool.slug}`}
+                      href={withTrailingSlash(`/tools/${tool.slug}`)}
                       class="text-base font-medium text-foreground underline-offset-4 hover:underline"
                     >
                       {tool.name}
@@ -149,7 +150,7 @@ const topLinks = [
                       {tool.description}
                     </p>
                     <a
-                      href={`/tools/${tool.slug}`}
+                      href={withTrailingSlash(`/tools/${tool.slug}`)}
                       class="hf-button hf-button-outline hf-button-md"
                     >
                       Open

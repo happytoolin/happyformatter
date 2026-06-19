@@ -1,6 +1,7 @@
 ---
 import EngineIcon from "@/icons/EngineIcon.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 import { getLanguageVariants } from "@/lib/seo-variants";
 
 interface LanguageRelation {
@@ -322,10 +323,8 @@ const languagesWithMinifiers = [
   "scss",
   "html",
   "javascript",
-  "javascript-biome",
   "javascript-oxc",
   "typescript",
-  "typescript-biome",
   "typescript-oxc",
   "json",
   "xml",
@@ -697,10 +696,11 @@ const showSection = currentLanguage && recommendations.length > 0;
             const actionUrl = isCurrentLanguage
               ? (minify && hasMinifier ? `/minify${tool.url}` : tool.url)
               : (minify && hasMinifier ? `/minify${tool.url}` : tool.url);
+            const actionHref = withTrailingSlash(actionUrl);
 
             return (
               <a
-                href={actionUrl}
+                href={actionHref}
                 class="group grid min-h-[88px] grid-cols-[1fr_40px] items-center gap-4 px-4 py-4 transition-[background-color,transform] duration-150 ease-out hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none"
               >
                 <div class="flex min-w-0 items-center gap-3">

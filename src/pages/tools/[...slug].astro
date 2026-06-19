@@ -1,6 +1,7 @@
 ---
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 import { LANGUAGES } from "@/lib/languages";
 import {
   getUtilityCategoryBreadcrumbs,
@@ -291,7 +292,7 @@ const relatedUtilityLinks = tool
             <div class="mt-4 space-y-3">
               {relatedUtilityLinks.map(link => (
                 <a
-                  href={link.href}
+                  href={withTrailingSlash(link.href)}
                   class="block rounded-md border border-border bg-card p-3 transition-colors hover:border-foreground hover:bg-secondary"
                 >
                   <span class="text-sm font-semibold text-foreground">
@@ -335,7 +336,7 @@ const relatedUtilityLinks = tool
             {getUtilityToolsByCategory(category.id).map(item => (
               <article class="grid gap-4 py-5 md:grid-cols-[minmax(190px,0.28fr)_minmax(0,1fr)_auto] md:items-center">
                 <a
-                  href={`/tools/${item.slug}`}
+                  href={withTrailingSlash(`/tools/${item.slug}`)}
                   class="text-lg font-semibold text-foreground underline-offset-4 hover:underline"
                 >
                   {item.name}
@@ -344,7 +345,7 @@ const relatedUtilityLinks = tool
                   {item.description}
                 </p>
                 <a
-                  href={`/tools/${item.slug}`}
+                  href={withTrailingSlash(`/tools/${item.slug}`)}
                   class="hf-button hf-button-outline hf-button-md"
                 >
                   Open tool
@@ -383,7 +384,7 @@ const relatedUtilityLinks = tool
               {meta.tools.map(item => (
                 <article class="grid gap-4 py-5 md:grid-cols-[minmax(210px,0.3fr)_minmax(0,1fr)_auto] md:items-center">
                   <a
-                    href={item.url}
+                    href={withTrailingSlash(item.url)}
                     class="text-lg font-semibold text-foreground underline-offset-4 hover:underline"
                   >
                     {item.name}
@@ -392,7 +393,7 @@ const relatedUtilityLinks = tool
                     {item.description}
                   </p>
                   <a
-                    href={item.url}
+                    href={withTrailingSlash(item.url)}
                     class="hf-button hf-button-outline hf-button-md"
                   >
                     Open

@@ -1,4 +1,5 @@
 ---
+import { withTrailingSlash } from "@/lib/canonical-url";
 import type {
   AnySeoContentPage,
   ComparisonPage,
@@ -148,7 +149,7 @@ const guide = isGuide ? page as GuidePage : null;
         {page.relatedLinks.map(link => (
           <article class="grid gap-3 py-4 md:grid-cols-[minmax(180px,0.3fr)_minmax(0,1fr)_auto] md:items-center">
             <a
-              href={link.href}
+              href={withTrailingSlash(link.href)}
               class="text-base font-semibold text-foreground underline-offset-4 hover:underline"
             >
               {link.title}

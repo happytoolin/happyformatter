@@ -1,5 +1,13 @@
 ---
+import { withTrailingSlash } from "@/lib/canonical-url";
 
+const footerLinks = [
+  { label: "About", href: withTrailingSlash("/about") },
+  { label: "Privacy", href: withTrailingSlash("/privacy-policy") },
+  { label: "Terms", href: withTrailingSlash("/terms-of-service") },
+  { label: "Security", href: withTrailingSlash("/security") },
+  { label: "Contact", href: withTrailingSlash("/contact") },
+];
 ---
 
 <footer class="border-t border-border bg-card py-8">
@@ -23,36 +31,14 @@
     </div>
 
     <nav class="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-muted-foreground">
-      <a
-        href="/about"
-        class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        About
-      </a>
-      <a
-        href="/privacy-policy"
-        class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        Privacy
-      </a>
-      <a
-        href="/terms-of-service"
-        class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        Terms
-      </a>
-      <a
-        href="/security"
-        class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        Security
-      </a>
-      <a
-        href="/contact"
-        class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        Contact
-      </a>
+      {footerLinks.map(link => (
+        <a
+          href={link.href}
+          class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {link.label}
+        </a>
+      ))}
       <a
         href="https://happytokenizer.com"
         target="_blank"

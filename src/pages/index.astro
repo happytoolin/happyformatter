@@ -4,6 +4,7 @@ import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import LanguageIcon from "@/icons/languages/LanguageIcon.astro";
 import UtilityIcon from "@/icons/UtilityIcon.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 import { LANGUAGES } from "@/lib/languages";
 import { COMMON_FIX_LINKS, POPULAR_PRIVATE_LINKS } from "@/lib/seo-content";
 
@@ -53,6 +54,12 @@ const toolGroups = [
     links: addShortcutIcons(COMMON_FIX_LINKS),
   },
 ];
+
+const ctaLinks = [
+  { label: "All private tools", href: withTrailingSlash("/tools") },
+  { label: "JSON tools", href: withTrailingSlash("/tools/json") },
+  { label: "Minifiers", href: withTrailingSlash("/tools/minifiers") },
+];
 ---
 
 <Layout
@@ -79,36 +86,18 @@ const toolGroups = [
   </section>
   <section class="border-b border-border bg-background py-5">
     <div class="mx-auto flex max-w-[1400px] flex-wrap gap-2 px-4 sm:px-6 lg:px-8">
-      <a
-        href="/tools"
-        class="hf-button hf-button-outline hf-button-md"
-        data-analytics-event="navigation_click"
-        data-analytics-source="homepage_cta"
-        data-analytics-item="All private tools"
-        data-analytics-destination="/tools"
-      >
-        All private tools
-      </a>
-      <a
-        href="/tools/json"
-        class="hf-button hf-button-outline hf-button-md"
-        data-analytics-event="navigation_click"
-        data-analytics-source="homepage_cta"
-        data-analytics-item="JSON tools"
-        data-analytics-destination="/tools/json"
-      >
-        JSON tools
-      </a>
-      <a
-        href="/tools/minifiers"
-        class="hf-button hf-button-outline hf-button-md"
-        data-analytics-event="navigation_click"
-        data-analytics-source="homepage_cta"
-        data-analytics-item="Minifiers"
-        data-analytics-destination="/tools/minifiers"
-      >
-        Minifiers
-      </a>
+      {ctaLinks.map(link => (
+        <a
+          href={link.href}
+          class="hf-button hf-button-outline hf-button-md"
+          data-analytics-event="navigation_click"
+          data-analytics-source="homepage_cta"
+          data-analytics-item={link.label}
+          data-analytics-destination={link.href}
+        >
+          {link.label}
+        </a>
+      ))}
     </div>
   </section>
   <ReactIsland
@@ -180,12 +169,12 @@ const toolGroups = [
             <div class="divide-y divide-border">
               {group.links.map(link => (
                 <a
-                  href={link.href}
+                  href={withTrailingSlash(link.href)}
                   class="group grid min-h-20 grid-cols-[2.25rem_minmax(0,1fr)] gap-3 px-4 py-3.5 transition-colors duration-150 ease-out hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring motion-reduce:transition-none"
                   data-analytics-event="tool_shortcut_select"
                   data-analytics-source={group.title}
                   data-analytics-item={link.title}
-                  data-analytics-destination={link.href}
+                  data-analytics-destination={withTrailingSlash(link.href)}
                 >
                   <span
                     class="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors group-hover:text-foreground"

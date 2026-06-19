@@ -1,4 +1,5 @@
 ---
+import { withTrailingSlash } from "@/lib/canonical-url";
 import type { SeoContentFamily } from "@/lib/seo-content";
 import { getSeoContentPagesByFamily, SEO_HUBS } from "@/lib/seo-content";
 
@@ -33,7 +34,7 @@ const pages = getSeoContentPagesByFamily(family);
       {pages.map(page => (
         <article class="grid gap-4 py-5 md:grid-cols-[minmax(220px,0.3fr)_minmax(0,1fr)_auto] md:items-center">
           <a
-            href={page.canonicalPath}
+            href={withTrailingSlash(page.canonicalPath)}
             class="text-lg font-semibold text-foreground underline-offset-4 hover:underline"
           >
             {page.h1}
@@ -42,7 +43,7 @@ const pages = getSeoContentPagesByFamily(family);
             {page.summary}
           </p>
           <a
-            href={page.canonicalPath}
+            href={withTrailingSlash(page.canonicalPath)}
             class="hf-button hf-button-outline hf-button-md"
           >
             Open

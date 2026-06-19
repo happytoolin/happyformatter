@@ -3,6 +3,7 @@ import Info from "@/components/info/info-enhanced.astro";
 import ToolExamples from "@/components/info/ToolExamples.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
 import { buildToolPageSEO } from "@/lib/tool-page-seo";
 import type { GetStaticPaths } from "astro";
@@ -152,7 +153,9 @@ const displayVariantData = variant ? { h1: toolSEO.h1 } : null;
       </div>
       <div class="flex items-center gap-4">
         <a
-          href={`/${actualLanguage}${variant ? `-${variant}` : ""}`}
+          href={withTrailingSlash(
+            `/${actualLanguage}${variant ? `-${variant}` : ""}`,
+          )}
           class="hf-button hf-button-outline hf-button-md"
         >
           Back to {actualLanguageConfig.name}

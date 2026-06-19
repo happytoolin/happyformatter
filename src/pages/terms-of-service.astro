@@ -1,5 +1,6 @@
 ---
 import Layout from "@/components/layout/layout.astro";
+import { withTrailingSlash } from "@/lib/canonical-url";
 
 const termGroups = [
   {
@@ -213,7 +214,7 @@ const relatedLinks = [
         <div class="mt-5 space-y-3">
           {relatedLinks.map(link => (
             <a
-              href={link.href}
+              href={withTrailingSlash(link.href)}
               class="block rounded-md border border-border bg-card p-4 transition-colors hover:border-foreground hover:bg-secondary"
             >
               <span class="text-sm font-semibold text-foreground">

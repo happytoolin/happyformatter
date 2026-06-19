@@ -1,4 +1,6 @@
 ---
+import { toCanonicalURL } from "@/lib/canonical-url";
+
 interface BreadcrumbItem {
   name: string;
   url: string;
@@ -11,7 +13,7 @@ interface Props {
 
 const { items, current } = Astro.props;
 
-const toAbsoluteURL = (url: string) => new URL(url, Astro.site).href;
+const toAbsoluteURL = (url: string) => toCanonicalURL(url, Astro.site).href;
 
 const breadcrumbList = {
   "@context": "https://schema.org",
@@ -30,7 +32,7 @@ if (current) {
       "@type": "ListItem",
       "position": items.length + 1,
       "name": current,
-      "item": Astro.url.href,
+      "item": toCanonicalURL(Astro.url, Astro.site).href,
     } as const,
   );
 }

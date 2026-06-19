@@ -1,4 +1,5 @@
 ---
+import { withTrailingSlash } from "@/lib/canonical-url";
 import { LANGUAGES } from "@/lib/languages";
 import { codeToHtml } from "shiki";
 
@@ -11,8 +12,10 @@ type Props = {
 const { language, minify = false, variant = null } = Astro.props;
 const languageConfig = LANGUAGES[language];
 const languageName = languageConfig?.name ?? language;
-const formatterPath = `/${language}${variant ? `-${variant}` : ""}`;
-const minifierPath = `/minify/${language}`;
+const formatterPath = withTrailingSlash(
+  `/${language}${variant ? `-${variant}` : ""}`,
+);
+const minifierPath = withTrailingSlash(`/minify/${language}`);
 
 const examples: Record<
   string,
@@ -330,7 +333,7 @@ const relatedLinks = [
           <div class="mt-3 grid gap-2">
             {relatedLinks.map(link => (
               <a
-                href={link.href}
+                href={withTrailingSlash(link.href)}
                 class="group block rounded-md border border-border bg-background p-3 transition-colors duration-150 hover:border-ring hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span class="flex items-center justify-between gap-3">

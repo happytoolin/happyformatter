@@ -1,14 +1,15 @@
 ---
+import { withTrailingSlash } from "@/lib/canonical-url";
 import Icon from "../../icons/Icons.astro";
 import Logo from "../../icons/Logo.astro";
 import ThemeIcon from "../ThemeIcon.astro";
 
 const primaryLinks = [
-  { label: "JSON", href: "/json" },
-  { label: "JavaScript", href: "/javascript" },
-  { label: "CSS", href: "/css" },
-  { label: "SQL", href: "/sql" },
-  { label: "Python", href: "/python" },
+  { label: "JSON", href: withTrailingSlash("/json") },
+  { label: "JavaScript", href: withTrailingSlash("/javascript") },
+  { label: "CSS", href: withTrailingSlash("/css") },
+  { label: "SQL", href: withTrailingSlash("/sql") },
+  { label: "Python", href: withTrailingSlash("/python") },
 ];
 ---
 
