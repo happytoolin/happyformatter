@@ -1,0 +1,83 @@
+---
+import { getLanguageDeepDive } from "@/lib/language-deep-dive";
+import { LANGUAGES } from "@/lib/languages";
+
+interface Props {
+  language: string;
+  minify?: boolean;
+  variant?: string | null;
+}
+
+const { language, minify = false, variant } = Astro.props;
+
+const languageConfig = LANGUAGES[language];
+const languageName = languageConfig?.name ?? language;
+
+// Rendered on main language pages only; data also feeds FAQ structured data
+// in the page route.
+const deepDive = !minify && !variant
+  ? getLanguageDeepDive(language)
+  : undefined;
+---
+
+{deepDive && (
+  <section class="border-b border-border bg-background py-10 sm:py-12">
+    <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-medium text-muted-foreground">
+          {languageName} formatting guide
+        </p>
+        <h2 class="mt-2 text-2xl font-semibold leading-tight text-foreground">
+          {languageName} formatting, explained.
+        </h2>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground">
+          {deepDive.intro}
+        </p>
+
+        {deepDive.sections.map(section => (
+          <div class="mt-8">
+            <h3 class="text-lg font-semibold text-foreground">
+              {section.heading}
+            </h3>
+            {section.paragraphs.map(paragraph => (
+              <p class="mt-3 text-sm leading-6 text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
+
+            {section.table && (
+              <div class="mt-4 overflow-x-auto rounded-md border border-border">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-card text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      {section.table.headers.map(header => (
+                        <th class="px-3 py-2 font-medium">{header}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {section.table.rows.map(row => (
+                      <tr class="border-t border-border">
+                        {row.map(cell => (
+                          <td class="px-3 py-2 text-muted-foreground">
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {section.list && (
+              <ul class="mt-4 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
+                {section.list.map(item => <li>{item}</li>)}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

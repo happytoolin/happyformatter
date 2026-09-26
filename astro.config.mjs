@@ -103,6 +103,20 @@ const redirectTo = destination => ({
   status: 301,
 });
 
+// Generic variant pages merged into the main language page (see
+// MERGED_VARIANT_SLUGS in src/lib/seo-variants.ts for the data behind this).
+const mergedVariantSlugs = new Set([
+  "free",
+  "online",
+  "secure",
+  "beautifier",
+  "pretty",
+  "pep8",
+  "flutter",
+  "compiler",
+  "formatter",
+]);
+
 const createLegacyRedirects = () => {
   const redirects = {};
 
@@ -115,6 +129,16 @@ const createLegacyRedirects = () => {
       }
 
       redirects[`/${language}/${variant}`] = redirectTo(`/${language}-${variant}`);
+    }
+  }
+
+  // Merged generic variants: every merged slug for every language 301s to
+  // the main language page. Generated for the full matrix so languages whose
+  // variant sets differ between configs are all covered.
+  for (const language of Object.keys(legacyLanguageVariants)) {
+    for (const slug of mergedVariantSlugs) {
+      redirects[`/${language}-${slug}`] = redirectTo(`/${language}`);
+      redirects[`/${language}/${slug}`] = redirectTo(`/${language}`);
     }
   }
 

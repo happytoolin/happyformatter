@@ -1421,18 +1421,59 @@ export const languageVariants: Record<string, LanguageVariants> = {
   },
 };
 
-// Helper function to get variant data
-export function getLanguageVariant(language: string, variant: string): SEOVariant | null {
+// Helper function to get variant data - merged variant slugs resolve to
+// null so old URLs fall through to the 301 redirect rules.
+export function getLanguageVariant(
+  language: string,
+  variant: string,
+): SEOVariant | null {
   // Safety checks
   if (!language || !variant) return null;
 
   const variants = languageVariants[language];
   if (!variants) return null;
 
+  if (isMergedVariantSlug(variant)) return null;
+
   return variants[variant] || null;
 }
 
 // Helper function to get all variants for a language
+// Generic variant pages (free, online, secure, beautifier, ...) earned
+// zero clicks in 16 months of Search Console data - every query landed on
+// the main language page. They are merged into /{lang}/ with 301 redirects.
+// Engine-named variants (biome, oxc, gofmt, ruff, mago, rustfmt, zig-fmt,
+// clang, dotnet, google) stay: they wrap a different formatter.
+export const MERGED_VARIANT_SLUGS = new Set([
+  "free",
+  "online",
+  "secure",
+  "beautifier",
+  "pretty",
+  "pep8",
+  "flutter",
+  "compiler",
+  "formatter",
+]);
+
+export function isMergedVariantSlug(slug: string): boolean {
+  return MERGED_VARIANT_SLUGS.has(slug);
+}
+
+// Resolve a variant id (hyphenated form like "zig-fmt") to its data key.
+function resolveVariantKey(
+  variants: LanguageVariants,
+  variant: string,
+): string | null {
+  if (variants[variant]) return variant;
+  const normalized = variant.replace(/-/g, "");
+  const match = Object.keys(variants).find(
+    key => key.replace(/-/g, "") === normalized,
+  );
+  return match ?? null;
+}
+
+// Helper function to get all variants for a language (merged slugs excluded)
 export function getLanguageVariants(language: string): SEOVariant[] {
   // Safety check - return empty array if language is undefined
   if (!language) return [];
@@ -1440,7 +1481,9 @@ export function getLanguageVariants(language: string): SEOVariant[] {
   const variants = languageVariants[language];
   if (!variants) return [];
 
-  return Object.values(variants);
+  return Object.values(variants).filter(
+    variant => !isMergedVariantSlug(variant.slug),
+  );
 }
 
 // Helper function to generate all variant paths
@@ -1449,6 +1492,7 @@ export function generateVariantPaths(): Array<{ params: { lang: string[] } }> {
 
   Object.entries(languageVariants).forEach(([language, variants]) => {
     Object.keys(variants).forEach(variant => {
+      if (isMergedVariantSlug(variant)) return;
       paths.push({
         params: { lang: [language, variant] },
       });
@@ -1464,6 +1508,7 @@ export function isVariantPath(pathSegments: string[]): boolean {
 
   const [language, variant] = pathSegments;
   if (!language || !variant) return false;
+  if (isMergedVariantSlug(variant)) return false;
 
   const variants = languageVariants[language];
 
