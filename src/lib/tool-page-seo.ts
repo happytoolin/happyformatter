@@ -442,7 +442,15 @@ function buildH1(
   return `${languageName} ${getVariantLabel(variant)}`;
 }
 
+// Query-targeted copy for the pages that earn real impressions. Applied to
+// main language pages only (variants keep their generated copy).
+const languageDescriptionOverrides: Record<string, string> = {
+  lua: "Format and beautify Lua and Luau in your browser for Roblox, Love2D, and Neovim.",
+  dart: "Format Dart in your browser with dart-style rules: 2-space indent, trailing commas, 80 columns.",
+};
+
 function buildDescription(
+  language: string,
   languageName: string,
   minify: boolean,
   variant?: string | null,
@@ -456,6 +464,11 @@ function buildDescription(
 
   if (variantData?.description) {
     return withPrivacyDescription(variantData.description);
+  }
+
+  const override = languageDescriptionOverrides[language];
+  if (override && !variant) {
+    return withPrivacyDescription(override);
   }
 
   if (privateVariantIds.has(variant || "")) {
@@ -542,7 +555,13 @@ export function buildToolPageSEO({
   const languageName = getLanguageDisplayName(language, languageConfig);
   const routeIsMinifier = minify || variant === "minify";
   const h1 = buildH1(languageName, minify, variant, variantData);
-  const description = buildDescription(languageName, minify, variant, variantData);
+  const description = buildDescription(
+    language,
+    languageName,
+    minify,
+    variant,
+    variantData,
+  );
   const title = buildTitle(h1, description, minify, variant);
   const canonicalPath = buildCanonicalPath(
     language,

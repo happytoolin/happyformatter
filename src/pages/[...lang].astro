@@ -1,9 +1,11 @@
 ---
 import Info from "@/components/info/info-enhanced.astro";
+import LanguageDeepDive from "@/components/info/LanguageDeepDive.astro";
 import ToolExamples from "@/components/info/ToolExamples.astro";
 import ReactIsland from "@/components/islands/ReactIsland.astro";
 import Layout from "@/components/layout/layout.astro";
 import { withTrailingSlash } from "@/lib/canonical-url";
+import { getLanguageDeepDive } from "@/lib/language-deep-dive";
 import { type LanguageConfig, LANGUAGES } from "@/lib/languages";
 import { buildToolPageSEO } from "@/lib/tool-page-seo";
 import type { GetStaticPaths } from "astro";
@@ -128,6 +130,9 @@ const toolSEO = buildToolPageSEO({
   variantData: actualVariantData,
 });
 const displayVariantData = currentVariant ? { h1: toolSEO.h1 } : null;
+const deepDiveFaqs = !currentVariant
+  ? getLanguageDeepDive(actualLanguage)?.faqs
+  : undefined;
 ---
 
 <Layout
@@ -140,7 +145,13 @@ const displayVariantData = currentVariant ? { h1: toolSEO.h1 } : null;
   category={toolSEO.category}
   currentVariant={currentVariant}
   breadcrumbs={toolSEO.breadcrumbs}
-  faqItems={toolSEO.faqItems}
+  faqItems={[
+    ...(deepDiveFaqs?.map(faq => ({
+      title: faq.question,
+      content: faq.answer,
+    })) ?? []),
+    ...(toolSEO.faqItems ?? []),
+  ]}
   showFormatHeading={!currentVariant}
   structuredDataName={toolSEO.schemaName}
   structuredDataDescription={toolSEO.schemaDescription}
@@ -192,6 +203,12 @@ const displayVariantData = currentVariant ? { h1: toolSEO.h1 } : null;
     minify={currentVariant === "minify"}
     variant={currentVariant}
     variantData={displayVariantData}
+  />
+
+  <LanguageDeepDive
+    language={actualLanguage}
+    minify={currentVariant === "minify"}
+    variant={currentVariant}
   />
 
   <ReactIsland
