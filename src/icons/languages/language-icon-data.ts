@@ -1,0 +1,150 @@
+import angularIcon from "devicon/icons/angular/angular-original.svg?raw";
+import astroIcon from "devicon/icons/astro/astro-original.svg?raw";
+import bashIcon from "devicon/icons/bash/bash-original.svg?raw";
+import biomeIcon from "devicon/icons/biome/biome-original.svg?raw";
+import cIcon from "devicon/icons/c/c-original.svg?raw";
+import cppIcon from "devicon/icons/cplusplus/cplusplus-original.svg?raw";
+import csharpIcon from "devicon/icons/csharp/csharp-original.svg?raw";
+import cssIcon from "devicon/icons/css3/css3-original.svg?raw";
+import dartIcon from "devicon/icons/dart/dart-original.svg?raw";
+import goIcon from "devicon/icons/go/go-original.svg?raw";
+import graphqlIcon from "devicon/icons/graphql/graphql-plain.svg?raw";
+import handlebarsIcon from "devicon/icons/handlebars/handlebars-original.svg?raw";
+import htmlIcon from "devicon/icons/html5/html5-original.svg?raw";
+import javaIcon from "devicon/icons/java/java-original.svg?raw";
+import javascriptIcon from "devicon/icons/javascript/javascript-original.svg?raw";
+import jsonIcon from "devicon/icons/json/json-original.svg?raw";
+import lessIcon from "devicon/icons/less/less-plain-wordmark.svg?raw";
+import luaIcon from "devicon/icons/lua/lua-original.svg?raw";
+import markdownIcon from "devicon/icons/markdown/markdown-original.svg?raw";
+import sqlIcon from "devicon/icons/microsoftsqlserver/microsoftsqlserver-original.svg?raw";
+import objectivecIcon from "devicon/icons/objectivec/objectivec-plain.svg?raw";
+import phpIcon from "devicon/icons/php/php-original.svg?raw";
+import pythonIcon from "devicon/icons/python/python-original.svg?raw";
+import rustIcon from "devicon/icons/rust/rust-original.svg?raw";
+import sassIcon from "devicon/icons/sass/sass-original.svg?raw";
+import svelteIcon from "devicon/icons/svelte/svelte-original.svg?raw";
+import swiftIcon from "devicon/icons/swift/swift-original.svg?raw";
+import typescriptIcon from "devicon/icons/typescript/typescript-original.svg?raw";
+import vueIcon from "devicon/icons/vuejs/vuejs-original.svg?raw";
+import xmlIcon from "devicon/icons/xml/xml-original.svg?raw";
+import yamlIcon from "devicon/icons/yaml/yaml-original.svg?raw";
+import zigIcon from "devicon/icons/zig/zig-original.svg?raw";
+import protoIcon from "./proto.svg?raw";
+import tomlIcon from "./toml.svg?raw";
+
+export interface SpriteIcon {
+  /** Outer svg viewBox, e.g. "0 0 128 128". */
+  viewBox: string;
+  /** Inner svg markup (everything between <svg> and </svg>). */
+  content: string;
+  /** Sprite symbol id. */
+  symbolId: string;
+}
+
+const aliases: Record<string, string> = {
+  "atom-one-dark": "javascript",
+  "atom-one-light": "javascript",
+  "catppuccin-latte": "javascript",
+  "catppuccin-mocha": "javascript",
+  "css-minify": "css",
+  "github-dark": "javascript",
+  "github-light": "javascript",
+  "html-minify": "html",
+  "javascript-biome": "javascript",
+  "javascript-oxc": "javascript",
+  "javascript-minify": "javascript",
+  jinja: "html",
+  "json-minify": "json",
+  json5: "json",
+  jsonc: "json",
+  "material-theme-palenight": "javascript",
+  mdx: "markdown",
+  objectivecpp: "cplusplus",
+  "one-dark-pro": "javascript",
+  "php-mago": "php",
+  "python-ruff": "python",
+  shell: "bash",
+  scss: "sass",
+  "scss-minify": "sass",
+  "solarized-dark": "javascript",
+  "solarized-light": "javascript",
+  twig: "html",
+  "typescript-biome": "typescript",
+  "typescript-oxc": "typescript",
+  "typescript-minify": "typescript",
+  "vitesse-dark": "javascript",
+  "vitesse-light": "javascript",
+  "xml-minify": "xml",
+};
+
+const rawIcons: Record<string, string> = {
+  biome: biomeIcon,
+  angular: angularIcon,
+  astro: astroIcon,
+  bash: bashIcon,
+  c: cIcon,
+  cpp: cppIcon,
+  cplusplus: cppIcon,
+  csharp: csharpIcon,
+  css: cssIcon,
+  css3: cssIcon,
+  dart: dartIcon,
+  go: goIcon,
+  graphql: graphqlIcon,
+  handlebars: handlebarsIcon,
+  html: htmlIcon,
+  html5: htmlIcon,
+  java: javaIcon,
+  javascript: javascriptIcon,
+  json: jsonIcon,
+  less: lessIcon,
+  lua: luaIcon,
+  markdown: markdownIcon,
+  objectivec: objectivecIcon,
+  php: phpIcon,
+  proto: protoIcon,
+  python: pythonIcon,
+  rust: rustIcon,
+  sass: sassIcon,
+  svelte: svelteIcon,
+  sql: sqlIcon,
+  swift: swiftIcon,
+  toml: tomlIcon,
+  typescript: typescriptIcon,
+  vue: vueIcon,
+  xml: xmlIcon,
+  yaml: yamlIcon,
+  zig: zigIcon,
+};
+
+const FALLBACK_ICON = "javascript";
+
+const fallbackViewBox = "0 0 128 128";
+
+function parseSpriteIcon(key: string, raw: string): SpriteIcon {
+  const viewBox = raw.match(/viewBox="([^"]+)"/)?.[1] ?? fallbackViewBox;
+  const content = raw
+    .replace(/^[\s\S]*?<svg[^>]*>/, "")
+    .replace(/<\/svg>[\s\S]*$/, "")
+    .trim();
+
+  return { viewBox, content, symbolId: `hf-lang-${key}` };
+}
+
+const spriteIcons = new Map<string, SpriteIcon>();
+for (const [key, raw] of Object.entries(rawIcons)) {
+  if (!spriteIcons.has(key)) {
+    spriteIcons.set(key, parseSpriteIcon(key, raw));
+  }
+}
+
+export function resolveLanguageIcon(icon: string): SpriteIcon {
+  const normalizedIcon = icon.toLowerCase().replace(/^\/+|\/+$/g, "");
+  const iconKey = aliases[normalizedIcon] ?? normalizedIcon;
+  return spriteIcons.get(iconKey) ?? spriteIcons.get(FALLBACK_ICON)!;
+}
+
+export function allLanguageIcons(): SpriteIcon[] {
+  return [...spriteIcons.values()];
+}

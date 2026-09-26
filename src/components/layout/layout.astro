@@ -4,6 +4,7 @@ import { generatePageTitle } from "../../lib/seo-titles";
 import { generateBreadcrumbs, getLanguageSEOData } from "../../lib/seo-utils";
 import type { ToolFAQItem } from "../../lib/tool-page-seo";
 import "../../styles/globals.css";
+import IconSprite from "../../icons/languages/IconSprite.astro";
 import MoreTools from "../info/moretools.astro";
 import RelatedAndVariants from "../info/RelatedAndVariants.astro";
 import Breadcrumbs from "../structured-data/Breadcrumbs.astro";
@@ -109,6 +110,8 @@ const canonicalURL = toCanonicalURL(
     )}
   </head>
   <body>
+    <IconSprite />
+
     <!-- Skip to main content link for keyboard navigation -->
     <a
       href="#main-content"

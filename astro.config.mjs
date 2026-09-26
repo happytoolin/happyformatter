@@ -191,16 +191,6 @@ const createLegacyRedirects = () => {
     }
   }
 
-  // Astro redirect keys only match the normalized path. With
-  // trailingSlash: "always", a request to the key without its trailing slash
-  // falls through to 404 before the redirect table is consulted, so register
-  // every key both with and without the trailing slash.
-  for (const [key, value] of Object.entries({ ...redirects })) {
-    if (key !== "/" && !key.endsWith("/")) {
-      redirects[`${key}/`] = value;
-    }
-  }
-
   return redirects;
 };
 
