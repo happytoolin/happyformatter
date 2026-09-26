@@ -1,0 +1,22 @@
+---
+import { allLanguageIcons } from "./language-icon-data";
+
+// Rendered once per page. Every language logo is defined as a <symbol> and
+// referenced with <use>, so repeated icons cost a few bytes instead of a
+// full inline SVG each (the SQL logo alone is ~12 KB per copy).
+const icons = allLanguageIcons();
+---
+
+<svg
+  aria-hidden="true"
+  focusable="false"
+  height="0"
+  style="position: absolute; width: 0; height: 0; overflow: hidden"
+  width="0"
+>
+  {icons.map(icon => (
+    <symbol id={icon.symbolId} viewBox={icon.viewBox}>
+      <Fragment set:html={icon.content} />
+    </symbol>
+  ))}
+</svg>

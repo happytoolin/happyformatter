@@ -248,19 +248,89 @@ export function sanitizeSEOKeywords(keywords: string[] | string) {
     .join(", ");
 }
 
+/** Google truncates titles near 60 characters and descriptions near 160.
+ * Only decorate when the result stays inside the limit. */
+const TITLE_LIMIT = 60;
+const DESCRIPTION_LIMIT = 160;
+const DESCRIPTION_MIN = 70;
+
+function fitsWithin(length: number, addition: number) {
+  return length + addition <= TITLE_LIMIT;
+}
+
 function withBrand(title: string) {
-  return title.includes(brandName) ? title : `${title} | ${brandName}`;
+  if (title.includes(brandName)) {
+    return title;
+  }
+
+  return fitsWithin(title.length, brandName.length + 3)
+    ? `${title} | ${brandName}`
+    : title;
 }
 
 function withPrivacyTitle(title: string) {
   const strippedTitle = sanitizeTitle(title);
-  const privateTitle = /^private\b/i.test(strippedTitle)
-    ? strippedTitle
-    : `Private ${strippedTitle}`;
+  let privateTitle = strippedTitle;
 
-  return /no upload/i.test(privateTitle)
-    ? privateTitle
-    : `${privateTitle} - No Upload`;
+  if (!/^private\b/i.test(strippedTitle) && fitsWithin(strippedTitle.length, 8)) {
+    privateTitle = `Private ${strippedTitle}`;
+  }
+
+  if (!/no upload/i.test(privateTitle) && fitsWithin(privateTitle.length, 12)) {
+    privateTitle = `${privateTitle} - No Upload`;
+  }
+
+  return privateTitle;
+}
+
+function clampDescription(description: string) {
+  const trimmed = description.replace(/\s+/g, " ").trim();
+
+  if (trimmed.length > DESCRIPTION_LIMIT) {
+    const clipped = trimmed.slice(0, DESCRIPTION_LIMIT + 1);
+    const sentenceEnd = clipped.lastIndexOf(".");
+    if (sentenceEnd >= DESCRIPTION_MIN) {
+      return clipped.slice(0, sentenceEnd + 1).trim();
+    }
+    const wordEnd = clipped.lastIndexOf(" ");
+    return `${clipped.slice(0, wordEnd > 0 ? wordEnd : DESCRIPTION_LIMIT).trim()}.`;
+  }
+
+  if (trimmed.length < DESCRIPTION_MIN) {
+    return clampDescription(
+      `${trimmed} Free, private, and instant — no sign-up and no upload.`,
+    );
+  }
+
+  return trimmed;
+}
+
+/** Final safety clamp used by <Head> so every page stays inside the SERP
+ * display limits, regardless of where its title or description came from. */
+export function clampSEOTitle(title: string) {
+  const trimmed = title.replace(/\s+/g, " ").trim();
+  if (trimmed.length <= TITLE_LIMIT) {
+    return trimmed;
+  }
+
+  // Prefer dropping a trailing "| Brand" segment when it alone frees space.
+  const brandSplit = trimmed.split(/\s+\|\s+/);
+  if (brandSplit.length > 1 && brandSplit[0].trim().length <= TITLE_LIMIT) {
+    return brandSplit[0].trim();
+  }
+
+  const clipped = trimmed.slice(0, TITLE_LIMIT + 1);
+  const wordEnd = clipped.lastIndexOf(" ");
+  return clipped.slice(0, wordEnd > 0 ? wordEnd : TITLE_LIMIT).trim();
+}
+
+export function clampSEODescription(description: string) {
+  const trimmed = description.replace(/\s+/g, " ").trim();
+  if (trimmed.length <= DESCRIPTION_LIMIT) {
+    return trimmed;
+  }
+
+  return clampDescription(trimmed);
 }
 
 function withPrivacyDescription(description: string) {
@@ -270,10 +340,12 @@ function withPrivacyDescription(description: string) {
       sanitizedDescription,
     )
   ) {
-    return sanitizedDescription;
+    return clampDescription(sanitizedDescription);
   }
 
-  return `${sanitizedDescription} It runs in your browser, and your input stays on this device.`;
+  return clampDescription(
+    `${sanitizedDescription} It runs in your browser, and your input stays on this device.`,
+  );
 }
 
 function buildBaseKeywords(
@@ -409,14 +481,15 @@ function buildTitle(
   minify: boolean,
   variant?: string | null,
 ) {
-  const browserTitle = h1.includes("Browser") ? h1 : `${h1} in Browser`;
-  const title = minify || variant === "minify"
-    ? browserTitle
-    : description.includes("browser")
-    ? browserTitle
+  const browserSuffix = " in Browser";
+  const wantsBrowser = minify
+    || variant === "minify"
+    || (description.includes("browser") && !h1.includes("Browser"));
+  const browserTitle = wantsBrowser && fitsWithin(h1.length, browserSuffix.length)
+    ? `${h1}${browserSuffix}`
     : h1;
 
-  return withBrand(withPrivacyTitle(title));
+  return withBrand(withPrivacyTitle(browserTitle));
 }
 
 export function buildToolFAQItems({

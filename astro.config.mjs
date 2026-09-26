@@ -165,6 +165,32 @@ const createLegacyRedirects = () => {
     "/tools/svg-optimizer": redirectTo("/tools/svg-optimizer-pretty-printer"),
   });
 
+  // Old "/formatter/{lang}" scheme → current "/{lang}/" pages.
+  for (const language of Object.keys(legacyLanguageVariants)) {
+    redirects[`/formatter/${language}`] = redirectTo(`/${language}`);
+  }
+
+  // Old "/{lang}-validator" and "/{lang}/validator" scheme → formatter pages
+  // (the formatter validates as it parses).
+  for (const language of Object.keys(legacyLanguageVariants)) {
+    redirects[`/${language}-validator`] = redirectTo(`/${language}`);
+    redirects[`/${language}/validator`] = redirectTo(`/${language}`);
+    redirects[`/validator/${language}`] = redirectTo(`/${language}`);
+
+    for (const variant of legacyLanguageVariants[language]) {
+      if (variant === "minify") {
+        redirects[`/validator/${language}-minify`] = redirectTo(
+          `/minify/${language}`,
+        );
+        continue;
+      }
+
+      redirects[`/validator/${language}-${variant}`] = redirectTo(
+        `/${language}-${variant}`,
+      );
+    }
+  }
+
   return redirects;
 };
 
