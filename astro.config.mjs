@@ -1,4 +1,4 @@
-import { createReadStream, readFileSync } from "node:fs";
+import { createReadStream, readFileSync, writeFileSync } from "node:fs";
 import { join, posix } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -321,6 +321,63 @@ function modernMonacoRuntimePlugin() {
   };
 }
 
+/** Astro normalizes redirect keys to the trailing-slash form when it emits
+ * dist/client/_redirects. Cloudflare matches those rules exactly, so a
+ * no-slash request (e.g. /css/minify) falls through to 404 before the rule
+ * runs. This integration duplicates every rule without the trailing slash
+ * after the build writes the file, so the assets layer answers both forms
+ * with the configured 301 - no worker required, which keeps git-integration
+ * deploys (assets-only) correct. */
+function slashlessRedirectsIntegration() {
+  const redirectsFile = () => new URL("./dist/client/_redirects", import.meta.url);
+
+  return {
+    name: "happyformatter-slashless-redirects",
+    hooks: {
+      "astro:build:done"() {
+        let source;
+        try {
+          source = readFileSync(redirectsFile(), "utf8");
+        } catch {
+          return;
+        }
+
+        const seen = new Set();
+        const lines = [];
+        for (const rawLine of source.split("\n")) {
+          const line = rawLine.trim();
+          if (!line || line.startsWith("#")) {
+            lines.push(rawLine);
+            continue;
+          }
+
+          if (!seen.has(line)) {
+            seen.add(line);
+            lines.push(line);
+          }
+
+          const [from, ...rest] = line.split(/\s+/);
+          if (
+            from.startsWith("/")
+            && from.endsWith("/")
+            && from !== "/"
+            && !from.includes("*")
+            && !from.includes(":")
+          ) {
+            const slashless = [from.replace(/\/+$/, ""), ...rest].join(" ");
+            if (!seen.has(slashless)) {
+              seen.add(slashless);
+              lines.push(slashless);
+            }
+          }
+        }
+
+        writeFileSync(redirectsFile(), lines.join("\n"));
+      },
+    },
+  };
+}
+
 function noStoreDevModulesPlugin() {
   return {
     name: "happyformatter-no-store-dev-modules",
@@ -361,6 +418,7 @@ export default defineConfig({
     }),
     react(),
     playformCompress(),
+    slashlessRedirectsIntegration(),
   ],
 
   prefetch: true,
