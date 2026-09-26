@@ -7,6 +7,8 @@ import {
   themeStorageKey,
 } from "@/lib/theme";
 import {
+  clampSEODescription,
+  clampSEOTitle,
   sanitizeSEODescription,
   sanitizeSEOKeywords,
 } from "@/lib/tool-page-seo";
@@ -64,7 +66,10 @@ const darkEditorThemeIds = editorThemes
   .filter(theme => theme.type === "dark")
   .map(theme => theme.id);
 const sanitizedKeywords = sanitizeSEOKeywords(keywords);
-const sanitizedDescription = sanitizeSEODescription(description);
+const sanitizedDescription = clampSEODescription(
+  sanitizeSEODescription(description),
+);
+const finalTitle = clampSEOTitle(title);
 const modernMonacoImportMap = JSON.stringify(
   {
     imports: {
@@ -196,8 +201,8 @@ html.dark body {
 <meta name="robots" content={robots} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="canonical" href={canonicalHref} />
-<title>{title}</title>
-<meta name="title" content={title} />
+<title>{finalTitle}</title>
+<meta name="title" content={finalTitle} />
 <meta name="description" content={sanitizedDescription} />
 <meta name="keywords" content={sanitizedKeywords} />
 <meta name="author" content={author} />
@@ -220,7 +225,7 @@ html.dark body {
 <meta property="og:site_name" content="HappyFormatter" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:url" content={canonicalHref} />
-<meta property="og:title" content={title} />
+<meta property="og:title" content={finalTitle} />
 <meta property="og:description" content={sanitizedDescription} />
 <meta property="og:image" content={ogImageURL} />
 <meta property="og:image:secure_url" content={ogImageURL} />
@@ -230,7 +235,7 @@ html.dark body {
 <meta property="og:image:alt" content={finalImageAlt} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content={canonicalHref} />
-<meta name="twitter:title" content={title} />
+<meta name="twitter:title" content={finalTitle} />
 <meta name="twitter:description" content={sanitizedDescription} />
 <meta name="twitter:image" content={ogImageURL} />
 <meta name="twitter:image:alt" content={finalImageAlt} />

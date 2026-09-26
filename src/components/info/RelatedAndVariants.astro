@@ -507,12 +507,18 @@ const getMixedRecommendations = () => {
     });
   });
 
-  // Add up to 3 variants
-  canonicalVariants.slice(0, 3).forEach(variant => {
+  // Add every canonical variant so no variant page is left without an
+  // internal link (orphan pages), then fill remaining slots with tools.
+  canonicalVariants.forEach(variant => {
+    const variantUrl = `/${currentLanguage}-${variant.slug}`;
+    if (allRecommendations.some(item => item.url === variantUrl)) {
+      return;
+    }
+
     const display = getVariantRecommendation(currentLanguage || "", variant);
     allRecommendations.push({
       name: display.name,
-      url: `/${currentLanguage}-${variant.slug}`,
+      url: variantUrl,
       type: "VAR",
       reason: "Alternate workflow",
       description: display.description,
@@ -520,43 +526,21 @@ const getMixedRecommendations = () => {
     });
   });
 
-  // If we don't have enough recommendations, add more related tools or variants
+  // If we don't have enough recommendations, add more related tools
   if (allRecommendations.length < 6) {
     const remainingRelated = related.slice(3);
-    const remainingVariants = canonicalVariants.slice(3);
 
-    // Alternate between adding more related tools and variants
     let i = 0;
-    while (
-      allRecommendations.length < 6
-      && i < Math.max(remainingRelated.length, remainingVariants.length)
-    ) {
-      if (i < remainingRelated.length) {
-        const tool = remainingRelated[i];
-        allRecommendations.push({
-          name: tool.name,
-          url: tool.url,
-          type: tool.type,
-          reason: tool.reason,
-          description: tool.description,
-          category: "related",
-        });
-      }
-      if (allRecommendations.length < 6 && i < remainingVariants.length) {
-        const variant = remainingVariants[i];
-        const display = getVariantRecommendation(
-          currentLanguage || "",
-          variant,
-        );
-        allRecommendations.push({
-          name: display.name,
-          url: `/${currentLanguage}-${variant.slug}`,
-          type: "VAR",
-          reason: "Alternate workflow",
-          description: display.description,
-          category: "variant",
-        });
-      }
+    while (allRecommendations.length < 6 && i < remainingRelated.length) {
+      const tool = remainingRelated[i];
+      allRecommendations.push({
+        name: tool.name,
+        url: tool.url,
+        type: tool.type,
+        reason: tool.reason,
+        description: tool.description,
+        category: "related",
+      });
       i++;
     }
   }
@@ -600,7 +584,7 @@ const getMixedRecommendations = () => {
     });
   }
 
-  return allRecommendations.slice(0, 6);
+  return allRecommendations.slice(0, 9);
 };
 
 const getToolIcon = (url: string) => {

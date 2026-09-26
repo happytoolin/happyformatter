@@ -165,6 +165,42 @@ const createLegacyRedirects = () => {
     "/tools/svg-optimizer": redirectTo("/tools/svg-optimizer-pretty-printer"),
   });
 
+  // Old "/formatter/{lang}" scheme → current "/{lang}/" pages.
+  for (const language of Object.keys(legacyLanguageVariants)) {
+    redirects[`/formatter/${language}`] = redirectTo(`/${language}`);
+  }
+
+  // Old "/{lang}-validator" and "/{lang}/validator" scheme → formatter pages
+  // (the formatter validates as it parses).
+  for (const language of Object.keys(legacyLanguageVariants)) {
+    redirects[`/${language}-validator`] = redirectTo(`/${language}`);
+    redirects[`/${language}/validator`] = redirectTo(`/${language}`);
+    redirects[`/validator/${language}`] = redirectTo(`/${language}`);
+
+    for (const variant of legacyLanguageVariants[language]) {
+      if (variant === "minify") {
+        redirects[`/validator/${language}-minify`] = redirectTo(
+          `/minify/${language}`,
+        );
+        continue;
+      }
+
+      redirects[`/validator/${language}-${variant}`] = redirectTo(
+        `/${language}-${variant}`,
+      );
+    }
+  }
+
+  // Astro redirect keys only match the normalized path. With
+  // trailingSlash: "always", a request to the key without its trailing slash
+  // falls through to 404 before the redirect table is consulted, so register
+  // every key both with and without the trailing slash.
+  for (const [key, value] of Object.entries({ ...redirects })) {
+    if (key !== "/" && !key.endsWith("/")) {
+      redirects[`${key}/`] = value;
+    }
+  }
+
   return redirects;
 };
 
